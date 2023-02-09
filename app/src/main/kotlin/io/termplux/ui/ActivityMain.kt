@@ -36,7 +36,6 @@ fun ActivityMain(
     deleteApp: (String) -> Unit,
 
 
-
     targetAppVersionName: String,
 
     NavigationOnClick: () -> Unit,
@@ -45,6 +44,8 @@ fun ActivityMain(
     SheetOnClick: () -> Unit,
     AppsOnClick: () -> Unit,
     SelectOnClick: () -> Unit,
+    dynamicColorChecked: Boolean,
+    taskBarChecked: Boolean
 ) {
     val items = listOf(
         Screen.Home,
@@ -278,16 +279,16 @@ fun ActivityMain(
                     navController = navController,
                     scope = scope,
                     snackBarHostState = snackBarHostState,
-                    dynamicColorChecked = true,
-                    taskBarChecked = true,
+                    dynamicColorChecked = dynamicColorChecked,
+                    taskBarChecked = taskBarChecked,
                     onUninstall = {
                         deleteApp(BuildConfig.APPLICATION_ID)
                     },
-                    onDynamicChecked = { b ->
-                        PopTip.show(b.toString())
+                    onDynamicChecked = { value ->
+                        PopTip.show(value.toString())
                     },
-                    onTaskBarChecked = { b ->
-                        PopTip.show(b.toString())
+                    onTaskBarChecked = { value ->
+                        PopTip.show(value.toString())
                     },
                     onTaskBarSettings = {},
                     onSystemSettings = {},
@@ -325,7 +326,9 @@ private fun ActivityMainPreview() {
         MenuOnClick = { /*TODO*/ },
         SearchOnClick = { /*TODO*/ },
         SheetOnClick = { /*TODO*/ },
-        AppsOnClick = { /*TODO*/ }) {
-
-    }
+        AppsOnClick = { /*TODO*/ },
+        SelectOnClick = {},
+        dynamicColorChecked = true,
+        taskBarChecked = true
+    )
 }

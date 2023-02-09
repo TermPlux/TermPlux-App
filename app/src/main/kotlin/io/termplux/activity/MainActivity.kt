@@ -810,9 +810,11 @@ class MainActivity : BaseActivity(), Runnable {
             MenuOnClick = { /*TODO*/ },
             SearchOnClick = { /*TODO*/ },
             SheetOnClick = { /*TODO*/ },
-            AppsOnClick = { /*TODO*/ }) {
-
-        }
+            AppsOnClick = { /*TODO*/ },
+            SelectOnClick = {},
+            dynamicColorChecked = mDynamicColor,
+            taskBarChecked = mLibTaskBar
+        )
     }
 
     private fun startApplication(
