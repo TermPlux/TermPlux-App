@@ -68,9 +68,9 @@ dependencies {
     // 协议对话框：https://github.com/PSDev/LicensesDialog
     implementation 'de.psdev.licensesdialog:licensesdialog:2.2.0'
     // Shizuku：https://github.com/RikkaApps/Shizuku-API
-    implementation "dev.rikka.shizuku:api:12.2.0"
+    implementation "dev.rikka.shizuku:api:13.1.0"
     // Shizuku：https://github.com/RikkaApps/Shizuku-API
-    implementation "dev.rikka.shizuku:provider:12.2.0"
+    implementation "dev.rikka.shizuku:provider:13.1.0"
     // 绕接口限制：https://github.com/LSPosed/AndroidHiddenApiBypass
     implementation 'org.lsposed.hiddenapibypass:hiddenapibypass:4.3'
     // 捷并思官方库
