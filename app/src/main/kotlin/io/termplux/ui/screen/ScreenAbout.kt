@@ -271,7 +271,10 @@ fun ScreenAbout() {
                     .padding(
                         horizontal = 16.dp
                     )
-                    .padding(top = 8.dp, bottom = 16.dp)
+                    .padding(
+                        top = 8.dp,
+                        bottom = 16.dp
+                    )
             ) {
                 Column {
                     Text(
@@ -279,6 +282,7 @@ fun ScreenAbout() {
                         modifier = Modifier.padding(all = 16.dp),
                         color = MaterialTheme.colorScheme.primary
                     )
+                    Divider()
                     Surface(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -286,9 +290,11 @@ fun ScreenAbout() {
                     ) {
                         Column {
                             Row(
-                                modifier = Modifier.padding(
-                                    horizontal = 24.dp
-                                ),
+                                modifier = Modifier
+                                    .padding(
+                                        horizontal = 24.dp
+                                    )
+                                    .padding(top = 5.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Image(
@@ -323,7 +329,79 @@ fun ScreenAbout() {
                                     horizontal = 24.dp
                                 )
                             ) {
-                                TextButton(onClick = { /*TODO*/ }) {
+                                TextButton(
+                                    onClick = {
+
+                                    }
+                                ) {
+                                    Text(
+                                        text = "GitHub"
+                                    )
+                                }
+                                TextButton(
+                                    onClick = {
+
+                                    }
+                                ) {
+                                    Text(
+                                        text = "Twitter"
+                                    )
+                                }
+                            }
+                        }
+                    }
+                    Divider()
+                    Surface(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .heightIn(min = 80.dp)
+                    ) {
+                        Column {
+                            Row(
+                                modifier = Modifier
+                                    .padding(
+                                        horizontal = 24.dp
+                                    )
+                                    .padding(top = 5.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Image(
+                                    painter = painterResource(
+                                        id = R.drawable.ic_baseline_termplux_24
+                                    ),
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .size(width = 48.dp, height = 48.dp)
+                                        .clip(CircleShape)
+                                )
+                                Column(
+                                    modifier = Modifier
+                                        .weight(weight = 1f)
+                                        .padding(
+                                            start = 16.dp,
+                                            end = 5.dp
+                                        )
+                                ) {
+                                    Text(
+                                        text = "TermPlux Project Team",
+                                        style = MaterialTheme.typography.titleMedium
+                                    )
+                                    Text(
+                                        text = "项目团队",
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
+                                }
+                            }
+                            Row(
+                                modifier = Modifier.padding(
+                                    horizontal = 24.dp
+                                )
+                            ) {
+                                TextButton(
+                                    onClick = {
+
+                                    }
+                                ) {
                                     Text(
                                         text = "GitHub"
                                     )
