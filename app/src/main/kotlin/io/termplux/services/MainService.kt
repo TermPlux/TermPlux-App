@@ -8,7 +8,7 @@ import android.os.Parcel
 import android.os.RemoteException
 import io.termplux.IInAppBillingService
 
-class BillingService : Service() {
+class MainService : Service() {
 
     private lateinit var mInAppBillingService: IInAppBillingService.Stub
 

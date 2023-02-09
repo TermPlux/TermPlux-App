@@ -1,16 +1,130 @@
 package io.termplux.utils
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.app.ActivityManager
 import android.app.WallpaperManager
+import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.os.Build
+import android.os.IBinder
+import android.os.Process
+import android.provider.Settings
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import com.blankj.utilcode.util.AppUtils
+import com.farmerbb.taskbar.lib.Taskbar
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
+import com.kongzue.baseframework.BaseApp
+import com.kongzue.baseframework.util.AppManager
+import com.kongzue.dialogx.dialogs.PopTip
+import io.termplux.R
 import io.termplux.values.Codes
 import io.termplux.values.Key
+import io.termplux.values.Packages
+import kotlin.system.exitProcess
 
 class MainActivityUtils(
     private val mContext: Context
 ) {
+
+    // 检查设备是否支持谷歌基础服务
+    fun checkGooglePlayServices(
+        onNoGms: () -> Unit
+    ) {
+        val code =
+            GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(mContext)
+        if (code != ConnectionResult.SUCCESS) {
+            if (!AppUtils.isAppInstalled(Packages.gms)) {
+                GoogleApiAvailability.getInstance()
+                    .makeGooglePlayServicesAvailable(mContext as AppCompatActivity)
+                if (GoogleApiAvailability.getInstance().isUserResolvableError(code)) {
+                    onNoGms()
+                }
+            }
+        }
+    }
+
+    // 服务绑定的监听器
+    val mConnection: ServiceConnection = object : ServiceConnection {
+        // 后台服务绑定成功后执行
+        override fun onServiceConnected(
+            className: ComponentName,
+            service: IBinder
+        ) {
+            PopTip.show("服务绑定成功")
+        }
+
+        // 后台服务绑定失败后执行
+        override fun onServiceDisconnected(arg0: ComponentName) {
+            val msg = "error"
+            try {
+                PopTip.show(msg)
+            } catch (e: Exception) {
+                Toast.makeText(
+                    AppManager.getInstance().activeActivity,
+                    msg,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
+
+    fun getAndroidVersion(): String {
+        return when (Build.VERSION.SDK_INT) {
+            Build.VERSION_CODES.N -> "Android Nougat 7.0"
+            Build.VERSION_CODES.N_MR1 -> "Android Nougat 7.1"
+            Build.VERSION_CODES.O -> "Android Oreo 8.0"
+            Build.VERSION_CODES.O_MR1 -> "Android Oreo 8.1"
+            Build.VERSION_CODES.P -> "Android Pie 9.0"
+            Build.VERSION_CODES.Q -> "Android Queen Cake 10.0"
+            Build.VERSION_CODES.R -> "Android Red Velvet Cake 11.0"
+            Build.VERSION_CODES.S -> "Android Snow Cone 12.0"
+            Build.VERSION_CODES.S_V2 -> "Android Snow Cone V2 12.1"
+            Build.VERSION_CODES.TIRAMISU -> "Android Tiramisu 13.0"
+            34 -> "Android Upside Down Cake 14.0"
+            else -> "unknown"
+        }
+    }
+
+    fun getShizukuVersion(): String{
+        return "shit"
+    }
+
+    // 打开任务栏设置
+    fun taskbarSettings() {
+        Taskbar.openSettings(
+            mContext,
+            mContext.getString(R.string.taskbar_title),
+            R.style.Theme_TermPlux_ActionBar
+        )
+    }
+
+    // 选择默认主屏幕应用
+    fun defaultLauncher() {
+        val intent = Intent(Settings.ACTION_HOME_SETTINGS)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        mContext.startActivity(intent)
+    }
+
+
+    fun killAppProcess(context: Context) {
+        val mActivityManager = context.getSystemService(BaseApp.ACTIVITY_SERVICE) as ActivityManager
+        val mList = mActivityManager.runningAppProcesses
+        for (runningAppProcessInfo in mList) {
+            if (runningAppProcessInfo.pid != Process.myPid()) {
+                Process.killProcess(runningAppProcessInfo.pid)
+            }
+        }
+        Process.killProcess(Process.myPid())
+        exitProcess(0)
+    }
 
 
 
@@ -44,7 +158,8 @@ class MainActivityUtils(
         const val libTaskbar: String = key.libTaskBar
 
         /** 开屏图标动画时长 */
-        const val splashAnimatorMillis = 600
+        const val splashPart1AnimatorMillis = 600
+        const val splashPart2AnimatorMillis = 800
 
         /** 操作栏是否应该在[autoHideDelayMillis]毫秒后自动隐藏。*/
         const val autoHide = true

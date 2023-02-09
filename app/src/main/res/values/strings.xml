@@ -2,6 +2,11 @@
     <!-- APP名称和描述 -->
     <string name="app_name" translatable="false">TermPlux</string>
     <string name="app_description" translatable="false">TermPlux Project</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
     <!-- 菜单 -->
     <string name="menu_navigation">Navigation</string>
     <string name="menu_home">Home</string>
@@ -34,6 +39,7 @@
     <string name="uninstall_title">Delete</string>
     <string name="uninstall_summary">Uninstall TermPlux</string>
     <string name="uninstall_tip">Click Delete to uninstall the app</string>
+    <string name="uninstall_error">Can\'t uninstall system apps</string>
     <string name="desktop_category_title">Desktop</string>
     <string name="desktop_title">Use full desktop mode</string>
     <string name="desktop_summary">This takes effect after you restart the app. Only Android 10+ is supported.</string>

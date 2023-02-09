@@ -21,7 +21,7 @@ import java.io.File
 
 /**
  * 作者: wyq0918dev
- * 源码: https://github.com/TermPlux/TermPlux
+ * 源码: https://github.com/TermPlux/TermPlux-App
  * 时间: 2023年01月
  * 描述: TermPlux 开源项目
  */

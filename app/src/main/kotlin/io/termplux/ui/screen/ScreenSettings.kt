@@ -35,9 +35,11 @@ fun ScreenSettings(
     snackBarHostState: SnackbarHostState,
     dynamicColorChecked: Boolean,
     taskBarChecked: Boolean,
+    onUninstall: () -> Unit,
     onDynamicChecked: (Boolean) -> Unit,
     onTaskBarChecked: (Boolean) -> Unit,
     onTaskBarSettings: () -> Unit,
+    onSystemSettings: () -> Unit,
     onDefaultLauncherSettings: () -> Unit
 ) {
     val scrollState = rememberScrollState()
@@ -197,7 +199,7 @@ fun ScreenSettings(
                 Row(
                     modifier = Modifier
                         .clickable {
-
+                            onUninstall()
                         }
                         .padding(
                             horizontal = 16.dp
@@ -365,7 +367,7 @@ fun ScreenSettings(
                 Row(
                     modifier = Modifier
                         .clickable {
-
+                            onSystemSettings()
                         }
                         .padding(horizontal = 16.dp),
                     verticalAlignment = Alignment.CenterVertically
@@ -453,9 +455,11 @@ private fun ScreenSettingsPreview() {
         snackBarHostState = SnackbarHostState(),
         dynamicColorChecked = true,
         taskBarChecked = true,
+        onUninstall = {},
         onDynamicChecked = {},
         onTaskBarChecked = {},
         onTaskBarSettings = {},
+        onSystemSettings = {},
         onDefaultLauncherSettings = {}
     )
 }

@@ -31,6 +31,7 @@
     <string name="uninstall_title">卸载</string>
     <string name="uninstall_summary">卸载 TermPlux</string>
     <string name="uninstall_tip">单击卸载以卸载该应用程序</string>
+    <string name="uninstall_error">无法卸载系统应用</string>
     <string name="desktop_category_title">桌面</string>
     <string name="desktop_title">使用完整桌面模式</string>
     <string name="desktop_summary">重启应用后生效。仅支持Android 10+</string>

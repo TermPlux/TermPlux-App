@@ -3,7 +3,6 @@ package io.termplux.ui.screen
 import android.content.pm.ResolveInfo
 import android.widget.GridView
 import android.widget.PopupMenu
-import android.widget.Toast
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
@@ -27,9 +26,9 @@ fun ScreenApps(
     gridView: GridView,
     appsList: List<ResolveInfo>,
     isSystemApps: (String) -> Boolean,
-    startApp: (String, String) -> Unit,
-    infoApp: (String) -> Unit,
-    deleteApp: (String) -> Unit
+    onStartApp: (String, String) -> Unit,
+    onInfoApp: (String) -> Unit,
+    onDeleteApp: (String) -> Unit,
 ) {
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -54,7 +53,7 @@ fun ScreenApps(
                                 // 打开应用
                                 R.id.open -> {
                                     if (packageName != BuildConfig.APPLICATION_ID) {
-                                        startApp(packageName, className)
+                                        onStartApp(packageName, className)
                                     } else {
                                         // 跳转主页
                                         navController.navigate(
@@ -73,7 +72,7 @@ fun ScreenApps(
                                 // 跳转应用信息界面
                                 R.id.info -> {
                                     if (packageName != BuildConfig.APPLICATION_ID) {
-                                        infoApp(packageName)
+                                        onInfoApp(packageName)
                                     } else {
                                         // 跳转关于
                                         navController.navigate(
@@ -93,7 +92,7 @@ fun ScreenApps(
                                 R.id.delete -> {
                                     if (!isSystemApps(packageName)) {
                                         if (packageName != BuildConfig.APPLICATION_ID) {
-                                            deleteApp(packageName)
+                                            onDeleteApp(packageName)
                                         } else {
                                             scope.launch {
                                                 snackBarHostState.showSnackbar(
@@ -115,7 +114,11 @@ fun ScreenApps(
                                         }
                                     } else {
                                         // 报错
-                                        Toast.makeText(context, "shit", Toast.LENGTH_SHORT).show()
+                                        scope.launch {
+                                            snackBarHostState.showSnackbar(
+                                                context.getString(R.string.uninstall_error)
+                                            )
+                                        }
                                     }
                                 }
                             }
@@ -133,7 +136,7 @@ fun ScreenApps(
                         // 判断是否为自身
                         if (packageName != BuildConfig.APPLICATION_ID) {
                             // 启动应用
-                            startApp(packageName, className)
+                            onStartApp(packageName, className)
                         } else {
                             // 跳转主页
                             navController.navigate(

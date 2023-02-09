@@ -33,14 +33,10 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.setPadding
-import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
-import androidx.viewpager2.adapter.FragmentStateAdapter
-import androidx.viewpager2.widget.ViewPager2
 import com.blankj.utilcode.util.AppUtils
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.android.gms.common.ConnectionResult
@@ -55,7 +51,7 @@ import com.kongzue.baseframework.util.AppManager
 import com.kongzue.baseframework.util.JumpParameter
 import com.kongzue.dialogx.dialogs.MessageDialog
 import io.termplux.R
-import io.termplux.core.Core
+import io.termplux.services.MainService
 import io.termplux.ui.ActivityMain
 import io.termplux.ui.screen.*
 import io.termplux.utils.MainActivityUtils
@@ -89,6 +85,9 @@ class MainActivity : BaseActivity(), Runnable {
     private lateinit var mAppsImageView: AppCompatImageView
     private lateinit var mAppsTextView: AppCompatTextView
     private lateinit var mAppsLinearLayout: LinearLayoutCompat
+
+
+
 
     private lateinit var mSharedPreferences: SharedPreferences
     private lateinit var mIntentFilter: IntentFilter
@@ -131,8 +130,8 @@ class MainActivity : BaseActivity(), Runnable {
 
     private val delayHideTouchListener = View.OnTouchListener { view, motionEvent ->
         when (motionEvent.action) {
-            MotionEvent.ACTION_DOWN -> if (autoHide) {
-                delayedHide(autoHideDelayMillis)
+            MotionEvent.ACTION_DOWN -> if (mUtilsCompanion.autoHide) {
+                delayedHide(mUtilsCompanion.autoHideDelayMillis)
             }
             MotionEvent.ACTION_UP -> view.performClick()
             else -> {
@@ -195,6 +194,7 @@ class MainActivity : BaseActivity(), Runnable {
     /**
      * 在Activity启动时最先执行，用于初始化空间和设置布局
      */
+    @SuppressLint("InflateParams")
     override fun resetContentView(): View {
         super.resetContentView()
         // 屏闪动画
@@ -306,6 +306,8 @@ class MainActivity : BaseActivity(), Runnable {
             orientation = LinearLayoutCompat.VERTICAL
         }
 
+
+
         // 返回应用主界面布局
         return LinearLayoutCompat(
             this@MainActivity
@@ -337,25 +339,10 @@ class MainActivity : BaseActivity(), Runnable {
     }
 
     override fun initViews() {
-        // 操作栏状态
-        mVisible = true
 
-        // 布局参数
-        val layoutParams = FrameLayout.LayoutParams(
-            FrameLayout.LayoutParams.WRAP_CONTENT,
-            FrameLayout.LayoutParams.WRAP_CONTENT
-        ).apply {
-            gravity = Gravity.CENTER
-        }
+        initStatus()
 
-        // 设置操作栏
-        setSupportActionBar(mToolbar)
-
-        // 添加开屏动画
-        addContentView(mSplashLogo, layoutParams)
-
-        mComposeView.visibility = View.INVISIBLE
-        mComposeView.post(this@MainActivity)
+        initSetContentViewPart2()
 
 
         val builder = AlertDialog.Builder(this@MainActivity)
@@ -400,13 +387,15 @@ class MainActivity : BaseActivity(), Runnable {
                 startRadius,
                 endRadius
             )
-            .setDuration(800)
+            .setDuration(
+                mUtilsCompanion.splashPart2AnimatorMillis.toLong()
+            )
         mSplashLogo.animate()
             .alpha(0f)
             .scaleX(1.3f)
             .scaleY(1.3f)
             .setDuration(
-                600
+                mUtilsCompanion.splashPart1AnimatorMillis.toLong()
             )
             .withEndAction {
                 mSplashLogo.visibility = View.GONE
@@ -424,25 +413,26 @@ class MainActivity : BaseActivity(), Runnable {
 
     override fun setEvents() {
 
-        // 生命周期
+        // 生命周期监听
         setLifeCircleListener(
             object : LifeCircleListener() {
-
                 override fun onCreate() {
+                    super.onCreate()
                     Shizuku.addBinderReceivedListenerSticky(binderReceivedListener)
                     Shizuku.addBinderDeadListener(binderDeadListener)
                     Shizuku.addRequestPermissionResultListener(requestPermissionResultListener)
                 }
 
                 override fun onResume() {
-
+                    super.onResume()
                 }
 
                 override fun onPause() {
-
+                    super.onPause()
                 }
 
                 override fun onDestroy() {
+                    super.onDestroy()
                     mComposeView.removeCallbacks(this@MainActivity)
                     unregisterReceiver(mBroadcastReceiver)
                     Shizuku.removeBinderReceivedListener(binderReceivedListener)
@@ -482,10 +472,39 @@ class MainActivity : BaseActivity(), Runnable {
         return true
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id = item.itemId
+
+        return super.onOptionsItemSelected(item)
+    }
 
     /**
      ***********************************************************************************************
      */
+
+    private fun initStatus(){
+        // 操作栏状态
+        mVisible = true
+    }
+
+    private fun initSetContentViewPart2(){
+        // 布局参数
+        val layoutParams = FrameLayout.LayoutParams(
+            FrameLayout.LayoutParams.WRAP_CONTENT,
+            FrameLayout.LayoutParams.WRAP_CONTENT
+        ).apply {
+            gravity = Gravity.CENTER
+        }
+
+        // 设置操作栏
+        setSupportActionBar(mToolbar)
+
+        // 添加开屏动画
+        addContentView(mSplashLogo, layoutParams)
+
+        mComposeView.visibility = View.INVISIBLE
+        mComposeView.post(this@MainActivity)
+    }
 
     private fun check() {
         try {
@@ -510,15 +529,18 @@ class MainActivity : BaseActivity(), Runnable {
         // 获取首选项
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this@MainActivity)
         // 获取用户协议状态true为已签署，false为未签署
-        mLicence = mSharedPreferences.getBoolean(licence, true)
+        mLicence = mSharedPreferences.getBoolean(
+            mUtilsCompanion.licence,
+            true
+        )
         // 获取是否启用动态颜色
         mDynamicColor = mSharedPreferences.getBoolean(
-            dynamicColor,
+            mUtilsCompanion.dynamicColor,
             true
         ) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
         // 获取是否使用完整桌面模式
         mLibTaskBar = mSharedPreferences.getBoolean(
-            libTaskbar,
+            mUtilsCompanion.libTaskbar,
             true
         ) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
     }
@@ -758,6 +780,8 @@ class MainActivity : BaseActivity(), Runnable {
     @Composable
     private fun MainComposable() {
         ActivityMain(
+            androidVersion = mUtils.getAndroidVersion(),
+            shizukuVersion = "",
             gridView = mAppsGridView,
             appsList = mAppsList,
             isSystemApps = { packageName ->
@@ -869,7 +893,9 @@ class MainActivity : BaseActivity(), Runnable {
     }
 
     private fun initServices() {
-        Core().service(context = this@MainActivity)
+        val intent = Intent(this@MainActivity, MainService().javaClass)
+        startService(intent)
+        bindService(intent, mUtils.mConnection, Context.BIND_AUTO_CREATE)
     }
 
 
@@ -890,7 +916,7 @@ class MainActivity : BaseActivity(), Runnable {
                     }
                     .setCancelButton("拒绝") { _, _ ->
                         // 结束应用进程
-                        Core().killAppProcess(
+                        mUtils.killAppProcess(
                             context = this@MainActivity
                         )
                         false
@@ -900,22 +926,7 @@ class MainActivity : BaseActivity(), Runnable {
     }
 
 
-    // 检查设备是否支持谷歌基础服务
-    private fun checkGooglePlayServices(
-        onNoGms: () -> Unit
-    ) {
-        val code =
-            GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this@MainActivity)
-        if (code != ConnectionResult.SUCCESS) {
-            if (!AppUtils.isAppInstalled(Packages.gms)) {
-                GoogleApiAvailability.getInstance()
-                    .makeGooglePlayServicesAvailable(this@MainActivity)
-                if (GoogleApiAvailability.getInstance().isUserResolvableError(code)) {
-                    onNoGms()
-                }
-            }
-        }
-    }
+
 
     private fun toggle() {
         if (mVisible) {
@@ -930,7 +941,7 @@ class MainActivity : BaseActivity(), Runnable {
         mVisible = true
         mHandler.postDelayed(
             showPart2Runnable,
-            uiAnimatorDelay.toLong()
+            mUtilsCompanion.uiAnimatorDelay.toLong()
         )
     }
 
@@ -944,22 +955,4 @@ class MainActivity : BaseActivity(), Runnable {
         mHandler.removeCallbacks(hideRunnable)
         mHandler.postDelayed(hideRunnable, delayMillis.toLong())
     }
-
-    companion object {
-        /** 操作栏是否应该在[autoHideDelayMillis]毫秒后自动隐藏。*/
-        private const val autoHide = true
-
-        /** 如果设置了[autoHide]，则在用户交互后隐藏操作栏之前等待的毫秒数。*/
-        private const val autoHideDelayMillis = 3000
-
-        /** 一些较老的设备需要在小部件更新和状态和导航栏更改之间有一个小的延迟。*/
-        private const val uiAnimatorDelay = 300
-
-
-        private const val licence: String = "licence"
-        private const val dynamicColor: String = "dynamic_color"
-        private const val libTaskbar: String = "lib_task_bar"
-    }
-
-
 }

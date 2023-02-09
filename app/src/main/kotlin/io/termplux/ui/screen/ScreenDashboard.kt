@@ -52,13 +52,9 @@ fun ScreenDashboard(
                 .verticalScroll(scrollState)
         ) {
 
+
             AndroidView(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        top = 16.dp,
-                        bottom = 8.dp
-                    ),
+                modifier = Modifier.fillMaxWidth(),
                 factory = { context ->
                     LinearLayoutCompat(context).apply {
                         orientation = LinearLayoutCompat.VERTICAL

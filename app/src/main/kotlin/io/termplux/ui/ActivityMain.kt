@@ -2,8 +2,6 @@ package io.termplux.ui
 
 import android.content.pm.ResolveInfo
 import android.widget.GridView
-import android.widget.TextView
-import android.widget.Toast
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -11,20 +9,16 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import com.kongzue.dialogx.dialogs.PopTip
+import io.termplux.BuildConfig
 import io.termplux.R
 import io.termplux.ui.screen.*
 
@@ -32,6 +26,8 @@ import io.termplux.ui.screen.*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ActivityMain(
+    androidVersion: String,
+    shizukuVersion: String,
     gridView: GridView,
     appsList: List<ResolveInfo>,
     isSystemApps: (String) -> Boolean,
@@ -230,7 +226,9 @@ fun ActivityMain(
                 ScreenHome(
                     navController = navController,
                     scope = scope,
-                    snackBarHostState = snackBarHostState
+                    snackBarHostState = snackBarHostState,
+                    androidVersion = androidVersion,
+                    shizukuVersion = shizukuVersion
                 )
             }
             composable(
@@ -245,13 +243,13 @@ fun ActivityMain(
                     isSystemApps = { packageName ->
                         isSystemApps(packageName)
                     },
-                    startApp = { packageName, className ->
+                    onStartApp = { packageName, className ->
                         startApp(packageName, className)
                     },
-                    infoApp = { packageName ->
+                    onInfoApp = { packageName ->
                         infoApp(packageName)
                     },
-                    deleteApp = { packageName ->
+                    onDeleteApp = { packageName ->
                         deleteApp(packageName)
                     }
                 )
@@ -282,6 +280,9 @@ fun ActivityMain(
                     snackBarHostState = snackBarHostState,
                     dynamicColorChecked = true,
                     taskBarChecked = true,
+                    onUninstall = {
+                        deleteApp(BuildConfig.APPLICATION_ID)
+                    },
                     onDynamicChecked = { b ->
                         PopTip.show(b.toString())
                     },
@@ -289,6 +290,7 @@ fun ActivityMain(
                         PopTip.show(b.toString())
                     },
                     onTaskBarSettings = {},
+                    onSystemSettings = {},
                     onDefaultLauncherSettings = {}
                 )
             }
@@ -309,6 +311,8 @@ fun ActivityMain(
 @Composable
 private fun ActivityMainPreview() {
     ActivityMain(
+        androidVersion = "13",
+        shizukuVersion = "13",
         gridView = GridView(LocalContext.current),
         appsList = ArrayList(),
         isSystemApps = { true },

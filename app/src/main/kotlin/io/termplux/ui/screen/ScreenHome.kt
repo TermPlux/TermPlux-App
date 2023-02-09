@@ -33,7 +33,9 @@ import kotlinx.coroutines.launch
 fun ScreenHome(
     navController: NavHostController,
     scope: CoroutineScope,
-    snackBarHostState: SnackbarHostState
+    snackBarHostState: SnackbarHostState,
+    androidVersion: String,
+    shizukuVersion: String
 ) {
     val scrollState = rememberScrollState()
     val contents = StringBuilder()
@@ -148,11 +150,11 @@ fun ScreenHome(
                 ) {
                     Item(
                         title = stringResource(id = R.string.android_version),
-                        body = "Android 13"
+                        body = androidVersion
                     )
                     Item(
                         title = stringResource(id = R.string.shizuku_version),
-                        body = "Shizuku 13"
+                        body = shizukuVersion
                     )
                     Item(
                         title = stringResource(id = R.string.kernel_version),
@@ -206,6 +208,8 @@ private fun ScreenHomePreview() {
     ScreenHome(
         navController = rememberNavController(),
         scope = rememberCoroutineScope(),
-        snackBarHostState = SnackbarHostState()
+        snackBarHostState = SnackbarHostState(),
+        androidVersion = "13",
+        shizukuVersion = "13"
     )
 }
