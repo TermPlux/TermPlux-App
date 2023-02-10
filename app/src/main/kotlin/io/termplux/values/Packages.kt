@@ -1,10 +1,6 @@
 package io.termplux.values
 
-import io.termplux.BuildConfig
-
 object Packages {
-    // 此app
-    const val termPlux: String = BuildConfig.APPLICATION_ID
 
     // Shizuku
     const val shizuku: String = "moe.shizuku.privileged.api"

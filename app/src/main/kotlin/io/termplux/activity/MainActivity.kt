@@ -540,7 +540,7 @@ class MainActivity : BaseActivity(), Runnable {
         ) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
         // 获取是否使用完整桌面模式
         mLibTaskBar = mSharedPreferences.getBoolean(
-            mUtilsCompanion.libTaskbar,
+            mUtilsCompanion.libTaskBar,
             true
         ) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
     }

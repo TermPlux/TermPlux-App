@@ -27,7 +27,6 @@ import com.kongzue.dialogx.interfaces.OnBindView
 import io.termplux.R
 import io.termplux.ui.view.ScrollControllerWebView
 import io.termplux.values.Codes
-import io.termplux.values.Key
 import io.termplux.values.Packages
 import kotlin.system.exitProcess
 
@@ -178,14 +177,13 @@ class MainActivityUtils(
 
     companion object {
         private val code = Codes
-        private val key = Key
 
         const val none: Int = code.modeNone
         const val shizuku: Int = code.modeShizuku
 
-        const val licence: String = key.licence
-        const val dynamicColor: String = key.dynamicColor
-        const val libTaskbar: String = key.libTaskBar
+        const val licence: String = "licence"
+        const val dynamicColor: String = "dynamic_colors"
+        const val libTaskBar: String = "lib_task_bar"
 
         /** 开屏图标动画时长 */
         const val splashPart1AnimatorMillis = 600

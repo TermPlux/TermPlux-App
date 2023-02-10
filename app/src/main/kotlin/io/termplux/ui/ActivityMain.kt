@@ -20,6 +20,7 @@ import androidx.navigation.compose.*
 import com.kongzue.dialogx.dialogs.PopTip
 import io.termplux.BuildConfig
 import io.termplux.R
+import io.termplux.ui.navigation.Screen
 import io.termplux.ui.screen.*
 
 

@@ -15,7 +15,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import io.termplux.ui.Screen
+import io.termplux.ui.navigation.Screen
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
