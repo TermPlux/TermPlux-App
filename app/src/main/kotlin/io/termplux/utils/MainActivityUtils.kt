@@ -4,39 +4,92 @@ import android.annotation.SuppressLint
 import android.app.ActivityManager
 import android.app.WallpaperManager
 import android.content.*
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
+import android.content.pm.ResolveInfo
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.net.Uri
 import android.os.Build
 import android.os.IBinder
 import android.os.Process
 import android.provider.Settings
 import android.view.View
 import android.webkit.WebViewClient
+import android.widget.GridView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
+import androidx.compose.runtime.Composable
 import com.blankj.utilcode.util.AppUtils
 import com.farmerbb.taskbar.lib.Taskbar
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
+import com.kongzue.baseframework.BaseActivity
 import com.kongzue.baseframework.BaseApp
 import com.kongzue.baseframework.util.AppManager
 import com.kongzue.dialogx.dialogs.FullScreenDialog
 import com.kongzue.dialogx.dialogs.PopTip
 import com.kongzue.dialogx.interfaces.OnBindView
 import io.termplux.R
+import io.termplux.ui.ActivityMain
 import io.termplux.ui.view.ScrollControllerWebView
 import io.termplux.values.Codes
 import io.termplux.values.Packages
+import java.lang.reflect.Method
 import kotlin.system.exitProcess
 
-
 class MainActivityUtils(
-    private val mContext: Context
+    private val mContext: BaseActivity
 ) {
 
-    fun initViews(){
+    fun initView() {
 
+    }
+
+    @Composable
+    fun Content(
+        gridView: GridView,
+        appsList: List<ResolveInfo>,
+        dynamicColorChecked: Boolean,
+        taskBarChecked: Boolean
+    ) {
+        ActivityMain(
+            androidVersion = getAndroidVersion(),
+            shizukuVersion = getShizukuVersion(),
+            gridView = gridView,
+            appsList = appsList,
+            isSystemApps = { packageName ->
+                isSystemApplication(
+                    packageName = packageName
+                )
+            },
+            startApp = { packageName, className ->
+                startApplication(
+                    packageName = packageName,
+                    className = className
+                )
+            },
+            infoApp = { packageName ->
+                infoApplication(
+                    packageName = packageName
+                )
+            },
+            deleteApp = { packageName ->
+                deleteApplication(
+                    packageName = packageName
+                )
+            },
+            targetAppVersionName = "",
+            NavigationOnClick = { /*TODO*/ },
+            MenuOnClick = { /*TODO*/ },
+            SearchOnClick = { /*TODO*/ },
+            SheetOnClick = { /*TODO*/ },
+            AppsOnClick = { /*TODO*/ },
+            SelectOnClick = { /*TODO*/ },
+            dynamicColorChecked = dynamicColorChecked,
+            taskBarChecked = taskBarChecked
+        )
     }
 
 
@@ -61,6 +114,72 @@ class MainActivityUtils(
                 }
             }
         )
+    }
+
+    private fun startApplication(
+        packageName: String,
+        className: String
+    ) {
+        try {
+            // 启动目标应用
+            val intent = Intent()
+            intent.component = ComponentName(packageName, className)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            mContext.startActivity(intent)
+        } catch (e: Exception) {
+            // 如果已卸载但未刷新跳转应用市场防止程序崩溃
+            openApplicationMarket(packageName = packageName)
+        }
+    }
+
+    private fun infoApplication(packageName: String) {
+        try {
+            val intent = Intent()
+            intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+            intent.data = Uri.parse("package:$packageName")
+            mContext.startActivity(intent)
+        } catch (e: Exception) {
+            openApplicationMarket(packageName = packageName)
+        }
+    }
+
+    private fun deleteApplication(packageName: String) {
+        try {
+            val intent = Intent(Intent.ACTION_DELETE)
+            intent.data = Uri.parse("package:$packageName")
+            mContext.startActivity(intent)
+        } catch (e: Exception) {
+            openApplicationMarket(packageName = packageName)
+        }
+    }
+
+    private fun openApplicationMarket(packageName: String) {
+        val str = "market://details?id=$packageName"
+        val localIntent = Intent(Intent.ACTION_VIEW)
+        localIntent.data = Uri.parse(str)
+        mContext.startActivity(localIntent)
+    }
+
+    /**
+     * 检测应用是否为系统应用
+     */
+    private fun isSystemApplication(packageName: String): Boolean {
+        try {
+            val packageInfo = mContext.packageManager.getPackageInfo(
+                packageName,
+                PackageManager.GET_CONFIGURATIONS
+            )
+            if (packageInfo.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0) {
+                return true
+            }
+        } catch (e: PackageManager.NameNotFoundException) {
+            e.printStackTrace()
+        }
+        return false
+    }
+
+    private fun easterEgg(){
+
     }
 
     // 检查设备是否支持谷歌基础服务
@@ -106,7 +225,7 @@ class MainActivityUtils(
     }
 
 
-    fun getAndroidVersion(): String {
+    private fun getAndroidVersion(): String {
         return when (Build.VERSION.SDK_INT) {
             Build.VERSION_CODES.N -> "Android Nougat 7.0"
             Build.VERSION_CODES.N_MR1 -> "Android Nougat 7.1"
@@ -123,12 +242,12 @@ class MainActivityUtils(
         }
     }
 
-    fun getShizukuVersion(): String {
-        return "shit"
+    private fun getShizukuVersion(): String {
+        return "114514"
     }
 
     // 打开任务栏设置
-    fun taskbarSettings() {
+    private fun taskbarSettings() {
         Taskbar.openSettings(
             mContext,
             mContext.getString(R.string.taskbar_title),
@@ -137,7 +256,7 @@ class MainActivityUtils(
     }
 
     // 选择默认主屏幕应用
-    fun defaultLauncher() {
+    private fun defaultLauncher() {
         val intent = Intent(Settings.ACTION_HOME_SETTINGS)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         mContext.startActivity(intent)

@@ -3,15 +3,12 @@ package io.termplux.activity
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.*
-import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.provider.Settings
 import android.util.Log
 import android.view.*
 import android.widget.*
@@ -37,10 +34,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.setPadding
 import androidx.preference.PreferenceManager
-import com.blankj.utilcode.util.AppUtils
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.internal.EdgeToEdgeUtils
@@ -50,13 +44,12 @@ import com.kongzue.baseframework.interfaces.LifeCircleListener
 import com.kongzue.baseframework.util.AppManager
 import com.kongzue.baseframework.util.JumpParameter
 import com.kongzue.dialogx.dialogs.MessageDialog
+import com.kongzue.dialogx.dialogs.PopTip
 import io.termplux.R
 import io.termplux.services.MainService
-import io.termplux.ui.ActivityMain
 import io.termplux.ui.screen.*
 import io.termplux.utils.MainActivityUtils
 import io.termplux.values.Codes
-import io.termplux.values.Packages
 import kotlinx.coroutines.Runnable
 import rikka.shizuku.Shizuku
 import kotlin.math.hypot
@@ -64,8 +57,14 @@ import kotlin.math.hypot
 
 class MainActivity : BaseActivity(), Runnable {
 
+    /** 获取上下文 */
+    private val mContent: BaseActivity = me
+
+    private val viewContent: Context = mContent
+    private val thisContent: Context = mContent
+
     /** 工具包 */
-    private val mUtils: MainActivityUtils = MainActivityUtils(mContext = this@MainActivity)
+    private val mUtils: MainActivityUtils = MainActivityUtils(mContext = mContent)
 
     /** 工具包伴生对象 */
     private val mUtilsCompanion: MainActivityUtils.Companion = MainActivityUtils.Companion
@@ -85,8 +84,6 @@ class MainActivity : BaseActivity(), Runnable {
     private lateinit var mAppsImageView: AppCompatImageView
     private lateinit var mAppsTextView: AppCompatTextView
     private lateinit var mAppsLinearLayout: LinearLayoutCompat
-
-
 
 
     private lateinit var mSharedPreferences: SharedPreferences
@@ -185,7 +182,7 @@ class MainActivity : BaseActivity(), Runnable {
     /** 目标应用 */
     private val mTarget: Int by mutableStateOf(0)
 
-    private var androidVersion: String by mutableStateOf("unknown")
+
 
     private var targetAppName: String by mutableStateOf("unknown")
     private var targetPackageName: String by mutableStateOf("unknown")
@@ -307,6 +304,7 @@ class MainActivity : BaseActivity(), Runnable {
         }
 
 
+        mUtils.initView()
 
         // 返回应用主界面布局
         return LinearLayoutCompat(
@@ -438,6 +436,8 @@ class MainActivity : BaseActivity(), Runnable {
                     Shizuku.removeBinderReceivedListener(binderReceivedListener)
                     Shizuku.removeBinderDeadListener(binderDeadListener)
                     Shizuku.removeRequestPermissionResultListener(requestPermissionResultListener)
+//                    unbindService(mUtils.mConnection)
+//                    stopService(Intent(this@MainActivity, MainService().javaClass))
                 }
             }
         )
@@ -468,14 +468,19 @@ class MainActivity : BaseActivity(), Runnable {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        super.onCreateOptionsMenu(menu)
         menuInflater.inflate(R.menu.activity_main_action, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val id = item.itemId
-
-        return super.onOptionsItemSelected(item)
+        super.onOptionsItemSelected(item)
+        when (item.itemId) {
+            R.id.action_settings -> {
+                PopTip.show("你小子6")
+            }
+        }
+        return true
     }
 
     /**
@@ -771,113 +776,17 @@ class MainActivity : BaseActivity(), Runnable {
                     colorScheme = colorScheme,
                     typography = typography,
                 ) {
-                    MainComposable()
+                    mUtils.Content(
+                        gridView = mAppsGridView,
+                        appsList = mAppsList,
+                        dynamicColorChecked = mDynamicColor,
+                        taskBarChecked = mLibTaskBar
+                    )
                 }
             }
         }
     }
 
-    @Composable
-    private fun MainComposable() {
-        ActivityMain(
-            androidVersion = mUtils.getAndroidVersion(),
-            shizukuVersion = "",
-            gridView = mAppsGridView,
-            appsList = mAppsList,
-            isSystemApps = { packageName ->
-                isSystemApplication(
-                    packageName = packageName
-                )
-            },
-            startApp = { packageName, className ->
-                startApplication(
-                    packageName = packageName,
-                    className = className
-                )
-            },
-            infoApp = { packageName ->
-                infoApplication(
-                    packageName = packageName
-                )
-            },
-            deleteApp = { packageName ->
-                deleteApplication(
-                    packageName = packageName
-                )
-            },
-            targetAppVersionName = "",
-            NavigationOnClick = { /*TODO*/ },
-            MenuOnClick = { /*TODO*/ },
-            SearchOnClick = { /*TODO*/ },
-            SheetOnClick = { /*TODO*/ },
-            AppsOnClick = { /*TODO*/ },
-            SelectOnClick = {},
-            dynamicColorChecked = mDynamicColor,
-            taskBarChecked = mLibTaskBar
-        )
-    }
-
-    private fun startApplication(
-        packageName: String,
-        className: String
-    ) {
-        try {
-            // 启动目标应用
-            val intent = Intent()
-            intent.component = ComponentName(packageName, className)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            startActivity(intent)
-        } catch (e: Exception) {
-            // 如果已卸载但未刷新跳转应用市场防止程序崩溃
-            openApplicationMarket(packageName = packageName)
-        }
-    }
-
-    private fun infoApplication(packageName: String) {
-        try {
-            val intent = Intent()
-            intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-            intent.data = Uri.parse("package:$packageName")
-            startActivity(intent)
-        } catch (e: Exception) {
-            openApplicationMarket(packageName = packageName)
-        }
-    }
-
-    private fun deleteApplication(packageName: String) {
-        try {
-            val intent = Intent(Intent.ACTION_DELETE)
-            intent.data = Uri.parse("package:$packageName")
-            startActivity(intent)
-        } catch (e: Exception) {
-            openApplicationMarket(packageName = packageName)
-        }
-    }
-
-    private fun openApplicationMarket(packageName: String) {
-        val str = "market://details?id=$packageName"
-        val localIntent = Intent(Intent.ACTION_VIEW)
-        localIntent.data = Uri.parse(str)
-        startActivity(localIntent)
-    }
-
-    /**
-     * 检测应用是否为系统应用
-     */
-    private fun isSystemApplication(packageName: String): Boolean {
-        try {
-            val packageInfo = packageManager.getPackageInfo(
-                packageName,
-                PackageManager.GET_CONFIGURATIONS
-            )
-            if (packageInfo.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0) {
-                return true
-            }
-        } catch (e: PackageManager.NameNotFoundException) {
-            e.printStackTrace()
-        }
-        return false
-    }
 
     @SuppressLint("RestrictedApi")
     @Suppress("DEPRECATION")
