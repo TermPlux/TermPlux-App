@@ -39,14 +39,13 @@ fun ActivityMain(
 
     targetAppVersionName: String,
 
-    NavigationOnClick: () -> Unit,
-    MenuOnClick: () -> Unit,
-    SearchOnClick: () -> Unit,
-    SheetOnClick: () -> Unit,
-    AppsOnClick: () -> Unit,
-    SelectOnClick: () -> Unit,
     dynamicColorChecked: Boolean,
-    taskBarChecked: Boolean
+    taskBarChecked: Boolean,
+    onNotice: () -> Unit,
+    onSource: () -> Unit,
+    onDevGitHub: () -> Unit,
+    onDevTwitter: () -> Unit,
+    onTeamGitHub: () -> Unit
 ) {
     val items = listOf(
         Screen.Home,
@@ -264,12 +263,12 @@ fun ActivityMain(
                     targetAppPackageName = "",
                     targetAppDescription = "",
                     targetAppVersionName = targetAppVersionName,
-                    NavigationOnClick = NavigationOnClick,
-                    MenuOnClick = MenuOnClick,
-                    SearchOnClick = SearchOnClick,
-                    SheetOnClick = SheetOnClick,
-                    AppsOnClick = AppsOnClick,
-                    SelectOnClick = SelectOnClick,
+                    NavigationOnClick = {},
+                    MenuOnClick = {},
+                    SearchOnClick = {},
+                    SheetOnClick = {},
+                    AppsOnClick = {},
+                    SelectOnClick = {},
                     onNavigateToApps = {},
                 )
             }
@@ -304,7 +303,12 @@ fun ActivityMain(
                     snackBarHostState = snackBarHostState,
                     infoApp = {
                         infoApp(BuildConfig.APPLICATION_ID)
-                    }
+                    },
+                    onNotice = onNotice,
+                    onSource = onSource,
+                    onDevGitHub = onDevGitHub,
+                    onDevTwitter = onDevTwitter,
+                    onTeamGitHub = onTeamGitHub
                 )
             }
         }
@@ -329,13 +333,12 @@ private fun ActivityMainPreview() {
         deleteApp = {},
         targetAppVersionName = "",
 
-        NavigationOnClick = { /*TODO*/ },
-        MenuOnClick = { /*TODO*/ },
-        SearchOnClick = { /*TODO*/ },
-        SheetOnClick = { /*TODO*/ },
-        AppsOnClick = { /*TODO*/ },
-        SelectOnClick = {},
         dynamicColorChecked = true,
-        taskBarChecked = true
+        taskBarChecked = true,
+        onNotice = {},
+        onSource = {},
+        onDevGitHub = {},
+        onDevTwitter = {},
+        onTeamGitHub = {}
     )
 }

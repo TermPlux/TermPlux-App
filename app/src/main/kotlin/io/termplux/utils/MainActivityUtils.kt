@@ -15,11 +15,9 @@ import android.os.IBinder
 import android.os.Process
 import android.provider.Settings
 import android.view.View
-import android.webkit.WebViewClient
 import android.widget.GridView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.AppCompatButton
 import androidx.compose.runtime.Composable
 import com.blankj.utilcode.util.AppUtils
 import com.farmerbb.taskbar.lib.Taskbar
@@ -31,20 +29,38 @@ import com.kongzue.baseframework.util.AppManager
 import com.kongzue.dialogx.dialogs.FullScreenDialog
 import com.kongzue.dialogx.dialogs.PopTip
 import com.kongzue.dialogx.interfaces.OnBindView
+import de.psdev.licensesdialog.LicensesDialog
+import de.psdev.licensesdialog.licenses.ApacheSoftwareLicense20
+import de.psdev.licensesdialog.licenses.GnuGeneralPublicLicense30
+import de.psdev.licensesdialog.licenses.MITLicense
+import de.psdev.licensesdialog.model.Notice
+import de.psdev.licensesdialog.model.Notices
 import io.termplux.R
 import io.termplux.ui.ActivityMain
 import io.termplux.ui.view.ScrollControllerWebView
 import io.termplux.values.Codes
 import io.termplux.values.Packages
-import java.lang.reflect.Method
 import kotlin.system.exitProcess
+
 
 class MainActivityUtils(
     private val mContext: BaseActivity
 ) {
 
-    fun initView() {
+    private lateinit var webView: ScrollControllerWebView
 
+    @SuppressLint("SetJavaScriptEnabled")
+    fun initView() {
+        webView = ScrollControllerWebView(mContext).apply {
+            settings.javaScriptEnabled = true
+            settings.loadWithOverviewMode = true
+            settings.useWideViewPort = true
+            settings.setSupportZoom(false)
+            settings.allowFileAccess = true
+            settings.javaScriptCanOpenWindowsAutomatically = true
+            settings.loadsImagesAutomatically = true
+            settings.defaultTextEncodingName = "utf-8"
+        }
     }
 
     @Composable
@@ -81,39 +97,53 @@ class MainActivityUtils(
                 )
             },
             targetAppVersionName = "",
-            NavigationOnClick = { /*TODO*/ },
-            MenuOnClick = { /*TODO*/ },
-            SearchOnClick = { /*TODO*/ },
-            SheetOnClick = { /*TODO*/ },
-            AppsOnClick = { /*TODO*/ },
-            SelectOnClick = { /*TODO*/ },
+
             dynamicColorChecked = dynamicColorChecked,
-            taskBarChecked = taskBarChecked
+            taskBarChecked = taskBarChecked,
+            onNotice = {
+                licenseDialog()
+            },
+            onSource = {
+                fullScreenWebView("https://github.com/TermPlux/TermPlux-App")
+            },
+            onDevGitHub = {
+                fullScreenWebView("https://github.com/wyq0918dev")
+            },
+            onDevTwitter = {
+                fullScreenWebView("https://twitter.com/wyq0918dev")
+            },
+            onTeamGitHub = {
+                fullScreenWebView("https://github.com/TermPlux")
+            },
         )
     }
 
-
-    fun web() {
-        val webView = ScrollControllerWebView(mContext)
-        val close = AppCompatButton(mContext)
+    private fun fullScreenWebView(url: String) {
         FullScreenDialog.show(
             object : OnBindView<FullScreenDialog>(webView) {
-                @SuppressLint("SetJavaScriptEnabled")
                 override fun onBind(dialog: FullScreenDialog?, v: View?) {
-                    val webSettings = webView.settings
-                    webSettings.javaScriptEnabled = true
-                    webSettings.loadWithOverviewMode = true
-                    webSettings.useWideViewPort = true
-                    webSettings.setSupportZoom(false)
-                    webSettings.allowFileAccess = true
-                    webSettings.javaScriptCanOpenWindowsAutomatically = true
-                    webSettings.loadsImagesAutomatically = true
-                    webSettings.defaultTextEncodingName = "utf-8"
-                    webView.webViewClient = WebViewClient()
-                    webView.loadUrl("https://github.com/TermPlux/TermPlux-App")
+                    webView.loadUrl(url)
                 }
             }
         )
+    }
+
+    private fun licenseDialog() {
+        val notices = Notices()
+        notices.addNotice(Notice("AndroidUtilCode", "", "Copyright (c) Blankj", ApacheSoftwareLicense20()))
+        notices.addNotice(Notice("LibTaskBar", "", "Copyright (c) farmerbb", ApacheSoftwareLicense20()))
+        notices.addNotice(Notice("BaseFramework", "", "Copyright BaseFramework", ApacheSoftwareLicense20()))
+        notices.addNotice(Notice("DialogX", "", "Copyright Kongzue DialogX", ApacheSoftwareLicense20()))
+        notices.addNotice(Notice("AndroidHiddenApiBypass", "", "Copyright 2021-2023 LSPosed", ApacheSoftwareLicense20()))
+        notices.addNotice(Notice("FakeStore", "", "Copyright (c) 2013-2016 microG Project Team", ApacheSoftwareLicense20()))
+        notices.addNotice(Notice("Shizuku-API", "", "Copyright (c) RikkaApps", MITLicense()))
+        notices.addNotice(Notice("Termux App", "", "Copyright (c) Termux", GnuGeneralPublicLicense30()))
+        notices.addNotice(Notice("UserLAnd", "", "Copyright (c) CypherpunkArmory", ApacheSoftwareLicense20()))
+        LicensesDialog.Builder(mContext)
+            .setNotices(notices)
+            .setIncludeOwnLicense(true)
+            .build()
+            .show()
     }
 
     private fun startApplication(
@@ -178,7 +208,7 @@ class MainActivityUtils(
         return false
     }
 
-    private fun easterEgg(){
+    private fun easterEgg() {
 
     }
 

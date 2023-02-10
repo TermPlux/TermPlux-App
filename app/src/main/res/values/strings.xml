@@ -24,6 +24,9 @@
     <string name="device_code">Device Code</string>
     <string name="copy_info">Copy</string>
     <string name="copied_to_clipboard">Copied to clipboard</string>
+    <!-- 应用 -->
+    <string name="uninstall_tip">Click Delete to uninstall the app</string>
+    <string name="uninstall_error">Can\'t uninstall system apps</string>
     <!-- 设置 -->
     <string name="app_category_title">App</string>
     <string name="dynamic_colors_title">Use the dynamic color</string>
@@ -33,8 +36,6 @@
     <string name="about_summary">About TermPlux</string>
     <string name="uninstall_title">Delete</string>
     <string name="uninstall_summary">Uninstall TermPlux</string>
-    <string name="uninstall_tip">Click Delete to uninstall the app</string>
-    <string name="uninstall_error">Can\'t uninstall system apps</string>
     <string name="desktop_category_title">Desktop</string>
     <string name="desktop_title">Use full desktop mode</string>
     <string name="desktop_summary">This takes effect after you restart the app. Only Android 10+ is supported.</string>

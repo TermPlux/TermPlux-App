@@ -1,11 +1,10 @@
 package io.termplux.ui.screen
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
+import androidx.compose.foundation.gestures.ScrollScope
+import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -31,7 +30,12 @@ import kotlinx.coroutines.launch
 fun ScreenAbout(
     scope: CoroutineScope,
     snackBarHostState: SnackbarHostState,
-    infoApp: () -> Unit
+    infoApp: () -> Unit,
+    onNotice: () -> Unit,
+    onSource: () -> Unit,
+    onDevGitHub: () -> Unit,
+    onDevTwitter: () -> Unit,
+    onTeamGitHub: () -> Unit
 ) {
     val scrollState = rememberScrollState()
     val position = remember {
@@ -216,7 +220,7 @@ fun ScreenAbout(
                         Row(
                             modifier = Modifier
                                 .clickable {
-
+                                    onNotice()
                                 }
                                 .padding(
                                     horizontal = 24.dp
@@ -255,7 +259,9 @@ fun ScreenAbout(
                         Row(
                             modifier = Modifier
                                 .clickable {
-
+                                    scope.launch {
+                                        scrollState.animateScrollBy(10000f)
+                                    }
                                 }
                                 .padding(
                                     horizontal = 24.dp
@@ -298,7 +304,7 @@ fun ScreenAbout(
                         Row(
                             modifier = Modifier
                                 .clickable {
-
+                                    onSource()
                                 }
                                 .padding(
                                     horizontal = 24.dp
@@ -409,7 +415,7 @@ fun ScreenAbout(
                             ) {
                                 TextButton(
                                     onClick = {
-
+                                        onDevGitHub()
                                     }
                                 ) {
                                     Text(
@@ -418,7 +424,7 @@ fun ScreenAbout(
                                 }
                                 TextButton(
                                     onClick = {
-
+                                        onDevTwitter()
                                     }
                                 ) {
                                     Text(
@@ -483,7 +489,7 @@ fun ScreenAbout(
                             ) {
                                 TextButton(
                                     onClick = {
-
+                                        onTeamGitHub()
                                     }
                                 ) {
                                     Text(
@@ -505,6 +511,11 @@ fun ScreenAboutPreview() {
     ScreenAbout(
         scope = rememberCoroutineScope(),
         snackBarHostState = SnackbarHostState(),
-        infoApp = {}
+        infoApp = {},
+        onNotice = {},
+        onSource = {},
+        onDevGitHub = {},
+        onDevTwitter = {},
+        onTeamGitHub = {}
     )
 }

@@ -46,4 +46,4 @@ AndroidEasterEggs [https://github.com/hushenghao/AndroidEasterEggs](https://gith
 ComposeSettings [https://github.com/amitks2015/ComposeSettings](https://github.com/amitks2015/ComposeSettings)  
 
 ## Open source agreement
-This repository is open source under the [Apache-2.0 License](https://github.com/TermPlux/TermPlux-App/blob/master/LICENSE) protocol.  
+This repository is open source under the [GNU General Public License v3.0](https://github.com/TermPlux/TermPlux-App/blob/master/LICENSE) protocol.  
