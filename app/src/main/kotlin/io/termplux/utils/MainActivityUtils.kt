@@ -1,39 +1,68 @@
 package io.termplux.utils
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.app.ActivityManager
 import android.app.WallpaperManager
-import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
-import android.content.ServiceConnection
+import android.content.*
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.os.Build
 import android.os.IBinder
 import android.os.Process
 import android.provider.Settings
+import android.view.View
+import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatButton
 import com.blankj.utilcode.util.AppUtils
 import com.farmerbb.taskbar.lib.Taskbar
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.kongzue.baseframework.BaseApp
 import com.kongzue.baseframework.util.AppManager
+import com.kongzue.dialogx.dialogs.FullScreenDialog
 import com.kongzue.dialogx.dialogs.PopTip
+import com.kongzue.dialogx.interfaces.OnBindView
 import io.termplux.R
+import io.termplux.ui.view.ScrollControllerWebView
 import io.termplux.values.Codes
 import io.termplux.values.Key
 import io.termplux.values.Packages
 import kotlin.system.exitProcess
 
+
 class MainActivityUtils(
     private val mContext: Context
 ) {
 
+    fun initViews(){
 
+    }
+
+
+    fun web() {
+        val webView = ScrollControllerWebView(mContext)
+        val close = AppCompatButton(mContext)
+        FullScreenDialog.show(
+            object : OnBindView<FullScreenDialog>(webView) {
+                @SuppressLint("SetJavaScriptEnabled")
+                override fun onBind(dialog: FullScreenDialog?, v: View?) {
+                    val webSettings = webView.settings
+                    webSettings.javaScriptEnabled = true
+                    webSettings.loadWithOverviewMode = true
+                    webSettings.useWideViewPort = true
+                    webSettings.setSupportZoom(false)
+                    webSettings.allowFileAccess = true
+                    webSettings.javaScriptCanOpenWindowsAutomatically = true
+                    webSettings.loadsImagesAutomatically = true
+                    webSettings.defaultTextEncodingName = "utf-8"
+                    webView.webViewClient = WebViewClient()
+                    webView.loadUrl("https://github.com/TermPlux/TermPlux-App")
+                }
+            }
+        )
+    }
 
     // 检查设备是否支持谷歌基础服务
     fun checkGooglePlayServices(
@@ -95,7 +124,7 @@ class MainActivityUtils(
         }
     }
 
-    fun getShizukuVersion(): String{
+    fun getShizukuVersion(): String {
         return "shit"
     }
 
@@ -127,7 +156,6 @@ class MainActivityUtils(
         Process.killProcess(Process.myPid())
         exitProcess(0)
     }
-
 
 
     /**

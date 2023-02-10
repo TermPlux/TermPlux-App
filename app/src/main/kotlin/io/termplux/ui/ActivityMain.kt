@@ -298,7 +298,13 @@ fun ActivityMain(
             composable(
                 route = Screen.About.route
             ) {
-                ScreenAbout()
+                ScreenAbout(
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
+                    infoApp = {
+                        infoApp(BuildConfig.APPLICATION_ID)
+                    }
+                )
             }
         }
     }
