@@ -1,8 +1,11 @@
 package io.termplux.ui.screen
 
-import androidx.compose.foundation.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -13,7 +16,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -22,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import com.kongzue.dialogx.dialogs.PopTip
 import io.termplux.BuildConfig
 import io.termplux.R
-import io.termplux.utils.MainActivityUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -297,7 +298,7 @@ fun ScreenAbout(
                         Row(
                             modifier = Modifier
                                 .clickable {
-                                    
+
                                 }
                                 .padding(
                                     horizontal = 24.dp
