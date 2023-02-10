@@ -2,11 +2,6 @@
     <!-- APP名称和描述 -->
     <string name="app_name" translatable="false">TermPlux</string>
     <string name="app_description" translatable="false">TermPlux Project</string>
-
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
-    <string name="nav_header_desc">Navigation header</string>
     <!-- 菜单 -->
     <string name="menu_navigation">Navigation</string>
     <string name="menu_home">Home</string>

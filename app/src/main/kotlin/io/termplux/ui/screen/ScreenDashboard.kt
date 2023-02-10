@@ -211,7 +211,7 @@ fun ScreenDashboard(
                         .heightIn(min = 70.dp)
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.ic_baseline_termplux_24),
+                        painter = painterResource(id = R.drawable.baseline_termplux_24),
                         contentDescription = null,
                         modifier = Modifier
                             .size(48.dp, 48.dp)

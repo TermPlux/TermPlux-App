@@ -202,7 +202,7 @@ class MainActivity : BaseActivity(), Runnable {
             setImageDrawable(
                 ContextCompat.getDrawable(
                     this@MainActivity,
-                    R.drawable.ic_baseline_termplux_24
+                    R.drawable.baseline_termplux_24
                 )
             )
         }
@@ -260,7 +260,7 @@ class MainActivity : BaseActivity(), Runnable {
         ).apply {
             navigationIcon = ContextCompat.getDrawable(
                 this@MainActivity,
-                R.drawable.ic_baseline_arrow_back_24
+                R.drawable.baseline_arrow_back_24
             )
         }
 
