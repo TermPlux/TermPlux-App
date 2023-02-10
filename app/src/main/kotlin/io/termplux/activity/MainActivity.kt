@@ -202,7 +202,7 @@ class MainActivity : BaseActivity(), Runnable {
             setImageDrawable(
                 ContextCompat.getDrawable(
                     this@MainActivity,
-                    R.drawable.baseline_termplux_24
+                    R.drawable.custom_termplux_24
                 )
             )
         }

@@ -72,7 +72,7 @@ fun ScreenAbout(
                     ) {
                         Image(
                             painter = painterResource(
-                                id = R.drawable.baseline_termplux_24
+                                id = R.drawable.custom_termplux_24
                             ),
                             contentDescription = null,
                             modifier = Modifier.fillMaxHeight()
@@ -370,7 +370,7 @@ fun ScreenAbout(
                             ) {
                                 Image(
                                     painter = painterResource(
-                                        id = R.drawable.developer
+                                        id = R.drawable.custom_developer_24
                                     ),
                                     contentDescription = null,
                                     modifier = Modifier
@@ -448,7 +448,7 @@ fun ScreenAbout(
                             ) {
                                 Image(
                                     painter = painterResource(
-                                        id = R.drawable.baseline_termplux_24
+                                        id = R.drawable.custom_termplux_24
                                     ),
                                     contentDescription = null,
                                     modifier = Modifier.size(
