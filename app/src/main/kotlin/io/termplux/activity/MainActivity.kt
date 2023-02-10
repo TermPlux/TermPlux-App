@@ -828,7 +828,7 @@ class MainActivity : BaseActivity(), Runnable {
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
         } catch (e: Exception) {
-            // 如果已卸载但未刷新跳转由于市场防止程序崩溃
+            // 如果已卸载但未刷新跳转应用市场防止程序崩溃
             openApplicationMarket(packageName = packageName)
         }
     }

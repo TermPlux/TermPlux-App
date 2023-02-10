@@ -38,7 +38,10 @@ fun ScreenAbout() {
                     .padding(
                         horizontal = 16.dp
                     )
-                    .padding(top = 16.dp, bottom = 8.dp)
+                    .padding(
+                        top = 16.dp,
+                        bottom = 8.dp
+                    )
             ) {
                 Column {
                     Row(
@@ -47,7 +50,9 @@ fun ScreenAbout() {
                             .padding(
                                 all = 24.dp
                             )
-                            .height(48.dp)
+                            .height(
+                                height = 48.dp
+                            )
                     ) {
                         Image(
                             painter = painterResource(
@@ -91,7 +96,9 @@ fun ScreenAbout() {
                             )
                             Column(
                                 modifier = Modifier
-                                    .weight(weight = 1f)
+                                    .weight(
+                                        weight = 1f
+                                    )
                                     .padding(
                                         start = 16.dp,
                                         end = 5.dp
@@ -113,7 +120,9 @@ fun ScreenAbout() {
                     Surface(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .heightIn(min = 50.dp)
+                            .heightIn(
+                                min = 50.dp
+                            )
                     ) {
                         Row(
                             modifier = Modifier
@@ -132,7 +141,9 @@ fun ScreenAbout() {
                             )
                             Column(
                                 modifier = Modifier
-                                    .weight(weight = 1f)
+                                    .weight(
+                                        weight = 1f
+                                    )
                                     .padding(
                                         start = 16.dp,
                                         end = 5.dp
@@ -152,7 +163,9 @@ fun ScreenAbout() {
                     Surface(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .heightIn(min = 50.dp)
+                            .heightIn(
+                                min = 50.dp
+                            )
                     ) {
                         Row(
                             modifier = Modifier
@@ -171,7 +184,9 @@ fun ScreenAbout() {
                             )
                             Column(
                                 modifier = Modifier
-                                    .weight(weight = 1f)
+                                    .weight(
+                                        weight = 1f
+                                    )
                                     .padding(
                                         start = 16.dp,
                                         end = 5.dp
@@ -187,7 +202,9 @@ fun ScreenAbout() {
                     Surface(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .heightIn(min = 50.dp)
+                            .heightIn(
+                                min = 50.dp
+                            )
                     ) {
                         Row(
                             modifier = Modifier
@@ -206,7 +223,9 @@ fun ScreenAbout() {
                             )
                             Column(
                                 modifier = Modifier
-                                    .weight(weight = 1f)
+                                    .weight(
+                                        weight = 1f
+                                    )
                                     .padding(
                                         start = 16.dp,
                                         end = 5.dp
@@ -226,7 +245,9 @@ fun ScreenAbout() {
                     Surface(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .heightIn(min = 50.dp)
+                            .heightIn(
+                                min = 50.dp
+                            )
                     ) {
                         Row(
                             modifier = Modifier
@@ -245,7 +266,9 @@ fun ScreenAbout() {
                             )
                             Column(
                                 modifier = Modifier
-                                    .weight(weight = 1f)
+                                    .weight(
+                                        weight = 1f
+                                    )
                                     .padding(
                                         start = 16.dp,
                                         end = 5.dp
@@ -276,13 +299,17 @@ fun ScreenAbout() {
                 Column {
                     Text(
                         text = "开发者",
-                        modifier = Modifier.padding(all = 16.dp),
+                        modifier = Modifier.padding(
+                            all = 16.dp
+                        ),
                         color = MaterialTheme.colorScheme.primary
                     )
                     Surface(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .heightIn(min = 80.dp)
+                            .heightIn(
+                                min = 80.dp
+                            )
                     ) {
                         Column {
                             Row(
@@ -290,7 +317,9 @@ fun ScreenAbout() {
                                     .padding(
                                         horizontal = 24.dp
                                     )
-                                    .padding(top = 5.dp),
+                                    .padding(
+                                        top = 5.dp
+                                    ),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Image(
@@ -299,12 +328,19 @@ fun ScreenAbout() {
                                     ),
                                     contentDescription = null,
                                     modifier = Modifier
-                                        .size(width = 48.dp, height = 48.dp)
-                                        .clip(CircleShape)
+                                        .size(
+                                            width = 48.dp,
+                                            height = 48.dp
+                                        )
+                                        .clip(
+                                            CircleShape
+                                        )
                                 )
                                 Column(
                                     modifier = Modifier
-                                        .weight(weight = 1f)
+                                        .weight(
+                                            weight = 1f
+                                        )
                                         .padding(
                                             start = 16.dp,
                                             end = 5.dp
@@ -349,7 +385,9 @@ fun ScreenAbout() {
                     Surface(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .heightIn(min = 80.dp)
+                            .heightIn(
+                                min = 80.dp
+                            )
                     ) {
                         Column {
                             Row(
@@ -357,7 +395,9 @@ fun ScreenAbout() {
                                     .padding(
                                         horizontal = 24.dp
                                     )
-                                    .padding(top = 5.dp),
+                                    .padding(
+                                        top = 5.dp
+                                    ),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Image(
@@ -365,13 +405,16 @@ fun ScreenAbout() {
                                         id = R.drawable.ic_baseline_termplux_24
                                     ),
                                     contentDescription = null,
-                                    modifier = Modifier
-                                        .size(width = 48.dp, height = 48.dp)
-                                        .clip(CircleShape)
+                                    modifier = Modifier.size(
+                                        width = 48.dp,
+                                        height = 48.dp
+                                    )
                                 )
                                 Column(
                                     modifier = Modifier
-                                        .weight(weight = 1f)
+                                        .weight(
+                                            weight = 1f
+                                        )
                                         .padding(
                                             start = 16.dp,
                                             end = 5.dp
@@ -406,7 +449,6 @@ fun ScreenAbout() {
                     }
                 }
             }
-
         }
     }
 }
