@@ -1,11 +1,11 @@
 # TermPlux
-![TermPlux](https://raw.github.com/TermPlux/TermPlux/master/image/cover.jpg)
+![TermPlux-App](https://raw.github.com/TermPlux/TermPlux-App/master/cover.jpg)
 
 English | [简体中文](https://github.com/TermPlux/TermPlux-App/blob/master/README_CN.md)
 
 ## Description
 After several generations of changes, the brand new TermPlux has arrived!  
-[TermPlux](https://github.com/TermPlux/TermPlux) is committed to making [Termux](https://github.com/termux/termux-app) more useful and easy to use, improving the productivity of mobile devices.  
+[TermPlux-App](https://github.com/TermPlux/TermPlux-App) is committed to making [Termux](https://github.com/termux/termux-app) more useful and easy to use, improving the productivity of mobile devices.  
 
 ## Software Architecture
 TermPlux is written in Kotlin and developed using Android Studio.  
@@ -21,7 +21,7 @@ Download the [Release](https://github.com/TermPlux/TermPlux-App/releases) and in
 
 ## Instructions for use
 
-[Shizuku](https://github.com/RikkaApps/Shizuku) is required to use [TermPlux](https://github.com/TermPlux/TermPlux)  
+[Shizuku](https://github.com/RikkaApps/Shizuku) is required to use [TermPlux-App](https://github.com/TermPlux/TermPlux-App)  
 
 ## Participate in contribution
 Developer:  

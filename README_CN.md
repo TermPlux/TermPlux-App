@@ -1,11 +1,11 @@
 # TermPlux
-![TermPlux](https://raw.github.com/TermPlux/TermPlux/master/image/cover.jpg)
+![TermPlux-App](https://raw.github.com/TermPlux/TermPlux-App/master/cover.jpg)
 
 [English](https://github.com/TermPlux/TermPlux-App/blob/master/README.md) | 简体中文
 
 ## 介绍
 经过多代更迭，全新的TermPlux已经到来！  
-[TermPlux](https://github.com/TermPlux/TermPlux)致力于让[Termux](https://github.com/termux/termux-app)更加好用、易用，提高移动设备生产力。
+[TermPlux-App](https://github.com/TermPlux/TermPlux-App)致力于让[Termux](https://github.com/termux/termux-app)更加好用、易用，提高移动设备生产力。
 
 ## 软件架构
 TermPlux使用Kotlin语言编写，并且使用Android Studio进行开发。
@@ -21,7 +21,7 @@ TermPlux使用Kotlin语言编写，并且使用Android Studio进行开发。
 
 ## 使用说明
 
-使用[TermPlux](https://github.com/TermPlux/TermPlux)需要[Shizuku](https://github.com/RikkaApps/Shizuku)
+使用[TermPlux-App](https://github.com/TermPlux/TermPlux-App)需要[Shizuku](https://github.com/RikkaApps/Shizuku)
 
 ## 参与贡献
 开发人员:  
@@ -46,4 +46,4 @@ AndroidEasterEggs [https://github.com/hushenghao/AndroidEasterEggs](https://gith
 ComposeSettings [https://github.com/amitks2015/ComposeSettings](https://github.com/amitks2015/ComposeSettings)
 
 ## 开源协议
-此仓库遵循[Apache-2.0 License](https://github.com/TermPlux/TermPlux-App/blob/master/LICENSE)协议开源。
+此仓库遵循[GNU General Public License v3.0](https://github.com/TermPlux/TermPlux-App/blob/master/LICENSE)协议开源。
