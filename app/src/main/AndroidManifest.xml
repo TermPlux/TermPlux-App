@@ -34,7 +34,7 @@
             android:value="@string/fake_signature" />
         <meta-data
             android:name="android.app.lib_name"
-            android:value="" />
+            android:value="termplux" />
 
         <activity
             android:name=".activity.MainActivity"

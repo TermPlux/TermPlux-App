@@ -21,6 +21,31 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+
+        externalNativeBuild {
+            cmake {
+                abiFilters "armeabi-v7a", 'arm64-v8a', 'x86', 'x86_64'
+                cppFlags "-std=c++17"
+                arguments '-DANDROID_TOOLCHAIN=clang', '-DANDROID_STL=c++_static'
+            }
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            path file('src/main/cpp/CMakeLists.txt')
+            version '3.22.1'
+        }
+    }
+
+    buildFeatures {
+        compose true
+        viewBinding true
+    }
+
+    composeOptions {
+        // https://developer.android.google.cn/jetpack/androidx/releases/compose-compiler
+        kotlinCompilerExtensionVersion '1.4.0'
     }
 
     buildTypes {
@@ -37,23 +62,6 @@ android {
 
     kotlinOptions {
         jvmTarget = '1.8'
-    }
-
-    buildFeatures {
-        compose true
-        viewBinding true
-    }
-
-    composeOptions {
-        // https://developer.android.google.cn/jetpack/androidx/releases/compose-compiler
-        kotlinCompilerExtensionVersion '1.4.0'
-    }
-
-    externalNativeBuild {
-        cmake {
-            path file('src/main/cpp/CMakeLists.txt')
-            version '3.22.1'
-        }
     }
 
     packagingOptions {
@@ -74,7 +82,7 @@ dependencies {
     // 对话框组件库：https://github.com/kongzue/DialogX
     implementation 'com.kongzue.dialogx:DialogX:0.0.47'
     // 对话框组件库：https://github.com/kongzue/DialogX
-    implementation 'com.kongzue.dialogx.style:DialogXMaterialYouStyle:0.0.47'
+    implementation 'com.kongzue.dialogx.style:DialogXIOSStyle:0.0.47'
     // 协议对话框：https://github.com/PSDev/LicensesDialog
     implementation 'de.psdev.licensesdialog:licensesdialog:2.2.0'
     // Shizuku：https://github.com/RikkaApps/Shizuku-API

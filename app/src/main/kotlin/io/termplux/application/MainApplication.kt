@@ -14,7 +14,7 @@ import com.kongzue.baseframework.util.AppManager
 import com.kongzue.dialogx.DialogX
 import com.kongzue.dialogx.dialogs.MessageDialog
 import com.kongzue.dialogx.dialogs.PopTip
-import com.kongzue.dialogxmaterialyou.style.MaterialYouStyle
+import com.kongzue.dialogx.style.IOSStyle
 import org.lsposed.hiddenapibypass.HiddenApiBypass
 import java.io.File
 
@@ -30,10 +30,6 @@ class MainApplication : BaseApp<MainApplication>() {
 
     /** 首选项 */
     private lateinit var mSharedPreferences: SharedPreferences
-
-    init {
-        
-    }
 
     /**
      * 应用启动时执行
@@ -88,7 +84,7 @@ class MainApplication : BaseApp<MainApplication>() {
 
         // 初始化DialogX
         DialogX.init(this@MainApplication)
-        DialogX.globalStyle = MaterialYouStyle()
+        DialogX.globalStyle = IOSStyle()
         DialogX.globalTheme = DialogX.THEME.AUTO
         DialogX.autoShowInputKeyboard = true
         DialogX.onlyOnePopTip = false

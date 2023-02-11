@@ -335,7 +335,7 @@ class MainActivityUtils(
 
     companion object {
 
-        // Used to load the 'myapplication' library on application startup.
+        // Used to load the 'termplux' library on application startup.
         init {
             System.loadLibrary("termplux")
         }
