@@ -736,16 +736,11 @@ class MainActivity : BaseActivity(), Runnable {
     private fun initCompose() {
         mComposeView.apply {
             setContent {
-                // 获取系统是否为深色模式
-                val darkTheme = isSystemInDarkTheme()
-                // 获取上下文
-                val context = LocalContext.current
-                // 获取ComposeView
-                val view = LocalView.current
-                // 初始化系统界面控制工具
-                val systemUiController = rememberSystemUiController()
-                // 获取窗口
-                val window = (view.context as Activity).window
+                val darkTheme = isSystemInDarkTheme() // 获取系统是否为深色模式
+                val context = LocalContext.current // 获取上下文
+                val view = LocalView.current // 获取ComposeView
+                val systemUiController = rememberSystemUiController() // 初始化系统界面控制工具
+                val window = (view.context as BaseActivity).window // 获取窗口
                 // 颜色
                 val colorScheme = when {
                     mDynamicColor -> {

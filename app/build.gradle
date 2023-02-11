@@ -14,6 +14,9 @@ android {
         versionCode 1
         versionName "preview01"
 
+        renderscriptTargetApi 24
+        renderscriptSupportModeEnabled true
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary true
@@ -44,6 +47,13 @@ android {
     composeOptions {
         // https://developer.android.google.cn/jetpack/androidx/releases/compose-compiler
         kotlinCompilerExtensionVersion '1.4.0'
+    }
+
+    externalNativeBuild {
+        cmake {
+            path file('src/main/cpp/CMakeLists.txt')
+            version '3.22.1'
+        }
     }
 
     packagingOptions {

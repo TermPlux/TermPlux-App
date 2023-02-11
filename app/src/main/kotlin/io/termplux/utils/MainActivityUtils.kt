@@ -327,7 +327,18 @@ class MainActivityUtils(
         return bitmap
     }
 
+    /**
+     * A native method that is implemented by the 'myapplication' native library,
+     * which is packaged with this application.
+     */
+    external fun stringFromJNI(): String
+
     companion object {
+
+        // Used to load the 'myapplication' library on application startup.
+        init {
+            System.loadLibrary("termplux")
+        }
 
         /** 操作栏是否应该在[autoHideDelayMillis]毫秒后自动隐藏。*/
         const val autoHide = true
