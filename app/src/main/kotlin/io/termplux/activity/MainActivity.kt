@@ -2,17 +2,19 @@ package io.termplux.activity
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.ActivityManager
 import android.content.*
+import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
-import android.os.Build
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.net.Uri
+import android.os.*
+import android.provider.Settings
 import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
@@ -34,40 +36,49 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.setPadding
 import androidx.preference.PreferenceManager
+import com.blankj.utilcode.util.AppUtils
+import com.farmerbb.taskbar.lib.Taskbar
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.internal.EdgeToEdgeUtils
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.kongzue.baseframework.BaseActivity
+import com.kongzue.baseframework.BaseApp
 import com.kongzue.baseframework.interfaces.LifeCircleListener
 import com.kongzue.baseframework.util.AppManager
 import com.kongzue.baseframework.util.JumpParameter
+import com.kongzue.dialogx.dialogs.FullScreenDialog
 import com.kongzue.dialogx.dialogs.MessageDialog
 import com.kongzue.dialogx.dialogs.PopTip
+import com.kongzue.dialogx.interfaces.OnBindView
+import de.psdev.licensesdialog.LicensesDialog
+import de.psdev.licensesdialog.licenses.ApacheSoftwareLicense20
+import de.psdev.licensesdialog.licenses.GnuGeneralPublicLicense30
+import de.psdev.licensesdialog.licenses.MITLicense
+import de.psdev.licensesdialog.model.Notice
+import de.psdev.licensesdialog.model.Notices
+import io.termplux.BuildConfig
+import io.termplux.IUserService
 import io.termplux.R
 import io.termplux.services.MainService
+import io.termplux.services.UserService
+import io.termplux.ui.ActivityMain
 import io.termplux.ui.screen.*
-import io.termplux.utils.MainActivityUtils
+import io.termplux.ui.view.ScrollControllerWebView
 import io.termplux.values.Codes
+import io.termplux.values.Packages
 import kotlinx.coroutines.Runnable
 import rikka.shizuku.Shizuku
 import kotlin.math.hypot
+import kotlin.system.exitProcess
 
 
 class MainActivity : BaseActivity(), Runnable {
 
-    /** 获取上下文 */
-    private val mContent: BaseActivity = me
 
-    private val viewContent: Context = mContent
-    private val thisContent: Context = mContent
-
-    /** 工具包 */
-    private val mUtils: MainActivityUtils = MainActivityUtils(mContext = mContent)
-
-    /** 工具包伴生对象 */
-    private val mUtilsCompanion: MainActivityUtils.Companion = MainActivityUtils.Companion
 
     private lateinit var dialog: AlertDialog
 
@@ -85,7 +96,10 @@ class MainActivity : BaseActivity(), Runnable {
     private lateinit var mAppsTextView: AppCompatTextView
     private lateinit var mAppsLinearLayout: LinearLayoutCompat
 
+    private lateinit var webView: ScrollControllerWebView
 
+
+    private lateinit var userServices: IUserService
     private lateinit var mSharedPreferences: SharedPreferences
     private lateinit var mIntentFilter: IntentFilter
     private lateinit var mAppsAdapter: BaseAdapter
@@ -93,15 +107,12 @@ class MainActivity : BaseActivity(), Runnable {
     private lateinit var mBroadcastReceiver: BroadcastReceiver
 
     private val binderReceivedListener = Shizuku.OnBinderReceivedListener {
-        if (Shizuku.isPreV11()) {
+        // shizuku进程已激活
 
-        } else {
-
-        }
     }
 
     private val binderDeadListener = Shizuku.OnBinderDeadListener {
-
+        // shizuku进程被停止
     }
 
     //shizuku监听授权结果
@@ -127,8 +138,8 @@ class MainActivity : BaseActivity(), Runnable {
 
     private val delayHideTouchListener = View.OnTouchListener { view, motionEvent ->
         when (motionEvent.action) {
-            MotionEvent.ACTION_DOWN -> if (mUtilsCompanion.autoHide) {
-                delayedHide(mUtilsCompanion.autoHideDelayMillis)
+            MotionEvent.ACTION_DOWN -> if (autoHide) {
+                delayedHide(autoHideDelayMillis)
             }
             MotionEvent.ACTION_UP -> view.performClick()
             else -> {
@@ -191,7 +202,7 @@ class MainActivity : BaseActivity(), Runnable {
     /**
      * 在Activity启动时最先执行，用于初始化空间和设置布局
      */
-    @SuppressLint("InflateParams")
+    @SuppressLint("InflateParams", "SetJavaScriptEnabled")
     override fun resetContentView(): View {
         super.resetContentView()
         // 屏闪动画
@@ -304,7 +315,18 @@ class MainActivity : BaseActivity(), Runnable {
         }
 
 
-        mUtils.initView()
+        webView = ScrollControllerWebView(
+            this@MainActivity
+        ).apply {
+            settings.javaScriptEnabled = true
+            settings.loadWithOverviewMode = true
+            settings.useWideViewPort = true
+            settings.setSupportZoom(false)
+            settings.allowFileAccess = true
+            settings.javaScriptCanOpenWindowsAutomatically = true
+            settings.loadsImagesAutomatically = true
+            settings.defaultTextEncodingName = "utf-8"
+        }
 
         // 返回应用主界面布局
         return LinearLayoutCompat(
@@ -386,14 +408,14 @@ class MainActivity : BaseActivity(), Runnable {
                 endRadius
             )
             .setDuration(
-                mUtilsCompanion.splashPart2AnimatorMillis.toLong()
+                splashPart2AnimatorMillis.toLong()
             )
         mSplashLogo.animate()
             .alpha(0f)
             .scaleX(1.3f)
             .scaleY(1.3f)
             .setDuration(
-                mUtilsCompanion.splashPart1AnimatorMillis.toLong()
+                splashPart1AnimatorMillis.toLong()
             )
             .withEndAction {
                 mSplashLogo.visibility = View.GONE
@@ -436,8 +458,6 @@ class MainActivity : BaseActivity(), Runnable {
                     Shizuku.removeBinderReceivedListener(binderReceivedListener)
                     Shizuku.removeBinderDeadListener(binderDeadListener)
                     Shizuku.removeRequestPermissionResultListener(requestPermissionResultListener)
-//                    unbindService(mUtils.mConnection)
-//                    stopService(Intent(this@MainActivity, MainService().javaClass))
                 }
             }
         )
@@ -535,17 +555,17 @@ class MainActivity : BaseActivity(), Runnable {
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this@MainActivity)
         // 获取用户协议状态true为已签署，false为未签署
         mLicence = mSharedPreferences.getBoolean(
-            mUtilsCompanion.licence,
+            licence,
             true
         )
         // 获取是否启用动态颜色
         mDynamicColor = mSharedPreferences.getBoolean(
-            mUtilsCompanion.dynamicColor,
+            dynamicColor,
             true
         ) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
         // 获取是否使用完整桌面模式
         mLibTaskBar = mSharedPreferences.getBoolean(
-            mUtilsCompanion.libTaskBar,
+            libTaskBar,
             true
         ) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
     }
@@ -771,7 +791,7 @@ class MainActivity : BaseActivity(), Runnable {
                     colorScheme = colorScheme,
                     typography = typography,
                 ) {
-                    mUtils.Content(
+                    Content(
                         gridView = mAppsGridView,
                         appsList = mAppsList,
                         dynamicColorChecked = mDynamicColor,
@@ -780,6 +800,158 @@ class MainActivity : BaseActivity(), Runnable {
                 }
             }
         }
+    }
+
+    @Composable
+    fun Content(
+        gridView: GridView,
+        appsList: List<ResolveInfo>,
+        dynamicColorChecked: Boolean,
+        taskBarChecked: Boolean
+    ) {
+        ActivityMain(
+            androidVersion = getAndroidVersion(),
+            shizukuVersion = getShizukuVersion(),
+            gridView = gridView,
+            appsList = appsList,
+            isSystemApps = { packageName ->
+                isSystemApplication(
+                    packageName = packageName
+                )
+            },
+            startApp = { packageName, className ->
+                startApplication(
+                    packageName = packageName,
+                    className = className
+                )
+            },
+            infoApp = { packageName ->
+                infoApplication(
+                    packageName = packageName
+                )
+            },
+            deleteApp = { packageName ->
+                deleteApplication(
+                    packageName = packageName
+                )
+            },
+            targetAppVersionName = "",
+
+            dynamicColorChecked = dynamicColorChecked,
+            taskBarChecked = taskBarChecked,
+            onEasterEgg = {
+                easterEgg()
+            },
+            onNotice = {
+                licenseDialog()
+            },
+            onSource = {
+                fullScreenWebView("https://github.com/TermPlux/TermPlux-App")
+            },
+            onDevGitHub = {
+                fullScreenWebView("https://github.com/wyq0918dev")
+            },
+            onDevTwitter = {
+                fullScreenWebView("https://twitter.com/wyq0918dev")
+            },
+            onTeamGitHub = {
+                fullScreenWebView("https://github.com/TermPlux")
+            },
+        )
+    }
+
+    private fun fullScreenWebView(url: String) {
+        FullScreenDialog.show(
+            object : OnBindView<FullScreenDialog>(webView) {
+                override fun onBind(dialog: FullScreenDialog?, v: View?) {
+                    webView.loadUrl(url)
+                }
+            }
+        )
+    }
+
+    private fun licenseDialog() {
+        val notices = Notices()
+        notices.addNotice(Notice("AndroidUtilCode", "", "Copyright (c) Blankj", ApacheSoftwareLicense20()))
+        notices.addNotice(Notice("LibTaskBar", "", "Copyright (c) farmerbb", ApacheSoftwareLicense20()))
+        notices.addNotice(Notice("BaseFramework", "", "Copyright BaseFramework", ApacheSoftwareLicense20()))
+        notices.addNotice(Notice("DialogX", "", "Copyright Kongzue DialogX", ApacheSoftwareLicense20()))
+        notices.addNotice(Notice("AndroidHiddenApiBypass", "", "Copyright 2021-2023 LSPosed", ApacheSoftwareLicense20()))
+        notices.addNotice(Notice("FakeStore", "", "Copyright (c) 2013-2016 microG Project Team", ApacheSoftwareLicense20()))
+        notices.addNotice(Notice("Shizuku-API", "", "Copyright (c) RikkaApps", MITLicense()))
+        notices.addNotice(Notice("Termux App", "", "Copyright (c) Termux", GnuGeneralPublicLicense30()))
+        notices.addNotice(Notice("UserLAnd", "", "Copyright (c) CypherpunkArmory", ApacheSoftwareLicense20()))
+        LicensesDialog.Builder(this@MainActivity)
+            .setNotices(notices)
+            .setIncludeOwnLicense(true)
+            .build()
+            .show()
+    }
+
+    private fun startApplication(
+        packageName: String,
+        className: String
+    ) {
+        try {
+            // 启动目标应用
+            val intent = Intent()
+            intent.component = ComponentName(packageName, className)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
+        } catch (e: Exception) {
+            // 如果已卸载但未刷新跳转应用市场防止程序崩溃
+            openApplicationMarket(packageName = packageName)
+        }
+    }
+
+    private fun infoApplication(packageName: String) {
+        try {
+            val intent = Intent()
+            intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+            intent.data = Uri.parse("package:$packageName")
+            startActivity(intent)
+        } catch (e: Exception) {
+            openApplicationMarket(packageName = packageName)
+        }
+    }
+
+    private fun deleteApplication(packageName: String) {
+        try {
+            val intent = Intent(Intent.ACTION_DELETE)
+            intent.data = Uri.parse("package:$packageName")
+            startActivity(intent)
+        } catch (e: Exception) {
+            openApplicationMarket(packageName = packageName)
+        }
+    }
+
+    private fun openApplicationMarket(packageName: String) {
+        val str = "market://details?id=$packageName"
+        val localIntent = Intent(Intent.ACTION_VIEW)
+        localIntent.data = Uri.parse(str)
+        startActivity(localIntent)
+    }
+
+    /**
+     * 检测应用是否为系统应用
+     */
+    private fun isSystemApplication(packageName: String): Boolean {
+        try {
+            val packageInfo = packageManager.getPackageInfo(
+                packageName,
+                PackageManager.GET_CONFIGURATIONS
+            )
+            if (packageInfo.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0) {
+                return true
+            }
+        } catch (e: PackageManager.NameNotFoundException) {
+            e.printStackTrace()
+        }
+        return false
+    }
+
+    private fun easterEgg() {
+
     }
 
 
@@ -801,7 +973,7 @@ class MainActivity : BaseActivity(), Runnable {
     private fun initServices() {
         val intent = Intent(this@MainActivity, MainService().javaClass)
         startService(intent)
-        bindService(intent, mUtils.mConnection, Context.BIND_AUTO_CREATE)
+        bindService(intent, connection, Context.BIND_AUTO_CREATE)
     }
 
 
@@ -822,9 +994,7 @@ class MainActivity : BaseActivity(), Runnable {
                     }
                     .setCancelButton("拒绝") { _, _ ->
                         // 结束应用进程
-                        mUtils.killAppProcess(
-                            context = this@MainActivity
-                        )
+                        killAppProcess()
                         false
                     }
             }
@@ -847,7 +1017,7 @@ class MainActivity : BaseActivity(), Runnable {
         mVisible = true
         mHandler.postDelayed(
             showPart2Runnable,
-            mUtilsCompanion.uiAnimatorDelay.toLong()
+            uiAnimatorDelay.toLong()
         )
     }
 
@@ -860,5 +1030,138 @@ class MainActivity : BaseActivity(), Runnable {
     private fun delayedHide(delayMillis: Int) {
         mHandler.removeCallbacks(hideRunnable)
         mHandler.postDelayed(hideRunnable, delayMillis.toLong())
+    }
+
+    // 服务绑定的监听器
+    private val connection: ServiceConnection = object : ServiceConnection {
+        // 后台服务绑定成功后执行
+        override fun onServiceConnected(
+            className: ComponentName,
+            service: IBinder
+        ) {
+            PopTip.show("服务绑定成功")
+        }
+
+
+        override fun onServiceDisconnected(arg0: ComponentName) {
+
+        }
+    }
+
+
+
+    private val userServiceConnection: ServiceConnection = object : ServiceConnection {
+        override fun onServiceConnected(componentName: ComponentName, binder: IBinder?) {
+            if (binder != null && binder.pingBinder()){
+                userServices = IUserService.Stub.asInterface(binder)
+            }
+        }
+
+        override fun onServiceDisconnected(componentName: ComponentName) {
+
+        }
+    }
+
+    private val userServiceArgs = Shizuku.UserServiceArgs(
+        ComponentName(
+            BuildConfig.APPLICATION_ID,
+            UserService().javaClass.name
+        )
+    )
+        .daemon(false)
+        .processNameSuffix("service")
+        .debuggable(BuildConfig.DEBUG)
+        .version(BuildConfig.VERSION_CODE)
+
+
+    private fun getAndroidVersion(): String {
+        return when (Build.VERSION.SDK_INT) {
+            Build.VERSION_CODES.N -> "Android Nougat 7.0"
+            Build.VERSION_CODES.N_MR1 -> "Android Nougat 7.1"
+            Build.VERSION_CODES.O -> "Android Oreo 8.0"
+            Build.VERSION_CODES.O_MR1 -> "Android Oreo 8.1"
+            Build.VERSION_CODES.P -> "Android Pie 9.0"
+            Build.VERSION_CODES.Q -> "Android Queen Cake 10.0"
+            Build.VERSION_CODES.R -> "Android Red Velvet Cake 11.0"
+            Build.VERSION_CODES.S -> "Android Snow Cone 12.0"
+            Build.VERSION_CODES.S_V2 -> "Android Snow Cone V2 12.1"
+            Build.VERSION_CODES.TIRAMISU -> "Android Tiramisu 13.0"
+            34 -> "Android Upside Down Cake 14.0"
+            else -> "unknown"
+        }
+    }
+
+    // 检查设备是否支持谷歌基础服务
+    fun checkGooglePlayServices(
+        onNoGms: () -> Unit
+    ) {
+        val code =
+            GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this@MainActivity)
+        if (code != ConnectionResult.SUCCESS) {
+            if (!AppUtils.isAppInstalled(Packages.gms)) {
+                GoogleApiAvailability.getInstance()
+                    .makeGooglePlayServicesAvailable(this@MainActivity)
+                if (GoogleApiAvailability.getInstance().isUserResolvableError(code)) {
+                    onNoGms()
+                }
+            }
+        }
+    }
+
+
+
+    private fun getShizukuVersion(): String {
+        return ""
+    }
+
+    // 打开任务栏设置
+    private fun taskbarSettings() {
+        Taskbar.openSettings(
+            this@MainActivity,
+            getString(R.string.taskbar_title),
+            R.style.Theme_TermPlux_ActionBar
+        )
+    }
+
+    // 选择默认主屏幕应用
+    private fun defaultLauncher() {
+        val intent = Intent(Settings.ACTION_HOME_SETTINGS)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
+    }
+
+    private fun killAppProcess() {
+        val mActivityManager = getSystemService(BaseApp.ACTIVITY_SERVICE) as ActivityManager
+        val mList = mActivityManager.runningAppProcesses
+        for (runningAppProcessInfo in mList) {
+            if (runningAppProcessInfo.pid != Process.myPid()) {
+                Process.killProcess(runningAppProcessInfo.pid)
+            }
+        }
+        Process.killProcess(Process.myPid())
+        exitProcess(0)
+    }
+
+    companion object {
+
+        /** 操作栏是否应该在[autoHideDelayMillis]毫秒后自动隐藏。*/
+        const val autoHide = true
+
+        /** 如果设置了[autoHide]，则在用户交互后隐藏操作栏之前等待的毫秒数。*/
+        const val autoHideDelayMillis = 3000
+
+        /** 一些较老的设备需要在小部件更新和状态和导航栏更改之间有一个小的延迟。*/
+        const val uiAnimatorDelay = 300
+
+        /** 开屏图标动画时长 */
+        const val splashPart1AnimatorMillis = 600
+        const val splashPart2AnimatorMillis = 800
+
+        const val none: Int = 0
+        const val shizuku: Int = 1
+
+        const val licence: String = "licence"
+        const val dynamicColor: String = "dynamic_colors"
+        const val libTaskBar: String = "lib_task_bar"
     }
 }
