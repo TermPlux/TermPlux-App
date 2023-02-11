@@ -62,29 +62,6 @@
                 <action android:name="com.android.vending.billing.InAppBillingService.BIND" />
             </intent-filter>
         </service>
-        <service
-            android:name=".services.LiveWallpaper"
-            android:enabled="true"
-            android:exported="true"
-            android:permission="android.permission.BIND_WALLPAPER">
-            <meta-data
-                android:name="android.service.wallpaper"
-                android:resource="@xml/wallpaper_config" />
-
-            <intent-filter>
-                <action android:name="android.service.wallpaper.WallpaperService" />
-            </intent-filter>
-        </service>
-        <service
-            android:name=".services.QuickSettings"
-            android:exported="true"
-            android:icon="@drawable/baseline_terminal_24"
-            android:label="@string/app_name"
-            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
-            <intent-filter>
-                <action android:name="android.service.quicksettings.action.QS_TILE" />
-            </intent-filter>
-        </service>
 
         <provider
             android:name=".provider.MainProvider"

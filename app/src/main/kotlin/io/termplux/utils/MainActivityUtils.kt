@@ -100,6 +100,9 @@ class MainActivityUtils(
 
             dynamicColorChecked = dynamicColorChecked,
             taskBarChecked = taskBarChecked,
+            onEasterEgg = {
+                easterEgg()
+            },
             onNotice = {
                 licenseDialog()
             },
@@ -325,18 +328,6 @@ class MainActivityUtils(
     }
 
     companion object {
-        private val code = Codes
-
-        const val none: Int = code.modeNone
-        const val shizuku: Int = code.modeShizuku
-
-        const val licence: String = "licence"
-        const val dynamicColor: String = "dynamic_colors"
-        const val libTaskBar: String = "lib_task_bar"
-
-        /** 开屏图标动画时长 */
-        const val splashPart1AnimatorMillis = 600
-        const val splashPart2AnimatorMillis = 800
 
         /** 操作栏是否应该在[autoHideDelayMillis]毫秒后自动隐藏。*/
         const val autoHide = true
@@ -346,5 +337,16 @@ class MainActivityUtils(
 
         /** 一些较老的设备需要在小部件更新和状态和导航栏更改之间有一个小的延迟。*/
         const val uiAnimatorDelay = 300
+
+        /** 开屏图标动画时长 */
+        const val splashPart1AnimatorMillis = 600
+        const val splashPart2AnimatorMillis = 800
+
+        const val none: Int = 0
+        const val shizuku: Int = 1
+
+        const val licence: String = "licence"
+        const val dynamicColor: String = "dynamic_colors"
+        const val libTaskBar: String = "lib_task_bar"
     }
 }

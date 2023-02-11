@@ -31,6 +31,7 @@ fun ScreenAbout(
     scope: CoroutineScope,
     snackBarHostState: SnackbarHostState,
     infoApp: () -> Unit,
+    onEasterEgg: () -> Unit,
     onNotice: () -> Unit,
     onSource: () -> Unit,
     onDevGitHub: () -> Unit,
@@ -174,7 +175,7 @@ fun ScreenAbout(
                                             position.value ++
                                         }
                                         else -> {
-                                            PopTip.show("6")
+                                            onEasterEgg()
                                             position.value = 0
                                         }
                                     }
@@ -512,6 +513,7 @@ fun ScreenAboutPreview() {
         scope = rememberCoroutineScope(),
         snackBarHostState = SnackbarHostState(),
         infoApp = {},
+        onEasterEgg = {},
         onNotice = {},
         onSource = {},
         onDevGitHub = {},

@@ -41,6 +41,7 @@ fun ActivityMain(
 
     dynamicColorChecked: Boolean,
     taskBarChecked: Boolean,
+    onEasterEgg: () -> Unit,
     onNotice: () -> Unit,
     onSource: () -> Unit,
     onDevGitHub: () -> Unit,
@@ -304,6 +305,7 @@ fun ActivityMain(
                     infoApp = {
                         infoApp(BuildConfig.APPLICATION_ID)
                     },
+                    onEasterEgg = onEasterEgg,
                     onNotice = onNotice,
                     onSource = onSource,
                     onDevGitHub = onDevGitHub,
@@ -335,6 +337,7 @@ private fun ActivityMainPreview() {
 
         dynamicColorChecked = true,
         taskBarChecked = true,
+        onEasterEgg = {},
         onNotice = {},
         onSource = {},
         onDevGitHub = {},
