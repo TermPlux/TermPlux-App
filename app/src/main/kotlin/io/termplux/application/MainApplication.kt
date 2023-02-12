@@ -14,7 +14,7 @@ import com.kongzue.baseframework.util.AppManager
 import com.kongzue.dialogx.DialogX
 import com.kongzue.dialogx.dialogs.MessageDialog
 import com.kongzue.dialogx.dialogs.PopTip
-import com.kongzue.dialogx.style.IOSStyle
+import com.kongzue.dialogxmaterialyou.style.MaterialYouStyle
 import org.lsposed.hiddenapibypass.HiddenApiBypass
 import java.io.File
 
@@ -84,7 +84,7 @@ class MainApplication : BaseApp<MainApplication>() {
 
         // 初始化DialogX
         DialogX.init(this@MainApplication)
-        DialogX.globalStyle = IOSStyle()
+        DialogX.globalStyle = MaterialYouStyle()
         DialogX.globalTheme = DialogX.THEME.AUTO
         DialogX.autoShowInputKeyboard = true
         DialogX.onlyOnePopTip = false

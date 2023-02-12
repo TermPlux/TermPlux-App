@@ -14,9 +14,6 @@ android {
         versionCode 1
         versionName "preview01"
 
-        renderscriptTargetApi 24
-        renderscriptSupportModeEnabled true
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary true
@@ -82,7 +79,7 @@ dependencies {
     // 对话框组件库：https://github.com/kongzue/DialogX
     implementation 'com.kongzue.dialogx:DialogX:0.0.47'
     // 对话框组件库：https://github.com/kongzue/DialogX
-    implementation 'com.kongzue.dialogx.style:DialogXIOSStyle:0.0.47'
+    implementation 'com.kongzue.dialogx.style:DialogXMaterialYouStyle:0.0.47'
     // 协议对话框：https://github.com/PSDev/LicensesDialog
     implementation 'de.psdev.licensesdialog:licensesdialog:2.2.0'
     // Shizuku：https://github.com/RikkaApps/Shizuku-API
