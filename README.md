@@ -38,7 +38,7 @@ LicensesDialog [https://github.com/PSDev/LicensesDialog](https://github.com/PSDe
 Shizuku-API [https://github.com/RikkaApps/Shizuku-API](https://github.com/RikkaApps/Shizuku-API)  
 AndroidHiddenApiBypass [https://github.com/LSPosed/AndroidHiddenApiBypass](https://github.com/LSPosed/AndroidHiddenApiBypass)  
 
-Portions of code are referenced from the following projects:
+Portions of code are referenced from the following projects:  
 DialogX [https://github.com/kongzue/DialogX](https://github.com/kongzue/DialogX)  
 FakeStore [https://github.com/microg/FakeStore](https://github.com/microg/FakeStore)  
 UserLAnd [https://github.com/CypherpunkArmory/UserLAnd](https://github.com/CypherpunkArmory/UserLAnd)  
