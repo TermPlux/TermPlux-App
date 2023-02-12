@@ -78,13 +78,12 @@ import kotlin.system.exitProcess
 
 class MainActivity : BaseActivity(), Runnable {
 
-    private val mContext: BaseActivity = me
+    private val mMainContext: BaseActivity = me
 
-    private val viewContext: Context = mContext
-    private val thisContext: Context = mContext
+    private lateinit var mViewContext: Context
+    private lateinit var mThisContext: Context
 
-    private val mUtilsCompanion: MainActivityUtils.Companion = MainActivityUtils.Companion
-    private val mUtils : MainActivityUtils = mUtilsCompanion.newInstance()(mContext)
+    private lateinit var mUtilsCompanion: MainActivityUtils.Companion
 
     private lateinit var dialog: AlertDialog
 
@@ -206,122 +205,12 @@ class MainActivity : BaseActivity(), Runnable {
     /**
      * 在Activity启动时最先执行，用于初始化空间和设置布局
      */
-    @SuppressLint("InflateParams", "SetJavaScriptEnabled")
     override fun resetContentView(): View {
         super.resetContentView()
-        // 屏闪动画
-        mSplashLogo = AppCompatImageView(
-            this@MainActivity
-        ).apply {
-            scaleType = ImageView.ScaleType.CENTER
-            setImageDrawable(
-                ContextCompat.getDrawable(
-                    this@MainActivity,
-                    R.drawable.custom_termplux_24
-                )
-            )
-        }
-
-        // 进度条
-        mTipProgressBar = ProgressBar(
-            this@MainActivity
-        )
-
-        // 文本控件
-        mTipTextView = AppCompatTextView(
-            this@MainActivity
-        ).apply {
-            gravity = Gravity.CENTER
-            text = "应用正在启动请稍后"
-        }
-
-        // 对话框布局
-        mTipDialogLayout = LinearLayoutCompat(
-            this@MainActivity
-        ).apply {
-            orientation = LinearLayoutCompat.HORIZONTAL
-            setPadding(
-                resources.getDimension(
-                    R.dimen.tip_padding
-                ).toInt()
-            )
-            addView(
-                mTipProgressBar,
-                ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-                )
-            )
-            addView(
-                mTipTextView,
-                ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT
-                )
-            )
-        }
-
-        // 应用栏槽位
-        mAppBarLayout = AppBarLayout(
-            this@MainActivity
-        ).apply {
-            fitsSystemWindows = true
-            isLiftOnScroll = true
-        }
-
-        // 工具栏
-        mToolbar = MaterialToolbar(
-            this@MainActivity
-        ).apply {
-            navigationIcon = ContextCompat.getDrawable(
-                this@MainActivity,
-                R.drawable.baseline_arrow_back_24
-            )
-        }
-
-        // 主界面
-        mComposeView = ComposeView(
-            context = this@MainActivity
-        ).apply {
-            setOnTouchListener(delayHideTouchListener)
-            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-        }
-
-        // 应用列表
-        mAppsGridView = GridView(this@MainActivity).apply {
-            numColumns = GridView.AUTO_FIT
-            columnWidth = resources.getDimension(R.dimen.app_width).toInt()
-        }
-
-        // 应用图标
-        mAppsImageView = AppCompatImageView(
-            this@MainActivity
-        ).apply {
-            setPadding(resources.getDimension(R.dimen.icon_padding).toInt())
-        }
-
-        // 应用名称
-        mAppsTextView = AppCompatTextView(
-            this@MainActivity
-        ).apply {
-            gravity = Gravity.CENTER
-        }
-
-        // 应用item布局
-        mAppsLinearLayout = LinearLayoutCompat(
-            this@MainActivity
-        ).apply {
-            layoutParams = LinearLayoutCompat.LayoutParams(
-                resources.getDimension(R.dimen.app_width).toInt(),
-                resources.getDimension(R.dimen.app_height).toInt()
-            )
-            orientation = LinearLayoutCompat.VERTICAL
-        }
-
-        mUtilsCompanion.initView()()
-
-
-
+        // 加载参数
+        bootloader()
+        // 初始化布局控件
+        initUiView()
         // 返回应用主界面布局
         return LinearLayoutCompat(
             this@MainActivity
@@ -353,10 +242,9 @@ class MainActivity : BaseActivity(), Runnable {
     }
 
     override fun initViews() {
+        // 添加屏闪动画控件
+        initUiViewPart2()
 
-        initStatus()
-
-        initSetContentViewPart2()
 
 
         val builder = AlertDialog.Builder(this@MainActivity)
@@ -423,6 +311,7 @@ class MainActivity : BaseActivity(), Runnable {
 
     override fun initDatas(parameter: JumpParameter?) {
 
+
     }
 
     override fun setEvents() {
@@ -432,7 +321,6 @@ class MainActivity : BaseActivity(), Runnable {
             object : LifeCircleListener() {
                 override fun onCreate() {
                     super.onCreate()
-                    mUtils
                     Shizuku.addBinderReceivedListenerSticky(binderReceivedListener)
                     Shizuku.addBinderDeadListener(binderDeadListener)
                     Shizuku.addRequestPermissionResultListener(requestPermissionResultListener)
@@ -502,12 +390,137 @@ class MainActivity : BaseActivity(), Runnable {
      ***********************************************************************************************
      */
 
-    private fun initStatus(){
-        // 操作栏状态
+    /**
+     * 在应用启动时最先加载，
+     * 用于加载一些必要参数。
+     */
+    private fun bootloader() {
+        // 初始化用于用户界面的上下文
+        mViewContext = mMainContext
+        // 初始化用于逻辑代码的上下文
+        mThisContext = mMainContext
+        // 初始化工具包伴生对象
+        mUtilsCompanion = MainActivityUtils.Companion
+        // 创建工具包实例
+        mUtilsCompanion.newInstance()(mMainContext)
+        // 更新操作栏状态
         mVisible = true
     }
 
-    private fun initSetContentViewPart2(){
+    private fun initUiView(){
+        // 加载屏闪动画ImageView
+        mSplashLogo = AppCompatImageView(
+            mViewContext
+        ).apply {
+            scaleType = ImageView.ScaleType.CENTER
+            setImageDrawable(
+                ContextCompat.getDrawable(
+                    this@MainActivity,
+                    R.drawable.custom_termplux_24
+                )
+            )
+        }
+
+        // 进度条
+        mTipProgressBar = ProgressBar(
+            mViewContext
+        )
+
+        // 文本控件
+        mTipTextView = AppCompatTextView(
+            mViewContext
+        ).apply {
+            gravity = Gravity.CENTER
+            text = "应用正在启动请稍后"
+        }
+
+        // 对话框布局
+        mTipDialogLayout = LinearLayoutCompat(
+            mViewContext
+        ).apply {
+            orientation = LinearLayoutCompat.HORIZONTAL
+            setPadding(
+                resources.getDimension(
+                    R.dimen.tip_padding
+                ).toInt()
+            )
+            addView(
+                mTipProgressBar,
+                ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                )
+            )
+            addView(
+                mTipTextView,
+                ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+                )
+            )
+        }
+
+        // 应用栏槽位
+        mAppBarLayout = AppBarLayout(
+            mViewContext
+        ).apply {
+            fitsSystemWindows = true
+            isLiftOnScroll = true
+        }
+
+        // 工具栏
+        mToolbar = MaterialToolbar(
+            mViewContext
+        ).apply {
+            navigationIcon = ContextCompat.getDrawable(
+                this@MainActivity,
+                R.drawable.baseline_arrow_back_24
+            )
+        }
+
+        // Compose主界面
+        mComposeView = ComposeView(
+            context = mViewContext
+        ).apply {
+            setOnTouchListener(delayHideTouchListener)
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+        }
+
+        // 应用列表
+        mAppsGridView = GridView(
+            mViewContext
+        ).apply {
+            numColumns = GridView.AUTO_FIT
+            columnWidth = resources.getDimension(R.dimen.app_width).toInt()
+        }
+
+        // 应用图标
+        mAppsImageView = AppCompatImageView(
+            mViewContext
+        ).apply {
+            setPadding(resources.getDimension(R.dimen.icon_padding).toInt())
+        }
+
+        // 应用名称
+        mAppsTextView = AppCompatTextView(
+            mViewContext
+        ).apply {
+            gravity = Gravity.CENTER
+        }
+
+        // 应用item布局
+        mAppsLinearLayout = LinearLayoutCompat(
+            mViewContext
+        ).apply {
+            layoutParams = LinearLayoutCompat.LayoutParams(
+                resources.getDimension(R.dimen.app_width).toInt(),
+                resources.getDimension(R.dimen.app_height).toInt()
+            )
+            orientation = LinearLayoutCompat.VERTICAL
+        }
+    }
+
+    private fun initUiViewPart2(){
         // 布局参数
         val layoutParams = FrameLayout.LayoutParams(
             FrameLayout.LayoutParams.WRAP_CONTENT,
@@ -589,7 +602,7 @@ class MainActivity : BaseActivity(), Runnable {
 
             override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
                 return LinearLayoutCompat(
-                    this@MainActivity
+                    mViewContext
                 ).apply {
                     layoutParams = LinearLayoutCompat.LayoutParams(
                         resources.getDimension(R.dimen.app_width).toInt(),
@@ -598,7 +611,7 @@ class MainActivity : BaseActivity(), Runnable {
                     orientation = LinearLayoutCompat.VERTICAL
                     addView(
                         AppCompatImageView(
-                            this@MainActivity
+                            mViewContext
                         ).apply {
                             setImageDrawable(
                                 mAppsList[position].activityInfo.loadIcon(
@@ -616,7 +629,7 @@ class MainActivity : BaseActivity(), Runnable {
                     )
                     addView(
                         AppCompatTextView(
-                            this@MainActivity
+                            mViewContext
                         ).apply {
                             gravity = Gravity.CENTER
                             text = mAppsList[position].loadLabel(packageManager)
@@ -734,7 +747,7 @@ class MainActivity : BaseActivity(), Runnable {
     private fun initUi() {
         // 设置工具栏前景色
         mAppBarLayout.statusBarForeground =
-            MaterialShapeDrawable.createWithElevationOverlay(this@MainActivity)
+            MaterialShapeDrawable.createWithElevationOverlay(mThisContext)
         // 工具栏
         mToolbar.setNavigationOnClickListener {
 
@@ -787,7 +800,11 @@ class MainActivity : BaseActivity(), Runnable {
                     typography = typography,
                 ) {
                     mUtilsCompanion.content()(
-                        mAppsGridView, mAppsList, mDynamicColor, mLibTaskBar
+                        mMainContext,
+                        mAppsGridView,
+                        mAppsList,
+                        mDynamicColor,
+                        mLibTaskBar
                     )
                 }
             }

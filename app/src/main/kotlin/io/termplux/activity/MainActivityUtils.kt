@@ -10,9 +10,11 @@ import android.content.pm.ResolveInfo
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
+import android.util.Log
 import android.view.View
 import android.widget.GridView
 import androidx.compose.runtime.Composable
+import com.blankj.utilcode.util.Utils
 import com.farmerbb.taskbar.lib.Taskbar
 import com.kongzue.baseframework.BaseActivity
 import com.kongzue.dialogx.dialogs.FullScreenDialog
@@ -27,31 +29,14 @@ import io.termplux.R
 import io.termplux.ui.ActivityMain
 import io.termplux.ui.view.ScrollControllerWebView
 
-class MainActivityUtils() {
+open class MainActivityUtils(context: BaseActivity) {
 
     /** 上下文 */
-    private lateinit var mContext: Context
+    private var mContext: Context
 
-    private lateinit var mSCWebView: ScrollControllerWebView
-
-    constructor(context: BaseActivity) : this() {
+    init {
+        // 加载上下文
         mContext = context
-    }
-
-    @SuppressLint("SetJavaScriptEnabled")
-    private fun initView(){
-        mSCWebView = ScrollControllerWebView(
-            mContext
-        ).apply {
-            settings.javaScriptEnabled = true
-            settings.loadWithOverviewMode = true
-            settings.useWideViewPort = true
-            settings.setSupportZoom(false)
-            settings.allowFileAccess = true
-            settings.javaScriptCanOpenWindowsAutomatically = true
-            settings.loadsImagesAutomatically = true
-            settings.defaultTextEncodingName = "utf-8"
-        }
     }
 
     @Composable
@@ -113,10 +98,21 @@ class MainActivityUtils() {
     }
 
     private fun fullScreenWebView(url: String) {
+        val webView = ScrollControllerWebView(mContext)
         FullScreenDialog.show(
-            object : OnBindView<FullScreenDialog>(mSCWebView) {
+            object : OnBindView<FullScreenDialog>(webView) {
+
+                @SuppressLint("SetJavaScriptEnabled")
                 override fun onBind(dialog: FullScreenDialog?, v: View?) {
-                    mSCWebView.loadUrl(url)
+                    webView.settings.javaScriptEnabled = true
+                    webView.settings.loadWithOverviewMode = true
+                    webView.settings.useWideViewPort = true
+                    webView.settings.setSupportZoom(false)
+                    webView.settings.allowFileAccess = true
+                    webView.settings.javaScriptCanOpenWindowsAutomatically = true
+                    webView.settings.loadsImagesAutomatically = true
+                    webView.settings.defaultTextEncodingName = "utf-8"
+                    webView.loadUrl(url)
                 }
             }
         )
@@ -124,15 +120,71 @@ class MainActivityUtils() {
 
     private fun licenseDialog() {
         val notices = Notices()
-        notices.addNotice(Notice("AndroidUtilCode", "", "Copyright (c) Blankj", ApacheSoftwareLicense20()))
-        notices.addNotice(Notice("LibTaskBar", "", "Copyright (c) farmerbb", ApacheSoftwareLicense20()))
-        notices.addNotice(Notice("BaseFramework", "", "Copyright BaseFramework", ApacheSoftwareLicense20()))
-        notices.addNotice(Notice("DialogX", "", "Copyright Kongzue DialogX", ApacheSoftwareLicense20()))
-        notices.addNotice(Notice("AndroidHiddenApiBypass", "", "Copyright 2021-2023 LSPosed", ApacheSoftwareLicense20()))
-        notices.addNotice(Notice("FakeStore", "", "Copyright (c) 2013-2016 microG Project Team", ApacheSoftwareLicense20()))
+        notices.addNotice(
+            Notice(
+                "AndroidUtilCode",
+                "",
+                "Copyright (c) Blankj",
+                ApacheSoftwareLicense20()
+            )
+        )
+        notices.addNotice(
+            Notice(
+                "LibTaskBar",
+                "",
+                "Copyright (c) farmerbb",
+                ApacheSoftwareLicense20()
+            )
+        )
+        notices.addNotice(
+            Notice(
+                "BaseFramework",
+                "",
+                "Copyright BaseFramework",
+                ApacheSoftwareLicense20()
+            )
+        )
+        notices.addNotice(
+            Notice(
+                "DialogX",
+                "",
+                "Copyright Kongzue DialogX",
+                ApacheSoftwareLicense20()
+            )
+        )
+        notices.addNotice(
+            Notice(
+                "AndroidHiddenApiBypass",
+                "",
+                "Copyright 2021-2023 LSPosed",
+                ApacheSoftwareLicense20()
+            )
+        )
+        notices.addNotice(
+            Notice(
+                "FakeStore",
+                "",
+                "Copyright (c) 2013-2016 microG Project Team",
+                ApacheSoftwareLicense20()
+            )
+        )
         notices.addNotice(Notice("Shizuku-API", "", "Copyright (c) RikkaApps", MITLicense()))
-        notices.addNotice(Notice("Termux App", "", "Copyright (c) Termux", GnuGeneralPublicLicense30()))
-        notices.addNotice(Notice("UserLAnd", "", "Copyright (c) CypherpunkArmory", ApacheSoftwareLicense20()))
+        notices.addNotice(
+            Notice(
+                "Termux App",
+                "",
+                "Copyright (c) Termux",
+                GnuGeneralPublicLicense30()
+            )
+        )
+        notices.addNotice(
+            Notice(
+                "UserLAnd",
+                "",
+                "Copyright (c) CypherpunkArmory",
+                ApacheSoftwareLicense20()
+            )
+        )
         LicensesDialog.Builder(mContext)
             .setNotices(notices)
             .setIncludeOwnLicense(true)
@@ -245,7 +297,6 @@ class MainActivityUtils() {
     }
 
 
-
     private external fun fuck()
 
     companion object {
@@ -255,22 +306,24 @@ class MainActivityUtils() {
             System.loadLibrary("termplux")
         }
 
-        fun newInstance(): (BaseActivity) -> MainActivityUtils{
+        fun newInstance(): (BaseActivity) -> MainActivityUtils {
             return { context ->
                 MainActivityUtils(context)
             }
         }
 
-        fun initView(): () -> Unit {
-            return {
-                MainActivityUtils().initView()
-            }
-        }
-
         @Composable
-        fun content() : @Composable (GridView, List<ResolveInfo>, Boolean, Boolean) -> Unit {
-            return { gridView, appsList, dynamicColorChecked, taskBarChecked ->
-                MainActivityUtils().Content(
+        fun content(): @Composable (
+            BaseActivity,
+            GridView,
+            List<ResolveInfo>,
+            Boolean,
+            Boolean
+        ) -> Unit {
+            return { context, gridView, appsList, dynamicColorChecked, taskBarChecked ->
+                MainActivityUtils(
+                    context = context
+                ).Content(
                     gridView = gridView,
                     appsList = appsList,
                     dynamicColorChecked = dynamicColorChecked,
