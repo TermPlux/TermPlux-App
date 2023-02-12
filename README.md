@@ -38,12 +38,17 @@ LicensesDialog [https://github.com/PSDev/LicensesDialog](https://github.com/PSDe
 Shizuku-API [https://github.com/RikkaApps/Shizuku-API](https://github.com/RikkaApps/Shizuku-API)  
 AndroidHiddenApiBypass [https://github.com/LSPosed/AndroidHiddenApiBypass](https://github.com/LSPosed/AndroidHiddenApiBypass)  
 
-Portions of code are referenced from the following projects:  
+Portions of code are referenced from the following projects:
+DialogX [https://github.com/kongzue/DialogX](https://github.com/kongzue/DialogX)  
 FakeStore [https://github.com/microg/FakeStore](https://github.com/microg/FakeStore)  
 UserLAnd [https://github.com/CypherpunkArmory/UserLAnd](https://github.com/CypherpunkArmory/UserLAnd)  
 ShizukuRunner [https://github.com/WuDi-ZhanShen/ShizukuRunner](https://github.com/WuDi-ZhanShen/ShizukuRunner)  
 AndroidEasterEggs [https://github.com/hushenghao/AndroidEasterEggs](https://github.com/hushenghao/AndroidEasterEggs)  
 ComposeSettings [https://github.com/amitks2015/ComposeSettings](https://github.com/amitks2015/ComposeSettings)  
+KernelSU [https://github.com/tiann/KernelSU](https://github.com/tiann/KernelSU)  
+EdXposedManager [https://github.com/ElderDrivers/EdXposedManager](https://github.com/ElderDrivers/EdXposedManager)  
+Xposed Installer [https://github.com/rovo89/XposedInstaller](https://github.com/rovo89/XposedInstaller)  
+LearnPlus [https://github.com/wyq0918dev/LearnPlus](https://github.com/wyq0918dev/LearnPlus)  
 
 ## Open source agreement
 This repository is open source under the [GNU General Public License v3.0](https://github.com/TermPlux/TermPlux-App/blob/master/LICENSE) protocol.  
