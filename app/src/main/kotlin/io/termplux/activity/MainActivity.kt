@@ -86,7 +86,6 @@ class MainActivity : BaseActivity(), Runnable {
     private val mUtilsCompanion: MainActivityUtils.Companion = MainActivityUtils.Companion
     private val mUtils : MainActivityUtils = mUtilsCompanion.newInstance()(mContext)
 
-
     private lateinit var dialog: AlertDialog
 
     private lateinit var mSplashLogo: AppCompatImageView
@@ -102,8 +101,6 @@ class MainActivity : BaseActivity(), Runnable {
     private lateinit var mAppsImageView: AppCompatImageView
     private lateinit var mAppsTextView: AppCompatTextView
     private lateinit var mAppsLinearLayout: LinearLayoutCompat
-
-    private lateinit var webView: ScrollControllerWebView
 
 
     private lateinit var userServices: IUserService
@@ -321,19 +318,9 @@ class MainActivity : BaseActivity(), Runnable {
             orientation = LinearLayoutCompat.VERTICAL
         }
 
+        mUtilsCompanion.initView()()
 
-        webView = ScrollControllerWebView(
-            this@MainActivity
-        ).apply {
-            settings.javaScriptEnabled = true
-            settings.loadWithOverviewMode = true
-            settings.useWideViewPort = true
-            settings.setSupportZoom(false)
-            settings.allowFileAccess = true
-            settings.javaScriptCanOpenWindowsAutomatically = true
-            settings.loadsImagesAutomatically = true
-            settings.defaultTextEncodingName = "utf-8"
-        }
+
 
         // 返回应用主界面布局
         return LinearLayoutCompat(
@@ -445,6 +432,7 @@ class MainActivity : BaseActivity(), Runnable {
             object : LifeCircleListener() {
                 override fun onCreate() {
                     super.onCreate()
+                    mUtils
                     Shizuku.addBinderReceivedListenerSticky(binderReceivedListener)
                     Shizuku.addBinderDeadListener(binderDeadListener)
                     Shizuku.addRequestPermissionResultListener(requestPermissionResultListener)
@@ -798,169 +786,15 @@ class MainActivity : BaseActivity(), Runnable {
                     colorScheme = colorScheme,
                     typography = typography,
                 ) {
-                    mUtilsCompanion.content()()
-                    Content(
-                        gridView = mAppsGridView,
-                        appsList = mAppsList,
-                        dynamicColorChecked = mDynamicColor,
-                        taskBarChecked = mLibTaskBar
+                    mUtilsCompanion.content()(
+                        mAppsGridView, mAppsList, mDynamicColor, mLibTaskBar
                     )
                 }
             }
         }
     }
 
-    @Composable
-    fun Content(
-        gridView: GridView,
-        appsList: List<ResolveInfo>,
-        dynamicColorChecked: Boolean,
-        taskBarChecked: Boolean
-    ) {
-        ActivityMain(
-            androidVersion = getAndroidVersion(),
-            shizukuVersion = getShizukuVersion(),
-            gridView = gridView,
-            appsList = appsList,
-            isSystemApps = { packageName ->
-                isSystemApplication(
-                    packageName = packageName
-                )
-            },
-            startApp = { packageName, className ->
-                startApplication(
-                    packageName = packageName,
-                    className = className
-                )
-            },
-            infoApp = { packageName ->
-                infoApplication(
-                    packageName = packageName
-                )
-            },
-            deleteApp = { packageName ->
-                deleteApplication(
-                    packageName = packageName
-                )
-            },
-            targetAppVersionName = "",
 
-            dynamicColorChecked = dynamicColorChecked,
-            taskBarChecked = taskBarChecked,
-            onEasterEgg = {
-                easterEgg()
-            },
-            onNotice = {
-                licenseDialog()
-            },
-            onSource = {
-                fullScreenWebView("https://github.com/TermPlux/TermPlux-App")
-            },
-            onDevGitHub = {
-                fullScreenWebView("https://github.com/wyq0918dev")
-            },
-            onDevTwitter = {
-                fullScreenWebView("https://twitter.com/wyq0918dev")
-            },
-            onTeamGitHub = {
-                fullScreenWebView("https://github.com/TermPlux")
-            },
-        )
-    }
-
-    private fun fullScreenWebView(url: String) {
-        FullScreenDialog.show(
-            object : OnBindView<FullScreenDialog>(webView) {
-                override fun onBind(dialog: FullScreenDialog?, v: View?) {
-                    webView.loadUrl(url)
-                }
-            }
-        )
-    }
-
-    private fun licenseDialog() {
-        val notices = Notices()
-        notices.addNotice(Notice("AndroidUtilCode", "", "Copyright (c) Blankj", ApacheSoftwareLicense20()))
-        notices.addNotice(Notice("LibTaskBar", "", "Copyright (c) farmerbb", ApacheSoftwareLicense20()))
-        notices.addNotice(Notice("BaseFramework", "", "Copyright BaseFramework", ApacheSoftwareLicense20()))
-        notices.addNotice(Notice("DialogX", "", "Copyright Kongzue DialogX", ApacheSoftwareLicense20()))
-        notices.addNotice(Notice("AndroidHiddenApiBypass", "", "Copyright 2021-2023 LSPosed", ApacheSoftwareLicense20()))
-        notices.addNotice(Notice("FakeStore", "", "Copyright (c) 2013-2016 microG Project Team", ApacheSoftwareLicense20()))
-        notices.addNotice(Notice("Shizuku-API", "", "Copyright (c) RikkaApps", MITLicense()))
-        notices.addNotice(Notice("Termux App", "", "Copyright (c) Termux", GnuGeneralPublicLicense30()))
-        notices.addNotice(Notice("UserLAnd", "", "Copyright (c) CypherpunkArmory", ApacheSoftwareLicense20()))
-        LicensesDialog.Builder(this@MainActivity)
-            .setNotices(notices)
-            .setIncludeOwnLicense(true)
-            .build()
-            .show()
-    }
-
-    private fun startApplication(
-        packageName: String,
-        className: String
-    ) {
-        try {
-            // 启动目标应用
-            val intent = Intent()
-            intent.component = ComponentName(packageName, className)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            startActivity(intent)
-        } catch (e: Exception) {
-            // 如果已卸载但未刷新跳转应用市场防止程序崩溃
-            openApplicationMarket(packageName = packageName)
-        }
-    }
-
-    private fun infoApplication(packageName: String) {
-        try {
-            val intent = Intent()
-            intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-            intent.data = Uri.parse("package:$packageName")
-            startActivity(intent)
-        } catch (e: Exception) {
-            openApplicationMarket(packageName = packageName)
-        }
-    }
-
-    private fun deleteApplication(packageName: String) {
-        try {
-            val intent = Intent(Intent.ACTION_DELETE)
-            intent.data = Uri.parse("package:$packageName")
-            startActivity(intent)
-        } catch (e: Exception) {
-            openApplicationMarket(packageName = packageName)
-        }
-    }
-
-    private fun openApplicationMarket(packageName: String) {
-        val str = "market://details?id=$packageName"
-        val localIntent = Intent(Intent.ACTION_VIEW)
-        localIntent.data = Uri.parse(str)
-        startActivity(localIntent)
-    }
-
-    /**
-     * 检测应用是否为系统应用
-     */
-    private fun isSystemApplication(packageName: String): Boolean {
-        try {
-            val packageInfo = packageManager.getPackageInfo(
-                packageName,
-                PackageManager.GET_CONFIGURATIONS
-            )
-            if (packageInfo.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0) {
-                return true
-            }
-        } catch (e: PackageManager.NameNotFoundException) {
-            e.printStackTrace()
-        }
-        return false
-    }
-
-    private fun easterEgg() {
-
-    }
 
 
     @SuppressLint("RestrictedApi")
@@ -1082,22 +916,7 @@ class MainActivity : BaseActivity(), Runnable {
         .version(BuildConfig.VERSION_CODE)
 
 
-    private fun getAndroidVersion(): String {
-        return when (Build.VERSION.SDK_INT) {
-            Build.VERSION_CODES.N -> "Android Nougat 7.0"
-            Build.VERSION_CODES.N_MR1 -> "Android Nougat 7.1"
-            Build.VERSION_CODES.O -> "Android Oreo 8.0"
-            Build.VERSION_CODES.O_MR1 -> "Android Oreo 8.1"
-            Build.VERSION_CODES.P -> "Android Pie 9.0"
-            Build.VERSION_CODES.Q -> "Android Queen Cake 10.0"
-            Build.VERSION_CODES.R -> "Android Red Velvet Cake 11.0"
-            Build.VERSION_CODES.S -> "Android Snow Cone 12.0"
-            Build.VERSION_CODES.S_V2 -> "Android Snow Cone V2 12.1"
-            Build.VERSION_CODES.TIRAMISU -> "Android Tiramisu 13.0"
-            34 -> "Android Upside Down Cake 14.0"
-            else -> "unknown"
-        }
-    }
+
 
     // 检查设备是否支持谷歌基础服务
     fun checkGooglePlayServices(
@@ -1118,25 +937,8 @@ class MainActivity : BaseActivity(), Runnable {
 
 
 
-    private fun getShizukuVersion(): String {
-        return ""
-    }
 
-    // 打开任务栏设置
-    private fun taskbarSettings() {
-        Taskbar.openSettings(
-            this@MainActivity,
-            getString(R.string.taskbar_title),
-            R.style.Theme_TermPlux_ActionBar
-        )
-    }
 
-    // 选择默认主屏幕应用
-    private fun defaultLauncher() {
-        val intent = Intent(Settings.ACTION_HOME_SETTINGS)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        startActivity(intent)
-    }
 
     private fun killAppProcess() {
         val mActivityManager = getSystemService(BaseApp.ACTIVITY_SERVICE) as ActivityManager
