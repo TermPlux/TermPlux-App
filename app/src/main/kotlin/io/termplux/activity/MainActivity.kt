@@ -78,6 +78,13 @@ import kotlin.system.exitProcess
 
 class MainActivity : BaseActivity(), Runnable {
 
+    private val mContext: BaseActivity = me
+
+    private val viewContext: Context = mContext
+    private val thisContext: Context = mContext
+
+    private val mUtilsCompanion: MainActivityUtils.Companion = MainActivityUtils.Companion
+    private val mUtils : MainActivityUtils = mUtilsCompanion.newInstance()(mContext)
 
 
     private lateinit var dialog: AlertDialog
@@ -138,8 +145,8 @@ class MainActivity : BaseActivity(), Runnable {
 
     private val delayHideTouchListener = View.OnTouchListener { view, motionEvent ->
         when (motionEvent.action) {
-            MotionEvent.ACTION_DOWN -> if (autoHide) {
-                delayedHide(autoHideDelayMillis)
+            MotionEvent.ACTION_DOWN -> if (mUtilsCompanion.autoHide) {
+                delayedHide(mUtilsCompanion.autoHideDelayMillis)
             }
             MotionEvent.ACTION_UP -> view.performClick()
             else -> {
@@ -408,14 +415,14 @@ class MainActivity : BaseActivity(), Runnable {
                 endRadius
             )
             .setDuration(
-                splashPart2AnimatorMillis.toLong()
+                mUtilsCompanion.splashPart2AnimatorMillis.toLong()
             )
         mSplashLogo.animate()
             .alpha(0f)
             .scaleX(1.3f)
             .scaleY(1.3f)
             .setDuration(
-                splashPart1AnimatorMillis.toLong()
+                mUtilsCompanion.splashPart1AnimatorMillis.toLong()
             )
             .withEndAction {
                 mSplashLogo.visibility = View.GONE
@@ -555,17 +562,17 @@ class MainActivity : BaseActivity(), Runnable {
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this@MainActivity)
         // 获取用户协议状态true为已签署，false为未签署
         mLicence = mSharedPreferences.getBoolean(
-            licence,
+            mUtilsCompanion.licence,
             true
         )
         // 获取是否启用动态颜色
         mDynamicColor = mSharedPreferences.getBoolean(
-            dynamicColor,
+            mUtilsCompanion.dynamicColor,
             true
         ) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
         // 获取是否使用完整桌面模式
         mLibTaskBar = mSharedPreferences.getBoolean(
-            libTaskBar,
+            mUtilsCompanion.libTaskBar,
             true
         ) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
     }
@@ -791,6 +798,7 @@ class MainActivity : BaseActivity(), Runnable {
                     colorScheme = colorScheme,
                     typography = typography,
                 ) {
+                    mUtilsCompanion.content()()
                     Content(
                         gridView = mAppsGridView,
                         appsList = mAppsList,
@@ -1017,7 +1025,7 @@ class MainActivity : BaseActivity(), Runnable {
         mVisible = true
         mHandler.postDelayed(
             showPart2Runnable,
-            uiAnimatorDelay.toLong()
+            mUtilsCompanion.uiAnimatorDelay.toLong()
         )
     }
 
@@ -1142,26 +1150,4 @@ class MainActivity : BaseActivity(), Runnable {
         exitProcess(0)
     }
 
-    companion object {
-
-        /** 操作栏是否应该在[autoHideDelayMillis]毫秒后自动隐藏。*/
-        const val autoHide = true
-
-        /** 如果设置了[autoHide]，则在用户交互后隐藏操作栏之前等待的毫秒数。*/
-        const val autoHideDelayMillis = 3000
-
-        /** 一些较老的设备需要在小部件更新和状态和导航栏更改之间有一个小的延迟。*/
-        const val uiAnimatorDelay = 300
-
-        /** 开屏图标动画时长 */
-        const val splashPart1AnimatorMillis = 600
-        const val splashPart2AnimatorMillis = 800
-
-        const val none: Int = 0
-        const val shizuku: Int = 1
-
-        const val licence: String = "licence"
-        const val dynamicColor: String = "dynamic_colors"
-        const val libTaskBar: String = "lib_task_bar"
-    }
 }

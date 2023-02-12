@@ -2,6 +2,7 @@ package io.termplux.ui.screen
 
 import android.content.pm.ResolveInfo
 import android.widget.GridView
+import androidx.appcompat.widget.PopupMenu
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
@@ -44,106 +45,89 @@ fun ScreenApps(
             modifier = Modifier.fillMaxSize(),
             factory = { context ->
                 gridView.apply {
-                    setOnItemLongClickListener { _, _, position, _ ->
+                    setOnItemLongClickListener { _, view, position, _ ->
                         // 获取目标应用包名
                         val packageName = appsList[position].activityInfo.packageName
                         // 获取目标应用类名
                         val className = appsList[position].activityInfo.name
 
-                        PopMenu.show(
-                            arrayOf(
-                                context.getString(R.string.menu_open),
-                                context.getString(R.string.menu_info),
-                                context.getString(R.string.menu_delete)
-                            )
-                        )
-                            .setOnMenuItemClickListener { _, _, index ->
-                                when (index) {
-                                    0 -> {
-                                        if (packageName != BuildConfig.APPLICATION_ID) {
-                                            onStartApp(packageName, className)
-                                        } else {
-                                            // 跳转主页
-                                            navController.navigate(
-                                                route = Screen.Home.route
+                        val popupMenu = PopupMenu(context, view)
+                        popupMenu.menuInflater.inflate(R.menu.activity_main_apps, popupMenu.menu)
+
+                        popupMenu.setOnMenuItemClickListener { item ->
+                            when(item.itemId){
+                                R.id.open -> {
+                                    if (packageName != BuildConfig.APPLICATION_ID) {
+                                        onStartApp(packageName, className)
+                                    } else {
+                                        // 跳转主页
+                                        navController.navigate(
+                                            route = Screen.Home.route
+                                        ) {
+                                            popUpTo(
+                                                navController.graph.findStartDestination().id
                                             ) {
-                                                popUpTo(
-                                                    navController.graph.findStartDestination().id
-                                                ) {
-                                                    saveState = true
-                                                }
-                                                launchSingleTop = true
-                                                restoreState = true
+                                                saveState = true
                                             }
+                                            launchSingleTop = true
+                                            restoreState = true
                                         }
                                     }
-                                    1 -> {
-                                        if (packageName != BuildConfig.APPLICATION_ID) {
-                                            onInfoApp(packageName)
-                                        } else {
-                                            // 跳转关于
-                                            navController.navigate(
-                                                route = Screen.About.route
+                                }
+                                R.id.info -> {
+                                    if (packageName != BuildConfig.APPLICATION_ID) {
+                                        onInfoApp(packageName)
+                                    } else {
+                                        // 跳转关于
+                                        navController.navigate(
+                                            route = Screen.About.route
+                                        ) {
+                                            popUpTo(
+                                                navController.graph.findStartDestination().id
                                             ) {
-                                                popUpTo(
-                                                    navController.graph.findStartDestination().id
-                                                ) {
-                                                    saveState = true
-                                                }
-                                                launchSingleTop = true
-                                                restoreState = true
+                                                saveState = true
                                             }
+                                            launchSingleTop = true
+                                            restoreState = true
                                         }
                                     }
-                                    2 -> {
-                                        if (!isSystemApps(packageName)) {
-                                            if (packageName != BuildConfig.APPLICATION_ID) {
-                                                onDeleteApp(packageName)
-                                            } else {
-                                                scope.launch {
-                                                    snackBarHostState.showSnackbar(
-                                                        context.getString(R.string.uninstall_tip)
-                                                    )
-                                                }
-                                                // 跳转设置
-                                                navController.navigate(
-                                                    route = Screen.Settings.route
-                                                ) {
-                                                    popUpTo(
-                                                        navController.graph.findStartDestination().id
-                                                    ) {
-                                                        saveState = true
-                                                    }
-                                                    launchSingleTop = true
-                                                    restoreState = true
-                                                }
-                                            }
+                                }
+                                R.id.delete -> {
+                                    if (!isSystemApps(packageName)) {
+                                        if (packageName != BuildConfig.APPLICATION_ID) {
+                                            onDeleteApp(packageName)
                                         } else {
-                                            // 报错
                                             scope.launch {
                                                 snackBarHostState.showSnackbar(
-                                                    context.getString(R.string.uninstall_error)
+                                                    context.getString(R.string.uninstall_tip)
                                                 )
                                             }
+                                            // 跳转设置
+                                            navController.navigate(
+                                                route = Screen.Settings.route
+                                            ) {
+                                                popUpTo(
+                                                    navController.graph.findStartDestination().id
+                                                ) {
+                                                    saveState = true
+                                                }
+                                                launchSingleTop = true
+                                                restoreState = true
+                                            }
+                                        }
+                                    } else {
+                                        // 报错
+                                        scope.launch {
+                                            snackBarHostState.showSnackbar(
+                                                context.getString(R.string.uninstall_error)
+                                            )
                                         }
                                     }
                                 }
-                                false
                             }
-                            .onIconChangeCallBack = object : OnIconChangeCallBack<PopMenu?>(true) {
-                            override fun getIcon(
-                                dialog: PopMenu?,
-                                index: Int,
-                                menuText: String
-                            ): Int {
-                                return when (index) {
-                                    0 -> R.drawable.baseline_open_in_new_24
-                                    1 -> R.drawable.outline_info_24
-                                    2 -> R.drawable.outline_delete_24
-                                    else -> 0
-                                }
-                            }
+                            true
                         }
+                        popupMenu.show()
                         true
                     }
 
