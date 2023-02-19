@@ -25,17 +25,9 @@ class AppsAdapter(
         viewContext = context
     }
 
-    override fun getCount(): Int {
-        return appsList.size
-    }
-
-    override fun getItem(position: Int): Any {
-        return appsList[position]
-    }
-
-    override fun getItemId(position: Int): Long {
-        return position.toLong()
-    }
+    override fun getCount(): Int = appsList.size
+    override fun getItem(position: Int): Any = appsList[position]
+    override fun getItemId(position: Int): Long = position.toLong()
 
     override fun getView(
         position: Int,

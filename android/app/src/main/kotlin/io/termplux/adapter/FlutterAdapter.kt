@@ -22,6 +22,5 @@ class FlutterAdapter(
     }
 
     override fun getItemCount(): Int = count
-
     override fun createFragment(position: Int): Fragment = flutter
 }
