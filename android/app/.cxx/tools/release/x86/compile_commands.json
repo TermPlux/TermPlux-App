@@ -1,0 +1,7 @@
+[
+{
+  "directory": "C:/Users/81509/FlutterProjects/TermPlux/android/app/.cxx/RelWithDebInfo/43y1k4o4/x86",
+  "command": "C:\\Users\\81509\\AppData\\Local\\Android\\Sdk\\ndk\\23.1.7779620\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\clang++.exe --target=i686-none-linux-android24 --sysroot=C:/Users/81509/AppData/Local/Android/Sdk/ndk/23.1.7779620/toolchains/llvm/prebuilt/windows-x86_64/sysroot -Dtermplux_EXPORTS -std=c++17 -O2 -g -DNDEBUG -fPIC -o CMakeFiles\\termplux.dir\\native-lib.cpp.o -c C:\\Users\\81509\\FlutterProjects\\TermPlux\\android\\app\\src\\main\\cpp\\native-lib.cpp",
+  "file": "C:\\Users\\81509\\FlutterProjects\\TermPlux\\android\\app\\src\\main\\cpp\\native-lib.cpp"
+}
+]
