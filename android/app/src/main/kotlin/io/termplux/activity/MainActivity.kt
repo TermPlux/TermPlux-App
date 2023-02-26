@@ -718,7 +718,10 @@ class MainActivity : BaseActivity(), FlutterEngineConfigurator, Runnable {
                             )
                         },
                         startApp = { packageName, className ->
-                            openApp(packageName)
+                            startApplication(
+                                packageName = packageName,
+                                className = className
+                            )
                         },
                         infoApp = { packageName ->
                             infoApplication(
