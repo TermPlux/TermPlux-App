@@ -1,3 +1,0 @@
-C:/Users/81509/FlutterProjects/TermPlux/android/app/.cxx/Debug/3a5p6z6h/armeabi-v7a/CMakeFiles/termplux.dir
-C:/Users/81509/FlutterProjects/TermPlux/android/app/.cxx/Debug/3a5p6z6h/armeabi-v7a/CMakeFiles/edit_cache.dir
-C:/Users/81509/FlutterProjects/TermPlux/android/app/.cxx/Debug/3a5p6z6h/armeabi-v7a/CMakeFiles/rebuild_cache.dir

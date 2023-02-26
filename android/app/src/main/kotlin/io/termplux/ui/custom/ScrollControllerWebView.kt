@@ -1,4 +1,4 @@
-package io.termplux.custom
+package io.termplux.ui.custom
 
 import android.annotation.SuppressLint
 import android.content.Context

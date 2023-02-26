@@ -69,7 +69,7 @@ import io.termplux.IUserService
 import io.termplux.R
 import io.termplux.adapter.AppsAdapter
 import io.termplux.adapter.FlutterAdapter
-import io.termplux.custom.ScrollControllerWebView
+import io.termplux.ui.custom.ScrollControllerWebView
 import io.termplux.receiver.MainReceiver
 import io.termplux.services.MainService
 import io.termplux.services.UserService
@@ -718,10 +718,7 @@ class MainActivity : BaseActivity(), FlutterEngineConfigurator, Runnable {
                             )
                         },
                         startApp = { packageName, className ->
-                            startApplication(
-                                packageName = packageName,
-                                className = className
-                            )
+                            openApp(packageName)
                         },
                         infoApp = { packageName ->
                             infoApplication(
