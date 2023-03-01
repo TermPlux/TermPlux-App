@@ -64,6 +64,8 @@ import io.flutter.embedding.android.TransparencyMode
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.FlutterEngineCache
 import io.flutter.embedding.engine.dart.DartExecutor
+import io.flutter.plugin.common.MethodChannel
+import io.flutter.plugins.GeneratedPluginRegistrant
 import io.termplux.BuildConfig
 import io.termplux.IUserService
 import io.termplux.R
@@ -74,6 +76,7 @@ import io.termplux.receiver.MainReceiver
 import io.termplux.services.MainService
 import io.termplux.services.UserService
 import io.termplux.ui.ActivityMain
+import io.termplux.ui.flutter.LinkNativeViewFactory
 import kotlinx.coroutines.Runnable
 import rikka.shizuku.Shizuku
 import kotlin.math.hypot
@@ -402,7 +405,23 @@ class MainActivity : BaseActivity(), FlutterEngineConfigurator, Runnable {
     }
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+        GeneratedPluginRegistrant.registerWith(flutterEngine)
+        val registry = flutterEngine.platformViewsController.registry
+        registry.registerViewFactory("android_view", LinkNativeViewFactory())
 
+        val messenger = flutterEngine.dartExecutor.binaryMessenger
+        val channel = MethodChannel(messenger, "android")
+        channel.setMethodCallHandler { call, res ->
+            when (call.method) {
+                "menu" -> {
+                    // 事件
+                    res.success("success")
+                }
+                else -> {
+                    res.error("error", "error_message", null)
+                }
+            }
+        }
     }
 
     override fun cleanUpFlutterEngine(flutterEngine: FlutterEngine) {
@@ -600,7 +619,6 @@ class MainActivity : BaseActivity(), FlutterEngineConfigurator, Runnable {
         // 适配器
         val flutter: FragmentStateAdapter = FlutterAdapter(
             activity = mContext,
-            position = 1,
             flutterFragment = flutterFragment
         )
 
@@ -983,6 +1001,7 @@ class MainActivity : BaseActivity(), FlutterEngineConfigurator, Runnable {
 
     private fun easterEgg() {
         val intent = Intent(mThisContext, FlutterActivity().javaClass)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
     }
 
@@ -1046,7 +1065,6 @@ class MainActivity : BaseActivity(), FlutterEngineConfigurator, Runnable {
             }
         }
     }
-
 
     private fun killAppProcess() {
         val mActivityManager = getSystemService(BaseApp.ACTIVITY_SERVICE) as ActivityManager

@@ -6,16 +6,16 @@ import android.content.Intent
 
 class MainReceiver(refresh: () -> Unit) : BroadcastReceiver() {
 
-    private val refreshes : () -> Unit
+    private val mRefreshes : () -> Unit
 
     init {
-        refreshes = refresh
+        mRefreshes = refresh
     }
 
     override fun onReceive(
         context: Context?,
         intent: Intent?
     ) {
-        refreshes()
+        mRefreshes()
     }
 }
