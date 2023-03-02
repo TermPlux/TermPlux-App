@@ -327,7 +327,6 @@ class MainActivity : BaseActivity(), FlutterEngineConfigurator, Runnable {
         initAppsList()
         receiveSystemCast()
 
-        initFlutterEngine()
         initFlutter()
 
         initUi()
@@ -599,16 +598,13 @@ class MainActivity : BaseActivity(), FlutterEngineConfigurator, Runnable {
         registerReceiver(mBroadcastReceiver, mIntentFilter)
     }
 
-    private fun initFlutterEngine() {
+    private fun initFlutter() {
         // 创建Flutter引擎缓存
         val flutterEngine = FlutterEngine(mThisContext)
         flutterEngine.dartExecutor.executeDartEntrypoint(
             DartExecutor.DartEntrypoint.createDefault()
         )
         FlutterEngineCache.getInstance().put(flutter_engine, flutterEngine)
-    }
-
-    private fun initFlutter() {
         // 初始化FlutterFragment
         flutterFragment = FlutterFragment
             .withCachedEngine(flutter_engine)

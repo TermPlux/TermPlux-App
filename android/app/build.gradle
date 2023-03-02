@@ -111,9 +111,9 @@ dependencies {
     implementation 'com.kongzue.dialogx.style:DialogXIOSStyle:0.0.47'
     // 协议对话框：https://github.com/PSDev/LicensesDialog
     implementation 'de.psdev.licensesdialog:licensesdialog:2.2.0'
-    // Shizuku：https://github.com/RikkaApps/Shizuku-API
+    // Shizuku-API：https://github.com/RikkaApps/Shizuku-API
     implementation "dev.rikka.shizuku:api:13.1.0"
-    // Shizuku：https://github.com/RikkaApps/Shizuku-API
+    // Shizuku-API：https://github.com/RikkaApps/Shizuku-API
     implementation "dev.rikka.shizuku:provider:13.1.0"
     // 绕接口限制：https://github.com/LSPosed/AndroidHiddenApiBypass
     implementation 'org.lsposed.hiddenapibypass:hiddenapibypass:4.3'
@@ -123,7 +123,7 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
     // 谷歌官方库
     implementation 'androidx.core:core-ktx:1.9.0'
-    implementation 'androidx.annotation:annotation:1.5.0'
+    implementation 'androidx.annotation:annotation:1.6.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.browser:browser:1.5.0'
     implementation 'androidx.preference:preference:1.2.0'

@@ -1,6 +1,7 @@
 # TermPlux
 ![TermPlux-App](https://raw.github.com/TermPlux/TermPlux-App/master/cover.jpg)
 
+__警告！此应用严禁用于非法用途！不听劝阻，后果自负！使用此应用则代表使用者自行承担使用后导致的一切后果，与开发者无关！__
 ## 介绍
 经过多代更迭，全新的TermPlux已经到来！  
 [TermPlux-App](https://github.com/TermPlux/TermPlux-App)致力于让[Termux](https://github.com/termux/termux-app)更加好用、易用，提高移动设备生产力。
