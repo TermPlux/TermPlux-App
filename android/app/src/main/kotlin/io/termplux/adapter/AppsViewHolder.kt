@@ -5,7 +5,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.recyclerview.widget.RecyclerView
 
-class AppViewHolder(
+class AppsViewHolder(
     item: LinearLayoutCompat,
     icon: AppCompatImageView,
     title: AppCompatTextView

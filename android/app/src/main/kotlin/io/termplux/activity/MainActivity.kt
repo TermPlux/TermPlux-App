@@ -28,7 +28,7 @@ import io.flutter.embedding.android.TransparencyMode
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.FlutterEngineCache
 import io.flutter.embedding.engine.dart.DartExecutor
-import io.termplux.adapter.ViewPagerAdapter
+import io.termplux.adapter.MainAdapter
 import io.termplux.ui.ActivityMain
 
 class MainActivity : AppCompatActivity(), FlutterEngineConfigurator {
@@ -70,6 +70,33 @@ class MainActivity : AppCompatActivity(), FlutterEngineConfigurator {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+
+        initFlutter()
+
+
+        viewPager2 = ViewPager2(this@MainActivity)
+        val mainAdapter = MainAdapter(
+            activity = this@MainActivity,
+            flutter = flutterFragment,
+            viewPager = viewPager2
+        )
+        viewPager2.apply {
+            adapter = mainAdapter
+            offscreenPageLimit = mainAdapter.itemCount
+        }
+        initContent()
+        initSystemBar()
+    }
+
+    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+
+    }
+
+    override fun cleanUpFlutterEngine(flutterEngine: FlutterEngine) {
+
+    }
+
+    private fun initFlutter() {
         // 创建Flutter引擎缓存
         val flutterEngine = FlutterEngine(this@MainActivity)
         flutterEngine.dartExecutor.executeDartEntrypoint(
@@ -84,22 +111,6 @@ class MainActivity : AppCompatActivity(), FlutterEngineConfigurator {
             .renderMode(RenderMode.surface)
             .transparencyMode(TransparencyMode.transparent)
             .build()
-
-
-      //  val viewPagerAdapter =
-        viewPager2 = ViewPager2(this@MainActivity).apply {
-            adapter = ViewPagerAdapter(activity = this@MainActivity, flutter = flutterFragment, viewPager = this@apply)
-        }
-        initContent()
-        initSystemBar()
-    }
-
-    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
-
-    }
-
-    override fun cleanUpFlutterEngine(flutterEngine: FlutterEngine) {
-
     }
 
     @SuppressLint("RestrictedApi")

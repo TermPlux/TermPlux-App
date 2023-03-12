@@ -10,8 +10,6 @@ import kotlinx.coroutines.Runnable
 
 class HomeFragment(viewPager: ViewPager2) : Fragment(), Runnable {
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }

@@ -1,10 +1,6 @@
 package io.termplux.adapter
 
-import android.content.Intent
-import android.net.Uri
-import android.provider.Settings
 import android.view.Gravity
-import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
@@ -12,17 +8,18 @@ import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.setPadding
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.snackbar.Snackbar
+import com.blankj.utilcode.util.AppUtils
 import com.kongzue.dialogx.dialogs.PopMenu
+import com.kongzue.dialogx.dialogs.PopTip
 import com.kongzue.dialogx.interfaces.OnIconChangeCallBack
 import io.termplux.Apps
 import io.termplux.BuildConfig
 import io.termplux.R
 
-class AppAdapter(
+class AppsAdapter(
     applicationList: List<Apps>,
     viewPager: ViewPager2
-) : RecyclerView.Adapter<AppViewHolder>() {
+) : RecyclerView.Adapter<AppsViewHolder>() {
 
     private var mApplicationList: List<Apps>
     private var mViewPager: ViewPager2
@@ -32,7 +29,7 @@ class AppAdapter(
         mViewPager = viewPager
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AppViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AppsViewHolder {
 
         val appIcon = AppCompatImageView(parent.context)
         val appTitle = AppCompatTextView(parent.context)
@@ -71,21 +68,21 @@ class AppAdapter(
             )
         }
 
-        return AppViewHolder(item = itemView, icon = appIcon, title = appTitle)
+        return AppsViewHolder(item = itemView, icon = appIcon, title = appTitle)
     }
 
-    override fun onBindViewHolder(holder: AppViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: AppsViewHolder, position: Int) {
 
         holder.mAppIconView.setImageDrawable(mApplicationList[position].appIcon)
         holder.mTextView.text = mApplicationList[position].appLabel
 
-        holder.itemView.setOnLongClickListener { view ->
+        holder.itemView.setOnLongClickListener {
             PopMenu.show(arrayOf("打开", "应用信息", "卸载"))
                 .setOnMenuItemClickListener { _, _, index ->
                     when (index) {
-                        open -> openApp(position = position, view = view)
-                        info -> infoApp(position = position, view = view)
-                        delete -> deleteApp(holder = holder, position = position, view = view)
+                        open -> openApp(position = position)
+                        info -> infoApp(position = position)
+                        delete -> deleteApp(position = position)
                     }
                     false
                 }
@@ -102,8 +99,8 @@ class AppAdapter(
             true
         }
 
-        holder.itemView.setOnClickListener { view ->
-            openApp(position = position, view = view)
+        holder.itemView.setOnClickListener {
+            openApp(position = position)
         }
     }
 
@@ -111,49 +108,30 @@ class AppAdapter(
         return mApplicationList.size
     }
 
-    private fun openApp(position: Int, view: View) {
+    private fun openApp(position: Int) {
         if (mApplicationList[position].pkgName != BuildConfig.APPLICATION_ID) {
-            mApplicationList[position].appIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            view.context.startActivity(mApplicationList[position].appIntent)
+            AppUtils.launchApp(mApplicationList[position].pkgName)
         } else {
             // 跳转主页
             mViewPager.setCurrentItem(0, true)
         }
     }
 
-    private fun infoApp(position: Int, view: View) {
+    private fun infoApp(position: Int) {
         if (mApplicationList[position].pkgName != BuildConfig.APPLICATION_ID) {
-            val intent = Intent()
-            intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-            intent.data = Uri.fromParts(
-                "package",
-                mApplicationList[position].pkgName,
-                null
-            )
-            view.context.startActivity(intent)
+            AppUtils.launchAppDetailsSettings(mApplicationList[position].pkgName)
         } else {
             // 跳转关于
             mViewPager.setCurrentItem(0, true)
         }
     }
 
-    private fun deleteApp(holder: AppViewHolder, position: Int, view: View) {
+    private fun deleteApp(position: Int) {
         if (mApplicationList[position].pkgName != BuildConfig.APPLICATION_ID) {
-            if (mApplicationList[position].isSystemApp) {
-                Snackbar.make(
-                    holder.itemView,
-                    "无法卸载系统应用",
-                    Snackbar.LENGTH_SHORT
-                ).show()
+            if (!AppUtils.isAppSystem(mApplicationList[position].pkgName)) {
+                AppUtils.uninstallApp(mApplicationList[position].pkgName)
             } else {
-                val uri = Uri.fromParts(
-                    "package",
-                    mApplicationList[position].pkgName,
-                    null
-                )
-                val intent = Intent(Intent.ACTION_DELETE, uri)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                view.context.startActivity(intent)
+                PopTip.show("无法卸载系统应用")
             }
         } else {
             // 跳转设置卸载应用

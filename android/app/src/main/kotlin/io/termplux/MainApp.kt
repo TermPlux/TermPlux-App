@@ -172,6 +172,9 @@ open class MainApp : BaseApp<MainApp>() {
 
                 abstract fun configure(flutterEngine: FlutterEngine)
             }
+
+
+
         }
 
         class App {
@@ -319,12 +322,6 @@ open class MainApp : BaseApp<MainApp>() {
                     title = R.string.menu_home
                 )
 
-                object Apps : Screen(
-                    route = routeLauncher,
-                    imageVector = Icons.TwoTone.RocketLaunch,
-                    title = R.string.menu_apps
-                )
-
                 object Dashboard : Screen(
                     route = routeDashboard,
                     imageVector = Icons.TwoTone.Dashboard,
@@ -335,12 +332,6 @@ open class MainApp : BaseApp<MainApp>() {
                     route = routeManager,
                     imageVector = Icons.TwoTone.AppSettingsAlt,
                     title = R.string.menu_manager
-                )
-
-                object Flutter : Screen(
-                    route = routeFlutter,
-                    imageVector = Icons.TwoTone.FlutterDash,
-                    title = R.string.menu_flutter
                 )
 
                 object Settings : Screen(

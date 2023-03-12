@@ -3,7 +3,6 @@ package io.termplux.fragment
 import android.content.BroadcastReceiver
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.pm.ApplicationInfo
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import io.termplux.Apps
-import io.termplux.adapter.AppAdapter
+import io.termplux.adapter.AppsAdapter
 import io.termplux.receiver.MainReceiver
 
 class AppFragment(viewPager: ViewPager2) : Fragment() {
@@ -92,18 +91,13 @@ class AppFragment(viewPager: ViewPager2) : Fragment() {
                 Apps(
                     appIcon = resolveInfo.activityInfo.loadIcon(requireActivity().packageManager),
                     appLabel = resolveInfo.activityInfo.loadLabel(requireActivity().packageManager),
-                    isSystemApp = resolveInfo.activityInfo.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM == 1,
-                    appIntent = Intent().setClassName(
-                        resolveInfo.activityInfo.packageName,
-                        resolveInfo.activityInfo.name
-                    ),
                     pkgName = resolveInfo.activityInfo.packageName
                 )
             )
         }
 
         // 设置适配器
-        recyclerView.adapter = AppAdapter(
+        recyclerView.adapter = AppsAdapter(
             applicationList = applicationList,
             viewPager = mViewPager
         )

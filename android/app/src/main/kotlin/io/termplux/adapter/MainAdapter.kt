@@ -9,7 +9,7 @@ import io.termplux.fragment.AppFragment
 import io.termplux.fragment.ErrorFragment
 import io.termplux.fragment.HomeFragment
 
-class ViewPagerAdapter(
+class MainAdapter(
     activity: FragmentActivity,
     flutter: FlutterFragment,
     viewPager: ViewPager2
