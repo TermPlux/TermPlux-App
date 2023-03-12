@@ -1,7 +1,5 @@
 package io.termplux.ui
 
-import android.content.pm.ResolveInfo
-import android.widget.GridView
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,7 +16,6 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.*
 import androidx.viewpager2.widget.ViewPager2
-import com.kongzue.dialogx.dialogs.PopTip
 import io.termplux.BuildConfig
 import io.termplux.R
 import io.termplux.ui.navigation.Screen
@@ -28,21 +25,17 @@ import io.termplux.ui.screen.*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ActivityMain(
+    viewPager: ViewPager2,
     onOptionsMenu: () -> Unit,
     onToggle: () -> Unit,
     androidVersion: String,
     shizukuVersion: String,
-    gridView: GridView,
-    appsList: List<ResolveInfo>,
-    isSystemApps: (String) -> Boolean,
-    startApp: (String, String) -> Unit,
+
     infoApp: (String) -> Unit,
     deleteApp: (String) -> Unit,
 
 
     targetAppVersionName: String,
-
-    viewPager: ViewPager2,
 
     dynamicColorChecked: Boolean,
     taskBarChecked: Boolean,
@@ -62,8 +55,8 @@ fun ActivityMain(
 ) {
     val items = listOf(
         Screen.Home,
-        Screen.Apps,
         Screen.Dashboard,
+        Screen.Manager,
         Screen.Settings
     )
     val expandedMenu = remember {
@@ -239,65 +232,35 @@ fun ActivityMain(
             composable(
                 route = Screen.Home.route
             ) {
-                ScreenHome(
-                    navController = navController,
-                    scope = scope,
-                    snackBarHostState = snackBarHostState,
-                    androidVersion = androidVersion,
-                    shizukuVersion = shizukuVersion
-                )
-            }
-            composable(
-                route = Screen.Apps.route
-            ) {
-                ScreenApps(
-                    navController = navController,
-                    scope = scope,
-                    snackBarHostState = snackBarHostState,
-                    gridView = gridView,
-                    appsList = appsList,
-                    isSystemApps = { packageName ->
-                        isSystemApps(packageName)
-                    },
-                    onStartApp = { packageName, className ->
-                        startApp(packageName, className)
-                    },
-                    onInfoApp = { packageName ->
-                        infoApp(packageName)
-                    },
-                    onDeleteApp = { packageName ->
-                        deleteApp(packageName)
-                    }
-                )
+                ScreenHome(viewPager = viewPager)
             }
             composable(
                 route = Screen.Dashboard.route
             ) {
-                ScreenDashboard(
-                    targetAppName = "",
-                    targetAppPackageName = "",
-                    targetAppDescription = "",
-                    targetAppVersionName = targetAppVersionName,
-                    NavigationOnClick = {},
-                    MenuOnClick = {},
-                    SearchOnClick = {},
-                    SheetOnClick = {},
-                    AppsOnClick = {},
-                    SelectOnClick = {},
-                    onNavigateToApps = {},
-                )
+               ScreenDashboard(
+                   navController = navController,
+                   scope = scope,
+                   snackBarHostState = snackBarHostState,
+                   androidVersion = androidVersion,
+                   shizukuVersion = shizukuVersion
+               )
             }
             composable(
                 route = Screen.Manager.route
             ) {
-                ScreenManager()
-            }
-            composable(
-                route = Screen.Flutter.route
-            ) {
-                ScreenFlutter(
-                    viewPager = viewPager
-                )
+                ScreenManager(
+                    targetAppName = "",
+                    targetAppPackageName = "",
+                    targetAppDescription = "",
+                    targetAppVersionName = "",
+                    NavigationOnClick = { /*TODO*/ },
+                    MenuOnClick = { /*TODO*/ },
+                    SearchOnClick = { /*TODO*/ },
+                    SheetOnClick = { /*TODO*/ },
+                    AppsOnClick = { /*TODO*/ },
+                    SelectOnClick = { /*TODO*/ }) {
+
+                }
             }
             composable(
                 route = Screen.Settings.route
@@ -351,19 +314,15 @@ fun ActivityMain(
 @Composable
 private fun ActivityMainPreview() {
     ActivityMain(
+        viewPager = ViewPager2(LocalContext.current),
         onOptionsMenu = {},
         onToggle = {},
         androidVersion = "Android 13",
         shizukuVersion = "Shizuku 13",
-        gridView = GridView(LocalContext.current),
-        appsList = ArrayList(),
-        isSystemApps = { true },
-        startApp = { _, _ -> },
+
         infoApp = {},
         deleteApp = {},
         targetAppVersionName = "",
-
-        viewPager = ViewPager2(LocalContext.current),
 
         dynamicColorChecked = true,
         taskBarChecked = true,

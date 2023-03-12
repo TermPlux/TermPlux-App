@@ -23,10 +23,8 @@ fun ScreenNavigate(navController: NavHostController) {
     val items = listOf(
         Screen.Navigate,
         Screen.Home,
-        Screen.Apps,
         Screen.Dashboard,
         Screen.Manager,
-        Screen.Flutter,
         Screen.Settings,
         Screen.About
     )

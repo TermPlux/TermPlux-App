@@ -7,13 +7,7 @@ void call();
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_io_termplux_activity_MainActivity_fuck(JNIEnv *env, jobject thiz) {
-    call();
-}
-
-extern "C"
-JNIEXPORT void JNICALL
-Java_io_termplux_activity_FlutterActivity_fuck(JNIEnv *env, jobject thiz) {
+Java_io_termplux_activity_MainActivityOld_fuck(JNIEnv *env, jobject thiz) {
     call();
 }
 

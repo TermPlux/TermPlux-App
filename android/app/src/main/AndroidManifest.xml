@@ -12,7 +12,7 @@
     <uses-permission android:name="android.permission.FAKE_PACKAGE_SIGNATURE" /> <!-- 签名欺骗 -->
 
     <application
-        android:name=".application.MainApplication"
+        android:name=".application.TermPluxApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:enableOnBackInvokedCallback="true"
@@ -60,6 +60,32 @@
                 <category android:name="android.intent.category.LAUNCHER_APP" />
             </intent-filter>
         </activity>
+
+<!--        <activity-->
+<!--            android:name=".activity.MainActivityOld"-->
+<!--            android:configChanges="orientation|keyboardHidden|screenSize"-->
+<!--            android:exported="true"-->
+<!--            android:hardwareAccelerated="true"-->
+<!--            android:theme="@style/Theme.TermPlux"-->
+<!--            android:windowSoftInputMode="adjustResize">-->
+<!--            <meta-data-->
+<!--                android:name="android.app.lib_name"-->
+<!--                android:value="termplux" />-->
+<!--            <meta-data-->
+<!--                android:name="io.flutter.embedding.android.NormalTheme"-->
+<!--                android:resource="@style/NormalTheme" />-->
+
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.APPLICATION_PREFERENCES" />-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+
+<!--                <category android:name="android.intent.category.HOME" />-->
+<!--                <category android:name="android.intent.category.DEFAULT" />-->
+<!--                <category android:name="android.intent.category.MONKEY" />-->
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--                <category android:name="android.intent.category.LAUNCHER_APP" />-->
+<!--            </intent-filter>-->
+<!--        </activity>-->
 
         <activity
             android:name=".activity.FlutterActivity"

@@ -6,8 +6,11 @@ import android.view.MotionEvent
 import android.webkit.WebView
 import com.kongzue.dialogx.interfaces.ScrollController
 
-
-class ScrollControllerWebView(context: Context) : WebView(context), ScrollController {
+class ScrollControllerWebView(
+    context: Context
+) : WebView(
+    context
+), ScrollController {
 
     private var lockScroll = false
 

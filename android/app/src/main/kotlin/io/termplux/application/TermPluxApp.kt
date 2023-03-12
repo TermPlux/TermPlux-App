@@ -18,7 +18,7 @@ import com.kongzue.dialogx.style.IOSStyle
 import org.lsposed.hiddenapibypass.HiddenApiBypass
 import java.io.File
 
-class MainApplication : BaseApp<MainApplication>() {
+class TermPluxApp : BaseApp<TermPluxApp>() {
 
     /** 首选项 */
     private lateinit var mSharedPreferences: SharedPreferences
@@ -29,7 +29,7 @@ class MainApplication : BaseApp<MainApplication>() {
     override fun init() {
 
         // 加载首选项
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this@MainApplication)
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this@TermPluxApp)
 
         // 触发错误时调用
         setOnCrashListener(
@@ -75,7 +75,7 @@ class MainApplication : BaseApp<MainApplication>() {
         super.initSDKs()
 
         // 初始化DialogX
-        DialogX.init(this@MainApplication)
+        DialogX.init(this@TermPluxApp)
         DialogX.globalStyle = IOSStyle()
         DialogX.globalTheme = DialogX.THEME.AUTO
         DialogX.autoShowInputKeyboard = true
@@ -91,13 +91,12 @@ class MainApplication : BaseApp<MainApplication>() {
                 "dynamic_colors",
                 true
             ) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
-        ) {
-            DynamicColors.applyToActivitiesIfAvailable(this@MainApplication)
-        }
+        ) DynamicColors.applyToActivitiesIfAvailable(this@TermPluxApp)
+
 
         // 初始化任务栏
         Taskbar.setEnabled(
-            this@MainApplication,
+            this@TermPluxApp,
             mSharedPreferences.getBoolean(
                 "desktop",
                 true
