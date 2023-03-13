@@ -31,7 +31,6 @@ class AppFragment(viewPager: ViewPager2) : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         recyclerView = RecyclerView(
             requireActivity()
         ).apply {

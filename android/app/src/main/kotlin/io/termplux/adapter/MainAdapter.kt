@@ -8,11 +8,13 @@ import io.flutter.embedding.android.FlutterFragment
 import io.termplux.fragment.AppFragment
 import io.termplux.fragment.ErrorFragment
 import io.termplux.fragment.HomeFragment
+import io.termplux.fragment.SettingsFragment
 
 class MainAdapter(
     activity: FragmentActivity,
     flutter: FlutterFragment,
-    viewPager: ViewPager2
+    viewPager: ViewPager2,
+    settings: () -> Unit
 ) : FragmentStateAdapter(
     activity
 ) {
@@ -22,6 +24,7 @@ class MainAdapter(
     private var mFlutter: FlutterFragment
     private var mHome: HomeFragment
     private var mApps: AppFragment
+    private var mSettings: SettingsFragment
     private val mError: ErrorFragment
 
     init {
@@ -37,13 +40,17 @@ class MainAdapter(
             viewPager = mViewPager
         )
 
+        mSettings = SettingsFragment.newInstance(
+            settings = settings
+        )
+
         mError = ErrorFragment.newInstance(
             viewPager = mViewPager
         )
     }
 
     override fun getItemCount(): Int {
-        return 3
+        return 4
     }
 
     override fun createFragment(position: Int): Fragment {
@@ -51,6 +58,7 @@ class MainAdapter(
             home -> mHome
             flutter -> mFlutter
             apps -> mApps
+            settings -> mSettings
             else -> mError
         }
     }
@@ -59,5 +67,6 @@ class MainAdapter(
         const val home: Int = 0
         const val flutter: Int = 1
         const val apps: Int = 2
+        const val settings: Int = 3
     }
 }

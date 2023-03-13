@@ -17,6 +17,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
+import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.blankj.utilcode.util.AppUtils
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -75,17 +76,33 @@ class MainActivity : AppCompatActivity(), FlutterEngineConfigurator {
 
 
         viewPager2 = ViewPager2(this@MainActivity)
-        val mainAdapter = MainAdapter(
-            activity = this@MainActivity,
-            flutter = flutterFragment,
-            viewPager = viewPager2
-        )
-        viewPager2.apply {
-            adapter = mainAdapter
-            offscreenPageLimit = mainAdapter.itemCount
-        }
+//        val mainAdapter = MainAdapter(
+//            activity = this@MainActivity,
+//            flutter = flutterFragment,
+//            viewPager = viewPager2,
+//            onNavigationToSettings = {}
+//        )
+//        viewPager2.apply {
+//            adapter = mainAdapter
+//            offscreenPageLimit = mainAdapter.itemCount
+//        }
+
         initContent()
         initSystemBar()
+    }
+
+    private fun adapter(
+        activity: FragmentActivity,
+        flutter: FlutterFragment,
+        viewPager: ViewPager2,
+        settings: () -> Unit
+    ): MainAdapter {
+        return MainAdapter(
+            activity = activity,
+            flutter = flutter,
+            viewPager = viewPager,
+            settings = settings
+        )
     }
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
@@ -125,7 +142,7 @@ class MainActivity : AppCompatActivity(), FlutterEngineConfigurator {
         decorView.systemUiVisibility = visibility or option
     }
 
-    private fun initContent(){
+    private fun initContent() {
         setContent {
             // 获取系统是否为深色模式
             val darkTheme = isSystemInDarkTheme()
@@ -169,6 +186,16 @@ class MainActivity : AppCompatActivity(), FlutterEngineConfigurator {
             ) {
                 ActivityMain(
                     viewPager = viewPager2,
+                    activity = this@MainActivity,
+                    flutter = flutterFragment,
+                    viewPagerAdapter = { activity, flutter, viewPager, settings ->
+                        adapter(
+                            activity = activity,
+                            flutter = flutter,
+                            viewPager = viewPager,
+                            settings = settings
+                        )
+                    },
                     onOptionsMenu = {
 
                     },

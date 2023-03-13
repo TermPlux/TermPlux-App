@@ -1,0 +1,19 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/app_name">
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="running_mode"
+            android:icon="@drawable/baseline_settings_applications_24"
+            android:title="以完整模式运行"/>
+
+        <Preference
+            android:dependency="running_mode"
+            android:key="navigation_settings"
+            android:icon="@drawable/baseline_open_in_new_24"
+            android:title="全部设置" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

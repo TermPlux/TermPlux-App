@@ -12,12 +12,15 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.fragment.app.FragmentActivity
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.*
 import androidx.viewpager2.widget.ViewPager2
+import io.flutter.embedding.android.FlutterFragment
 import io.termplux.BuildConfig
 import io.termplux.R
+import io.termplux.adapter.MainAdapter
 import io.termplux.ui.navigation.Screen
 import io.termplux.ui.screen.*
 
@@ -26,6 +29,10 @@ import io.termplux.ui.screen.*
 @Composable
 fun ActivityMain(
     viewPager: ViewPager2,
+    activity: FragmentActivity,
+    flutter: FlutterFragment,
+    viewPagerAdapter: (FragmentActivity, FlutterFragment, ViewPager2, () -> Unit) -> MainAdapter,
+
     onOptionsMenu: () -> Unit,
     onToggle: () -> Unit,
     androidVersion: String,
@@ -232,18 +239,24 @@ fun ActivityMain(
             composable(
                 route = Screen.Home.route
             ) {
-                ScreenHome(viewPager = viewPager)
+               ScreenHome(
+                   navController = navController,
+                   viewPager = viewPager,
+                   activity = activity,
+                   flutter = flutter,
+                   viewPagerAdapter = viewPagerAdapter
+               )
             }
             composable(
                 route = Screen.Dashboard.route
             ) {
-               ScreenDashboard(
-                   navController = navController,
-                   scope = scope,
-                   snackBarHostState = snackBarHostState,
-                   androidVersion = androidVersion,
-                   shizukuVersion = shizukuVersion
-               )
+                ScreenDashboard(
+                    navController = navController,
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
+                    androidVersion = androidVersion,
+                    shizukuVersion = shizukuVersion
+                )
             }
             composable(
                 route = Screen.Manager.route
@@ -315,6 +328,16 @@ fun ActivityMain(
 private fun ActivityMainPreview() {
     ActivityMain(
         viewPager = ViewPager2(LocalContext.current),
+        activity = FragmentActivity(),
+        flutter = FlutterFragment(),
+        viewPagerAdapter = { activity, flutter, viewPager, settings ->
+            MainAdapter(
+                activity = activity,
+                flutter = flutter,
+                viewPager = viewPager,
+                settings = settings
+            )
+        },
         onOptionsMenu = {},
         onToggle = {},
         androidVersion = "Android 13",
