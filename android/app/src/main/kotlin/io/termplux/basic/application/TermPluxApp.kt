@@ -41,6 +41,40 @@ class TermPluxApp : BaseApp<TermPluxApp>() {
         // 加载首选项
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this@TermPluxApp)
 
+        FlutterBoost.instance().setup(me,
+            object : FlutterBoostDelegate {
+                override fun pushNativeRoute(options: FlutterBoostRouteOptions) {
+                    //这里根据options.pageName来判断你想跳转哪个页面，这里简单给一个
+                    val intent = when (options.pageName()){
+                        "tpmain" -> Intent(
+                            FlutterBoost.instance().currentActivity(),
+                            MainActivity().javaClass
+                        )
+                        else -> Intent()
+                    }
+
+                    FlutterBoost.instance().currentActivity().startActivityForResult(intent, options.requestCode())
+                }
+
+                override fun pushFlutterRoute(options: FlutterBoostRouteOptions) {
+                    val intent = FlutterBoostActivity.CachedEngineIntentBuilder(
+                        FlutterActivity().javaClass
+                    )
+                        .backgroundMode(FlutterActivityLaunchConfigs.BackgroundMode.transparent)
+                        .destroyEngineWithActivity(false)
+                        .uniqueId(options.uniqueId())
+                        .url(options.pageName())
+                        .urlParams(options.arguments())
+                        .build(FlutterBoost.instance().currentActivity())
+                    FlutterBoost.instance().currentActivity().startActivity(intent)
+                }
+            }
+        ) { engine: FlutterEngine? ->
+            engine.apply {
+
+            }
+        }
+
         // 触发错误时调用
         setOnCrashListener(
             object : OnBugReportListener() {
@@ -86,40 +120,6 @@ class TermPluxApp : BaseApp<TermPluxApp>() {
      */
     override fun initSDKs() {
         super.initSDKs()
-
-        FlutterBoost.instance().setup(me,
-            object : FlutterBoostDelegate {
-                override fun pushNativeRoute(options: FlutterBoostRouteOptions) {
-                    //这里根据options.pageName来判断你想跳转哪个页面，这里简单给一个
-                    val intent = when (options.pageName()){
-                        "tpmain" -> Intent(
-                            FlutterBoost.instance().currentActivity(),
-                            MainActivity().javaClass
-                        )
-                        else -> Intent()
-                    }
-
-                    FlutterBoost.instance().currentActivity().startActivityForResult(intent, options.requestCode())
-                }
-
-                override fun pushFlutterRoute(options: FlutterBoostRouteOptions) {
-                    val intent = FlutterBoostActivity.CachedEngineIntentBuilder(
-                        FlutterActivity().javaClass
-                    )
-                        .backgroundMode(FlutterActivityLaunchConfigs.BackgroundMode.transparent)
-                        .destroyEngineWithActivity(false)
-                        .uniqueId(options.uniqueId())
-                        .url(options.pageName())
-                        .urlParams(options.arguments())
-                        .build(FlutterBoost.instance().currentActivity())
-                    FlutterBoost.instance().currentActivity().startActivity(intent)
-                }
-            }
-        ) { engine: FlutterEngine? ->
-            engine.apply {
-
-            }
-        }
 
         // 初始化DialogX
         DialogX.init(this@TermPluxApp)

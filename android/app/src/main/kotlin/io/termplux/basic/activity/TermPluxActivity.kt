@@ -351,7 +351,6 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
         mFlutterFragment.onNewIntent(intent)
     }
 
-    @Suppress("DEPRECATION")
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String?>,
