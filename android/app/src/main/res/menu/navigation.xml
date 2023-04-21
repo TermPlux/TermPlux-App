@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:title="@string/app_name">
+        <menu>
+            <item
+                android:id="@+id/nav_launcher"
+                android:checkable="true"
+                android:icon="@drawable/outline_apps_24"
+                android:title="@string/menu_launcher"
+                app:showAsAction="ifRoom" />
+            <item
+                android:id="@+id/nav_home"
+                android:checkable="true"
+                android:icon="@drawable/outline_home_24"
+                android:title="@string/menu_home"
+                app:showAsAction="ifRoom" />
+<!--            <item-->
+<!--                android:id="@+id/nav_navigation"-->
+<!--                android:checkable="true"-->
+<!--                android:icon="@drawable/outline_navigation_24"-->
+<!--                android:title="@string/menu_navigation"-->
+<!--                app:showAsAction="ifRoom" />-->
+            <item
+                android:id="@+id/nav_settings"
+                android:checkable="true"
+                android:icon="@drawable/outline_settings_24"
+                android:title="@string/menu_settings"
+                app:showAsAction="ifRoom" />
+        </menu>
+    </item>
+    <item android:title="@string/app_name">
+        <menu>
+<!--            <item-->
+<!--                android:id="@+id/nav_compose_home"-->
+<!--                android:checkable="true"-->
+<!--                android:icon="@drawable/twotone_home_24"-->
+<!--                android:title="@string/menu_home"-->
+<!--                app:showAsAction="ifRoom" />-->
+            <item
+                android:id="@+id/nav_dashboard"
+                android:checkable="true"
+                android:icon="@drawable/twotone_dashboard_24"
+                android:title="@string/menu_dashboard"
+                app:showAsAction="ifRoom" />
+            <item
+                android:id="@+id/nav_manager"
+                android:checkable="true"
+                android:icon="@drawable/twotone_app_settings_alt_24"
+                android:title="@string/menu_content"
+                app:showAsAction="ifRoom" />
+            <item
+                android:id="@+id/nav_other_settings"
+                android:checkable="true"
+                android:icon="@drawable/twotone_settings_24"
+                android:title="@string/menu_settings"
+                app:showAsAction="ifRoom" />
+            <item
+                android:id="@+id/nav_about"
+                android:checkable="true"
+                android:icon="@drawable/twotone_info_24"
+                android:title="@string/menu_about"
+                app:showAsAction="ifRoom" />
+        </menu>
+    </item>
+</menu>

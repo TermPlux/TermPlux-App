@@ -1,0 +1,33 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/app_name">
+
+<!--        <SwitchPreference-->
+<!--            android:defaultValue="true"-->
+<!--            android:icon="@drawable/baseline_view_in_ar_24"-->
+<!--            android:key="running_mode"-->
+<!--            android:summary="完整的用户界面"-->
+<!--            android:title="以完整模式运行" />-->
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:icon="@drawable/baseline_color_lens_24"
+            android:key="dynamic_colors"
+            android:summary="@string/dynamic_colors_summary"
+            android:title="@string/dynamic_colors_title" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:icon="@drawable/baseline_view_carousel_24"
+            android:key="desktop"
+            android:summary="@string/desktop_summary"
+            android:title="@string/desktop_title" />
+
+        <Preference
+            android:icon="@drawable/baseline_open_in_new_24"
+            android:key="navigation_settings"
+            android:title="其他设置" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
