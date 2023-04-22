@@ -144,10 +144,7 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
 
     private val delayHideTouchListener = View.OnTouchListener { view, motionEvent ->
         when (motionEvent.action) {
-            MotionEvent.ACTION_DOWN -> if (autoHide) {
-                delayedHide(autoHideDelayMillis)
-            }
-
+            MotionEvent.ACTION_DOWN -> if (autoHide) delayedHide(autoHideDelayMillis)
             MotionEvent.ACTION_UP -> view.performClick()
         }
         false
@@ -155,8 +152,15 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
 
     override fun resetContentView(): View {
         super.resetContentView()
-
-        initUi()
+        // 加载ComposeView
+        mComposeView = ComposeView(
+            context = mBaseContext
+        ).apply {
+            setOnTouchListener(delayHideTouchListener)
+            setViewCompositionStrategy(
+                strategy = ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
+            )
+        }
         return mComposeView
     }
 
@@ -166,10 +170,12 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
     @SuppressLint("RestrictedApi")
     override fun initViews() {
         mVisible = true
-        setSupportActionBar(mToolbar)
+
+        initUi()
         if (!isHome) supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         initSP()
+        initServices()
         initFlutter()
         initSystemBar()
     }
@@ -413,28 +419,14 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
      * 加载Ui控件
      */
     private fun initUi() {
-        // 加载ComposeView
-        mComposeView = ComposeView(
-            context = mBaseContext
-        ).apply {
-            setOnTouchListener(delayHideTouchListener)
-            setViewCompositionStrategy(
-                strategy = ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
-            )
-        }
 
         // 加载Toolbar
-        mToolbar = MaterialToolbar(mBaseContext).apply {
-            setBackgroundColor(android.graphics.Color.TRANSPARENT)
+        mToolbar = MaterialToolbar(mBaseContext).also { toolbar ->
+            setSupportActionBar(toolbar)
         }
 
         mAppBarLayout = AppBarLayout(mBaseContext).apply {
-            setBackgroundColor(android.graphics.Color.TRANSPARENT)
             fitsSystemWindows = true
-            isLiftOnScroll = true
-            statusBarForeground = MaterialShapeDrawable.createWithElevationOverlay(
-                mBaseContext
-            )
             addView(
                 mToolbar,
                 LinearLayoutCompat.LayoutParams(
@@ -442,9 +434,12 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
                     LinearLayoutCompat.LayoutParams.WRAP_CONTENT
                 )
             )
+        }.also { appBar ->
+            appBar.isLiftOnScroll = true
+            appBar.statusBarForeground = MaterialShapeDrawable.createWithElevationOverlay(
+                mBaseContext
+            )
         }
-
-
 
         mViewPager2 = ViewPager2(
             mBaseContext
@@ -452,18 +447,9 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
             isUserInputEnabled = true
         }
 
-//        mContentView = ContentView(
-//            context = mBaseContext,
-//            toolbar = mToolbar,
-//            composeView = mComposeView,
-//            viewPager = mViewPager2,
-//            isFull = isFull
-//        )
-
         mTabLayout = TabLayout(
             mBaseContext
         ).apply {
-            setBackgroundColor(android.graphics.Color.TRANSPARENT)
             tabMode = TabLayout.MODE_AUTO
         }
     }

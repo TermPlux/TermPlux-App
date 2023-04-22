@@ -18,7 +18,6 @@ import com.kongzue.dialogxmaterialyou.style.MaterialYouStyle
 import org.lsposed.hiddenapibypass.HiddenApiBypass
 import java.io.File
 
-
 class TermPluxApp : BaseApp<TermPluxApp>() {
 
     /** 首选项 */

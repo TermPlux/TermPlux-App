@@ -69,6 +69,9 @@ fun ScreenDashboard(
                     state = scrollState
                 )
         ) {
+            tabBar(
+                modifier = Modifier.fillMaxWidth()
+            )
             ElevatedCard(
                 modifier = Modifier.padding(
                         start = 16.dp,
@@ -77,9 +80,7 @@ fun ScreenDashboard(
                         bottom = 8.dp
                     )
             ) {
-                tabBar(
-                    modifier = Modifier.fillMaxWidth()
-                )
+
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
