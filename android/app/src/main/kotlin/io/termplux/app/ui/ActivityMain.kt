@@ -70,7 +70,6 @@ fun ActivityMain(
     val drawerState = rememberDrawerState(
         initialValue = DrawerValue.Closed
     )
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val scope = rememberCoroutineScope()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
@@ -81,9 +80,7 @@ fun ActivityMain(
                 Column(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    //  verticalArrangement = Arrangement.spacedBy(space = 4.dp)
                 ) {
-
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -111,33 +108,6 @@ fun ActivityMain(
                             )
                         }
                     }
-
-//                    ExtendedFloatingActionButton(
-//                        text = {
-//                            Text(
-//                                text = stringResource(
-//                                    id = R.string.app_name
-//                                )
-//                            )
-//                        },
-//                        icon = {
-//                            Icon(
-//                                imageVector = Icons.Outlined.Terminal,
-//                                contentDescription = null,
-//                            )
-//                        },
-//                        onClick = {
-//                            scope.launch {
-//                                drawerState.close()
-//                            }
-//                        },
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .padding(
-//                                horizontal = 16.dp,
-//                                vertical = 10.dp
-//                            )
-//                    )
                 }
                 Divider()
                 Column(
@@ -236,83 +206,6 @@ fun ActivityMain(
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
-//                TopAppBar(
-//                    title = {
-//                        Text(
-//                            text = stringResource(
-//                                id = R.string.app_name
-//                            )
-//                        )
-//                    },
-//                    modifier = Modifier.fillMaxWidth(),
-//                    navigationIcon = {
-//                        IconButton(
-//                            onClick = {
-//                                scope.launch {
-//                                    drawerState.open()
-//                                }
-//                            }
-//                        ) {
-//                            Icon(
-//                                imageVector = Icons.Filled.Menu,
-//                                contentDescription = null
-//                            )
-//                        }
-//                    },
-//                    actions = {
-//                        IconButton(
-//                            onClick = {
-//                                expandedMenu.value = true
-//                            }
-//                        ) {
-//                            Icon(
-//                                imageVector = Icons.Filled.MoreVert,
-//                                contentDescription = null
-//                            )
-//                        }
-//                        DropdownMenu(
-//                            expanded = expandedMenu.value,
-//                            onDismissRequest = {
-//                                expandedMenu.value = false
-//                            }
-//                        ) {
-//                            DropdownMenuItem(
-//                                text = {
-//                                    Text(text = "更多")
-//                                },
-//                                onClick = {
-//                                    optionsMenu()
-//                                    expandedMenu.value = false
-//                                },
-//                                leadingIcon = {
-//                                    Icon(
-//                                        imageVector = Icons.Filled.MoreHoriz,
-//                                        contentDescription = null
-//                                    )
-//                                },
-//                                enabled = true
-//                            )
-//                            DropdownMenuItem(
-//                                text = {
-//                                    Text(text = "全屏")
-//                                },
-//                                onClick = {
-//                                    toggle()
-//                                    expandedMenu.value = false
-//                                },
-//                                leadingIcon = {
-//                                    Icon(
-//                                        imageVector = Icons.Filled.TouchApp,
-//                                        contentDescription = null
-//                                    )
-//                                },
-//                                enabled = true
-//                            )
-//                        }
-//                    },
-//                    colors = TopAppBarDefaults.topAppBarColors(),
-//                    scrollBehavior = scrollBehavior
-//                )
             },
             bottomBar = {
                 BottomAppBar(
@@ -352,34 +245,6 @@ fun ActivityMain(
                                 contentDescription = null
                             )
                         }
-//                        ExtendedFloatingActionButton(
-//                            text = {
-//                                Text(
-//                                    text = stringResource(
-//                                        id = R.string.menu_content
-//                                    )
-//                                )
-//                            },
-//                            icon = {
-//                                Icon(
-//                                    imageVector = Icons.Outlined.Terminal,
-//                                    contentDescription = null
-//                                )
-//                            },
-//                            onClick = {
-//                                navController.navigate(
-//                                    route = Screen.Content.route
-//                                ) {
-//                                    popUpTo(
-//                                        id = navController.graph.findStartDestination().id
-//                                    ) {
-//                                        saveState = true
-//                                    }
-//                                    launchSingleTop = true
-//                                    restoreState = true
-//                                }
-//                            }
-//                        )
                     }
                 )
 //                NavigationBar(
@@ -435,9 +300,6 @@ fun ActivityMain(
                 startDestination = Screen.Home.route,
                 modifier = Modifier
                     .fillMaxSize()
-                    .nestedScroll(
-                        connection = scrollBehavior.nestedScrollConnection
-                    )
                     .padding(
                         paddingValues = innerPadding
                     )
