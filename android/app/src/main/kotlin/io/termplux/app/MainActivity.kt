@@ -6,7 +6,6 @@ import io.termplux.basic.activity.TermPluxActivity
 
 class MainActivity : TermPluxActivity() {
 
-
     override fun onCreated(parameter: JumpParameter?) {
         setContents { navController, content, event, message, current ->
             ActivityMain(
