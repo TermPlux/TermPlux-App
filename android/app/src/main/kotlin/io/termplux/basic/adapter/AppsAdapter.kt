@@ -1,6 +1,5 @@
 package io.termplux.basic.adapter
 
-import android.graphics.Color
 import android.text.TextUtils
 import android.util.Log
 import android.view.Gravity
@@ -14,12 +13,9 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.blankj.utilcode.util.AppUtils
 import com.google.android.material.snackbar.Snackbar
-import com.kongzue.dialogx.dialogs.BottomMenu
 import com.kongzue.dialogx.dialogs.PopMenu
 import com.kongzue.dialogx.dialogs.PopTip
-import com.kongzue.dialogx.interfaces.MenuItemTextInfoInterceptor
 import com.kongzue.dialogx.interfaces.OnIconChangeCallBack
-import com.kongzue.dialogx.util.TextInfo
 import io.termplux.BuildConfig
 import io.termplux.R
 import io.termplux.model.AppsModel
@@ -276,15 +272,15 @@ class AppsAdapter constructor(
     }
 
     private fun navToHome() {
-        mViewPager.currentItem = MainAdapter.home
+        mViewPager.currentItem = ContentAdapter.home
     }
 
     private fun navToNav() {
-        mViewPager.currentItem = MainAdapter.nav
+        mViewPager.currentItem = ContentAdapter.nav
     }
 
     private fun navToSettings() {
-        mViewPager.currentItem = MainAdapter.settings
+        mViewPager.currentItem = ContentAdapter.settings
     }
 
     companion object {

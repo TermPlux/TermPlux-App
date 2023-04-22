@@ -24,7 +24,7 @@ import io.termplux.R
 import io.termplux.app.ui.navigation.Screen
 import io.termplux.app.ui.preview.TermPluxPreviews
 import io.termplux.app.ui.widget.SettingsItem
-import io.termplux.basic.adapter.MainAdapter
+import io.termplux.basic.adapter.ContentAdapter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -67,7 +67,7 @@ fun ScreenSettings(
                     title = "其他设置",
                     summary = "跳转其他设置界面"
                 ) {
-                    current(MainAdapter.settings)
+                    current(ContentAdapter.settings)
                     navController.navigate(
                         route = Screen.Content.route
                     ) {

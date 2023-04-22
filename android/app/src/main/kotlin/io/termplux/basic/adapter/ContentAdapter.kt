@@ -7,7 +7,7 @@ import androidx.viewpager2.widget.ViewPager2
 import io.flutter.embedding.android.FlutterFragment
 import io.termplux.basic.fragment.*
 
-class MainAdapter constructor(
+class ContentAdapter constructor(
     activity: FragmentActivity,
     flutter: FlutterFragment,
     viewPager: ViewPager2,
@@ -105,8 +105,8 @@ class MainAdapter constructor(
             flutter: FlutterFragment,
             viewPager: ViewPager2,
             navigation: (String) -> Unit
-        ): MainAdapter{
-            return MainAdapter(
+        ): ContentAdapter{
+            return ContentAdapter(
                 activity = activity,
                 flutter = flutter,
                 viewPager = viewPager,

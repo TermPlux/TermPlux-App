@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.navigation.NavigationView
 import io.termplux.R
-import io.termplux.basic.adapter.MainAdapter
+import io.termplux.basic.adapter.ContentAdapter
 import io.termplux.app.ui.navigation.Screen
 
 class NavigationFragment constructor(
@@ -49,10 +49,10 @@ class NavigationFragment constructor(
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.nav_launcher -> mViewPager.currentItem = MainAdapter.launcher
-            R.id.nav_home -> mViewPager.currentItem = MainAdapter.home
+            R.id.nav_launcher -> mViewPager.currentItem = ContentAdapter.launcher
+            R.id.nav_home -> mViewPager.currentItem = ContentAdapter.home
             //R.id.nav_navigation -> mViewPager.currentItem = MainAdapter.nav
-            R.id.nav_settings -> mViewPager.currentItem = MainAdapter.settings
+            R.id.nav_settings -> mViewPager.currentItem = ContentAdapter.settings
 
             //R.id.nav_compose_home -> mNavigation(Screen.Home.route)
             R.id.nav_dashboard -> mNavigation(Screen.Dashboard.route)

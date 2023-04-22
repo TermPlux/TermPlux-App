@@ -58,7 +58,7 @@ import io.flutter.plugins.GeneratedPluginRegistrant
 import io.termplux.BuildConfig
 import io.termplux.IUserService
 import io.termplux.R
-import io.termplux.basic.adapter.MainAdapter
+import io.termplux.basic.adapter.ContentAdapter
 import io.termplux.basic.custom.LinkNativeViewFactory
 import io.termplux.basic.services.MainService
 import io.termplux.basic.services.UserService
@@ -340,7 +340,7 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
         when (item.itemId) {
             android.R.id.home -> if (!isHome) onBack()
             R.id.action_settings -> {
-                current(item = MainAdapter.settings)
+                current(item = ContentAdapter.settings)
             }
         }
         return true
@@ -446,6 +446,8 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
         ).apply {
             isUserInputEnabled = true
         }
+
+
 
         mTabLayout = TabLayout(
             mBaseContext
@@ -579,8 +581,8 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
      * ViewPager2的适配器
      */
     private fun adapter(navController: NavHostController) {
-        // 初始化适配器
-        val adapter = MainAdapter.newInstance(
+        // 初始化适配器实例
+        val adapter = ContentAdapter.newInstance(
             activity = mME,
             flutter = mFlutterFragment,
             viewPager = mViewPager2,
@@ -602,27 +604,12 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
         val count = adapter.itemCount
         // 设置适配器
         mViewPager2.adapter = adapter
-        // 在精简模式预加载页面
+        // 预加载页面
         mViewPager2.offscreenPageLimit = count
     }
 
-
-    private fun mediator() {
-        val title = arrayOf(
-            getString(R.string.menu_home),
-            getString(R.string.menu_launcher),
-            getString(R.string.menu_navigation),
-            getString(R.string.menu_settings)
-        )
-        TabLayoutMediator(
-            mTabLayout, mViewPager2
-        ) { tab: TabLayout.Tab, position: Int ->
-            tab.text = title[position]
-        }.attach()
-    }
-
     @Composable
-    fun AppBarLayout(modifier: Modifier) {
+    private fun AppBarLayout(modifier: Modifier) {
         AndroidView(
             factory = {
                 mAppBarLayout
@@ -726,6 +713,7 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
             event: (event: String) -> Unit,
             message: (message: String) -> String,
             current: (item: Int) -> Unit,
+            browser: (url: String) -> Unit
         ) -> Unit
     ) {
         mComposeView.apply {
@@ -752,8 +740,17 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
                 }
                 // 设置适配器
                 adapter(navController = navController)
-                // 设置标签导航调解器
-                mediator()
+                val title = arrayOf(
+                    getString(R.string.menu_home),
+                    getString(R.string.menu_launcher),
+                    getString(R.string.menu_navigation),
+                    getString(R.string.menu_settings)
+                )
+                TabLayoutMediator(
+                    mTabLayout, mViewPager2
+                ) { tab: TabLayout.Tab, position: Int ->
+                    tab.text = title[position]
+                }.attach()
                 // 设置系统界面样式
                 if (!mComposeView.isInEditMode) {
                     SideEffect {
@@ -799,6 +796,9 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
                             current(
                                 item = item
                             )
+                        },
+                        browser = { url ->
+
                         }
                     )
                 }
@@ -810,6 +810,9 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
 
         const val topBar: String = "topBar"
         const val tabBar: String = "tabBar"
+        const val flutter: String = "flutter"
+        const val apps: String = "apps"
+
         const val pager: String = "pager"
 
         const val toggle: String = "toggle"

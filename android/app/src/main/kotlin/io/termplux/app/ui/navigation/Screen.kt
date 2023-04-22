@@ -12,7 +12,7 @@ import androidx.compose.material.icons.twotone.Settings
 import androidx.compose.material.icons.twotone.Terminal
 import androidx.compose.ui.graphics.vector.ImageVector
 import io.termplux.R
-import io.termplux.basic.adapter.MainAdapter
+import io.termplux.basic.adapter.ContentAdapter
 
 sealed class Screen constructor(
     val type: ScreenType,
@@ -59,28 +59,28 @@ sealed class Screen constructor(
 
     object LauncherFragment : Screen(
         type = ScreenType.Fragment,
-        route = MainAdapter.launcher.toString(),
+        route = ContentAdapter.launcher.toString(),
         imageVector = Icons.TwoTone.RocketLaunch,
         title = R.string.menu_launcher
     )
 
     object HomeFragment : Screen(
         type = ScreenType.Fragment,
-        route = MainAdapter.home.toString(),
+        route = ContentAdapter.home.toString(),
         imageVector = Icons.TwoTone.FlutterDash,
         title = R.string.menu_home
     )
 
     object NavigationFragment : Screen(
         type = ScreenType.Fragment,
-        route = MainAdapter.nav.toString(),
+        route = ContentAdapter.nav.toString(),
         imageVector = Icons.TwoTone.Navigation,
         title = R.string.menu_navigation
     )
 
     object SettingsFragment : Screen(
         type = ScreenType.Fragment,
-        route = MainAdapter.settings.toString(),
+        route = ContentAdapter.settings.toString(),
         imageVector = Icons.TwoTone.Settings,
         title = R.string.menu_settings
     )
