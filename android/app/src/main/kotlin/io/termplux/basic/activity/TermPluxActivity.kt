@@ -41,7 +41,6 @@ import com.google.android.material.internal.EdgeToEdgeUtils
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.idlefish.flutterboost.containers.FlutterBoostFragment
 import com.kongzue.baseframework.BaseActivity
 import com.kongzue.baseframework.interfaces.LifeCircleListener
 import com.kongzue.baseframework.util.AppManager
@@ -497,7 +496,7 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
         FlutterEngineCache.getInstance().put(termplux_flutter, flutterEngine)
 
         // 初始化FlutterFragment
-        mFlutterFragment = FlutterBoostFragment
+        mFlutterFragment = FlutterFragment
             .withCachedEngine(termplux_flutter)
             .renderMode(RenderMode.surface)
             .transparencyMode(TransparencyMode.opaque)
