@@ -32,6 +32,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun ActivityMain(
     navController: NavHostController,
+    drawerState: DrawerState,
     pager: @Composable (modifier: Modifier) -> Unit,
     tabBar: @Composable (modifier: Modifier) -> Unit,
     optionsMenu: () -> Unit,
@@ -41,15 +42,17 @@ fun ActivityMain(
     toggle: () -> Unit
 ) {
     val pages = listOf(
-        Screen.Divider,
         Screen.ComposeTitle,
+
         Screen.Home,
         Screen.Dashboard,
-        Screen.Content,
+        Screen.Manager,
         Screen.Settings,
         Screen.About,
+
         Screen.Divider,
         Screen.FragmentTitle,
+
         Screen.LauncherFragment,
         Screen.HomeFragment,
         Screen.AppsFragment,
@@ -59,7 +62,7 @@ fun ActivityMain(
     val items = listOf(
         Screen.Home,
         Screen.Dashboard,
-        Screen.Content,
+        Screen.Manager,
         Screen.Settings
     )
     val expandedMenu = remember {
@@ -68,9 +71,9 @@ fun ActivityMain(
         )
     }
 
-    val drawerState = rememberDrawerState(
-        initialValue = DrawerValue.Closed
-    )
+//    val drawerState = rememberDrawerState(
+//        initialValue = DrawerValue.Closed
+//    )
     val scope = rememberCoroutineScope()
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -79,53 +82,53 @@ fun ActivityMain(
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet {
-                // 头布局
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(
-                                all = 16.dp
-                            ),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = stringResource(
-                                id = R.string.app_description
-                            ),
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                        IconButton(
-                            onClick = {
-                                scope.launch {
-                                    drawerState.close()
-                                }
-                            }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.MenuOpen,
-                                contentDescription = null
-                            )
-                        }
-                    }
-                }
-                ExtendedFloatingActionButton(
-                    text = {
-                        Text(text = stringResource(id = R.string.menu_content))
-                    },
-                    icon = {
-                        Icon(imageVector = Icons.Outlined.Terminal, contentDescription = null)
-                    },
-                    onClick = { /*TODO*/ },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 5.dp)
-                )
+//                // 头布局
+//                Column(
+//                    modifier = Modifier.fillMaxWidth(),
+//                    horizontalAlignment = Alignment.CenterHorizontally,
+//                ) {
+//                    Row(
+//                        modifier = Modifier
+//                            .fillMaxWidth()
+//                            .padding(
+//                                all = 16.dp
+//                            ),
+//                        horizontalArrangement = Arrangement.SpaceBetween,
+//                        verticalAlignment = Alignment.CenterVertically
+//                    ) {
+//                        Text(
+//                            text = stringResource(
+//                                id = R.string.app_description
+//                            ),
+//                            style = MaterialTheme.typography.titleMedium,
+//                            color = MaterialTheme.colorScheme.primary
+//                        )
+//                        IconButton(
+//                            onClick = {
+//                                scope.launch {
+//                                    drawerState.close()
+//                                }
+//                            }
+//                        ) {
+//                            Icon(
+//                                imageVector = Icons.Default.MenuOpen,
+//                                contentDescription = null
+//                            )
+//                        }
+//                    }
+//                }
+//                ExtendedFloatingActionButton(
+//                    text = {
+//                        Text(text = stringResource(id = R.string.app_name))
+//                    },
+//                    icon = {
+//                        Icon(imageVector = Icons.Outlined.Terminal, contentDescription = null)
+//                    },
+//                    onClick = { /*TODO*/ },
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .padding(horizontal = 16.dp, vertical = 5.dp)
+//                )
                 // 导航列表
                 Column(
                     modifier = Modifier.verticalScroll(
@@ -133,6 +136,11 @@ fun ActivityMain(
                     ),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
+                    Spacer(
+                        modifier = Modifier.height(
+                            height = 12.dp
+                        )
+                    )
                     pages.forEach { item ->
                         when (item.item) {
                             ItemType.Default -> NavigationDrawerItem(
@@ -174,7 +182,7 @@ fun ActivityMain(
                                             item.route.toInt()
                                         ).also {
                                             navController.navigate(
-                                                route = Screen.Content.route
+                                                route = Screen.Home.route
                                             ) {
                                                 popUpTo(
                                                     id = navController.graph.findStartDestination().id
@@ -251,15 +259,24 @@ fun ActivityMain(
             composable(
                 route = Screen.Home.route
             ) {
+                ScreenContent(
+                    pager = pager
+                )
+
+            }
+            composable(
+                route = Screen.Dashboard.route
+            ) {
                 ScreenHome(
                     navController = navController,
                     drawerState = drawerState,
                     androidVersion = androidVersion,
                     shizukuVersion = shizukuVersion
                 )
+
             }
             composable(
-                route = Screen.Dashboard.route
+                route = Screen.Manager.route
             ) {
                 ScreenDashboard(
                     navController = navController,
@@ -278,13 +295,6 @@ fun ActivityMain(
                     SelectOnClick = { /*TODO*/ }) {
 
                 }
-            }
-            composable(
-                route = Screen.Content.route
-            ) {
-                ScreenContent(
-                    pager = pager
-                )
             }
             composable(
                 route = Screen.Settings.route
@@ -375,6 +385,9 @@ fun ActivityMain(
 fun ActivityMainPreview() {
     ActivityMain(
         navController = rememberNavController(),
+        drawerState = rememberDrawerState(
+            initialValue = DrawerValue.Closed
+        ),
         pager = { modifier ->
             Box(
                 modifier = modifier,

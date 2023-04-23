@@ -59,7 +59,7 @@ fun ScreenHome(
                 title = {
                     Text(
                         text = stringResource(
-                            id = R.string.menu_home
+                            id = R.string.menu_dashboard
                         )
                     )
                 },
@@ -130,7 +130,7 @@ fun ScreenHome(
                             .fillMaxWidth()
                             .clickable {
                                 navController.navigate(
-                                    route = Screen.Dashboard.route
+                                    route = Screen.Manager.route
                                 ) {
                                     popUpTo(
                                         navController.graph.findStartDestination().id

@@ -25,10 +25,9 @@ import com.blankj.utilcode.util.AppUtils
 import io.termplux.BuildConfig
 import io.termplux.R
 import io.termplux.app.ui.navigation.Screen
+import io.termplux.app.ui.navigation.ScreenRoute
 import io.termplux.app.ui.preview.TermPluxPreviews
 import io.termplux.app.ui.widget.SettingsItem
-import io.termplux.basic.adapter.ContentAdapter
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -121,9 +120,9 @@ fun ScreenSettings(
                         title = "其他设置",
                         summary = "跳转其他设置界面"
                     ) {
-                        current(ContentAdapter.settings)
+                        current(ScreenRoute.routeSettingsFragment.toInt())
                         navController.navigate(
-                            route = Screen.Content.route
+                            route = Screen.Home.route
                         ) {
                             popUpTo(
                                 navController.graph.findStartDestination().id

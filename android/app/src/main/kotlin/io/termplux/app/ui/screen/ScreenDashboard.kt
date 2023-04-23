@@ -71,7 +71,7 @@ fun ScreenDashboard(
                 title = {
                     Text(
                         text = stringResource(
-                            id = R.string.menu_dashboard
+                            id = R.string.menu_manager
                         )
                     )
                 },
@@ -98,7 +98,7 @@ fun ScreenDashboard(
             FloatingActionButton(
                 onClick = {
                     navController.navigate(
-                        route = Screen.Content.route
+                        route = Screen.Home.route
                     ) {
                         popUpTo(
                             id = navController.graph.findStartDestination().id

@@ -1,5 +1,6 @@
 package io.termplux.basic.adapter
 
+import androidx.compose.material3.DrawerState
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -13,20 +14,22 @@ class ContentAdapter constructor(
     flutter: FlutterFragment,
     viewPager: ViewPager2,
     appBarLayout: AppBarLayout,
+    drawerState: (Boolean) -> Unit,
     navigation: (String) -> Unit
 ) : FragmentStateAdapter(
     activity
 ) {
 
+    private val mAppBarLayout: AppBarLayout
     private val mViewPager: ViewPager2
     private val mFlutter: FlutterFragment
-    private val mAppBarLayout: AppBarLayout
 
+    private val mDrawerState: (Boolean) -> Unit
     private var mNavigation: (String) -> Unit
 
     private lateinit var mLauncher: LauncherFragment
     private lateinit var mHome: HomeFragment
-    private lateinit var mApp: AppsFragment
+    private lateinit var mApps: AppsFragment
     private lateinit var mNavFrag: NavigationFragment
     private lateinit var mSettings: SettingsFragment
     private lateinit var mError: ErrorFragment
@@ -38,6 +41,7 @@ class ContentAdapter constructor(
         // 传入FlutterFragment
         mFlutter = flutter
         mAppBarLayout = appBarLayout
+        mDrawerState = drawerState
         // 传入导航函数
         mNavigation = navigation
     }
@@ -45,7 +49,15 @@ class ContentAdapter constructor(
     /**
      * 返回页面数量
      */
-    override fun getItemCount(): Int = intArrayOf(launcher, home, apps, nav, settings).size
+    override fun getItemCount(): Int {
+        return intArrayOf(
+            launcher,
+            home,
+            apps,
+            nav,
+            settings
+        ).size
+    }
 
     /**
      * 返回Fragment页面
@@ -55,7 +67,7 @@ class ContentAdapter constructor(
         return when (position) {
             launcher -> mLauncher
             home -> mHome
-            apps -> mApp
+            apps -> mApps
             nav -> mNavFrag
             settings -> mSettings
             else -> mError
@@ -74,8 +86,8 @@ class ContentAdapter constructor(
             flutterFragment = mFlutter
         )
 
-        // 桌面
-        mApp = AppsFragment.newInstance(
+        // 应用
+        mApps = AppsFragment.newInstance(
             viewPager = mViewPager,
             navigation = mNavigation
         )
@@ -104,13 +116,15 @@ class ContentAdapter constructor(
             flutter: FlutterFragment,
             viewPager: ViewPager2,
             appBarLayout: AppBarLayout,
+            drawerState: (Boolean) -> Unit,
             navigation: (String) -> Unit
-        ): ContentAdapter{
+        ): ContentAdapter {
             return ContentAdapter(
                 activity = activity,
                 flutter = flutter,
                 viewPager = viewPager,
                 appBarLayout = appBarLayout,
+                drawerState = drawerState,
                 navigation = navigation
             )
         }

@@ -63,7 +63,9 @@ import io.termplux.basic.custom.LinkNativeViewFactory
 import io.termplux.basic.services.MainService
 import io.termplux.basic.services.UserService
 import io.termplux.basic.utils.BackInvokedCallbackUtils
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Runnable
+import kotlinx.coroutines.launch
 import rikka.shizuku.Shizuku
 
 abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
@@ -419,19 +421,21 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
      * 加载Ui控件
      */
     private fun initUi() {
-
-        // 加载Toolbar
-        mToolbar = MaterialToolbar(mBaseContext).also { toolbar ->
-            setSupportActionBar(toolbar)
-        }
-
-        mAppBarLayout = AppBarLayout(mBaseContext).apply {
+        // 加载AppBarLayout
+        mAppBarLayout = AppBarLayout(
+            mBaseContext
+        ).apply {
             fitsSystemWindows = true
             addView(
-                mToolbar,
-                LinearLayoutCompat.LayoutParams(
-                    LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-                    LinearLayoutCompat.LayoutParams.WRAP_CONTENT
+                MaterialToolbar(
+                    mBaseContext
+                ).also { toolbar ->
+                    setSupportActionBar(toolbar)
+                    mToolbar = toolbar
+                },
+                AppBarLayout.LayoutParams(
+                    AppBarLayout.LayoutParams.MATCH_PARENT,
+                    AppBarLayout.LayoutParams.WRAP_CONTENT
                 )
             )
         }.also { appBar ->
@@ -441,14 +445,14 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
             )
         }
 
+        // 加载ViewPager2
         mViewPager2 = ViewPager2(
             mBaseContext
         ).apply {
-            isUserInputEnabled = true
+            isUserInputEnabled = false
         }
 
-
-
+        // 加载TabLayout
         mTabLayout = TabLayout(
             mBaseContext
         ).apply {
@@ -463,7 +467,7 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
         EdgeToEdgeUtils.applyEdgeToEdge(window, true)
         // 深色模式跟随系统
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-        WindowCompat.setDecorFitsSystemWindows(window, false)
+        WindowCompat.setDecorFitsSystemWindows(window, true)
 
         val option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
         val decorView = window.decorView
@@ -580,13 +584,25 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
     /**
      * ViewPager2的适配器
      */
-    private fun adapter(navController: NavHostController) {
+    private fun adapter(
+        navController: NavHostController,
+        scope: CoroutineScope,
+        drawerState: DrawerState
+    ) {
         // 初始化适配器实例
         val adapter = ContentAdapter.newInstance(
             activity = mME,
             flutter = mFlutterFragment,
             viewPager = mViewPager2,
             appBarLayout = mAppBarLayout,
+            drawerState = { state ->
+                scope.launch {
+                    when (state) {
+                        true -> drawerState.open()
+                        false -> drawerState.close()
+                    }
+                }
+            },
             navigation = { route ->
                 navController.navigate(
                     route = route
@@ -725,6 +741,7 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
     protected fun setContents(
         content: @Composable (
             navController: NavHostController,
+            drawerState: DrawerState,
             content: @Composable (content: String, modifier: Modifier) -> Unit,
             event: (event: String) -> Unit,
             message: (message: String) -> String,
@@ -737,6 +754,10 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
             setContent {
                 // 导航控制器实例
                 val navController = rememberNavController()
+                val scope = rememberCoroutineScope()
+                val drawerState = rememberDrawerState(
+                    initialValue = DrawerValue.Closed
+                )
                 // 系统界面控制器实例
                 val systemUiController = rememberSystemUiController()
                 // 判断系统是否处于深色模式
@@ -755,7 +776,11 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
                     else -> LightColorScheme
                 }
                 // 设置适配器
-                adapter(navController = navController)
+                adapter(
+                    navController = navController,
+                    scope = scope,
+                    drawerState = drawerState
+                )
                 mediator()
                 // 设置系统界面样式
                 if (!mComposeView.isInEditMode) {
@@ -777,6 +802,7 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
                 ) {
                     content(
                         navController = navController,
+                        drawerState = drawerState,
                         content = { content, modifier ->
                             when (content) {
                                 tabBar -> TabLayout(modifier = modifier)

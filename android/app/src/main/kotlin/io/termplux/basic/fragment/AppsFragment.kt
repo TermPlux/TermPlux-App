@@ -117,7 +117,6 @@ class AppsFragment constructor(
                 applicationList.add(
                     AppsModel(pkgName = pkg)
                 )
-              //  Log.i("Launcher", AppsModel(pkgName = pkg).toString())
             }
         }
 
