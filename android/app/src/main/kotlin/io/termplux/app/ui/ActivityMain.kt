@@ -22,6 +22,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import io.termplux.BuildConfig
 import io.termplux.R
+import io.termplux.app.ui.navigation.ItemType
 import io.termplux.app.ui.navigation.Screen
 import io.termplux.app.ui.navigation.ScreenType
 import io.termplux.app.ui.preview.TermPluxPreviews
@@ -29,10 +30,8 @@ import io.termplux.app.ui.screen.*
 import kotlinx.coroutines.launch
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
 fun ActivityMain(
     navController: NavHostController,
-    topBar: @Composable (modifier: Modifier) -> Unit,
     pager: @Composable (modifier: Modifier) -> Unit,
     tabBar: @Composable (modifier: Modifier) -> Unit,
     optionsMenu: () -> Unit,
@@ -42,40 +41,44 @@ fun ActivityMain(
     toggle: () -> Unit
 ) {
     val pages = listOf(
+        Screen.Divider,
+        Screen.ComposeTitle,
         Screen.Home,
         Screen.Dashboard,
         Screen.Content,
+        Screen.Settings,
+        Screen.About,
+        Screen.Divider,
+        Screen.FragmentTitle,
         Screen.HomeFragment,
         Screen.LauncherFragment,
         Screen.NavigationFragment,
-        Screen.SettingsFragment,
-        Screen.Settings,
-        Screen.About
+        Screen.SettingsFragment
     )
     val items = listOf(
         Screen.Home,
         Screen.Dashboard,
         Screen.Content,
-        Screen.Settings,
+        Screen.Settings
     )
     val expandedMenu = remember {
         mutableStateOf(
             value = false
         )
     }
-    val snackBarHostState = remember {
-        SnackbarHostState()
-    }
+
     val drawerState = rememberDrawerState(
         initialValue = DrawerValue.Closed
     )
     val scope = rememberCoroutineScope()
+
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet {
+                // 头布局
                 Column(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -83,7 +86,9 @@ fun ActivityMain(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(all = 16.dp),
+                            .padding(
+                                all = 16.dp
+                            ),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -108,59 +113,48 @@ fun ActivityMain(
                         }
                     }
                 }
-                Divider()
+                ExtendedFloatingActionButton(
+                    text = {
+                        Text(text = stringResource(id = R.string.menu_content))
+                    },
+                    icon = {
+                        Icon(imageVector = Icons.Outlined.Terminal, contentDescription = null)
+                    },
+                    onClick = { /*TODO*/ },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 5.dp)
+                )
+                // 导航列表
                 Column(
                     modifier = Modifier.verticalScroll(
                         state = rememberScrollState()
                     ),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    Spacer(
-                        modifier = Modifier.height(
-                            height = 12.dp
-                        )
-                    )
                     pages.forEach { item ->
-                        NavigationDrawerItem(
-                            icon = {
-                                Icon(
-                                    imageVector = item.imageVector,
-                                    contentDescription = null
-                                )
-                            },
-                            label = {
-                                Text(
-                                    text = stringResource(
-                                        id = item.title
+                        when (item.item) {
+                            ItemType.Default -> NavigationDrawerItem(
+                                icon = {
+                                    Icon(
+                                        imageVector = item.imageVector,
+                                        contentDescription = null
                                     )
-                                )
-                            },
-                            selected = currentDestination?.hierarchy?.any {
-                                it.route == item.route
-                            } == true,
-                            onClick = {
-                                when (item.type) {
-                                    ScreenType.Compose -> navController.navigate(
-                                        route = item.route
-                                    ) {
-                                        popUpTo(
-                                            id = navController.graph.findStartDestination().id
-                                        ) {
-                                            saveState = true
-                                        }
-                                        launchSingleTop = true
-                                        restoreState = true
-                                    }.also {
-                                        scope.launch {
-                                            drawerState.close()
-                                        }
-                                    }
-
-                                    ScreenType.Fragment -> current(
-                                        item.route.toInt()
-                                    ).also {
-                                        navController.navigate(
-                                            route = Screen.Content.route
+                                },
+                                label = {
+                                    Text(
+                                        text = stringResource(
+                                            id = item.title
+                                        )
+                                    )
+                                },
+                                selected = currentDestination?.hierarchy?.any {
+                                    it.route == item.route
+                                } == true,
+                                onClick = {
+                                    when (item.type) {
+                                        ScreenType.Compose -> navController.navigate(
+                                            route = item.route
                                         ) {
                                             popUpTo(
                                                 id = navController.graph.findStartDestination().id
@@ -174,13 +168,69 @@ fun ActivityMain(
                                                 drawerState.close()
                                             }
                                         }
+
+                                        ScreenType.Fragment -> current(
+                                            item.route.toInt()
+                                        ).also {
+                                            navController.navigate(
+                                                route = Screen.Content.route
+                                            ) {
+                                                popUpTo(
+                                                    id = navController.graph.findStartDestination().id
+                                                ) {
+                                                    saveState = true
+                                                }
+                                                launchSingleTop = true
+                                                restoreState = true
+                                            }.also {
+                                                scope.launch {
+                                                    drawerState.close()
+                                                }
+                                            }
+                                        }
+
+                                        ScreenType.Title -> scope.launch {
+                                            drawerState.close()
+                                        }
+
+                                        ScreenType.Divider -> scope.launch {
+                                            drawerState.close()
+                                        }
                                     }
-                                }
-                            },
-                            modifier = Modifier.padding(
-                                paddingValues = NavigationDrawerItemDefaults.ItemPadding
+                                },
+                                modifier = Modifier.padding(
+                                    paddingValues = NavigationDrawerItemDefaults.ItemPadding
+                                )
                             )
-                        )
+
+                            ItemType.Title -> Text(
+                                text = stringResource(
+                                    id = item.title
+                                ),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(
+                                        paddingValues = NavigationDrawerItemDefaults.ItemPadding
+                                    )
+                                    .padding(
+                                        vertical = 5.dp
+                                    ),
+                                color = MaterialTheme.colorScheme.primary,
+                                textAlign = TextAlign.Start,
+                                style = MaterialTheme.typography.titleMedium
+                            )
+
+                            ItemType.Divider -> Divider(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(
+                                        paddingValues = NavigationDrawerItemDefaults.ItemPadding
+                                    )
+                                    .padding(
+                                        vertical = 5.dp
+                                    )
+                            )
+                        }
                     }
                     Spacer(
                         modifier = Modifier.height(
@@ -192,60 +242,80 @@ fun ActivityMain(
         },
         gesturesEnabled = true
     ) {
-        Scaffold(
-            modifier = Modifier.fillMaxSize(),
-            topBar = {
-                Column(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Spacer(
-                        modifier = Modifier.statusBarsPadding()
-                    )
-                    topBar(
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
-            },
-            bottomBar = {
-                BottomAppBar(
-                    actions = {
-                        IconButton(
-                            onClick = {
-                                scope.launch {
-                                    drawerState.open()
-                                }
-                            }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.Menu,
-                                contentDescription = null
-                            )
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    floatingActionButton = {
-                        FloatingActionButton(
-                            onClick = {
-                                navController.navigate(
-                                    route = Screen.Content.route
-                                ) {
-                                    popUpTo(
-                                        id = navController.graph.findStartDestination().id
-                                    ) {
-                                        saveState = true
-                                    }
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
-                            }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Outlined.Terminal,
-                                contentDescription = null
-                            )
-                        }
-                    }
+        NavHost(
+            navController = navController,
+            startDestination = Screen.Home.route,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            composable(
+                route = Screen.Home.route
+            ) {
+                ScreenHome(
+                    navController = navController,
+                    drawerState = drawerState,
+                    androidVersion = androidVersion,
+                    shizukuVersion = shizukuVersion
                 )
+            }
+            composable(
+                route = Screen.Dashboard.route
+            ) {
+                ScreenDashboard(
+                    navController = navController,
+                    drawerState = drawerState,
+                    tabBar = tabBar,
+                    toggle = toggle,
+                    targetAppName = stringResource(id = R.string.app_name),
+                    targetAppPackageName = BuildConfig.APPLICATION_ID,
+                    targetAppDescription = stringResource(id = R.string.app_description),
+                    targetAppVersionName = BuildConfig.VERSION_NAME,
+                    NavigationOnClick = { /*TODO*/ },
+                    MenuOnClick = { /*TODO*/ },
+                    SearchOnClick = { /*TODO*/ },
+                    SheetOnClick = { /*TODO*/ },
+                    AppsOnClick = { /*TODO*/ },
+                    SelectOnClick = { /*TODO*/ }) {
+
+                }
+            }
+            composable(
+                route = Screen.Content.route
+            ) {
+                ScreenContent(
+                    pager = pager
+                )
+            }
+            composable(
+                route = Screen.Settings.route
+            ) {
+                ScreenSettings(
+                    navController = navController,
+                    drawerState = drawerState,
+                    current = current,
+                    onTaskBarSettings = {},
+                    onSystemSettings = {},
+                    onDefaultLauncherSettings = {}
+                )
+            }
+            composable(
+                route = Screen.About.route
+            ) {
+                ScreenAbout(
+             //       scope = scope,
+                    drawerState = drawerState,
+                 //   snackBarHostState = snackBarHostState,
+                    onEasterEgg = {},
+                    onNotice = {},
+                    onSource = {},
+                    onDevGitHub = {},
+                    onDevTwitter = {},
+                    onTeamGitHub = {}
+                )
+            }
+        }
+//        Scaffold(
+//            modifier = Modifier.fillMaxSize(),
+//            bottomBar = {
 //                NavigationBar(
 //                    modifier = Modifier.fillMaxWidth()
 //                ) {
@@ -286,111 +356,24 @@ fun ActivityMain(
 //                        )
 //                    }
 //                }
-            },
-            snackbarHost = {
-                SnackbarHost(
-                    hostState = snackBarHostState
-                )
-            },
-            contentWindowInsets = ScaffoldDefaults.contentWindowInsets
-        ) { innerPadding ->
-            NavHost(
-                navController = navController,
-                startDestination = Screen.Home.route,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(
-                        paddingValues = innerPadding
-                    )
-            ) {
-                composable(
-                    route = Screen.Home.route
-                ) {
-                    ScreenHome(
-                        navController = navController,
-                        scope = scope,
-                        snackBarHostState = snackBarHostState,
-                        androidVersion = androidVersion,
-                        shizukuVersion = shizukuVersion
-                    )
-                }
-                composable(
-                    route = Screen.Dashboard.route
-                ) {
-                    ScreenDashboard(
-                        navController = navController,
-                        tabBar = tabBar,
-                        toggle = toggle,
-                        targetAppName = stringResource(id = R.string.app_name),
-                        targetAppPackageName = BuildConfig.APPLICATION_ID,
-                        targetAppDescription = stringResource(id = R.string.app_description),
-                        targetAppVersionName = BuildConfig.VERSION_NAME,
-                        NavigationOnClick = { /*TODO*/ },
-                        MenuOnClick = { /*TODO*/ },
-                        SearchOnClick = { /*TODO*/ },
-                        SheetOnClick = { /*TODO*/ },
-                        AppsOnClick = { /*TODO*/ },
-                        SelectOnClick = { /*TODO*/ }) {
-
-                    }
-                }
-                composable(
-                    route = Screen.Content.route
-                ) {
-                    ScreenContent(
-                        pager = pager
-                    )
-                }
-                composable(
-                    route = Screen.Settings.route
-                ) {
-                    ScreenSettings(
-                        navController = navController,
-                        scope = scope,
-                        snackBarHostState = snackBarHostState,
-                        current = current,
-                        onTaskBarSettings = {},
-                        onSystemSettings = {},
-                        onDefaultLauncherSettings = {}
-                    )
-                }
-                composable(
-                    route = Screen.About.route
-                ) {
-                    ScreenAbout(
-                        scope = scope,
-                        snackBarHostState = snackBarHostState,
-                        onEasterEgg = {},
-                        onNotice = {},
-                        onSource = {},
-                        onDevGitHub = {},
-                        onDevTwitter = {},
-                        onTeamGitHub = {}
-                    )
-                }
-            }
-        }
+//            },
+//            snackbarHost = {
+//                SnackbarHost(
+//                    hostState = snackBarHostState
+//                )
+//            },
+//            contentWindowInsets = ScaffoldDefaults.contentWindowInsets
+//        ) { innerPadding ->
+//
+//        }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @TermPluxPreviews
 fun ActivityMainPreview() {
     ActivityMain(
         navController = rememberNavController(),
-        topBar = { modifier ->
-            TopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(
-                            id = R.string.toolbar_preview
-                        )
-                    )
-                },
-                modifier = modifier,
-            )
-        },
         pager = { modifier ->
             Box(
                 modifier = modifier,

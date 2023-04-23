@@ -2,6 +2,7 @@ package io.termplux.app.ui.navigation
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Android
 import androidx.compose.material.icons.twotone.Dashboard
 import androidx.compose.material.icons.twotone.FlutterDash
 import androidx.compose.material.icons.twotone.Home
@@ -16,13 +17,23 @@ import io.termplux.basic.adapter.ContentAdapter
 
 sealed class Screen constructor(
     val type: ScreenType,
+    val item: ItemType,
     val route: String,
     val imageVector: ImageVector,
     @StringRes val title: Int,
 ) {
 
+    object ComposeTitle : Screen(
+        type = ScreenType.Title,
+        item = ItemType.Title,
+        route = ScreenRoute.Title,
+        imageVector = Icons.Filled.Android,
+        title = R.string.app_name
+    )
+
     object Home : Screen(
         type = ScreenType.Compose,
+        item = ItemType.Default,
         route = ScreenRoute.routeHome,
         imageVector = Icons.TwoTone.Home,
         title = R.string.menu_home
@@ -30,6 +41,7 @@ sealed class Screen constructor(
 
     object Dashboard : Screen(
         type = ScreenType.Compose,
+        item = ItemType.Default,
         route = ScreenRoute.routeDashboard,
         imageVector = Icons.TwoTone.Dashboard,
         title = R.string.menu_dashboard
@@ -37,6 +49,7 @@ sealed class Screen constructor(
 
     object Content : Screen(
         type = ScreenType.Compose,
+        item = ItemType.Default,
         route = ScreenRoute.routeContent,
         imageVector = Icons.TwoTone.Terminal,
         title = R.string.menu_content
@@ -44,6 +57,7 @@ sealed class Screen constructor(
 
     object Settings : Screen(
         type = ScreenType.Compose,
+        item = ItemType.Default,
         route = ScreenRoute.routeSettings,
         imageVector = Icons.TwoTone.Settings,
         title = R.string.menu_settings
@@ -51,14 +65,32 @@ sealed class Screen constructor(
 
     object About : Screen(
         type = ScreenType.Compose,
+        item = ItemType.Default,
         route = ScreenRoute.routeAbout,
         imageVector = Icons.TwoTone.Info,
         title = R.string.menu_about
     )
 
+    object Divider : Screen(
+        type = ScreenType.Divider,
+        item = ItemType.Divider,
+        route = ScreenRoute.Divider,
+        imageVector = Icons.Filled.Android,
+        title = R.string.app_name
+    )
+
+    object FragmentTitle : Screen(
+        type = ScreenType.Title,
+        item = ItemType.Title,
+        route = ScreenRoute.Title,
+        imageVector = Icons.Filled.Android,
+        title = R.string.menu_content
+    )
+
 
     object LauncherFragment : Screen(
         type = ScreenType.Fragment,
+        item = ItemType.Default,
         route = ContentAdapter.launcher.toString(),
         imageVector = Icons.TwoTone.RocketLaunch,
         title = R.string.menu_launcher
@@ -66,6 +98,7 @@ sealed class Screen constructor(
 
     object HomeFragment : Screen(
         type = ScreenType.Fragment,
+        item = ItemType.Default,
         route = ContentAdapter.home.toString(),
         imageVector = Icons.TwoTone.FlutterDash,
         title = R.string.menu_home
@@ -73,6 +106,7 @@ sealed class Screen constructor(
 
     object NavigationFragment : Screen(
         type = ScreenType.Fragment,
+        item = ItemType.Default,
         route = ContentAdapter.nav.toString(),
         imageVector = Icons.TwoTone.Navigation,
         title = R.string.menu_navigation
@@ -80,6 +114,7 @@ sealed class Screen constructor(
 
     object SettingsFragment : Screen(
         type = ScreenType.Fragment,
+        item = ItemType.Default,
         route = ContentAdapter.settings.toString(),
         imageVector = Icons.TwoTone.Settings,
         title = R.string.menu_settings

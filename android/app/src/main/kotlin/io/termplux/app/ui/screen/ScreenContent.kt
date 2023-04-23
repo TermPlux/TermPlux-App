@@ -14,18 +14,26 @@ import io.termplux.app.ui.preview.TermPluxPreviews
 fun ScreenContent(
     pager: @Composable (modifier: Modifier) -> Unit
 ) {
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
-    ) {
-        pager(
-            modifier = Modifier.fillMaxSize()
-        )
+    Scaffold(
+        modifier = Modifier.fillMaxSize()
+    ) { innerPadding ->
+        Surface(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(
+                    paddingValues = innerPadding
+                ),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            pager(
+                modifier = Modifier.fillMaxSize()
+            )
+        }
     }
 }
 
-@TermPluxPreviews
 @Composable
+@TermPluxPreviews
 fun ScreenContentPreview() {
     ScreenContent(
         pager = { modifier ->

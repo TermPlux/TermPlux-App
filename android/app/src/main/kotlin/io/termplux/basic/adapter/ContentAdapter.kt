@@ -4,6 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.appbar.AppBarLayout
 import io.flutter.embedding.android.FlutterFragment
 import io.termplux.basic.fragment.*
 
@@ -11,31 +12,22 @@ class ContentAdapter constructor(
     activity: FragmentActivity,
     flutter: FlutterFragment,
     viewPager: ViewPager2,
+    appBarLayout: AppBarLayout,
     navigation: (String) -> Unit
 ) : FragmentStateAdapter(
     activity
 ) {
 
-    /** ViewPager2实例 */
-    private var mViewPager: ViewPager2
+    private val mViewPager: ViewPager2
+    private val mFlutter: FlutterFragment
+    private val mAppBarLayout: AppBarLayout
 
-    /** FlutterFragment */
-    private var mFlutter: FlutterFragment
-
-    /** Compose NavHost 导航 */
     private var mNavigation: (String) -> Unit
 
     private lateinit var mHome: HomeFragment
-
-    private lateinit var mLauncher: LauncherFragment
-
-    /** 控制中心页面 */
+    private lateinit var mLauncher: AppsFragment
     private lateinit var mNavFrag: NavigationFragment
-
-    /** 设置页面 */
     private lateinit var mSettings: SettingsFragment
-
-    /** 错误提示页面 */
     private lateinit var mError: ErrorFragment
 
     init {
@@ -44,6 +36,7 @@ class ContentAdapter constructor(
         mViewPager = viewPager
         // 传入FlutterFragment
         mFlutter = flutter
+        mAppBarLayout = appBarLayout
         // 传入导航函数
         mNavigation = navigation
     }
@@ -76,7 +69,7 @@ class ContentAdapter constructor(
         )
 
         // 桌面
-        mLauncher = LauncherFragment.newInstance(
+        mLauncher = AppsFragment.newInstance(
             viewPager = mViewPager,
             navigation = mNavigation
         )
@@ -104,12 +97,14 @@ class ContentAdapter constructor(
             activity: FragmentActivity,
             flutter: FlutterFragment,
             viewPager: ViewPager2,
+            appBarLayout: AppBarLayout,
             navigation: (String) -> Unit
         ): ContentAdapter{
             return ContentAdapter(
                 activity = activity,
                 flutter = flutter,
                 viewPager = viewPager,
+                appBarLayout = appBarLayout,
                 navigation = navigation
             )
         }

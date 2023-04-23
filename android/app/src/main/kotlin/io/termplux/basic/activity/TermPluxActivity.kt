@@ -463,7 +463,7 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
         EdgeToEdgeUtils.applyEdgeToEdge(window, true)
         // 深色模式跟随系统
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-        WindowCompat.setDecorFitsSystemWindows(window, true)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
 
         val option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
         val decorView = window.decorView
@@ -586,6 +586,7 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
             activity = mME,
             flutter = mFlutterFragment,
             viewPager = mViewPager2,
+            appBarLayout = mAppBarLayout,
             navigation = { route ->
                 navController.navigate(
                     route = route
@@ -608,15 +609,29 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
         mViewPager2.offscreenPageLimit = count
     }
 
-    @Composable
-    private fun AppBarLayout(modifier: Modifier) {
-        AndroidView(
-            factory = {
-                mAppBarLayout
-            },
-            modifier = modifier
+    private fun mediator() {
+        val title = arrayOf(
+            getString(R.string.menu_home),
+            getString(R.string.menu_launcher),
+            getString(R.string.menu_navigation),
+            getString(R.string.menu_settings)
         )
+        TabLayoutMediator(
+            mTabLayout, mViewPager2
+        ) { tab: TabLayout.Tab, position: Int ->
+            tab.text = title[position]
+        }.attach()
     }
+
+//    @Composable
+//    private fun AppBarLayout(modifier: Modifier) {
+//        AndroidView(
+//            factory = {
+//                mAppBarLayout
+//            },
+//            modifier = modifier
+//        )
+//    }
 
     /**
      * 标签栏
@@ -740,17 +755,7 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
                 }
                 // 设置适配器
                 adapter(navController = navController)
-                val title = arrayOf(
-                    getString(R.string.menu_home),
-                    getString(R.string.menu_launcher),
-                    getString(R.string.menu_navigation),
-                    getString(R.string.menu_settings)
-                )
-                TabLayoutMediator(
-                    mTabLayout, mViewPager2
-                ) { tab: TabLayout.Tab, position: Int ->
-                    tab.text = title[position]
-                }.attach()
+                mediator()
                 // 设置系统界面样式
                 if (!mComposeView.isInEditMode) {
                     SideEffect {
@@ -773,7 +778,6 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
                         navController = navController,
                         content = { content, modifier ->
                             when (content) {
-                                topBar -> AppBarLayout(modifier = modifier)
                                 tabBar -> TabLayout(modifier = modifier)
                                 pager -> ViewPager2(modifier = modifier)
                             }
@@ -808,7 +812,6 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
 
     companion object {
 
-        const val topBar: String = "topBar"
         const val tabBar: String = "tabBar"
         const val flutter: String = "flutter"
         const val apps: String = "apps"

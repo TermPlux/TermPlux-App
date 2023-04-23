@@ -4,5 +4,9 @@ enum class ScreenType {
     // Compose的声明式界面
     Compose,
     // Fragment的View界面
-    Fragment
+    Fragment,
+    // 间隔符
+    Divider,
+    // 分组标题
+    Title
 }

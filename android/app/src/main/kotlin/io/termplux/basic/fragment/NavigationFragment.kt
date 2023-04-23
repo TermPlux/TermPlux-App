@@ -51,14 +51,8 @@ class NavigationFragment constructor(
         when (item.itemId) {
             R.id.nav_launcher -> mViewPager.currentItem = ContentAdapter.launcher
             R.id.nav_home -> mViewPager.currentItem = ContentAdapter.home
-            //R.id.nav_navigation -> mViewPager.currentItem = MainAdapter.nav
+            R.id.nav_navigation -> mViewPager.currentItem = ContentAdapter.nav
             R.id.nav_settings -> mViewPager.currentItem = ContentAdapter.settings
-
-            //R.id.nav_compose_home -> mNavigation(Screen.Home.route)
-            R.id.nav_dashboard -> mNavigation(Screen.Dashboard.route)
-            R.id.nav_manager -> mNavigation(Screen.Content.route)
-            R.id.nav_other_settings -> mNavigation(Screen.Settings.route)
-            R.id.nav_about -> mNavigation(Screen.About.route)
         }
         return false
     }

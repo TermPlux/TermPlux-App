@@ -8,29 +8,37 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.Terminal
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import io.termplux.BuildConfig
 import io.termplux.R
+import io.termplux.app.ui.navigation.Screen
 import io.termplux.app.ui.preview.TermPluxPreviews
 import io.termplux.basic.custom.ClockView
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScreenDashboard(
     navController: NavHostController,
+    drawerState: DrawerState,
     tabBar: @Composable (modifier: Modifier) -> Unit,
     toggle: () -> Unit,
     targetAppName: String,
@@ -46,29 +54,97 @@ fun ScreenDashboard(
     onNavigateToApps: () -> Unit,
 ) {
     val scrollState = rememberScrollState()
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    val scope = rememberCoroutineScope()
+    val snackBarHostState = remember {
+        SnackbarHostState()
+    }
     val expandedPowerButton = remember {
         mutableStateOf(
             value = true
         )
     }
-    Surface(
+    Scaffold(
         modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
-    ) {
-        Column(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            tabBar(
-                modifier = Modifier.fillMaxWidth()
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(
+                            id = R.string.menu_dashboard
+                        )
+                    )
+                },
+                modifier = Modifier.fillMaxWidth(),
+                navigationIcon = {
+                    IconButton(
+                        onClick = {
+                            scope.launch {
+                                drawerState.open()
+                            }
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Menu,
+                            contentDescription = null
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(),
+                scrollBehavior = scrollBehavior
             )
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    navController.navigate(
+                        route = Screen.Content.route
+                    ) {
+                        popUpTo(
+                            id = navController.graph.findStartDestination().id
+                        ) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Terminal,
+                    contentDescription = null
+                )
+            }
+        },
+        floatingActionButtonPosition = FabPosition.End,
+        snackbarHost = {
+            SnackbarHost(
+                hostState = snackBarHostState
+            )
+        },
+        contentWindowInsets = ScaffoldDefaults.contentWindowInsets
+    ) { innerPadding ->
+        Surface(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(
+                    paddingValues = innerPadding
+                ),
+            color = MaterialTheme.colorScheme.background
+        ) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .nestedScroll(
+                        connection = scrollBehavior.nestedScrollConnection
+                    )
                     .verticalScroll(
                         state = scrollState
                     )
             ) {
-
+                tabBar(
+                    modifier = Modifier.fillMaxWidth()
+                )
                 ElevatedCard(
                     modifier = Modifier.padding(
                         start = 16.dp,
@@ -477,6 +553,7 @@ fun ScreenDashboard(
             }
         }
     }
+
 }
 
 @Composable
@@ -484,6 +561,9 @@ fun ScreenDashboard(
 private fun ScreenDashboardPreview() {
     ScreenDashboard(
         navController = rememberNavController(),
+        drawerState = rememberDrawerState(
+            initialValue = DrawerValue.Closed
+        ),
         tabBar = { modifier ->
             Text(
                 text = stringResource(

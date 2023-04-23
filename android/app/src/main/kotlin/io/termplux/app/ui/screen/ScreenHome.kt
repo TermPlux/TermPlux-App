@@ -11,13 +11,17 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.KeyboardArrowRight
 import androidx.compose.material.icons.outlined.Terminal
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -33,159 +37,221 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
+@OptIn(ExperimentalMaterial3Api::class)
 fun ScreenHome(
     navController: NavHostController,
-    scope: CoroutineScope,
-    snackBarHostState: SnackbarHostState,
+    drawerState: DrawerState,
     androidVersion: String,
     shizukuVersion: String
 ) {
     val scrollState = rememberScrollState()
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    val scope = rememberCoroutineScope()
     val contents = StringBuilder()
     val context = LocalContext.current
-    Surface(
-        modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
-    ) {
-        Column(
+    val snackBarHostState = remember {
+        SnackbarHostState()
+    }
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(
+                            id = R.string.menu_home
+                        )
+                    )
+                },
+                modifier = Modifier.fillMaxWidth(),
+                navigationIcon = {
+                    IconButton(
+                        onClick = {
+                            scope.launch {
+                                drawerState.open()
+                            }
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Menu,
+                            contentDescription = null
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(
+                        onClick = { /*TODO*/ }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.MoreVert,
+                            contentDescription = null
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(),
+                scrollBehavior = scrollBehavior
+            )
+        },
+        snackbarHost = {
+            SnackbarHost(
+                hostState = snackBarHostState
+            )
+        },
+        contentWindowInsets = ScaffoldDefaults.contentWindowInsets
+    ) { innerPadding ->
+        Surface(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(
-                    state = scrollState
+                .nestedScroll(
+                    connection = scrollBehavior.nestedScrollConnection
                 )
-        ) {
-            ElevatedCard(
-                modifier = Modifier.padding(
-                    start = 16.dp, end = 16.dp, top = 5.dp, bottom = 8.dp
+                .padding(
+                    paddingValues = innerPadding
                 ),
-                colors = CardDefaults.elevatedCardColors(
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer
-                )
+            color = MaterialTheme.colorScheme.background
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(
+                        state = scrollState
+                    )
             ) {
-                Row(
-                    modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable {
-                        navController.navigate(
-                            route = Screen.Dashboard.route
-                        ) {
-                            popUpTo(
-                                navController.graph.findStartDestination().id
-                            ) {
-                                saveState = true
-                            }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
-                    }
-                    .padding(
-                        all = 24.dp
+                ElevatedCard(
+                    modifier = Modifier.padding(
+                        start = 16.dp, end = 16.dp, top = 5.dp, bottom = 8.dp
                     ),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Terminal,
-                        contentDescription = null
+                    colors = CardDefaults.elevatedCardColors(
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer
                     )
-                    Column(
-                        modifier = Modifier.padding(
-                            start = 20.dp
-                        )
-                    ) {
-                        Text(
-                            text = stringResource(
-                                id = R.string.app_description
-                            ), style = MaterialTheme.typography.titleMedium
-                        )
-                        Spacer(
-                            modifier = Modifier.height(
-                                height = 4.dp
-                            )
-                        )
-                        Text(
-                            text = stringResource(
-                                id = R.string.version
-                            ) + ":\t" + BuildConfig.VERSION_NAME,
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                    }
-                    Icon(
-                        imageVector = Icons.Outlined.KeyboardArrowRight,
-                        contentDescription = null,
+                ) {
+                    Row(
                         modifier = Modifier
-                            .weight(
-                                weight = 1f
-                            )
-                            .wrapContentWidth(
-                                align = Alignment.End
-                            )
-                    )
-                }
-            }
-            ElevatedCard(
-                modifier = Modifier.padding(
-                    start = 16.dp, end = 16.dp, top = 8.dp, bottom = 16.dp
-                )
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            all = 24.dp
+                            .fillMaxWidth()
+                            .clickable {
+                                navController.navigate(
+                                    route = Screen.Dashboard.route
+                                ) {
+                                    popUpTo(
+                                        navController.graph.findStartDestination().id
+                                    ) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            }
+                            .padding(
+                                all = 24.dp
+                            ),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Terminal,
+                            contentDescription = null
                         )
-                ) {
-                    HomeItem(
-                        contents = contents,
-                        title = stringResource(id = R.string.android_version),
-                        body = androidVersion
-                    )
-                    HomeItem(
-                        contents = contents,
-                        title = stringResource(id = R.string.shizuku_version),
-                        body = shizukuVersion
-                    )
-                    HomeItem(
-                        contents = contents,
-                        title = stringResource(id = R.string.kernel_version),
-                        body = Os.uname().release
-                    )
-                    HomeItem(
-                        contents = contents,
-                        title = stringResource(id = R.string.system_version),
-                        body = Os.uname().version
-                    )
-                    HomeItem(
-                        contents = contents,
-                        title = stringResource(id = R.string.device_arch),
-                        body = Os.uname().machine
-                    )
-                    HomeItem(
-                        contents = contents,
-                        title = stringResource(id = R.string.device_code),
-                        body = Build.DEVICE
-                    )
-                    TextButton(modifier = Modifier.align(Alignment.End), onClick = {
-                        val clipboardManager = context.getSystemService(
-                            Context.CLIPBOARD_SERVICE
-                        ) as ClipboardManager
-                        clipboardManager.setPrimaryClip(
-                            ClipData.newPlainText(
-                                context.getString(R.string.app_name), contents.toString()
+                        Column(
+                            modifier = Modifier.padding(
+                                start = 20.dp
                             )
-                        )
-                        scope.launch {
-                            snackBarHostState.showSnackbar(
-                                context.getString(R.string.copied_to_clipboard)
+                        ) {
+                            Text(
+                                text = stringResource(
+                                    id = R.string.app_description
+                                ), style = MaterialTheme.typography.titleMedium
+                            )
+                            Spacer(
+                                modifier = Modifier.height(
+                                    height = 4.dp
+                                )
+                            )
+                            Text(
+                                text = stringResource(
+                                    id = R.string.version
+                                ) + ":\t" + BuildConfig.VERSION_NAME,
+                                style = MaterialTheme.typography.bodyMedium
                             )
                         }
-                    }, content = {
-                        Text(
-                            text = stringResource(id = R.string.copy_info)
+                        Icon(
+                            imageVector = Icons.Outlined.KeyboardArrowRight,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .weight(
+                                    weight = 1f
+                                )
+                                .wrapContentWidth(
+                                    align = Alignment.End
+                                )
                         )
-                    })
+                    }
+                }
+                ElevatedCard(
+                    modifier = Modifier.padding(
+                        start = 16.dp, end = 16.dp, top = 8.dp, bottom = 16.dp
+                    )
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(
+                                all = 24.dp
+                            )
+                    ) {
+                        HomeItem(
+                            contents = contents,
+                            title = stringResource(id = R.string.android_version),
+                            body = androidVersion
+                        )
+                        HomeItem(
+                            contents = contents,
+                            title = stringResource(id = R.string.shizuku_version),
+                            body = shizukuVersion
+                        )
+                        HomeItem(
+                            contents = contents,
+                            title = stringResource(id = R.string.kernel_version),
+                            body = Os.uname().release
+                        )
+                        HomeItem(
+                            contents = contents,
+                            title = stringResource(id = R.string.system_version),
+                            body = Os.uname().version
+                        )
+                        HomeItem(
+                            contents = contents,
+                            title = stringResource(id = R.string.device_arch),
+                            body = Os.uname().machine
+                        )
+                        HomeItem(
+                            contents = contents,
+                            title = stringResource(id = R.string.device_code),
+                            body = Build.DEVICE
+                        )
+                        TextButton(modifier = Modifier.align(Alignment.End), onClick = {
+                            val clipboardManager = context.getSystemService(
+                                Context.CLIPBOARD_SERVICE
+                            ) as ClipboardManager
+                            clipboardManager.setPrimaryClip(
+                                ClipData.newPlainText(
+                                    context.getString(R.string.app_name), contents.toString()
+                                )
+                            )
+                            scope.launch {
+                                snackBarHostState.showSnackbar(
+                                    context.getString(R.string.copied_to_clipboard)
+                                )
+                            }
+                        }, content = {
+                            Text(
+                                text = stringResource(id = R.string.copy_info)
+                            )
+                        })
+                    }
                 }
             }
         }
     }
+
 }
 
 @TermPluxPreviews
@@ -193,8 +259,9 @@ fun ScreenHome(
 private fun ScreenHomePreview() {
     ScreenHome(
         navController = rememberNavController(),
-        scope = rememberCoroutineScope(),
-        snackBarHostState = SnackbarHostState(),
+        drawerState = rememberDrawerState(
+            initialValue = DrawerValue.Closed
+        ),
         androidVersion = "13",
         shizukuVersion = "13"
     )

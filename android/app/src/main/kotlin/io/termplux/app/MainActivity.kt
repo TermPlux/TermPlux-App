@@ -10,12 +10,12 @@ class MainActivity : TermPluxActivity() {
         setContents { navController, content, event, message, current, browser ->
             ActivityMain(
                 navController = navController,
-                topBar = { modifier ->
-                    content(
-                        content = topBar,
-                        modifier = modifier
-                    )
-                },
+//                topBar = { modifier ->
+//                    content(
+//                        content = topBar,
+//                        modifier = modifier
+//                    )
+//                },
                 pager = { modifier ->
                     content(
                         content = pager,
