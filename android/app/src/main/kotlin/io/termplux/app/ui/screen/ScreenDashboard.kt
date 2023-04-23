@@ -1,28 +1,29 @@
 package io.termplux.app.ui.screen
 
-import androidx.compose.foundation.Image
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.os.Build
+import android.system.Os
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.outlined.KeyboardArrowRight
 import androidx.compose.material.icons.outlined.Terminal
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -30,39 +31,24 @@ import io.termplux.BuildConfig
 import io.termplux.R
 import io.termplux.app.ui.navigation.Screen
 import io.termplux.app.ui.preview.TermPluxPreviews
-import io.termplux.basic.custom.ClockView
-import kotlinx.coroutines.CoroutineScope
+import io.termplux.app.ui.widget.HomeItem
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
+@OptIn(ExperimentalMaterial3Api::class)
 fun ScreenDashboard(
     navController: NavHostController,
     drawerState: DrawerState,
-    tabBar: @Composable (modifier: Modifier) -> Unit,
-    toggle: () -> Unit,
-    targetAppName: String,
-    targetAppPackageName: String,
-    targetAppDescription: String,
-    targetAppVersionName: String,
-    NavigationOnClick: () -> Unit,
-    MenuOnClick: () -> Unit,
-    SearchOnClick: () -> Unit,
-    SheetOnClick: () -> Unit,
-    AppsOnClick: () -> Unit,
-    SelectOnClick: () -> Unit,
-    onNavigateToApps: () -> Unit,
+    androidVersion: String,
+    shizukuVersion: String
 ) {
     val scrollState = rememberScrollState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val scope = rememberCoroutineScope()
+    val contents = StringBuilder()
+    val context = LocalContext.current
     val snackBarHostState = remember {
         SnackbarHostState()
-    }
-    val expandedPowerButton = remember {
-        mutableStateOf(
-            value = true
-        )
     }
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -71,7 +57,7 @@ fun ScreenDashboard(
                 title = {
                     Text(
                         text = stringResource(
-                            id = R.string.menu_manager
+                            id = R.string.menu_dashboard
                         )
                     )
                 },
@@ -90,33 +76,20 @@ fun ScreenDashboard(
                         )
                     }
                 },
+                actions = {
+                    IconButton(
+                        onClick = { /*TODO*/ }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.MoreVert,
+                            contentDescription = null
+                        )
+                    }
+                },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(),
                 scrollBehavior = scrollBehavior
             )
         },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    navController.navigate(
-                        route = Screen.Home.route
-                    ) {
-                        popUpTo(
-                            id = navController.graph.findStartDestination().id
-                        ) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                }
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Terminal,
-                    contentDescription = null
-                )
-            }
-        },
-        floatingActionButtonPosition = FabPosition.End,
         snackbarHost = {
             SnackbarHost(
                 hostState = snackBarHostState
@@ -127,6 +100,9 @@ fun ScreenDashboard(
         Surface(
             modifier = Modifier
                 .fillMaxSize()
+                .nestedScroll(
+                    connection = scrollBehavior.nestedScrollConnection
+                )
                 .padding(
                     paddingValues = innerPadding
                 ),
@@ -135,57 +111,68 @@ fun ScreenDashboard(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .nestedScroll(
-                        connection = scrollBehavior.nestedScrollConnection
-                    )
                     .verticalScroll(
                         state = scrollState
                     )
             ) {
-                tabBar(
-                    modifier = Modifier.fillMaxWidth()
-                )
                 ElevatedCard(
                     modifier = Modifier.padding(
-                        start = 16.dp,
-                        end = 16.dp,
-                        top = 5.dp,
-                        bottom = 8.dp
+                        start = 16.dp, end = 16.dp, top = 5.dp, bottom = 8.dp
+                    ),
+                    colors = CardDefaults.elevatedCardColors(
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer
                     )
                 ) {
-
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(IntrinsicSize.Min)
                             .clickable {
-
+                                navController.navigate(
+                                    route = Screen.Manager.route
+                                ) {
+                                    popUpTo(
+                                        navController.graph.findStartDestination().id
+                                    ) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
                             }
+                            .padding(
+                                all = 24.dp
+                            ),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        IconButton(
-                            onClick = {
-
-                            }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.Search,
-                                contentDescription = null
-                            )
-                        }
+                        Icon(
+                            imageVector = Icons.Outlined.Terminal,
+                            contentDescription = null
+                        )
                         Column(
-                            modifier = Modifier.fillMaxHeight(),
-                            verticalArrangement = Arrangement.Center,
+                            modifier = Modifier.padding(
+                                start = 20.dp
+                            )
                         ) {
                             Text(
-                                text = "Search...",
-                                textAlign = TextAlign.Center,
-                                style = MaterialTheme.typography.titleSmall
+                                text = stringResource(
+                                    id = R.string.app_description
+                                ), style = MaterialTheme.typography.titleMedium
+                            )
+                            Spacer(
+                                modifier = Modifier.height(
+                                    height = 4.dp
+                                )
+                            )
+                            Text(
+                                text = stringResource(
+                                    id = R.string.version
+                                ) + ":\t" + BuildConfig.VERSION_NAME,
+                                style = MaterialTheme.typography.bodyMedium
                             )
                         }
-                        IconButton(
-                            onClick = {
-                                toggle()
-                            },
+                        Icon(
+                            imageVector = Icons.Outlined.KeyboardArrowRight,
+                            contentDescription = null,
                             modifier = Modifier
                                 .weight(
                                     weight = 1f
@@ -193,402 +180,88 @@ fun ScreenDashboard(
                                 .wrapContentWidth(
                                     align = Alignment.End
                                 )
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.TouchApp,
-                                contentDescription = null
-                            )
-                        }
-                    }
-                }
-
-
-
-
-//                AndroidView(
-//                    factory = { context ->
-//                        ClockView(
-//                            context = context
-//                        )
-//                    },
-//                    modifier = Modifier.fillMaxWidth()
-//                )
-
-
-                ElevatedCard(
-                    modifier = Modifier.padding(
-                        start = 16.dp,
-                        end = 16.dp,
-                        top = 8.dp,
-                        bottom = 8.dp
-                    )
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(
-                                all = 5.dp
-                            )
-                            .heightIn(min = 70.dp)
-                    ) {
-                        Image(
-                            painter = painterResource(
-                                id = R.drawable.custom_termplux_24
-                            ),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(
-                                    width = 48.dp,
-                                    height = 48.dp
-                                )
-                                .padding(
-                                    top = 5.dp
-                                )
-                        )
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .weight(weight = 1f)
-                        ) {
-                            Text(
-                                text = targetAppName,
-                                modifier = Modifier.padding(start = 5.dp),
-                                style = MaterialTheme.typography.titleMedium
-                            )
-                            Text(
-                                text = targetAppPackageName,
-                                modifier = Modifier.padding(start = 5.dp),
-                                style = MaterialTheme.typography.bodySmall
-                            )
-                            Text(
-                                text = targetAppDescription,
-                                modifier = Modifier.padding(start = 5.dp),
-                                style = MaterialTheme.typography.bodySmall
-                            )
-                        }
-                        Text(
-                            text = targetAppVersionName,
-                            modifier = Modifier
-                                .padding(all = 5.dp)
-                                .wrapContentWidth(Alignment.End)
-                        )
-                        Switch(
-                            checked = expandedPowerButton.value,
-                            onCheckedChange = {
-                                expandedPowerButton.value = it
-                            },
-                            modifier = Modifier
-                                .padding(all = 5.dp)
-                                .wrapContentWidth(Alignment.End),
-                            enabled = true
                         )
                     }
                 }
-
-
-
                 ElevatedCard(
                     modifier = Modifier.padding(
-                        start = 16.dp,
-                        end = 16.dp,
-                        top = 8.dp,
-                        bottom = 8.dp
+                        start = 16.dp, end = 16.dp, top = 8.dp, bottom = 16.dp
                     )
                 ) {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(
-                                all = 5.dp
+                                all = 24.dp
                             )
                     ) {
-                        Text(text = "运行环境电源")
-                        AssistChip(
-                            onClick = {
-
-                            },
-                            label = {
-                                Text(
-                                    text = "启动运行环境",
-                                    color = Color.Green
+                        HomeItem(
+                            contents = contents,
+                            title = stringResource(id = R.string.android_version),
+                            body = androidVersion
+                        )
+                        HomeItem(
+                            contents = contents,
+                            title = stringResource(id = R.string.shizuku_version),
+                            body = shizukuVersion
+                        )
+                        HomeItem(
+                            contents = contents,
+                            title = stringResource(id = R.string.kernel_version),
+                            body = Os.uname().release
+                        )
+                        HomeItem(
+                            contents = contents,
+                            title = stringResource(id = R.string.system_version),
+                            body = Os.uname().version
+                        )
+                        HomeItem(
+                            contents = contents,
+                            title = stringResource(id = R.string.device_arch),
+                            body = Os.uname().machine
+                        )
+                        HomeItem(
+                            contents = contents,
+                            title = stringResource(id = R.string.device_code),
+                            body = Build.DEVICE
+                        )
+                        TextButton(modifier = Modifier.align(Alignment.End), onClick = {
+                            val clipboardManager = context.getSystemService(
+                                Context.CLIPBOARD_SERVICE
+                            ) as ClipboardManager
+                            clipboardManager.setPrimaryClip(
+                                ClipData.newPlainText(
+                                    context.getString(R.string.app_name), contents.toString()
                                 )
-                            },
-                            modifier = Modifier.fillMaxWidth(),
-                            enabled = expandedPowerButton.value,
-                            leadingIcon = {
-                                Icon(
-                                    imageVector = Icons.Filled.ToggleOn,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(AssistChipDefaults.IconSize),
-                                    tint = Color.Green
+                            )
+                            scope.launch {
+                                snackBarHostState.showSnackbar(
+                                    context.getString(R.string.copied_to_clipboard)
                                 )
                             }
-                        )
-                        AssistChip(
-                            onClick = {
-
-                            },
-                            label = {
-                                Text(
-                                    text = "停止运行环境",
-                                    color = Color.Red
-                                )
-                            },
-                            modifier = Modifier.fillMaxWidth(),
-                            enabled = expandedPowerButton.value,
-                            leadingIcon = {
-                                Icon(
-                                    imageVector = Icons.Filled.ToggleOff,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(AssistChipDefaults.IconSize),
-                                    tint = Color.Red
-                                )
-                            }
-                        )
+                        }, content = {
+                            Text(
+                                text = stringResource(id = R.string.copy_info)
+                            )
+                        })
                     }
                 }
-
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            vertical = 8.dp
-                        ),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Surface(
-                        modifier = Modifier
-                            .width(50.dp)
-                            .height(50.dp),
-                        shape = CircleShape,
-                        color = MaterialTheme.colorScheme.primary
-                    ) {
-                        IconButton(
-                            onClick = {
-
-                            }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.Menu,
-                                contentDescription = null
-                            )
-                        }
-                    }
-                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                    Surface(
-                        modifier = Modifier
-                            .width(50.dp)
-                            .height(50.dp),
-                        shape = CircleShape,
-                        color = MaterialTheme.colorScheme.primary
-                    ) {
-                        IconButton(
-                            onClick = {
-
-                            }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.MoreVert,
-                                contentDescription = null
-                            )
-                        }
-                    }
-                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                    Surface(
-                        modifier = Modifier
-                            .width(50.dp)
-                            .height(50.dp),
-                        shape = CircleShape,
-                        color = MaterialTheme.colorScheme.primary
-                    ) {
-                        IconButton(
-                            onClick = {
-
-                            }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.Apps,
-                                contentDescription = null
-                            )
-                        }
-                    }
-                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                    Surface(
-                        modifier = Modifier
-                            .width(50.dp)
-                            .height(50.dp),
-                        shape = CircleShape,
-                        color = MaterialTheme.colorScheme.primary
-                    ) {
-                        IconButton(
-                            onClick = {
-
-                            }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.Search,
-                                contentDescription = null
-                            )
-                        }
-                    }
-                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                    Surface(
-                        modifier = Modifier
-                            .width(50.dp)
-                            .height(50.dp),
-                        shape = CircleShape,
-                        color = MaterialTheme.colorScheme.primary
-                    ) {
-                        IconButton(
-                            onClick = {
-
-                            }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.SelectAll,
-                                contentDescription = null
-                            )
-                        }
-                    }
-                }
-
-//            Divider()
-//
-//
-//
-//            Column(
-//                modifier = Modifier.fillMaxWidth()
-//            ) {
-//                Text(
-//                    text = "设备信息",
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .padding(
-//                            start = 5.dp,
-//                            end = 5.dp,
-//                            top = 5.dp,
-//                            bottom = 2.5.dp
-//                        )
-//                )
-//                Row(
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .height(IntrinsicSize.Min)
-//                        .padding(
-//                            start = 5.dp,
-//                            end = 5.dp,
-//                            top = 2.5.dp,
-//                            bottom = 2.5.dp
-//                        ),
-//                    verticalAlignment = Alignment.CenterVertically
-//                ) {
-//                    Icon(
-//                        imageVector = Icons.Filled.Android,
-//                        contentDescription = null,
-//                        tint = MaterialTheme.colorScheme.primary
-//                    )
-//                    Text(
-//                        text = "sb",
-//                        modifier = Modifier
-//                            .weight(1f)
-//                            .padding(
-//                                start = 5.dp,
-//                            )
-//                    )
-//                }
-//                Row(
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .height(IntrinsicSize.Min)
-//                        .padding(
-//                            start = 5.dp,
-//                            end = 5.dp,
-//                            top = 2.5.dp,
-//                            bottom = 2.5.dp
-//                        ),
-//                    verticalAlignment = Alignment.CenterVertically
-//                ) {
-//                    Icon(
-//                        imageVector = Icons.Filled.PhoneAndroid,
-//                        contentDescription = null,
-//                        tint = MaterialTheme.colorScheme.primary
-//                    )
-//                    Text(
-//                        text = "sb",
-//                        modifier = Modifier
-//                            .weight(1f)
-//                            .padding(
-//                                start = 5.dp,
-//                            )
-//                    )
-//                }
-//                Row(
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .height(IntrinsicSize.Min)
-//                        .padding(
-//                            start = 5.dp,
-//                            end = 5.dp,
-//                            top = 2.5.dp,
-//                            bottom = 2.5.dp
-//                        ),
-//                    verticalAlignment = Alignment.CenterVertically
-//                ) {
-//                    Icon(
-//                        imageVector = Icons.Filled.DesignServices,
-//                        contentDescription = null,
-//                        tint = MaterialTheme.colorScheme.primary
-//                    )
-//                    Text(
-//                        text = "sb",
-//                        modifier = Modifier
-//                            .weight(1f)
-//                            .padding(
-//                                start = 5.dp,
-//                            )
-//                    )
-//                }
-                //}
             }
         }
     }
 
 }
 
-@Composable
 @TermPluxPreviews
+@Composable
 private fun ScreenDashboardPreview() {
     ScreenDashboard(
         navController = rememberNavController(),
         drawerState = rememberDrawerState(
             initialValue = DrawerValue.Closed
         ),
-        tabBar = { modifier ->
-            Text(
-                text = stringResource(
-                    id = R.string.tab_layout_preview
-                ),
-                modifier = modifier,
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.titleLarge
-            )
-        },
-        toggle = {},
-        targetAppName = stringResource(
-            id = R.string.app_name
-        ),
-        targetAppPackageName = BuildConfig.APPLICATION_ID,
-        targetAppDescription = stringResource(
-            id = R.string.app_description
-        ),
-        targetAppVersionName = BuildConfig.VERSION_NAME,
-        NavigationOnClick = {},
-        MenuOnClick = {},
-        SearchOnClick = {},
-        SheetOnClick = {},
-        AppsOnClick = {},
-        SelectOnClick = {},
-        onNavigateToApps = {}
+        androidVersion = "13",
+        shizukuVersion = "13"
     )
 }
+

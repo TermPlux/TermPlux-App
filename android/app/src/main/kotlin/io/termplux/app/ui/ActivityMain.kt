@@ -259,7 +259,7 @@ fun ActivityMain(
             composable(
                 route = Screen.Home.route
             ) {
-                ScreenContent(
+                ScreenHome(
                     pager = pager
                 )
 
@@ -267,7 +267,7 @@ fun ActivityMain(
             composable(
                 route = Screen.Dashboard.route
             ) {
-                ScreenHome(
+                ScreenDashboard(
                     navController = navController,
                     drawerState = drawerState,
                     androidVersion = androidVersion,
@@ -278,7 +278,7 @@ fun ActivityMain(
             composable(
                 route = Screen.Manager.route
             ) {
-                ScreenDashboard(
+                ScreenManager(
                     navController = navController,
                     drawerState = drawerState,
                     tabBar = tabBar,

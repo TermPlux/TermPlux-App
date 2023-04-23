@@ -11,7 +11,7 @@ import io.termplux.R
 import io.termplux.app.ui.preview.TermPluxPreviews
 
 @Composable
-fun ScreenContent(
+fun ScreenHome(
     pager: @Composable (modifier: Modifier) -> Unit
 ) {
     Scaffold(
@@ -34,8 +34,8 @@ fun ScreenContent(
 
 @Composable
 @TermPluxPreviews
-fun ScreenContentPreview() {
-    ScreenContent(
+fun ScreenHomePreview() {
+    ScreenHome(
         pager = { modifier ->
             Box(
                 modifier = modifier,

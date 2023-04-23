@@ -27,6 +27,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -174,7 +175,8 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
         mVisible = true
 
         initUi()
-        if (!isHome) supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayUseLogoEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
 
         initSP()
         initServices()
@@ -340,7 +342,7 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         super.onOptionsItemSelected(item)
         when (item.itemId) {
-            android.R.id.home -> if (!isHome) onBack()
+            //android.R.id.home -> if (!isHome) onBack()
             R.id.action_settings -> {
                 current(item = ContentAdapter.settings)
             }
@@ -429,7 +431,16 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
             addView(
                 MaterialToolbar(
                     mBaseContext
-                ).also { toolbar ->
+                ).apply {
+                    navigationIcon = ContextCompat.getDrawable(
+                        mBaseContext,
+                        R.drawable.baseline_menu_24
+                    )
+                    logo = ContextCompat.getDrawable(
+                        mBaseContext,
+                        R.drawable.baseline_terminal_24
+                    )
+                }.also { toolbar ->
                     setSupportActionBar(toolbar)
                     mToolbar = toolbar
                 },
@@ -781,6 +792,11 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
                     scope = scope,
                     drawerState = drawerState
                 )
+                mToolbar.setNavigationOnClickListener {
+                    scope.launch {
+                        drawerState.open()
+                    }
+                }
                 mediator()
                 // 设置系统界面样式
                 if (!mComposeView.isInEditMode) {
