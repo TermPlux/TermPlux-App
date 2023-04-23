@@ -58,7 +58,7 @@ fun ScreenAbout(
                 title = {
                     Text(
                         text = stringResource(
-                            id = R.string.menu_dashboard
+                            id = R.string.menu_about
                         )
                     )
                 },

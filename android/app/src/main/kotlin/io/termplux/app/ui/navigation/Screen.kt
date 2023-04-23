@@ -3,6 +3,7 @@ package io.termplux.app.ui.navigation
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Android
+import androidx.compose.material.icons.twotone.Apps
 import androidx.compose.material.icons.twotone.Dashboard
 import androidx.compose.material.icons.twotone.FlutterDash
 import androidx.compose.material.icons.twotone.Home
@@ -102,6 +103,14 @@ sealed class Screen constructor(
         route = ContentAdapter.home.toString(),
         imageVector = Icons.TwoTone.FlutterDash,
         title = R.string.menu_home
+    )
+
+    object AppsFragment : Screen(
+        type = ScreenType.Fragment,
+        item = ItemType.Default,
+        route = ContentAdapter.apps.toString(),
+        imageVector = Icons.TwoTone.Apps,
+        title = R.string.menu_apps
     )
 
     object NavigationFragment : Screen(

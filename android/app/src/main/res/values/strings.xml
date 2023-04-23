@@ -6,6 +6,7 @@
     <string name="menu_navigation">Navigation</string>
     <string name="menu_launcher">Launcher</string>
     <string name="menu_home">Home</string>
+    <string name="menu_apps">Apps</string>
     <string name="menu_dashboard">Dashboard</string>
     <string name="menu_content">Content</string>
     <string name="menu_settings">Settings</string>

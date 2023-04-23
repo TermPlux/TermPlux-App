@@ -205,14 +205,14 @@ fun ScreenDashboard(
 
 
 
-                AndroidView(
-                    factory = { context ->
-                        ClockView(
-                            context = context
-                        )
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
+//                AndroidView(
+//                    factory = { context ->
+//                        ClockView(
+//                            context = context
+//                        )
+//                    },
+//                    modifier = Modifier.fillMaxWidth()
+//                )
 
 
                 ElevatedCard(

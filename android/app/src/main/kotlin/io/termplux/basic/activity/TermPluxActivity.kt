@@ -611,8 +611,9 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
 
     private fun mediator() {
         val title = arrayOf(
-            getString(R.string.menu_home),
             getString(R.string.menu_launcher),
+            getString(R.string.menu_home),
+            getString(R.string.menu_apps),
             getString(R.string.menu_navigation),
             getString(R.string.menu_settings)
         )

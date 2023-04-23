@@ -24,8 +24,9 @@ class ContentAdapter constructor(
 
     private var mNavigation: (String) -> Unit
 
+    private lateinit var mLauncher: LauncherFragment
     private lateinit var mHome: HomeFragment
-    private lateinit var mLauncher: AppsFragment
+    private lateinit var mApp: AppsFragment
     private lateinit var mNavFrag: NavigationFragment
     private lateinit var mSettings: SettingsFragment
     private lateinit var mError: ErrorFragment
@@ -44,7 +45,7 @@ class ContentAdapter constructor(
     /**
      * 返回页面数量
      */
-    override fun getItemCount(): Int = intArrayOf(home, launcher, nav, settings).size
+    override fun getItemCount(): Int = intArrayOf(launcher, home, apps, nav, settings).size
 
     /**
      * 返回Fragment页面
@@ -52,8 +53,9 @@ class ContentAdapter constructor(
     override fun createFragment(position: Int): Fragment {
         initFragment()
         return when (position) {
-            home -> mHome
             launcher -> mLauncher
+            home -> mHome
+            apps -> mApp
             nav -> mNavFrag
             settings -> mSettings
             else -> mError
@@ -64,12 +66,16 @@ class ContentAdapter constructor(
      * 加载Fragment
      */
     private fun initFragment() {
+        mLauncher = LauncherFragment.newInstance(
+            appBarLayout = mAppBarLayout
+        )
+
         mHome = HomeFragment.newInstance(
             flutterFragment = mFlutter
         )
 
         // 桌面
-        mLauncher = AppsFragment.newInstance(
+        mApp = AppsFragment.newInstance(
             viewPager = mViewPager,
             navigation = mNavigation
         )
@@ -110,16 +116,18 @@ class ContentAdapter constructor(
         }
         // 页面代码，从0开始，以此类推
 
+        const val launcher: Int = 0
+
         // 主页
-        const val home: Int = 0
+        const val home: Int = 1
 
         // 桌面
-        const val launcher: Int = 1
+        const val apps: Int = 2
 
         // 控制中心
-        const val nav: Int = 2
+        const val nav: Int = 3
 
         // 设置
-        const val settings: Int = 3
+        const val settings: Int = 4
     }
 }

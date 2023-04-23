@@ -50,8 +50,9 @@ fun ActivityMain(
         Screen.About,
         Screen.Divider,
         Screen.FragmentTitle,
-        Screen.HomeFragment,
         Screen.LauncherFragment,
+        Screen.HomeFragment,
+        Screen.AppsFragment,
         Screen.NavigationFragment,
         Screen.SettingsFragment
     )

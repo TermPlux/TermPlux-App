@@ -49,7 +49,7 @@ class NavigationFragment constructor(
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.nav_launcher -> mViewPager.currentItem = ContentAdapter.launcher
+            R.id.nav_launcher -> mViewPager.currentItem = ContentAdapter.apps
             R.id.nav_home -> mViewPager.currentItem = ContentAdapter.home
             R.id.nav_navigation -> mViewPager.currentItem = ContentAdapter.nav
             R.id.nav_settings -> mViewPager.currentItem = ContentAdapter.settings
