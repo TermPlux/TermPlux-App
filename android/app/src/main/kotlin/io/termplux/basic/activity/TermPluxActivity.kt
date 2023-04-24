@@ -428,10 +428,12 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
             mBaseContext
         ).apply {
             fitsSystemWindows = true
+            setBackgroundColor(android.graphics.Color.TRANSPARENT)
             addView(
                 MaterialToolbar(
                     mBaseContext
                 ).apply {
+                    setBackgroundColor(android.graphics.Color.TRANSPARENT)
                     navigationIcon = ContextCompat.getDrawable(
                         mBaseContext,
                         R.drawable.baseline_menu_24
@@ -636,12 +638,22 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
         mViewPager2.offscreenPageLimit = count
     }
 
+    private fun syncDrawer(
+        scope: CoroutineScope,
+        drawerState: DrawerState
+    ) {
+        mToolbar.setNavigationOnClickListener {
+            scope.launch {
+                drawerState.open()
+            }
+        }
+    }
+
     private fun mediator() {
         val title = arrayOf(
             getString(R.string.menu_launcher),
             getString(R.string.menu_home),
             getString(R.string.menu_apps),
-            getString(R.string.menu_navigation),
             getString(R.string.menu_settings)
         )
         TabLayoutMediator(
@@ -792,11 +804,10 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
                     scope = scope,
                     drawerState = drawerState
                 )
-                mToolbar.setNavigationOnClickListener {
-                    scope.launch {
-                        drawerState.open()
-                    }
-                }
+                syncDrawer(
+                    scope = scope,
+                    drawerState = drawerState
+                )
                 mediator()
                 // 设置系统界面样式
                 if (!mComposeView.isInEditMode) {

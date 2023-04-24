@@ -30,7 +30,6 @@ class ContentAdapter constructor(
     private lateinit var mLauncher: LauncherFragment
     private lateinit var mHome: HomeFragment
     private lateinit var mApps: AppsFragment
-    private lateinit var mNavFrag: NavigationFragment
     private lateinit var mSettings: SettingsFragment
     private lateinit var mError: ErrorFragment
 
@@ -54,7 +53,6 @@ class ContentAdapter constructor(
             launcher,
             home,
             apps,
-            nav,
             settings
         ).size
     }
@@ -68,7 +66,6 @@ class ContentAdapter constructor(
             launcher -> mLauncher
             home -> mHome
             apps -> mApps
-            nav -> mNavFrag
             settings -> mSettings
             else -> mError
         }
@@ -92,11 +89,6 @@ class ContentAdapter constructor(
             navigation = mNavigation
         )
 
-        // 导航
-        mNavFrag = NavigationFragment.newInstance(
-            viewPager = mViewPager,
-            navigation = mNavigation
-        )
 
         // 设置
         mSettings = SettingsFragment.newInstance(
@@ -138,10 +130,7 @@ class ContentAdapter constructor(
         // 桌面
         const val apps: Int = 2
 
-        // 控制中心
-        const val nav: Int = 3
-
         // 设置
-        const val settings: Int = 4
+        const val settings: Int = 3
     }
 }

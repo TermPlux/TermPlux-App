@@ -91,29 +91,6 @@ fun ScreenManager(
                 scrollBehavior = scrollBehavior
             )
         },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    navController.navigate(
-                        route = Screen.Home.route
-                    ) {
-                        popUpTo(
-                            id = navController.graph.findStartDestination().id
-                        ) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                }
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Terminal,
-                    contentDescription = null
-                )
-            }
-        },
-        floatingActionButtonPosition = FabPosition.End,
         snackbarHost = {
             SnackbarHost(
                 hostState = snackBarHostState

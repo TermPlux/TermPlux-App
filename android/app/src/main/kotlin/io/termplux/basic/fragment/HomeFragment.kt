@@ -36,7 +36,7 @@ class HomeFragment constructor(
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
         return FragmentContainerView(requireActivity()).apply {
-            id = R.id.fragment_container
+            id = R.id.flutter_container
         }
     }
 
@@ -46,7 +46,7 @@ class HomeFragment constructor(
             flutterFragment = mFlutter
             childFragmentManager.beginTransaction()
                 .add(
-                    R.id.fragment_container,
+                    R.id.flutter_container,
                     mFlutter,
                     TAG_FLUTTER_FRAGMENT
                 )

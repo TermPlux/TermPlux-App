@@ -276,7 +276,7 @@ class AppsAdapter constructor(
     }
 
     private fun navToNav() {
-        mViewPager.currentItem = ContentAdapter.nav
+   //     mViewPager.currentItem = ContentAdapter.nav
     }
 
     private fun navToSettings() {

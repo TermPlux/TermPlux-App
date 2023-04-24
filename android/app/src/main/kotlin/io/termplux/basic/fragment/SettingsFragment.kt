@@ -1,41 +1,103 @@
 package io.termplux.basic.fragment
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
-import androidx.preference.Preference
-import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.PreferenceManager
-import androidx.preference.SwitchPreference
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentContainerView
+import androidx.fragment.app.FragmentManager
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.appbar.MaterialToolbar
 import io.termplux.R
 import io.termplux.app.ui.navigation.Screen
+import io.termplux.basic.settings.Settings
 
-class SettingsFragment constructor(navigation: (String) -> Unit) : PreferenceFragmentCompat() {
+class SettingsFragment constructor(
+    navigation: (String) -> Unit
+) : Fragment() {
 
-    private var mNavigation: (String) -> Unit
-
-    private lateinit var mContext: Context
-    private lateinit var mSharedPreferences: SharedPreferences
+    private val mSettings: Settings
+    private var mSettingsFragment: Settings? = null
 
     init {
-        mNavigation = navigation
+        mSettings = Settings {
+            navigation(Screen.Settings.route)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mContext = requireActivity()
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext)
+        val fragmentManager: FragmentManager = childFragmentManager
+        mSettingsFragment = fragmentManager.findFragmentByTag(TAG_SETTINGS_FRAGMENT) as Settings?
     }
 
-    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        setPreferencesFromResource(R.xml.root_preferences, rootKey)
-
-        val settings: Preference? = findPreference("navigation_settings")
-
-        settings?.setOnPreferenceClickListener {
-            mNavigation(Screen.Settings.route)
-            true
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        super.onCreateView(inflater, container, savedInstanceState)
+//        return LinearLayoutCompat(requireActivity()).apply {
+//            orientation = LinearLayoutCompat.VERTICAL
+//            addView(
+//                AppBarLayout(requireActivity()).apply {
+//                    addView(
+//                        MaterialToolbar(requireActivity()).apply {
+//                            title = getString(R.string.menu_settings)
+//                            navigationIcon = ContextCompat.getDrawable(
+//                                requireActivity(),
+//                                R.drawable.baseline_arrow_back_24
+//                            )
+//                            setNavigationOnClickListener {
+//
+//                            }
+//                        },
+//                        AppBarLayout.LayoutParams(
+//                            AppBarLayout.LayoutParams.MATCH_PARENT,
+//                            AppBarLayout.LayoutParams.WRAP_CONTENT
+//                        )
+//                    )
+//                },
+//                LinearLayoutCompat.LayoutParams(
+//                    LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+//                    LinearLayoutCompat.LayoutParams.WRAP_CONTENT
+//                )
+//            )
+//            addView(
+//                FragmentContainerView(requireActivity()).apply {
+//                    id = R.id.settings_container
+//                },
+//                LinearLayoutCompat.LayoutParams(
+//                    LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+//                    LinearLayoutCompat.LayoutParams.MATCH_PARENT
+//                )
+//            )
+//        }
+        return FragmentContainerView(requireActivity()).apply {
+            id = R.id.settings_container
         }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        if (mSettingsFragment == null) {
+            mSettingsFragment = mSettings
+            childFragmentManager.beginTransaction()
+                .add(
+                    R.id.settings_container,
+                    mSettings,
+                    TAG_SETTINGS_FRAGMENT
+                )
+                .commit()
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        mSettingsFragment = null
     }
 
     companion object {
@@ -44,5 +106,9 @@ class SettingsFragment constructor(navigation: (String) -> Unit) : PreferenceFra
                 navigation = navigation
             )
         }
+
+        private const val TAG_SETTINGS_FRAGMENT = "settings_fragment"
     }
 }
+
+

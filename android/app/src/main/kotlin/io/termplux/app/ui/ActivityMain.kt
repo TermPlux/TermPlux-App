@@ -56,7 +56,6 @@ fun ActivityMain(
         Screen.LauncherFragment,
         Screen.HomeFragment,
         Screen.AppsFragment,
-        Screen.NavigationFragment,
         Screen.SettingsFragment
     )
     val items = listOf(

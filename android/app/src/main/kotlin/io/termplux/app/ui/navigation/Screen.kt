@@ -113,14 +113,6 @@ sealed class Screen constructor(
         title = R.string.menu_apps
     )
 
-    object NavigationFragment : Screen(
-        type = ScreenType.Fragment,
-        item = ItemType.Default,
-        route = ScreenRoute.routeNavigationFragment,
-        imageVector = Icons.TwoTone.Navigation,
-        title = R.string.menu_navigation
-    )
-
     object SettingsFragment : Screen(
         type = ScreenType.Fragment,
         item = ItemType.Default,
