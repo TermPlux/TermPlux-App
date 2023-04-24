@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextClock
+        android:id="@+id/textClock"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:format12Hour="hh:mm:ss"
+        android:format24Hour="HH:mm:ss"
+        android:gravity="center"
+        android:text="时间"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextClock
+        android:id="@+id/textClock2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:format12Hour="yyyy/MM/dd E"
+        android:format24Hour="yyyy/MM/dd E"
+        android:gravity="center"
+        android:text="日期"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textClock" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/textView_cale"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="农历"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textClock2" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/textView_carrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="运营商名称"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_cale" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView_bottom_apps"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10.0dip"
+        app:cardBackgroundColor="?attr/colorPrimary"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="5.0dip"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp">
+
+            <androidx.constraintlayout.helper.widget.Flow
+                android:id="@+id/flow"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="ImageFilterButton_bottom_apps_phone,
+                    ImageFilterButton_bottom_apps_contacts,
+                    ImageFilterButton_bottom_apps_apps,
+                    ImageFilterButton_bottom_apps_webview,
+                    ImageFilterButton_bottom_apps_camera"
+                app:flow_horizontalGap="10dp"
+                app:flow_verticalGap="10dp"
+                app:flow_wrapMode="none"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.constraintlayout.utils.widget.ImageFilterButton
+                android:id="@+id/ImageFilterButton_bottom_apps_phone"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@color/white"
+                android:contentDescription="@string/todo"
+                android:scaleType="center"
+                android:src="@drawable/custom_dialer_24"
+                android:tint="?attr/colorPrimary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/flow"
+                app:layout_constraintTop_toTopOf="parent"
+                app:round="88dp" />
+
+            <androidx.constraintlayout.utils.widget.ImageFilterButton
+                android:id="@+id/ImageFilterButton_bottom_apps_contacts"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@color/white"
+                android:contentDescription="@string/todo"
+                android:scaleType="center"
+                android:src="@drawable/custom_contacts_24"
+                android:tint="?attr/colorPrimary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/ImageFilterButton_bottom_apps_phone"
+                app:layout_constraintTop_toTopOf="parent"
+                app:round="88dp" />
+
+            <androidx.constraintlayout.utils.widget.ImageFilterButton
+                android:id="@+id/ImageFilterButton_bottom_apps_apps"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@color/white"
+                android:contentDescription="@string/todo"
+                android:scaleType="center"
+                android:src="@drawable/baseline_apps_24"
+                android:tint="?attr/colorPrimary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/ImageFilterButton_bottom_apps_contacts"
+                app:layout_constraintTop_toTopOf="parent"
+                app:round="88dp" />
+
+            <androidx.constraintlayout.utils.widget.ImageFilterButton
+                android:id="@+id/ImageFilterButton_bottom_apps_webview"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@color/white"
+                android:contentDescription="@string/todo"
+                android:scaleType="center"
+                android:src="@drawable/custom_chrome_24"
+                android:tint="?attr/colorPrimary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/ImageFilterButton_bottom_apps_apps"
+                app:layout_constraintTop_toTopOf="parent"
+                app:round="88dp" />
+
+            <androidx.constraintlayout.utils.widget.ImageFilterButton
+                android:id="@+id/ImageFilterButton_bottom_apps_camera"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@color/white"
+                android:contentDescription="@string/todo"
+                android:scaleType="center"
+                android:src="@drawable/custom_camera_24"
+                android:tint="?attr/colorPrimary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/ImageFilterButton_bottom_apps_webview"
+                app:layout_constraintTop_toTopOf="parent"
+                app:round="88dp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

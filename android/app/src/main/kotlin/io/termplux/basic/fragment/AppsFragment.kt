@@ -4,24 +4,19 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.graphics.Color
 import android.os.Bundle
 import android.view.*
-import android.widget.Space
-import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
-import com.blankj.utilcode.util.BarUtils
-import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.appbar.MaterialToolbar
 import io.termplux.BuildConfig
 import io.termplux.R
 import io.termplux.basic.adapter.AppsAdapter
 import io.termplux.basic.custom.FragmentScaffold
 import io.termplux.basic.receiver.AppsReceiver
+import io.termplux.databinding.FragmentAppsBinding
 import io.termplux.model.AppsModel
 import java.util.*
 
@@ -38,7 +33,9 @@ class AppsFragment constructor(
 
     private lateinit var mContext: Context
 
-    private lateinit var recyclerView: RecyclerView
+    private var _binding: FragmentAppsBinding? = null
+    private val binding get() = _binding!!
+
     private lateinit var appReceiver: BroadcastReceiver
 
     init {
@@ -57,21 +54,11 @@ class AppsFragment constructor(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // 创建用于显示启动器列表的RecyclerView
-        recyclerView = RecyclerView(
-            mContext
-        ).apply {
-            layoutManager = GridLayoutManager(
-                mContext,
-                4,
-                RecyclerView.VERTICAL,
-                false
-            )
-        }
-
+        super.onCreateView(inflater, container, savedInstanceState)
+        _binding = FragmentAppsBinding.inflate(inflater, container, false)
         return FragmentScaffold(
             context = requireActivity(),
-            view = recyclerView
+            view = binding.root
         ).apply {
             // 设置背景
             background = ContextCompat.getDrawable(
@@ -83,6 +70,13 @@ class AppsFragment constructor(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.recyclerView.layoutManager = GridLayoutManager(
+            mContext,
+            4,
+            RecyclerView.VERTICAL,
+            false
+        )
+
         // 加载应用列表
         loadApp()
 
@@ -105,6 +99,7 @@ class AppsFragment constructor(
 
     override fun onDestroyView() {
         super.onDestroyView()
+        _binding = null
         // 注销广播接收器
         mContext.unregisterReceiver(appReceiver)
     }
@@ -133,7 +128,7 @@ class AppsFragment constructor(
         }
 
         // 设置适配器
-        recyclerView.adapter = AppsAdapter.newInstance(
+        binding.recyclerView.adapter = AppsAdapter.newInstance(
             applicationList = applicationList,
             viewPager = mViewPager
         )

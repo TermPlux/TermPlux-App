@@ -330,7 +330,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="file:/$USER_HOME$/AppData/Local/Android/Sdk/icons/material/materialiconsoutlined/rocket_launch/outline_rocket_launch_24.xml" />
+                                      <entry key="url" value="file:/$USER_HOME$/AppData/Local/Android/Sdk/icons/material/materialicons/apps/baseline_apps_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -340,7 +340,7 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="outline_rocket_launch_24" />
+                            <entry key="outputName" value="baseline_apps_24" />
                             <entry key="sourceFile" value="C:\Users\81509\Desktop\wallpaper.svg" />
                           </map>
                         </option>

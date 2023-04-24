@@ -1,6 +1,7 @@
 package io.termplux.basic.fragment
 
 import android.os.Bundle
+import android.telephony.TelephonyManager
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -12,12 +13,12 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.blankj.utilcode.util.BarUtils
 import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.search.SearchView
+import com.kongzue.baseframework.BaseApp
 import io.termplux.R
-import io.termplux.basic.custom.ClockView
 import io.termplux.basic.custom.FragmentScaffold
+import io.termplux.basic.utils.ChineseCaleUtils
+import io.termplux.databinding.FragmentLauncherBinding
 import kotlin.math.hypot
 
 class LauncherFragment constructor(
@@ -28,6 +29,9 @@ class LauncherFragment constructor(
 
     private lateinit var mSplashLogo: AppCompatImageView
     private lateinit var mContentLinear: LinearLayoutCompat
+
+    private var _binding: FragmentLauncherBinding? = null
+    private val binding get() = _binding!!
 
     init {
         mAppBarLayout = appBarLayout
@@ -43,6 +47,9 @@ class LauncherFragment constructor(
         savedInstanceState: Bundle?
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
+        // 加载XML布局
+        _binding = FragmentLauncherBinding.inflate(inflater, container, false)
+        // 屏闪动画LOGO
         mSplashLogo = AppCompatImageView(
             requireActivity()
         ).apply {
@@ -54,7 +61,7 @@ class LauncherFragment constructor(
                 )
             )
         }
-
+        // 页面内容
         mContentLinear = LinearLayoutCompat(requireActivity()).apply {
             orientation = LinearLayoutCompat.VERTICAL
             addView(
@@ -65,16 +72,14 @@ class LauncherFragment constructor(
                 )
             )
             addView(
-                ClockView(
-                    context = requireActivity()
-                ),
+                binding.root,
                 LinearLayoutCompat.LayoutParams(
                     LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-                    LinearLayoutCompat.LayoutParams.WRAP_CONTENT
+                    LinearLayoutCompat.LayoutParams.MATCH_PARENT
                 )
             )
         }
-
+        // 跟布局
         return FragmentScaffold(
             context = requireActivity(),
             view = FrameLayout(
@@ -110,6 +115,20 @@ class LauncherFragment constructor(
         super.onViewCreated(view, savedInstanceState)
         mContentLinear.visibility = View.INVISIBLE
         mContentLinear.post(this@LauncherFragment)
+
+        binding.textViewCale.text = getDayLunar()
+        binding.textViewCarrier.text = getCarrierName()
+    }
+
+    private fun getDayLunar(): String {
+        return ChineseCaleUtils.getChineseCale()
+    }
+
+    private fun getCarrierName(): String {
+        val telephony: TelephonyManager = requireActivity().getSystemService(
+            BaseApp.TELEPHONY_SERVICE
+        ) as TelephonyManager
+        return telephony.simOperatorName
     }
 
     override fun run() {
@@ -153,6 +172,7 @@ class LauncherFragment constructor(
 
     override fun onDestroyView() {
         super.onDestroyView()
+        _binding = null
         mContentLinear.removeCallbacks(this@LauncherFragment)
     }
 
