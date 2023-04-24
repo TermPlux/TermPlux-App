@@ -119,22 +119,22 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
     private lateinit var mFlutterFragment: FlutterFragment
 
 
-    @Suppress("DEPRECATION")
-    private val hidePart2Runnable = Runnable {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            mComposeView.windowInsetsController?.hide(
-                WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars()
-            )
-        } else {
-            mComposeView.systemUiVisibility =
-                View.SYSTEM_UI_FLAG_LOW_PROFILE or
-                        View.SYSTEM_UI_FLAG_FULLSCREEN or
-                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-                        View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or
-                        View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
-                        View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-        }
-    }
+//    @Suppress("DEPRECATION")
+//    private val hidePart2Runnable = Runnable {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+//            mComposeView.windowInsetsController?.hide(
+//                WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars()
+//            )
+//        } else {
+//            mComposeView.systemUiVisibility =
+//                View.SYSTEM_UI_FLAG_LOW_PROFILE or
+//                        View.SYSTEM_UI_FLAG_FULLSCREEN or
+//                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+//                        View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or
+//                        View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
+//                        View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+//        }
+//    }
 
     private val showPart2Runnable = Runnable {
         // 延迟显示UI元素
@@ -577,45 +577,33 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
         supportActionBar?.hide()
         mVisible = false
         hideHandler.removeCallbacks(showPart2Runnable)
-        hideHandler.postDelayed(hidePart2Runnable, uiAnimatorDelay.toLong())
+       // hideHandler.postDelayed(hidePart2Runnable, uiAnimatorDelay.toLong())
     }
 
     @Suppress("DEPRECATION")
     private fun show() {
-        if (Build.VERSION.SDK_INT >= 30) {
-            mComposeView.windowInsetsController?.show(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
-        } else {
-            mComposeView.systemUiVisibility =
-                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
-                        View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-        }
+//        if (Build.VERSION.SDK_INT >= 30) {
+//            mComposeView.windowInsetsController?.show(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
+//        } else {
+//            mComposeView.systemUiVisibility =
+//                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
+//                        View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+//        }
         mVisible = true
-        hideHandler.removeCallbacks(hidePart2Runnable)
+    //    hideHandler.removeCallbacks(hidePart2Runnable)
         hideHandler.postDelayed(showPart2Runnable, uiAnimatorDelay.toLong())
     }
 
     /**
      * ViewPager2的适配器
      */
-    private fun adapter(
-        navController: NavHostController,
-        scope: CoroutineScope,
-        drawerState: DrawerState
-    ) {
+    private fun adapter(navController: NavHostController, ) {
         // 初始化适配器实例
         val adapter = ContentAdapter.newInstance(
             activity = mME,
             flutter = mFlutterFragment,
             viewPager = mViewPager2,
             appBarLayout = mAppBarLayout,
-            drawerState = { state ->
-                scope.launch {
-                    when (state) {
-                        true -> drawerState.open()
-                        false -> drawerState.close()
-                    }
-                }
-            },
             navigation = { route ->
                 navController.navigate(
                     route = route
@@ -800,9 +788,7 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
                 }
                 // 设置适配器
                 adapter(
-                    navController = navController,
-                    scope = scope,
-                    drawerState = drawerState
+                    navController = navController
                 )
                 syncDrawer(
                     scope = scope,

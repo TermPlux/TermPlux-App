@@ -195,8 +195,8 @@ class AppsAdapter constructor(
                                 delete -> R.drawable.outline_delete_24
                                 else -> 0
                             } else when (index) {
-                                open -> R.drawable.outline_home_24
-                                info -> R.drawable.outline_navigation_24
+                                open -> R.drawable.outline_rocket_launch_24
+                                info -> R.drawable.outline_home_24
                                 delete -> R.drawable.outline_settings_24
                                 else -> 0
                             }
@@ -212,8 +212,8 @@ class AppsAdapter constructor(
                         info -> infoApp(position = position)
                         delete -> deleteApp(view = view, position = position)
                     } else when (index) {
-                        open -> navToHome()
-                        info -> navToNav()
+                        open -> navToLauncher()
+                        info -> navToHome()
                         delete -> navToSettings()
                     }
                     false
@@ -271,13 +271,15 @@ class AppsAdapter constructor(
         }
     }
 
+    private fun navToLauncher() {
+        mViewPager.currentItem = ContentAdapter.launcher
+    }
+
     private fun navToHome() {
         mViewPager.currentItem = ContentAdapter.home
     }
 
-    private fun navToNav() {
-   //     mViewPager.currentItem = ContentAdapter.nav
-    }
+
 
     private fun navToSettings() {
         mViewPager.currentItem = ContentAdapter.settings

@@ -14,7 +14,6 @@ class ContentAdapter constructor(
     flutter: FlutterFragment,
     viewPager: ViewPager2,
     appBarLayout: AppBarLayout,
-    drawerState: (Boolean) -> Unit,
     navigation: (String) -> Unit
 ) : FragmentStateAdapter(
     activity
@@ -24,7 +23,6 @@ class ContentAdapter constructor(
     private val mViewPager: ViewPager2
     private val mFlutter: FlutterFragment
 
-    private val mDrawerState: (Boolean) -> Unit
     private var mNavigation: (String) -> Unit
 
     private lateinit var mLauncher: LauncherFragment
@@ -40,7 +38,6 @@ class ContentAdapter constructor(
         // 传入FlutterFragment
         mFlutter = flutter
         mAppBarLayout = appBarLayout
-        mDrawerState = drawerState
         // 传入导航函数
         mNavigation = navigation
     }
@@ -108,7 +105,6 @@ class ContentAdapter constructor(
             flutter: FlutterFragment,
             viewPager: ViewPager2,
             appBarLayout: AppBarLayout,
-            drawerState: (Boolean) -> Unit,
             navigation: (String) -> Unit
         ): ContentAdapter {
             return ContentAdapter(
@@ -116,7 +112,6 @@ class ContentAdapter constructor(
                 flutter = flutter,
                 viewPager = viewPager,
                 appBarLayout = appBarLayout,
-                drawerState = drawerState,
                 navigation = navigation
             )
         }

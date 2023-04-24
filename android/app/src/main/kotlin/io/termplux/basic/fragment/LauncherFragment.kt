@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.blankj.utilcode.util.BarUtils
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.search.SearchView
 import io.termplux.R
 import io.termplux.basic.custom.ClockView
 import io.termplux.basic.custom.FragmentScaffold
