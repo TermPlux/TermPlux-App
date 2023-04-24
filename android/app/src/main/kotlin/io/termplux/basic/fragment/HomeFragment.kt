@@ -4,15 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.FragmentManager
 import io.flutter.embedding.android.FlutterFragment
-import io.termplux.R
 import io.termplux.basic.custom.FragmentScaffold
 import io.termplux.databinding.FragmentHomeBinding
-import io.termplux.databinding.FragmentLauncherBinding
 
 class HomeFragment constructor(
     flutterFragment: FlutterFragment

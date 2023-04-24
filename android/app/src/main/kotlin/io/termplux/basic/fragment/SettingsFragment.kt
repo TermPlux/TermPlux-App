@@ -5,13 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.FragmentManager
-import io.termplux.R
 import io.termplux.app.ui.navigation.Screen
 import io.termplux.basic.custom.FragmentScaffold
 import io.termplux.basic.settings.Settings
-import io.termplux.databinding.FragmentHomeBinding
 import io.termplux.databinding.FragmentSettingsBinding
 
 class SettingsFragment constructor(
