@@ -13,6 +13,7 @@ import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.MaterialToolbar
 import io.termplux.R
 import io.termplux.app.ui.navigation.Screen
+import io.termplux.basic.custom.FragmentScaffold
 import io.termplux.basic.settings.Settings
 
 class SettingsFragment constructor(
@@ -76,9 +77,15 @@ class SettingsFragment constructor(
 //                )
 //            )
 //        }
-        return FragmentContainerView(requireActivity()).apply {
-            id = R.id.settings_container
-        }
+
+        return FragmentScaffold(
+            context = requireActivity(),
+            view = FragmentContainerView(
+                requireActivity()
+            ).apply {
+                id = R.id.settings_container
+            }
+        )
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

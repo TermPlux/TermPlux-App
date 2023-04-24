@@ -51,6 +51,7 @@ fun ScreenAbout(
     val position = remember {
         mutableStateOf(value = 0)
     }
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {

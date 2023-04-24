@@ -12,9 +12,11 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.blankj.utilcode.util.BarUtils
 import com.google.android.material.appbar.AppBarLayout
 import io.termplux.R
 import io.termplux.basic.custom.ClockView
+import io.termplux.basic.custom.FragmentScaffold
 import kotlin.math.hypot
 
 class LauncherFragment constructor(
@@ -72,29 +74,33 @@ class LauncherFragment constructor(
             )
         }
 
-        return FrameLayout(
-            requireActivity()
+        return FragmentScaffold(
+            context = requireActivity(),
+            view = FrameLayout(
+                requireActivity()
+            ).apply {
+                addView(
+                    mContentLinear,
+                    FrameLayout.LayoutParams(
+                        FrameLayout.LayoutParams.MATCH_PARENT,
+                        FrameLayout.LayoutParams.MATCH_PARENT
+                    )
+                )
+                addView(
+                    mSplashLogo,
+                    FrameLayout.LayoutParams(
+                        FrameLayout.LayoutParams.WRAP_CONTENT,
+                        FrameLayout.LayoutParams.WRAP_CONTENT
+                    ).apply {
+                        gravity = Gravity.CENTER
+                    }
+                )
+            }
         ).apply {
             // 设置背景
             background = ContextCompat.getDrawable(
                 requireActivity(),
                 R.drawable.custom_wallpaper_24
-            )
-            addView(
-                mContentLinear,
-                FrameLayout.LayoutParams(
-                    FrameLayout.LayoutParams.MATCH_PARENT,
-                    FrameLayout.LayoutParams.MATCH_PARENT
-                )
-            )
-            addView(
-                mSplashLogo,
-                FrameLayout.LayoutParams(
-                    FrameLayout.LayoutParams.WRAP_CONTENT,
-                    FrameLayout.LayoutParams.WRAP_CONTENT
-                ).apply {
-                    gravity = Gravity.CENTER
-                }
             )
         }
     }

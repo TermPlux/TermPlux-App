@@ -13,11 +13,13 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import com.blankj.utilcode.util.BarUtils
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.MaterialToolbar
 import io.termplux.BuildConfig
 import io.termplux.R
 import io.termplux.basic.adapter.AppsAdapter
+import io.termplux.basic.custom.FragmentScaffold
 import io.termplux.basic.receiver.AppsReceiver
 import io.termplux.model.AppsModel
 import java.util.*
@@ -58,11 +60,6 @@ class AppsFragment constructor(
         recyclerView = RecyclerView(
             mContext
         ).apply {
-            // 设置背景
-            background = ContextCompat.getDrawable(
-                requireActivity(),
-                R.drawable.custom_wallpaper_24
-            )
             layoutManager = GridLayoutManager(
                 mContext,
                 4,
@@ -70,50 +67,17 @@ class AppsFragment constructor(
                 false
             )
         }
-        return recyclerView
-//        return LinearLayoutCompat(requireActivity()).apply {
-//            orientation = LinearLayoutCompat.VERTICAL
-//
-//            addView(
-//                Space(requireActivity()).apply {
-//
-//                },
-//                LinearLayoutCompat.LayoutParams(
-//                    LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-//                )
-//            )
-//            addView(
-//                AppBarLayout(requireActivity()).apply {
-//                    addView(
-//                        MaterialToolbar(requireActivity()).apply {
-//                            title = getString(R.string.menu_apps)
-//                            navigationIcon = ContextCompat.getDrawable(
-//                                requireActivity(),
-//                                R.drawable.baseline_arrow_back_24
-//                            )
-//                            setNavigationOnClickListener {
-//                                mViewPager.currentItem = 0
-//                            }
-//                        },
-//                        AppBarLayout.LayoutParams(
-//                            AppBarLayout.LayoutParams.MATCH_PARENT,
-//                            AppBarLayout.LayoutParams.WRAP_CONTENT
-//                        )
-//                    )
-//                },
-//                LinearLayoutCompat.LayoutParams(
-//                    LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-//                    LinearLayoutCompat.LayoutParams.WRAP_CONTENT
-//                )
-//            )
-//            addView(
-//                recyclerView,
-//                LinearLayoutCompat.LayoutParams(
-//                    LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-//                    LinearLayoutCompat.LayoutParams.MATCH_PARENT
-//                )
-//            )
-//        }
+
+        return FragmentScaffold(
+            context = requireActivity(),
+            view = recyclerView
+        ).apply {
+            // 设置背景
+            background = ContextCompat.getDrawable(
+                requireActivity(),
+                R.drawable.custom_wallpaper_24
+            )
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

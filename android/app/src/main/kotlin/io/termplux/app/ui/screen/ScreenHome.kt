@@ -14,22 +14,30 @@ import io.termplux.app.ui.preview.TermPluxPreviews
 fun ScreenHome(
     pager: @Composable (modifier: Modifier) -> Unit
 ) {
-    Scaffold(
-        modifier = Modifier.fillMaxSize()
-    ) { innerPadding ->
-        Surface(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(
-                    paddingValues = innerPadding
-                ),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            pager(
-                modifier = Modifier.fillMaxSize()
-            )
-        }
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
+    ) {
+        pager(
+            modifier = Modifier.fillMaxSize()
+        )
     }
+//    Scaffold(
+//        modifier = Modifier.fillMaxSize()
+//    ) { innerPadding ->
+//        Surface(
+//            modifier = Modifier
+//                .fillMaxSize()
+//                .padding(
+//                    paddingValues = innerPadding
+//                ),
+//            color = MaterialTheme.colorScheme.background
+//        ) {
+//            pager(
+//                modifier = Modifier.fillMaxSize()
+//            )
+//        }
+//    }
 }
 
 @Composable

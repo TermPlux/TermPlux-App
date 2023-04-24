@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.FragmentManager
 import io.flutter.embedding.android.FlutterFragment
 import io.termplux.R
+import io.termplux.basic.custom.FragmentScaffold
 
 class HomeFragment constructor(
     flutterFragment: FlutterFragment
@@ -35,9 +36,14 @@ class HomeFragment constructor(
         savedInstanceState: Bundle?
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
-        return FragmentContainerView(requireActivity()).apply {
-            id = R.id.flutter_container
-        }
+        return FragmentScaffold(
+            context = requireActivity(),
+            view = FragmentContainerView(
+                requireActivity()
+            ).apply {
+                id = R.id.flutter_container
+            }
+        )
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

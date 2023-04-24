@@ -10,6 +10,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import io.termplux.R
+import io.termplux.basic.custom.FragmentScaffold
 
 class ErrorFragment constructor(viewPager: ViewPager2) : Fragment() {
 
@@ -30,7 +31,10 @@ class ErrorFragment constructor(viewPager: ViewPager2) : Fragment() {
         mErrorTipTextView = AppCompatTextView(
             requireActivity()
         )
-        return mErrorTipTextView
+        return FragmentScaffold(
+            context = requireActivity(),
+            view = mErrorTipTextView
+        )
     }
 
 
