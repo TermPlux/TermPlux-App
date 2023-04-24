@@ -11,6 +11,8 @@ import io.termplux.R
 import io.termplux.app.ui.navigation.Screen
 import io.termplux.basic.custom.FragmentScaffold
 import io.termplux.basic.settings.Settings
+import io.termplux.databinding.FragmentHomeBinding
+import io.termplux.databinding.FragmentSettingsBinding
 
 class SettingsFragment constructor(
     navigation: (String) -> Unit
@@ -18,6 +20,8 @@ class SettingsFragment constructor(
 
     private val mSettings: Settings
     private var mSettingsFragment: Settings? = null
+    private var _binding: FragmentSettingsBinding? = null
+    private val binding get() = _binding!!
 
     init {
         mSettings = Settings {
@@ -39,13 +43,10 @@ class SettingsFragment constructor(
         savedInstanceState: Bundle?
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
+        _binding = FragmentSettingsBinding.inflate(inflater, container, false)
         return FragmentScaffold(
             context = requireActivity(),
-            view = FragmentContainerView(
-                requireActivity()
-            ).apply {
-                id = R.id.settings_container
-            }
+            view = binding.root
         )
     }
 
@@ -55,7 +56,7 @@ class SettingsFragment constructor(
             mSettingsFragment = mSettings
             childFragmentManager.beginTransaction()
                 .add(
-                    R.id.settings_container,
+                    binding.settingsContainer.id,
                     mSettings,
                     TAG_SETTINGS_FRAGMENT
                 )
@@ -65,6 +66,7 @@ class SettingsFragment constructor(
 
     override fun onDestroyView() {
         super.onDestroyView()
+        _binding = null
         mSettingsFragment = null
     }
 

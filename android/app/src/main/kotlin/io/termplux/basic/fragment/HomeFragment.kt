@@ -11,6 +11,8 @@ import androidx.fragment.app.FragmentManager
 import io.flutter.embedding.android.FlutterFragment
 import io.termplux.R
 import io.termplux.basic.custom.FragmentScaffold
+import io.termplux.databinding.FragmentHomeBinding
+import io.termplux.databinding.FragmentLauncherBinding
 
 class HomeFragment constructor(
     flutterFragment: FlutterFragment
@@ -19,6 +21,8 @@ class HomeFragment constructor(
     private val mFlutter: FlutterFragment
 
     private var flutterFragment: FlutterFragment? = null
+    private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
 
     init {
         mFlutter = flutterFragment
@@ -36,13 +40,10 @@ class HomeFragment constructor(
         savedInstanceState: Bundle?
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return FragmentScaffold(
             context = requireActivity(),
-            view = FragmentContainerView(
-                requireActivity()
-            ).apply {
-                id = R.id.flutter_container
-            }
+            view = binding.root
         )
     }
 
@@ -52,12 +53,18 @@ class HomeFragment constructor(
             flutterFragment = mFlutter
             childFragmentManager.beginTransaction()
                 .add(
-                    R.id.flutter_container,
+                    binding.flutterContainer.id,
                     mFlutter,
                     TAG_FLUTTER_FRAGMENT
                 )
                 .commit()
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+        flutterFragment = null
     }
 
     companion object {
