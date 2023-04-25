@@ -21,17 +21,6 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  Widget? appBar() {
-    if (!kIsWeb) {
-      if (!Platform.isAndroid) {
-        return AppBar(
-          title: Text(widget.title),
-        );
-      }
-    }
-    return null;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,6 +31,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+
             const Text(
               'You have pushed the button this many times:',
             ),
@@ -49,13 +39,14 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
+            TextButton(onPressed: _incrementCounter, child: const Text("增加"))
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.arrow_forward),
       ),
     );
   }
