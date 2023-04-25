@@ -118,6 +118,7 @@ class LauncherFragment constructor(
 
         binding.textViewCale.text = getDayLunar()
         binding.textViewCarrier.text = getCarrierName()
+
     }
 
     private fun getDayLunar(): String {

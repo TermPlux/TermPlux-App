@@ -14,6 +14,7 @@ import androidx.viewpager2.widget.ViewPager2
 import io.termplux.BuildConfig
 import io.termplux.R
 import io.termplux.basic.adapter.AppsAdapter
+import io.termplux.basic.adapter.ContentAdapter
 import io.termplux.basic.custom.FragmentScaffold
 import io.termplux.basic.receiver.AppsReceiver
 import io.termplux.databinding.FragmentAppsBinding

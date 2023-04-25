@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import io.termplux.app.ui.navigation.Screen
+import io.termplux.basic.adapter.ContentAdapter
 import io.termplux.basic.custom.FragmentScaffold
 import io.termplux.basic.settings.Settings
 import io.termplux.databinding.FragmentSettingsBinding
