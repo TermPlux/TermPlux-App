@@ -303,6 +303,16 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
                     current(item = ContentAdapter.launcher)
                     res.success("success")
                 }
+                // 显示/隐藏ActionBar
+                "toggle" -> {
+                    toggle()
+                    res.success("success")
+                }
+                // 打开ActionBar菜单
+                "option" -> {
+                    optionsMenu()
+                    res.success("success")
+                }
 
                 else -> {
                     res.error("error", "error_message", null)
