@@ -4,12 +4,11 @@ import android.content.Context
 import android.telephony.TelephonyManager
 import android.view.Gravity
 import android.widget.TextClock
-import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import com.kongzue.baseframework.BaseApp
 import io.termplux.basic.utils.ChineseCaleUtils
 
-class ClockView(context: Context) : LinearLayoutCompat(context) {
+class ClockView constructor(context: Context) : LinearLayoutCompat(context) {
 
     private val mContext: Context
 

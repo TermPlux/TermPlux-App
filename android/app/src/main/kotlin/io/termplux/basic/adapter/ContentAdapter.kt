@@ -86,7 +86,6 @@ class ContentAdapter constructor(
             navigation = mNavigation
         )
 
-
         // 设置
         mSettings = SettingsFragment.newInstance(
             navigation = mNavigation
@@ -121,8 +120,6 @@ class ContentAdapter constructor(
         const val home: Int = 0
 
         const val launcher: Int = 1
-
-
 
         // 桌面
         const val apps: Int = 2

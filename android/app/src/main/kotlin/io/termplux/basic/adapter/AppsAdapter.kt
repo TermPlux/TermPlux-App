@@ -174,7 +174,7 @@ class AppsAdapter constructor(
                     view.context.getString(R.string.menu_delete)
                 ) else arrayOf(
                     view.context.getString(R.string.menu_home),
-                    view.context.getString(R.string.menu_navigation),
+                    view.context.getString(R.string.menu_launcher),
                     view.context.getString(R.string.menu_settings)
                 )
             )
@@ -195,8 +195,8 @@ class AppsAdapter constructor(
                                 delete -> R.drawable.outline_delete_24
                                 else -> 0
                             } else when (index) {
-                                open -> R.drawable.outline_rocket_launch_24
-                                info -> R.drawable.outline_home_24
+                                open -> R.drawable.outline_home_24
+                                info -> R.drawable.outline_rocket_launch_24
                                 delete -> R.drawable.outline_settings_24
                                 else -> 0
                             }
@@ -212,8 +212,8 @@ class AppsAdapter constructor(
                         info -> infoApp(position = position)
                         delete -> deleteApp(view = view, position = position)
                     } else when (index) {
-                        open -> navToLauncher()
-                        info -> navToHome()
+                        open -> navToHome()
+                        info -> navToLauncher()
                         delete -> navToSettings()
                     }
                     false
@@ -278,8 +278,6 @@ class AppsAdapter constructor(
     private fun navToHome() {
         mViewPager.currentItem = ContentAdapter.home
     }
-
-
 
     private fun navToSettings() {
         mViewPager.currentItem = ContentAdapter.settings

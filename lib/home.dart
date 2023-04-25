@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -15,10 +16,20 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
+  static const channel = MethodChannel('termplux_channel');
+
   void _incrementCounter() {
     setState(() {
       _counter++;
     });
+  }
+
+  void navToLauncher() {
+    if (!kIsWeb) {
+      if (Platform.isAndroid) {
+        channel.invokeMethod("navToLauncher");
+      }
+    }
   }
 
   @override
@@ -31,7 +42,6 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-
             const Text(
               'You have pushed the button this many times:',
             ),
@@ -44,8 +54,8 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
+        onPressed: navToLauncher,
+        tooltip: 'Launcher',
         child: const Icon(Icons.arrow_forward),
       ),
     );

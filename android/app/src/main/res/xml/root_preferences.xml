@@ -2,13 +2,6 @@
 
     <PreferenceCategory android:title="@string/app_name">
 
-<!--        <SwitchPreference-->
-<!--            android:defaultValue="true"-->
-<!--            android:icon="@drawable/baseline_view_in_ar_24"-->
-<!--            android:key="running_mode"-->
-<!--            android:summary="完整的用户界面"-->
-<!--            android:title="以完整模式运行" />-->
-
         <SwitchPreference
             android:defaultValue="true"
             android:icon="@drawable/baseline_color_lens_24"

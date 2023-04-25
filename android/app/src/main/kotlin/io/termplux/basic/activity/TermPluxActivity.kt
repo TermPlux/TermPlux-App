@@ -295,11 +295,12 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
         registry.registerViewFactory("android_view", LinkNativeViewFactory())
 
         val messenger = flutterEngine.dartExecutor.binaryMessenger
-        val channel = MethodChannel(messenger, "android")
+        val channel = MethodChannel(messenger, "termplux_channel")
         channel.setMethodCallHandler { call, res ->
             when (call.method) {
-                "menu" -> {
-                    // 事件
+                // 跳转桌面
+                "navToLauncher" -> {
+                    current(item = ContentAdapter.launcher)
                     res.success("success")
                 }
 
@@ -329,7 +330,6 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
         if (!isHome) {
             mFlutterFragment.onBackPressed()
         }
-        log("操你妈的执行了")
         return isHome
     }
 

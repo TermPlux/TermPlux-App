@@ -81,53 +81,53 @@ fun ActivityMain(
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet {
-//                // 头布局
-//                Column(
-//                    modifier = Modifier.fillMaxWidth(),
-//                    horizontalAlignment = Alignment.CenterHorizontally,
-//                ) {
-//                    Row(
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .padding(
-//                                all = 16.dp
-//                            ),
-//                        horizontalArrangement = Arrangement.SpaceBetween,
-//                        verticalAlignment = Alignment.CenterVertically
-//                    ) {
-//                        Text(
-//                            text = stringResource(
-//                                id = R.string.app_description
-//                            ),
-//                            style = MaterialTheme.typography.titleMedium,
-//                            color = MaterialTheme.colorScheme.primary
-//                        )
-//                        IconButton(
-//                            onClick = {
-//                                scope.launch {
-//                                    drawerState.close()
-//                                }
-//                            }
-//                        ) {
-//                            Icon(
-//                                imageVector = Icons.Default.MenuOpen,
-//                                contentDescription = null
-//                            )
-//                        }
-//                    }
-//                }
-//                ExtendedFloatingActionButton(
-//                    text = {
-//                        Text(text = stringResource(id = R.string.app_name))
-//                    },
-//                    icon = {
-//                        Icon(imageVector = Icons.Outlined.Terminal, contentDescription = null)
-//                    },
-//                    onClick = { /*TODO*/ },
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .padding(horizontal = 16.dp, vertical = 5.dp)
-//                )
+                // 头布局
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(
+                                all = 16.dp
+                            ),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = stringResource(
+                                id = R.string.app_description
+                            ),
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        IconButton(
+                            onClick = {
+                                scope.launch {
+                                    drawerState.close()
+                                }
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.MenuOpen,
+                                contentDescription = null
+                            )
+                        }
+                    }
+                }
+                ExtendedFloatingActionButton(
+                    text = {
+                        Text(text = stringResource(id = R.string.app_name))
+                    },
+                    icon = {
+                        Icon(imageVector = Icons.Outlined.Terminal, contentDescription = null)
+                    },
+                    onClick = { /*TODO*/ },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 5.dp)
+                )
                 // 导航列表
                 Column(
                     modifier = Modifier.verticalScroll(
