@@ -9,10 +9,8 @@ import androidx.compose.material.icons.twotone.Dashboard
 import androidx.compose.material.icons.twotone.FlutterDash
 import androidx.compose.material.icons.twotone.Home
 import androidx.compose.material.icons.twotone.Info
-import androidx.compose.material.icons.twotone.Navigation
 import androidx.compose.material.icons.twotone.RocketLaunch
 import androidx.compose.material.icons.twotone.Settings
-import androidx.compose.material.icons.twotone.Terminal
 import androidx.compose.ui.graphics.vector.ImageVector
 import io.termplux.R
 
@@ -88,6 +86,13 @@ sealed class Screen constructor(
         title = R.string.title_fragment
     )
 
+    object HomeFragment : Screen(
+        type = ScreenType.Fragment,
+        item = ItemType.Default,
+        route = ScreenRoute.routeHomeFragment,
+        imageVector = Icons.TwoTone.FlutterDash,
+        title = R.string.menu_home
+    )
 
     object LauncherFragment : Screen(
         type = ScreenType.Fragment,
@@ -95,14 +100,6 @@ sealed class Screen constructor(
         route = ScreenRoute.routeLauncherFragment,
         imageVector = Icons.TwoTone.RocketLaunch,
         title = R.string.menu_launcher
-    )
-
-    object HomeFragment : Screen(
-        type = ScreenType.Fragment,
-        item = ItemType.Default,
-        route = ScreenRoute.routeHomeFragment,
-        imageVector = Icons.TwoTone.FlutterDash,
-        title = R.string.menu_home
     )
 
     object AppsFragment : Screen(

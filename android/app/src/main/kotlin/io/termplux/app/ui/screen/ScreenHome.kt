@@ -22,22 +22,6 @@ fun ScreenHome(
             modifier = Modifier.fillMaxSize()
         )
     }
-//    Scaffold(
-//        modifier = Modifier.fillMaxSize()
-//    ) { innerPadding ->
-//        Surface(
-//            modifier = Modifier
-//                .fillMaxSize()
-//                .padding(
-//                    paddingValues = innerPadding
-//                ),
-//            color = MaterialTheme.colorScheme.background
-//        ) {
-//            pager(
-//                modifier = Modifier.fillMaxSize()
-//            )
-//        }
-//    }
 }
 
 @Composable

@@ -463,6 +463,7 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
             mBaseContext
         ).apply {
             isUserInputEnabled = false
+            orientation = ViewPager2.ORIENTATION_HORIZONTAL
         }
 
         // 加载TabLayout

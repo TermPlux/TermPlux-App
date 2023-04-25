@@ -53,8 +53,8 @@ fun ActivityMain(
         Screen.Divider,
         Screen.FragmentTitle,
 
-        Screen.LauncherFragment,
         Screen.HomeFragment,
+        Screen.LauncherFragment,
         Screen.AppsFragment,
         Screen.SettingsFragment
     )
@@ -261,7 +261,6 @@ fun ActivityMain(
                 ScreenHome(
                     pager = pager
                 )
-
             }
             composable(
                 route = Screen.Dashboard.route
@@ -272,7 +271,6 @@ fun ActivityMain(
                     androidVersion = androidVersion,
                     shizukuVersion = shizukuVersion
                 )
-
             }
             composable(
                 route = Screen.Manager.route
@@ -323,59 +321,6 @@ fun ActivityMain(
                 )
             }
         }
-//        Scaffold(
-//            modifier = Modifier.fillMaxSize(),
-//            bottomBar = {
-//                NavigationBar(
-//                    modifier = Modifier.fillMaxWidth()
-//                ) {
-//                    items.forEach { item ->
-//                        NavigationBarItem(
-//                            selected = currentDestination?.hierarchy?.any {
-//                                it.route == item.route
-//                            } == true,
-//                            onClick = {
-//                                if (item.type == ScreenType.Compose) navController.navigate(
-//                                    route = item.route
-//                                ) {
-//                                    popUpTo(
-//                                        id = navController.graph.findStartDestination().id
-//                                    ) {
-//                                        saveState = true
-//                                    }
-//                                    launchSingleTop = true
-//                                    restoreState = true
-//                                }
-//                            },
-//                            icon = {
-//                                Icon(
-//                                    imageVector = item.imageVector,
-//                                    contentDescription = null
-//                                )
-//                            },
-//                            modifier = Modifier.fillMaxWidth(),
-//                            enabled = true,
-//                            label = {
-//                                Text(
-//                                    stringResource(
-//                                        id = item.title
-//                                    )
-//                                )
-//                            },
-//                            alwaysShowLabel = false
-//                        )
-//                    }
-//                }
-//            },
-//            snackbarHost = {
-//                SnackbarHost(
-//                    hostState = snackBarHostState
-//                )
-//            },
-//            contentWindowInsets = ScaffoldDefaults.contentWindowInsets
-//        ) { innerPadding ->
-//
-//        }
     }
 }
 
