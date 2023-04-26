@@ -95,23 +95,25 @@ flutter {
 
 dependencies {
     // 第三方库
-    // AndroidUtilCode：https://github.com/Blankj/AndroidUtilCode
+    // FlutterBoost: https://github.com/alibaba/flutter_boost
+    implementation project(':flutter_boost')
+    // AndroidUtilCode: https://github.com/Blankj/AndroidUtilCode
     implementation 'com.blankj:utilcodex:1.31.1'
-    // LibTaskbar：https://github.com/farmerbb/libtaskbar
+    // LibTaskbar: https://github.com/farmerbb/libtaskbar
     implementation 'com.github.farmerbb:libtaskbar:2.2.0'
-    // BaseFramework：https://github.com/kongzue/BaseFramework
+    // BaseFramework: https://github.com/kongzue/BaseFramework
     implementation 'com.github.kongzue:BaseFramework:6.8.9.1'
-    // DialogX：https://github.com/kongzue/DialogX
+    // DialogX: https://github.com/kongzue/DialogX
     implementation 'com.kongzue.dialogx:DialogX:0.0.47'
-    // DialogX：https://github.com/kongzue/DialogX
+    // DialogX: https://github.com/kongzue/DialogX
     implementation 'com.kongzue.dialogx.style:DialogXMaterialYouStyle:0.0.47'
-    // LicensesDialog：https://github.com/PSDev/LicensesDialog
+    // LicensesDialog: https://github.com/PSDev/LicensesDialog
     implementation 'de.psdev.licensesdialog:licensesdialog:2.2.0'
-    // Shizuku-API：https://github.com/RikkaApps/Shizuku-API
+    // Shizuku-API: https://github.com/RikkaApps/Shizuku-API
     implementation "dev.rikka.shizuku:api:13.1.1"
-    // Shizuku-API：https://github.com/RikkaApps/Shizuku-API
+    // Shizuku-API: https://github.com/RikkaApps/Shizuku-API
     implementation "dev.rikka.shizuku:provider:13.1.1"
-    // AndroidHiddenApiBypass：https://github.com/LSPosed/AndroidHiddenApiBypass
+    // AndroidHiddenApiBypass: https://github.com/LSPosed/AndroidHiddenApiBypass
     implementation 'org.lsposed.hiddenapibypass:hiddenapibypass:4.3'
     // JetBrains官方库
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
