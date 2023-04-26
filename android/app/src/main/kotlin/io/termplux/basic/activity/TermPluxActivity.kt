@@ -3,6 +3,7 @@ package io.termplux.basic.activity
 import android.annotation.SuppressLint
 import android.content.*
 import android.content.pm.PackageManager
+import android.graphics.PorterDuff
 import android.os.Build
 import android.os.Handler
 import android.os.IBinder
@@ -37,6 +38,7 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.internal.EdgeToEdgeUtils
+import com.google.android.material.internal.ToolbarUtils
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -431,6 +433,7 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
     /**
      * 加载Ui控件
      */
+    @SuppressLint("RestrictedApi")
     private fun initUi() {
         // 加载AppBarLayout
         mAppBarLayout = AppBarLayout(
@@ -452,7 +455,26 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
                         R.drawable.baseline_terminal_24
                     )
                 }.also { toolbar ->
+                    // 设置操作栏
                     setSupportActionBar(toolbar)
+                    // 设置导航按钮着色
+                    ToolbarUtils.getNavigationIconButton(
+                        toolbar
+                    )?.setColorFilter(
+                        android.graphics.Color.WHITE
+                    )
+                    // 设置图标着色
+                    ToolbarUtils.getLogoImageView(
+                        toolbar
+                    )?.setColorFilter(
+                        android.graphics.Color.WHITE
+                    )
+                    // 设置标题着色
+                    ToolbarUtils.getTitleTextView(
+                        toolbar
+                    )?.setTextColor(
+                        android.graphics.Color.WHITE
+                    )
                     mToolbar = toolbar
                 },
                 AppBarLayout.LayoutParams(
