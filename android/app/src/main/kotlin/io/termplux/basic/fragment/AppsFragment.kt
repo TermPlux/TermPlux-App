@@ -1,5 +1,7 @@
 package io.termplux.basic.fragment
 
+import android.annotation.SuppressLint
+import android.app.WallpaperManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -50,27 +52,27 @@ class AppsFragment constructor(
         mContext = requireActivity()
     }
 
+    @SuppressLint("MissingPermission")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
+        // 壁纸管理器
+        val wallpaperManager = WallpaperManager.getInstance(requireActivity())
         _binding = FragmentAppsBinding.inflate(inflater, container, false)
         return FragmentScaffold(
             context = requireActivity()
         ).apply {
+            // 设置背景
+            background = wallpaperManager.drawable
             addView(
                 binding.root,
                 FrameLayout.LayoutParams(
                     FrameLayout.LayoutParams.MATCH_PARENT,
                     FrameLayout.LayoutParams.MATCH_PARENT
                 )
-            )
-            // 设置背景
-            background = ContextCompat.getDrawable(
-                requireActivity(),
-                R.drawable.custom_wallpaper_24
             )
         }
     }

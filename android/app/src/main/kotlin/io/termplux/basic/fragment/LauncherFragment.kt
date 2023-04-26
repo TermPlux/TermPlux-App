@@ -52,6 +52,7 @@ class LauncherFragment constructor(
         savedInstanceState: Bundle?
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
+        // 壁纸管理器
         val wallpaperManager = WallpaperManager.getInstance(requireActivity())
         // 加载XML布局
         _binding = FragmentLauncherBinding.inflate(inflater, container, false)
@@ -90,6 +91,7 @@ class LauncherFragment constructor(
             context = requireActivity()
         ).apply {
             // 设置背景
+            background = wallpaperManager.drawable
             addView(
                 FrameLayout(
                     requireActivity()
@@ -116,7 +118,6 @@ class LauncherFragment constructor(
                     FrameLayout.LayoutParams.MATCH_PARENT
                 )
             )
-            background = wallpaperManager.drawable
         }
     }
 
