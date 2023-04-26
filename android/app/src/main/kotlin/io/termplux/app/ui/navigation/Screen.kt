@@ -86,20 +86,20 @@ sealed class Screen constructor(
         title = R.string.title_fragment
     )
 
-    object HomeFragment : Screen(
-        type = ScreenType.Fragment,
-        item = ItemType.Default,
-        route = ScreenRoute.routeHomeFragment,
-        imageVector = Icons.TwoTone.FlutterDash,
-        title = R.string.menu_home
-    )
-
     object LauncherFragment : Screen(
         type = ScreenType.Fragment,
         item = ItemType.Default,
         route = ScreenRoute.routeLauncherFragment,
         imageVector = Icons.TwoTone.RocketLaunch,
         title = R.string.menu_launcher
+    )
+
+    object HomeFragment : Screen(
+        type = ScreenType.Fragment,
+        item = ItemType.Default,
+        route = ScreenRoute.routeHomeFragment,
+        imageVector = Icons.TwoTone.FlutterDash,
+        title = R.string.menu_home
     )
 
     object AppsFragment : Screen(

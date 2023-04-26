@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import io.termplux.app.ui.navigation.Screen
@@ -43,9 +44,16 @@ class SettingsFragment constructor(
         super.onCreateView(inflater, container, savedInstanceState)
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
         return FragmentScaffold(
-            context = requireActivity(),
-            view = binding.root
-        )
+            context = requireActivity()
+        ).apply {
+            addView(
+                binding.root,
+                FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT,
+                    FrameLayout.LayoutParams.MATCH_PARENT
+                )
+            )
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

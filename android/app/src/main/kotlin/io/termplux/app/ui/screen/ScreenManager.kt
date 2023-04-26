@@ -8,7 +8,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.outlined.Terminal
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -28,6 +27,7 @@ import androidx.navigation.compose.rememberNavController
 import io.termplux.BuildConfig
 import io.termplux.R
 import io.termplux.app.ui.navigation.Screen
+import io.termplux.app.ui.navigation.ScreenRoute
 import io.termplux.app.ui.preview.TermPluxPreviews
 import kotlinx.coroutines.launch
 
@@ -38,6 +38,7 @@ fun ScreenManager(
     drawerState: DrawerState,
     tabBar: @Composable (modifier: Modifier) -> Unit,
     toggle: () -> Unit,
+    current: (item: Int) -> Unit,
     targetAppName: String,
     targetAppPackageName: String,
     targetAppDescription: String,
@@ -158,7 +159,23 @@ fun ScreenManager(
                         }
                         IconButton(
                             onClick = {
-                                toggle()
+                                navController.navigate(
+                                    route = Screen.Home.route
+                                ) {
+                                    popUpTo(
+                                        id = navController.graph.findStartDestination().id
+                                    ) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }.also {
+                                    current(
+                                        ScreenRoute.routeLauncherFragment.toInt()
+                                    ).also {
+                                        toggle()
+                                    }
+                                }
                             },
                             modifier = Modifier
                                 .weight(
@@ -175,8 +192,6 @@ fun ScreenManager(
                         }
                     }
                 }
-
-
 
 
 //                AndroidView(
@@ -549,6 +564,7 @@ private fun ScreenManagerPreview() {
             )
         },
         toggle = {},
+        current = {},
         targetAppName = stringResource(
             id = R.string.app_name
         ),

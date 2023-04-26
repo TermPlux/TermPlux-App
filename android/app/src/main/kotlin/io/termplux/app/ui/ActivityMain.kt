@@ -53,8 +53,8 @@ fun ActivityMain(
         Screen.Divider,
         Screen.FragmentTitle,
 
-        Screen.HomeFragment,
         Screen.LauncherFragment,
+        Screen.HomeFragment,
         Screen.AppsFragment,
         Screen.SettingsFragment
     )
@@ -280,6 +280,7 @@ fun ActivityMain(
                     drawerState = drawerState,
                     tabBar = tabBar,
                     toggle = toggle,
+                    current = current,
                     targetAppName = stringResource(id = R.string.app_name),
                     targetAppPackageName = BuildConfig.APPLICATION_ID,
                     targetAppDescription = stringResource(id = R.string.app_description),

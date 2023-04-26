@@ -1,5 +1,9 @@
 package io.termplux.basic.fragment
 
+import android.annotation.SuppressLint
+import android.app.WallpaperManager
+import android.content.Context
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.telephony.TelephonyManager
 import android.view.Gravity
@@ -41,12 +45,14 @@ class LauncherFragment constructor(
         super.onCreate(savedInstanceState)
     }
 
+    @SuppressLint("MissingPermission")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
+        val wallpaperManager = WallpaperManager.getInstance(requireActivity())
         // 加载XML布局
         _binding = FragmentLauncherBinding.inflate(inflater, container, false)
         // 屏闪动画LOGO
@@ -81,33 +87,36 @@ class LauncherFragment constructor(
         }
         // 跟布局
         return FragmentScaffold(
-            context = requireActivity(),
-            view = FrameLayout(
-                requireActivity()
-            ).apply {
-                addView(
-                    mContentLinear,
-                    FrameLayout.LayoutParams(
-                        FrameLayout.LayoutParams.MATCH_PARENT,
-                        FrameLayout.LayoutParams.MATCH_PARENT
-                    )
-                )
-                addView(
-                    mSplashLogo,
-                    FrameLayout.LayoutParams(
-                        FrameLayout.LayoutParams.WRAP_CONTENT,
-                        FrameLayout.LayoutParams.WRAP_CONTENT
-                    ).apply {
-                        gravity = Gravity.CENTER
-                    }
-                )
-            }
+            context = requireActivity()
         ).apply {
             // 设置背景
-            background = ContextCompat.getDrawable(
-                requireActivity(),
-                R.drawable.custom_wallpaper_24
+            addView(
+                FrameLayout(
+                    requireActivity()
+                ).apply {
+                    addView(
+                        mContentLinear,
+                        FrameLayout.LayoutParams(
+                            FrameLayout.LayoutParams.MATCH_PARENT,
+                            FrameLayout.LayoutParams.MATCH_PARENT
+                        )
+                    )
+                    addView(
+                        mSplashLogo,
+                        FrameLayout.LayoutParams(
+                            FrameLayout.LayoutParams.WRAP_CONTENT,
+                            FrameLayout.LayoutParams.WRAP_CONTENT
+                        ).apply {
+                            gravity = Gravity.CENTER
+                        }
+                    )
+                },
+                FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT,
+                    FrameLayout.LayoutParams.MATCH_PARENT
+                )
             )
+            background = wallpaperManager.drawable
         }
     }
 

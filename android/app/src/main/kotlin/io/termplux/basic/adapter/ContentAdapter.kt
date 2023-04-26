@@ -47,8 +47,8 @@ class ContentAdapter constructor(
      */
     override fun getItemCount(): Int {
         return intArrayOf(
-            home,
             launcher,
+            home,
             apps,
             settings
         ).size
@@ -60,8 +60,8 @@ class ContentAdapter constructor(
     override fun createFragment(position: Int): Fragment {
         initFragment()
         return when (position) {
-            home -> mHome
             launcher -> mLauncher
+            home -> mHome
             apps -> mApps
             settings -> mSettings
             else -> mError
@@ -72,13 +72,15 @@ class ContentAdapter constructor(
      * 加载Fragment
      */
     private fun initFragment() {
-        mHome = HomeFragment.newInstance(
-            flutterFragment = mFlutter
-        )
 
         mLauncher = LauncherFragment.newInstance(
             appBarLayout = mAppBarLayout
         )
+        mHome = HomeFragment.newInstance(
+            flutterFragment = mFlutter
+        )
+
+
 
         // 应用
         mApps = AppsFragment.newInstance(
@@ -114,17 +116,11 @@ class ContentAdapter constructor(
                 navigation = navigation
             )
         }
+
         // 页面代码，从0开始，以此类推
-
-        // 主页
-        const val home: Int = 0
-
-        const val launcher: Int = 1
-
-        // 桌面
+        const val launcher: Int = 0
+        const val home: Int = 1
         const val apps: Int = 2
-
-        // 设置
         const val settings: Int = 3
     }
 }

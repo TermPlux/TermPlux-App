@@ -1,19 +1,36 @@
 package io.termplux.basic.custom
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
-import android.view.View
+import android.util.AttributeSet
 import android.widget.FrameLayout
 import com.blankj.utilcode.util.BarUtils
 
-@SuppressLint("ViewConstructor")
-class FragmentScaffold constructor(
-    context: Context,
-    view: View
-) : FrameLayout(
-    context
-) {
+class FragmentScaffold : FrameLayout {
+
+    constructor(
+        context: Context
+    ) : super(
+        context
+    )
+
+    constructor(
+        context: Context,
+        attrs: AttributeSet?
+    ) : super(
+        context,
+        attrs
+    )
+
+    constructor(
+        context: Context,
+        attrs: AttributeSet?,
+        defStyleAttr: Int
+    ) : super(
+        context,
+        attrs,
+        defStyleAttr
+    )
 
     init {
         setPadding(
@@ -21,13 +38,6 @@ class FragmentScaffold constructor(
             statusBarHeight(context = context),
             0,
             navigationBarHeight(context = context)
-        )
-        addView(
-            view,
-            LayoutParams(
-                LayoutParams.MATCH_PARENT,
-                LayoutParams.MATCH_PARENT
-            )
         )
     }
 

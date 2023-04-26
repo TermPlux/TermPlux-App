@@ -131,7 +131,7 @@ fun ScreenDashboard(
                                     route = Screen.Manager.route
                                 ) {
                                     popUpTo(
-                                        navController.graph.findStartDestination().id
+                                        id = navController.graph.findStartDestination().id
                                     ) {
                                         saveState = true
                                     }

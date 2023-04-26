@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import android.view.*
+import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
@@ -14,7 +15,6 @@ import androidx.viewpager2.widget.ViewPager2
 import io.termplux.BuildConfig
 import io.termplux.R
 import io.termplux.basic.adapter.AppsAdapter
-import io.termplux.basic.adapter.ContentAdapter
 import io.termplux.basic.custom.FragmentScaffold
 import io.termplux.basic.receiver.AppsReceiver
 import io.termplux.databinding.FragmentAppsBinding
@@ -58,9 +58,15 @@ class AppsFragment constructor(
         super.onCreateView(inflater, container, savedInstanceState)
         _binding = FragmentAppsBinding.inflate(inflater, container, false)
         return FragmentScaffold(
-            context = requireActivity(),
-            view = binding.root
+            context = requireActivity()
         ).apply {
+            addView(
+                binding.root,
+                FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT,
+                    FrameLayout.LayoutParams.MATCH_PARENT
+                )
+            )
             // 设置背景
             background = ContextCompat.getDrawable(
                 requireActivity(),

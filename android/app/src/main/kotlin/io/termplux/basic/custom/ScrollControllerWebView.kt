@@ -2,15 +2,36 @@ package io.termplux.basic.custom
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.AttributeSet
 import android.view.MotionEvent
 import android.webkit.WebView
 import com.kongzue.dialogx.interfaces.ScrollController
 
-class ScrollControllerWebView constructor(
-    context: Context
-) : WebView(
-    context
-), ScrollController {
+class ScrollControllerWebView : WebView, ScrollController {
+
+    constructor(
+        context: Context
+    ) : super(
+        context
+    )
+
+    constructor(
+        context: Context,
+        attrs: AttributeSet?
+    ) : super(
+        context,
+        attrs
+    )
+
+    constructor(
+        context: Context,
+        attrs: AttributeSet?,
+        defStyleAttr: Int
+    ) : super(
+        context,
+        attrs,
+        defStyleAttr
+    )
 
     private var lockScroll = false
 
