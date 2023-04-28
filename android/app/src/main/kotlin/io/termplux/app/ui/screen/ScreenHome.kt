@@ -143,7 +143,7 @@ fun ScreenHome(
                                 )
                             )
                         },
-                        alwaysShowLabel = false
+                        alwaysShowLabel = true
                     )
                 }
             }

@@ -46,14 +46,18 @@ _(由于不同平台软件差异，iOS和macOS端必须用Mac才能进行开发�
 使用的开源第三方库:  
 AndroidUtilCode [https://github.com/Blankj/AndroidUtilCode](https://github.com/Blankj/AndroidUtilCode)  
 Flutter [https://github.com/flutter/flutter](https://github.com/flutter/flutter)  
-FlutterBoost [https://github.com/alibaba/flutter_boost](https://github.com/alibaba/flutter_boost)  
 LibTaskBar [https://github.com/farmerbb/libtaskbar](https://github.com/farmerbb/libtaskbar)  
 BaseFramework [https://github.com/kongzue/BaseFramework](https://github.com/kongzue/BaseFramework)  
 DialogX [https://github.com/kongzue/DialogX](https://github.com/kongzue/DialogX)  
 LicensesDialog [https://github.com/PSDev/LicensesDialog](https://github.com/PSDev/LicensesDialog)  
 Shizuku-API [https://github.com/RikkaApps/Shizuku-API](https://github.com/RikkaApps/Shizuku-API)  
 AndroidHiddenApiBypass [https://github.com/LSPosed/AndroidHiddenApiBypass](https://github.com/LSPosed/AndroidHiddenApiBypass)  
-dynamic_color [https://pub.dev/packages/dynamic_color](https://pub.dev/packages/dynamic_color)
+
+使用的Flutter插件:  
+dynamic_color [https://pub.dev/packages/dynamic_color](https://pub.dev/packages/dynamic_color)  
+device_preview [https://pub.dev/packages/device_preview](https://pub.dev/packages/device_preview)  
+flutter_rfb [https://pub.dev/packages/flutter_rfb](https://pub.dev/packages/flutter_rfb)  
+xterm [https://pub.dev/packages/xterm](https://pub.dev/packages/xterm)  
 
 引用了以下项目的部分代码:  
 DialogX [https://github.com/kongzue/DialogX](https://github.com/kongzue/DialogX)  
