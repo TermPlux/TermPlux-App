@@ -3,8 +3,6 @@ package io.termplux.basic.activity
 import android.annotation.SuppressLint
 import android.content.*
 import android.content.pm.PackageManager
-import android.content.res.ColorStateList
-import android.graphics.PorterDuff
 import android.os.Build
 import android.os.Handler
 import android.os.IBinder
@@ -12,26 +10,21 @@ import android.os.Looper
 import android.util.Log
 import android.view.*
 import android.widget.FrameLayout
-import android.widget.ImageView
 import android.widget.ProgressBar
 import android.window.OnBackInvokedCallback
 import android.window.OnBackInvokedDispatcher
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.appcompat.widget.AppCompatImageView
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
@@ -41,13 +34,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.preference.PreferenceManager
 import androidx.viewpager2.widget.ViewPager2
-import com.blankj.utilcode.util.BarUtils
 import com.farmerbb.taskbar.lib.Taskbar
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.internal.EdgeToEdgeUtils
-import com.google.android.material.internal.ToolbarUtils
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -113,16 +104,11 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
     private var isNeedInterceptBackEvent: Boolean by mutableStateOf(value = true)
     private var isHome: Boolean by mutableStateOf(value = false)
     private var mVisible: Boolean by mutableStateOf(value = false)
-
-    //private var isFull: Boolean by mutableStateOf(value = true)
     private var isDynamicColor: Boolean by mutableStateOf(value = true)
-
-    //private lateinit var mContentView: ContentView
 
 
     private lateinit var mToolbar: MaterialToolbar
     private lateinit var mAppBarLayout: AppBarLayout
-    //private lateinit var mComposeView: ComposeView
     private lateinit var mViewPager2: ViewPager2
 
     private lateinit var mTabLayout: TabLayout
@@ -166,15 +152,6 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
 
     override fun resetContentView(): View {
         super.resetContentView()
-//        // 加载ComposeView
-//        mComposeView = ComposeView(
-//            context = mBaseContext
-//        ).apply {
-//            setOnTouchListener(delayHideTouchListener)
-//            setViewCompositionStrategy(
-//                strategy = ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
-//            )
-//        }
         return FrameLayout(
             mBaseContext
         ).apply {
@@ -376,7 +353,6 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         super.onOptionsItemSelected(item)
         when (item.itemId) {
-            //android.R.id.home -> if (!isHome) onBack()
             R.id.action_settings -> {
                 current(item = ContentAdapter.settings)
             }
@@ -442,11 +418,6 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
         // 获取首选项
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mBaseContext)
 
-//        isFull = mSharedPreferences.getBoolean(
-//            "running_mode",
-//            true
-//        )
-
         isDynamicColor = mSharedPreferences.getBoolean(
             "dynamic_colors",
             true
@@ -463,12 +434,10 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
             mBaseContext
         ).apply {
             fitsSystemWindows = true
-            //setBackgroundColor(android.graphics.Color.TRANSPARENT)
             addView(
                 MaterialToolbar(
                     mBaseContext
                 ).apply {
-                    //setBackgroundColor(android.graphics.Color.TRANSPARENT)
                     navigationIcon = ContextCompat.getDrawable(
                         mBaseContext,
                         R.drawable.baseline_menu_24
@@ -500,7 +469,9 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
         ).apply {
             orientation = ViewPager2.ORIENTATION_HORIZONTAL
             isUserInputEnabled = false
-          //  setPageTransformer(ZoomOutPageTransformer())
+            setPageTransformer(
+                ZoomOutPageTransformer()
+            )
         }
 
         // 加载TabLayout
@@ -512,18 +483,12 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
     }
 
     @SuppressLint("RestrictedApi")
-    @Suppress("DEPRECATION")
     private fun initSystemBar() {
         // 启用边到边
         EdgeToEdgeUtils.applyEdgeToEdge(window, true)
         // 深色模式跟随系统
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         WindowCompat.setDecorFitsSystemWindows(window, true)
-
-//        val option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-//        val decorView = window.decorView
-//        val visibility: Int = decorView.systemUiVisibility
-//        decorView.systemUiVisibility = visibility or option
 
         setDarkStatusBarTheme(true)
         setDarkNavigationBarTheme(true)

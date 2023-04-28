@@ -42,7 +42,7 @@ fun ActivityMain(
     toggle: () -> Unit
 ) {
     val pages = listOf(
-        Screen.ComposeTitle,
+       // Screen.ComposeTitle,
 
         Screen.Home,
         Screen.Dashboard,
@@ -51,7 +51,7 @@ fun ActivityMain(
         Screen.About,
 
         Screen.Divider,
-        Screen.FragmentTitle,
+       // Screen.FragmentTitle,
 
         Screen.LauncherFragment,
         Screen.HomeFragment,

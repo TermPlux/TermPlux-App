@@ -18,7 +18,7 @@ import com.google.android.material.appbar.AppBarLayout
 import com.kongzue.baseframework.BaseApp
 import io.termplux.R
 import io.termplux.basic.utils.ChineseCaleUtils
-import io.termplux.databinding.FragmentLauncherBinding
+import io.termplux.databinding.LauncherBinding
 import kotlin.math.hypot
 
 class LauncherFragment constructor(
@@ -30,7 +30,7 @@ class LauncherFragment constructor(
     private lateinit var mSplashLogo: AppCompatImageView
     private lateinit var mContentLinear: LinearLayoutCompat
 
-    private var _binding: FragmentLauncherBinding? = null
+    private var _binding: LauncherBinding? = null
     private val binding get() = _binding!!
 
     init {
@@ -49,7 +49,7 @@ class LauncherFragment constructor(
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
         // 加载XML布局
-        _binding = FragmentLauncherBinding.inflate(inflater, container, false)
+        _binding = LauncherBinding.inflate(inflater, container, false)
         // 屏闪动画LOGO
         mSplashLogo = AppCompatImageView(
             requireActivity()

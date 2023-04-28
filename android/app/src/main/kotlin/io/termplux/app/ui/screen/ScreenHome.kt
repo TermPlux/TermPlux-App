@@ -36,6 +36,7 @@ import io.termplux.app.ui.navigation.Screen
 import io.termplux.app.ui.navigation.ScreenType
 import io.termplux.app.ui.preview.TermPluxPreviews
 import io.termplux.app.ui.widget.HomeItem
+import io.termplux.app.ui.widget.InfoItem
 import kotlinx.coroutines.launch
 
 @Composable
@@ -109,7 +110,7 @@ fun ScreenHome(
         bottomBar = {
             NavigationBar(
                 modifier = Modifier.fillMaxWidth(),
-              //  tonalElevation = 8.dp
+                //  tonalElevation = 8.dp
             ) {
                 items.forEach { item ->
                     NavigationBarItem(
@@ -244,65 +245,214 @@ fun ScreenHome(
                 }
                 ElevatedCard(
                     modifier = Modifier.padding(
-                        start = 16.dp, end = 16.dp, top = 8.dp, bottom = 16.dp
+                        start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp
                     )
                 ) {
-                    Column(
+                    Box(
+                        modifier = Modifier.clickable { }
+                    ){
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(
+                                    all = 24.dp
+                                )
+                        ) {
+
+                            Text(
+                                text = "应用版本",
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                            Text(
+                                text = BuildConfig.VERSION_NAME,
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                            Spacer(
+                                modifier = Modifier.height(
+                                    height = 16.dp
+                                )
+                            )
+                            Text(
+                                text = stringResource(id = R.string.kernel_version),
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                            Text(
+                                text = Os.uname().release,
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                            Spacer(
+                                modifier = Modifier.height(
+                                    height = 16.dp
+                                )
+                            )
+                            Text(
+                                text = stringResource(id = R.string.device_arch),
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                            Text(
+                                text = Os.uname().machine,
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                            Spacer(
+                                modifier = Modifier.height(
+                                    height = 16.dp
+                                )
+                            )
+                            Text(
+                                text = stringResource(id = R.string.shizuku_version),
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                            Text(
+                                text = shizukuVersion,
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
+                    }
+
+//                        InfoItem(
+//                            contents = contents,
+//                            title = stringResource(id = R.string.android_version),
+//                            body = androidVersion
+//                        )
+//                        InfoItem(
+//                            contents = contents,
+//                            title = stringResource(id = R.string.shizuku_version),
+//                            body = shizukuVersion
+//                        )
+//                        InfoItem(
+//                            contents = contents,
+//                            title = stringResource(id = R.string.kernel_version),
+//                            body = Os.uname().release
+//                        )
+//                        InfoItem(
+//                            contents = contents,
+//                            title = stringResource(id = R.string.system_version),
+//                            body = Os.uname().version
+//                        )
+//                        InfoItem(
+//                            contents = contents,
+//                            title = stringResource(id = R.string.device_arch),
+//                            body = Os.uname().machine
+//                        )
+//                        InfoItem(
+//                            contents = contents,
+//                            title = stringResource(id = R.string.device_code),
+//                            body = Build.DEVICE
+//
+
+
+//                        TextButton(
+//                            onClick = {
+//
+//                            },
+//                            modifier = Modifier.align(
+//                                alignment = Alignment.End
+//                            )
+//                        ) {
+//                            Text(
+//                                text = "全部参数"
+//                            )
+//                        }
+
+
+//                        TextButton(
+//                            onClick = {
+//                                val clipboardManager = context.getSystemService(
+//                                    Context.CLIPBOARD_SERVICE
+//                                ) as ClipboardManager
+//                                clipboardManager.setPrimaryClip(
+//                                    ClipData.newPlainText(
+//                                        context.getString(R.string.app_name), contents.toString()
+//                                    )
+//                                )
+//                                scope.launch {
+//                                    snackBarHostState.showSnackbar(
+//                                        context.getString(R.string.copied_to_clipboard)
+//                                    )
+//                                }
+//                            },
+//                            modifier = Modifier.align(
+//                                alignment = Alignment.End
+//                            )
+//                        ) {
+//                            Text(
+//                                text = stringResource(
+//                                    id = R.string.copy_info
+//                                )
+//                            )
+//                        }
+                //    }
+                }
+                ElevatedCard(
+                    modifier = Modifier.padding(
+                        start = 16.dp,
+                        end = 16.dp,
+                        top = 8.dp,
+                        bottom = 8.dp
+                    )
+                ) {
+                    Row(
                         modifier = Modifier
                             .fillMaxWidth()
+                            .clickable {
+
+                            }
                             .padding(
                                 all = 24.dp
-                            )
+                            ),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        HomeItem(
-                            contents = contents,
-                            title = stringResource(id = R.string.android_version),
-                            body = androidVersion
-                        )
-                        HomeItem(
-                            contents = contents,
-                            title = stringResource(id = R.string.shizuku_version),
-                            body = shizukuVersion
-                        )
-                        HomeItem(
-                            contents = contents,
-                            title = stringResource(id = R.string.kernel_version),
-                            body = Os.uname().release
-                        )
-                        HomeItem(
-                            contents = contents,
-                            title = stringResource(id = R.string.system_version),
-                            body = Os.uname().version
-                        )
-                        HomeItem(
-                            contents = contents,
-                            title = stringResource(id = R.string.device_arch),
-                            body = Os.uname().machine
-                        )
-                        HomeItem(
-                            contents = contents,
-                            title = stringResource(id = R.string.device_code),
-                            body = Build.DEVICE
-                        )
-                        TextButton(modifier = Modifier.align(Alignment.End), onClick = {
-                            val clipboardManager = context.getSystemService(
-                                Context.CLIPBOARD_SERVICE
-                            ) as ClipboardManager
-                            clipboardManager.setPrimaryClip(
-                                ClipData.newPlainText(
-                                    context.getString(R.string.app_name), contents.toString()
-                                )
-                            )
-                            scope.launch {
-                                snackBarHostState.showSnackbar(
-                                    context.getString(R.string.copied_to_clipboard)
-                                )
-                            }
-                        }, content = {
+                        Column() {
                             Text(
-                                text = stringResource(id = R.string.copy_info)
+                                text = "支持开发",
+                                style = MaterialTheme.typography.titleSmall
                             )
-                        })
+                            Spacer(
+                                modifier = Modifier.height(
+                                    height = 4.dp
+                                )
+                            )
+                            Text(
+                                text = "TermPlux 将保持免费和开源，向开发者捐赠以表示支持。",
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
+                    }
+                }
+                ElevatedCard(
+                    modifier = Modifier.padding(
+                        start = 16.dp,
+                        end = 16.dp,
+                        top = 8.dp,
+                        bottom = 16.dp
+                    )
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+
+                            }
+                            .padding(
+                                all = 24.dp
+                            ),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column() {
+                            Text(
+                                text = "了解 TermPlux",
+                                style = MaterialTheme.typography.titleSmall
+                            )
+                            Spacer(
+                                modifier = Modifier.height(
+                                    height = 4.dp
+                                )
+                            )
+                            Text(
+                                text = "了解如何使用 TermPlux",
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
                     }
                 }
             }

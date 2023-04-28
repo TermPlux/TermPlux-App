@@ -9,12 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun InfoItem(contents: StringBuilder, title: String, body: String) {
-    contents.appendLine(
-        value = title
-    ).appendLine(
-        value = body
-    ).appendLine()
+fun HomeItem(title: String, body: String) {
     Text(
         text = title,
         style = MaterialTheme.typography.bodyLarge
