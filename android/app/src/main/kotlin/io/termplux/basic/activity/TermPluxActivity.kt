@@ -3,6 +3,7 @@ package io.termplux.basic.activity
 import android.annotation.SuppressLint
 import android.content.*
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
 import android.graphics.PorterDuff
 import android.os.Build
 import android.os.Handler
@@ -12,6 +13,7 @@ import android.util.Log
 import android.view.*
 import android.window.OnBackInvokedCallback
 import android.window.OnBackInvokedDispatcher
+import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
@@ -20,6 +22,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -33,6 +36,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.preference.PreferenceManager
 import androidx.viewpager2.widget.ViewPager2
+import com.blankj.utilcode.util.BarUtils
 import com.farmerbb.taskbar.lib.Taskbar
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.android.material.appbar.AppBarLayout
@@ -64,6 +68,7 @@ import io.termplux.basic.custom.LinkNativeViewFactory
 import io.termplux.basic.services.MainService
 import io.termplux.basic.services.UserService
 import io.termplux.basic.utils.BackInvokedCallbackUtils
+import io.termplux.basic.utils.ZoomOutPageTransformer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Runnable
 import kotlinx.coroutines.launch
@@ -165,7 +170,7 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
                 strategy = ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
             )
         }
-        return mComposeView
+        return View(mBaseContext)
     }
 
     /**
@@ -440,12 +445,12 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
             mBaseContext
         ).apply {
             fitsSystemWindows = true
-            setBackgroundColor(android.graphics.Color.TRANSPARENT)
+            //setBackgroundColor(android.graphics.Color.TRANSPARENT)
             addView(
                 MaterialToolbar(
                     mBaseContext
                 ).apply {
-                    setBackgroundColor(android.graphics.Color.TRANSPARENT)
+                    //setBackgroundColor(android.graphics.Color.TRANSPARENT)
                     navigationIcon = ContextCompat.getDrawable(
                         mBaseContext,
                         R.drawable.baseline_menu_24
@@ -457,24 +462,6 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
                 }.also { toolbar ->
                     // 设置操作栏
                     setSupportActionBar(toolbar)
-                    // 设置导航按钮着色
-                    ToolbarUtils.getNavigationIconButton(
-                        toolbar
-                    )?.setColorFilter(
-                        android.graphics.Color.WHITE
-                    )
-                    // 设置图标着色
-                    ToolbarUtils.getLogoImageView(
-                        toolbar
-                    )?.setColorFilter(
-                        android.graphics.Color.WHITE
-                    )
-                    // 设置标题着色
-                    ToolbarUtils.getTitleTextView(
-                        toolbar
-                    )?.setTextColor(
-                        android.graphics.Color.WHITE
-                    )
                     mToolbar = toolbar
                 },
                 AppBarLayout.LayoutParams(
@@ -493,8 +480,9 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
         mViewPager2 = ViewPager2(
             mBaseContext
         ).apply {
-            isUserInputEnabled = false
             orientation = ViewPager2.ORIENTATION_HORIZONTAL
+            isUserInputEnabled = false
+            setPageTransformer(ZoomOutPageTransformer())
         }
 
         // 加载TabLayout
@@ -514,10 +502,10 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         WindowCompat.setDecorFitsSystemWindows(window, true)
 
-        val option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-        val decorView = window.decorView
-        val visibility: Int = decorView.systemUiVisibility
-        decorView.systemUiVisibility = visibility or option
+//        val option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+//        val decorView = window.decorView
+//        val visibility: Int = decorView.systemUiVisibility
+//        decorView.systemUiVisibility = visibility or option
 
         setDarkStatusBarTheme(true)
         setDarkNavigationBarTheme(true)
@@ -655,7 +643,7 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
         // 设置适配器
         mViewPager2.adapter = adapter
         // 预加载页面
-        mViewPager2.offscreenPageLimit = count
+        mViewPager2.offscreenPageLimit = count - 1
     }
 
     private fun syncDrawer(
@@ -683,15 +671,9 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
         }.attach()
     }
 
-//    @Composable
-//    private fun AppBarLayout(modifier: Modifier) {
-//        AndroidView(
-//            factory = {
-//                mAppBarLayout
-//            },
-//            modifier = modifier
-//        )
-//    }
+    private fun touch(hostView: View) {
+        hostView.setOnTouchListener(delayHideTouchListener)
+    }
 
     /**
      * 标签栏
@@ -792,92 +774,95 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
             browser: (url: String) -> Unit
         ) -> Unit
     ) {
-        mComposeView.apply {
-            // 设置内容
-            setContent {
-                // 导航控制器实例
-                val navController = rememberNavController()
-                val scope = rememberCoroutineScope()
-                val drawerState = rememberDrawerState(
-                    initialValue = DrawerValue.Closed
-                )
-                // 系统界面控制器实例
-                val systemUiController = rememberSystemUiController()
-                // 判断系统是否处于深色模式
-                val darkTheme = isSystemInDarkTheme()
-                // 配色方案
-                val colorScheme = when {
-                    isDynamicColor -> {
-                        if (darkTheme) dynamicDarkColorScheme(
-                            context = mBaseContext
-                        ) else dynamicLightColorScheme(
-                            context = mBaseContext
-                        )
-                    }
-
-                    darkTheme -> DarkColorScheme
-                    else -> LightColorScheme
-                }
-                // 设置适配器
-                adapter(
-                    navController = navController
-                )
-                syncDrawer(
-                    scope = scope,
-                    drawerState = drawerState
-                )
-                mediator()
-                // 设置系统界面样式
-                if (!mComposeView.isInEditMode) {
-                    SideEffect {
-                        systemUiController.setSystemBarsColor(
-                            color = Color.Transparent,
-                            darkIcons = !darkTheme
-                        )
-                        WindowCompat.getInsetsController(
-                            window,
-                            mComposeView
-                        )
-                    }
-                }
-                // 设置页面样式和内容
-                MaterialTheme(
-                    colorScheme = colorScheme,
-                    typography = Typography,
-                ) {
-                    content(
-                        navController = navController,
-                        drawerState = drawerState,
-                        content = { content, modifier ->
-                            when (content) {
-                                tabBar -> TabLayout(modifier = modifier)
-                                pager -> ViewPager2(modifier = modifier)
-                            }
-                        },
-                        event = { event ->
-                            when (event) {
-                                toggle -> toggle()
-                                taskbar -> taskbar()
-                                options -> optionsMenu()
-                            }
-                        },
-                        message = { message ->
-                            when (message) {
-                                shizukuVersion -> getShizukuVersion()
-                                androidVersion -> getAndroidVersion()
-                                else -> ""
-                            }
-                        },
-                        current = { item ->
-                            current(
-                                item = item
-                            )
-                        },
-                        browser = { url ->
-
-                        }
+        // 设置内容
+        setContent {
+            // 获取根View
+            val hostView = LocalView.current
+            // 导航控制器实例
+            val navController = rememberNavController()
+            val scope = rememberCoroutineScope()
+            val drawerState = rememberDrawerState(
+                initialValue = DrawerValue.Closed
+            )
+            // 系统界面控制器实例
+            val systemUiController = rememberSystemUiController()
+            // 判断系统是否处于深色模式
+            val darkTheme = isSystemInDarkTheme()
+            // 配色方案
+            val colorScheme = when {
+                isDynamicColor -> {
+                    if (darkTheme) dynamicDarkColorScheme(
+                        context = mBaseContext
+                    ) else dynamicLightColorScheme(
+                        context = mBaseContext
                     )
                 }
+
+                darkTheme -> DarkColorScheme
+                else -> LightColorScheme
+            }
+            touch(
+                hostView = hostView
+            )
+            // 设置适配器
+            adapter(
+                navController = navController
+            )
+            syncDrawer(
+                scope = scope,
+                drawerState = drawerState
+            )
+            mediator()
+            // 设置系统界面样式
+            if (!hostView.isInEditMode) {
+                SideEffect {
+                    systemUiController.setSystemBarsColor(
+                        color = Color.Transparent,
+                        darkIcons = !darkTheme
+                    )
+                    WindowCompat.getInsetsController(
+                        window,
+                        mComposeView
+                    )
+                }
+            }
+            // 设置页面样式和内容
+            MaterialTheme(
+                colorScheme = colorScheme,
+                typography = Typography,
+            ) {
+                content(
+                    navController = navController,
+                    drawerState = drawerState,
+                    content = { content, modifier ->
+                        when (content) {
+                            tabBar -> TabLayout(modifier = modifier)
+                            pager -> ViewPager2(modifier = modifier)
+                        }
+                    },
+                    event = { event ->
+                        when (event) {
+                            toggle -> toggle()
+                            taskbar -> taskbar()
+                            options -> optionsMenu()
+                        }
+                    },
+                    message = { message ->
+                        when (message) {
+                            shizukuVersion -> getShizukuVersion()
+                            androidVersion -> getAndroidVersion()
+                            else -> ""
+                        }
+                    },
+                    current = { item ->
+                        current(
+                            item = item
+                        )
+                    },
+                    browser = { url ->
+
+                    }
+                )
             }
         }
     }

@@ -5,18 +5,19 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.FrameLayout
 import com.blankj.utilcode.util.BarUtils
+import com.google.android.material.appbar.AppBarLayout
 
 class FragmentScaffold : FrameLayout {
 
     constructor(
-        context: Context
+        context: Context,
     ) : super(
         context
     )
 
     constructor(
         context: Context,
-        attrs: AttributeSet?
+        attrs: AttributeSet?,
     ) : super(
         context,
         attrs
@@ -25,7 +26,7 @@ class FragmentScaffold : FrameLayout {
     constructor(
         context: Context,
         attrs: AttributeSet?,
-        defStyleAttr: Int
+        defStyleAttr: Int,
     ) : super(
         context,
         attrs,
@@ -33,12 +34,12 @@ class FragmentScaffold : FrameLayout {
     )
 
     init {
-        setPadding(
-            0,
-            statusBarHeight(context = context),
-            0,
-            navigationBarHeight(context = context)
-        )
+//        setPadding(
+//            0,
+//            statusBarHeight(context = context),
+//            0,
+//            navigationBarHeight(context = context)
+//        )
     }
 
     private fun statusBarHeight(context: Context): Int {

@@ -1,5 +1,6 @@
 package io.termplux.basic.adapter
 
+import android.graphics.Color
 import android.text.TextUtils
 import android.util.Log
 import android.view.Gravity
@@ -124,6 +125,7 @@ class AppsAdapter constructor(
             addView(
                 appTitle.apply {
                     gravity = Gravity.CENTER
+                    setTextColor(Color.WHITE)
                 },
                 LinearLayoutCompat.LayoutParams(
                     LinearLayoutCompat.LayoutParams.MATCH_PARENT,

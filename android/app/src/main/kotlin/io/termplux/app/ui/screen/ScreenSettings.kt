@@ -120,17 +120,20 @@ fun ScreenSettings(
                         title = "其他设置",
                         summary = "跳转其他设置界面"
                     ) {
-                        current(ScreenRoute.routeSettingsFragment.toInt())
-                        navController.navigate(
-                            route = Screen.Home.route
-                        ) {
-                            popUpTo(
-                                navController.graph.findStartDestination().id
+                        current(
+                            ScreenRoute.routeSettingsFragment.toInt()
+                        ).also {
+                            navController.navigate(
+                                route = Screen.Content.route
                             ) {
-                                saveState = true
+                                popUpTo(
+                                    id = navController.graph.findStartDestination().id
+                                ) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
                             }
-                            launchSingleTop = true
-                            restoreState = true
                         }
                     }
                     // 关于

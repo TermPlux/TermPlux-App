@@ -3,6 +3,7 @@ package io.termplux.basic.fragment
 import android.annotation.SuppressLint
 import android.app.WallpaperManager
 import android.content.Context
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.telephony.TelephonyManager
@@ -17,6 +18,7 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.blankj.utilcode.util.BarUtils
 import com.google.android.material.appbar.AppBarLayout
 import com.kongzue.baseframework.BaseApp
 import io.termplux.R

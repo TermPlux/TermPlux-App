@@ -10,7 +10,6 @@
         <option name="gradleJvm" value="19" />
         <option name="modules">
           <set>
-            <option value="$USER_HOME$/AppData/Local/Pub/Cache/git/flutter_boost-2e65cd6ebccd727c89d1a134175d724e5005a414/android" />
             <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/dynamic_color-1.6.3/android" />
             <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/shared_preferences_android-2.1.2/android" />
             <option value="$PROJECT_DIR$" />

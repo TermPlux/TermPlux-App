@@ -46,7 +46,7 @@ fun ActivityMain(
 
         Screen.Home,
         Screen.Dashboard,
-        Screen.Manager,
+        Screen.Content,
         Screen.Settings,
         Screen.About,
 
@@ -58,23 +58,9 @@ fun ActivityMain(
         Screen.AppsFragment,
         Screen.SettingsFragment
     )
-    val items = listOf(
-        Screen.Home,
-        Screen.Dashboard,
-        Screen.Manager,
-        Screen.Settings
-    )
-    val expandedMenu = remember {
-        mutableStateOf(
-            value = false
-        )
-    }
 
-//    val drawerState = rememberDrawerState(
-//        initialValue = DrawerValue.Closed
-//    )
+
     val scope = rememberCoroutineScope()
-
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
     ModalNavigationDrawer(
@@ -181,7 +167,7 @@ fun ActivityMain(
                                             item.route.toInt()
                                         ).also {
                                             navController.navigate(
-                                                route = Screen.Home.route
+                                                    route = Screen.Content.route
                                             ) {
                                                 popUpTo(
                                                     id = navController.graph.findStartDestination().id
@@ -259,23 +245,17 @@ fun ActivityMain(
                 route = Screen.Home.route
             ) {
                 ScreenHome(
-                    pager = pager
-                )
-            }
-            composable(
-                route = Screen.Dashboard.route
-            ) {
-                ScreenDashboard(
                     navController = navController,
+                    currentDestination = currentDestination,
                     drawerState = drawerState,
                     androidVersion = androidVersion,
                     shizukuVersion = shizukuVersion
                 )
             }
             composable(
-                route = Screen.Manager.route
+                route = Screen.Dashboard.route
             ) {
-                ScreenManager(
+                ScreenDashboard(
                     navController = navController,
                     drawerState = drawerState,
                     tabBar = tabBar,
@@ -293,6 +273,13 @@ fun ActivityMain(
                     SelectOnClick = { /*TODO*/ }) {
 
                 }
+            }
+            composable(
+                route = Screen.Content.route
+            ) {
+                ScreenContent(
+                    pager = pager
+                )
             }
             composable(
                 route = Screen.Settings.route

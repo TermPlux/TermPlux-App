@@ -3,14 +3,15 @@ package io.termplux.app.ui.navigation
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Android
-import androidx.compose.material.icons.twotone.AppSettingsAlt
-import androidx.compose.material.icons.twotone.Apps
+import androidx.compose.material.icons.filled.Apps
+import androidx.compose.material.icons.filled.FlutterDash
+import androidx.compose.material.icons.filled.RocketLaunch
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.twotone.Dashboard
-import androidx.compose.material.icons.twotone.FlutterDash
 import androidx.compose.material.icons.twotone.Home
 import androidx.compose.material.icons.twotone.Info
-import androidx.compose.material.icons.twotone.RocketLaunch
 import androidx.compose.material.icons.twotone.Settings
+import androidx.compose.material.icons.twotone.Terminal
 import androidx.compose.ui.graphics.vector.ImageVector
 import io.termplux.R
 
@@ -46,12 +47,12 @@ sealed class Screen constructor(
         title = R.string.menu_dashboard
     )
 
-    object Manager : Screen(
+    object Content : Screen(
         type = ScreenType.Compose,
         item = ItemType.Default,
         route = ScreenRoute.routeContent,
-        imageVector = Icons.TwoTone.AppSettingsAlt,
-        title = R.string.menu_manager
+        imageVector = Icons.TwoTone.Terminal,
+        title = R.string.menu_content
     )
 
     object Settings : Screen(
@@ -90,7 +91,7 @@ sealed class Screen constructor(
         type = ScreenType.Fragment,
         item = ItemType.Default,
         route = ScreenRoute.routeLauncherFragment,
-        imageVector = Icons.TwoTone.RocketLaunch,
+        imageVector = Icons.Filled.RocketLaunch,
         title = R.string.menu_launcher
     )
 
@@ -98,7 +99,7 @@ sealed class Screen constructor(
         type = ScreenType.Fragment,
         item = ItemType.Default,
         route = ScreenRoute.routeHomeFragment,
-        imageVector = Icons.TwoTone.FlutterDash,
+        imageVector = Icons.Filled.FlutterDash,
         title = R.string.menu_home
     )
 
@@ -106,7 +107,7 @@ sealed class Screen constructor(
         type = ScreenType.Fragment,
         item = ItemType.Default,
         route = ScreenRoute.routeAppsFragment,
-        imageVector = Icons.TwoTone.Apps,
+        imageVector = Icons.Filled.Apps,
         title = R.string.menu_apps
     )
 
@@ -114,7 +115,7 @@ sealed class Screen constructor(
         type = ScreenType.Fragment,
         item = ItemType.Default,
         route = ScreenRoute.routeSettingsFragment,
-        imageVector = Icons.TwoTone.Settings,
+        imageVector = Icons.Filled.Settings,
         title = R.string.menu_settings
     )
 }

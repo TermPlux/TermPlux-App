@@ -38,7 +38,6 @@
             android:name=".app.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true"
-            android:hardwareAccelerated="true"
             android:theme="@style/Theme.TermPlux"
             android:windowSoftInputMode="adjustResize">
             <meta-data

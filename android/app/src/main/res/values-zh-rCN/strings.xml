@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- 菜单 -->
-    <string name="menu_navigation">导航</string>
-
     <string name="menu_home">主页</string>
     <string name="menu_launcher">桌面</string>
     <string name="menu_apps">应用</string>
     <string name="menu_dashboard">仪表盘</string>
-    <string name="menu_manager">管理器</string>
+    <string name="menu_content">内容</string>
     <string name="menu_settings">设置</string>
     <string name="menu_about">关于</string>
     <string name="menu_open">打开</string>
