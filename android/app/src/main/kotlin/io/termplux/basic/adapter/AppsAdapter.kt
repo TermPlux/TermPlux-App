@@ -1,6 +1,5 @@
 package io.termplux.basic.adapter
 
-import android.graphics.Color
 import android.text.TextUtils
 import android.util.Log
 import android.view.Gravity
@@ -9,7 +8,6 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.core.view.setPadding
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.blankj.utilcode.util.AppUtils
@@ -39,27 +37,74 @@ class AppsAdapter constructor(
         val appIcon = AppCompatImageView(parent.context)
         val appTitle = AppCompatTextView(parent.context)
 
+        val itemView: LinearLayoutCompat = LinearLayoutCompat(
+            parent.context
+        ).apply {
+            layoutParams = LinearLayoutCompat.LayoutParams(
+                LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                parent.context.resources.getDimension(
+                    R.dimen.launcher_height
+                ).toInt()
+            )
+            setPadding(
+                parent.context.resources.getDimension(
+                    R.dimen.launcher_padding
+                ).toInt(),
+                0,
+                parent.context.resources.getDimension(
+                    R.dimen.launcher_padding
+                ).toInt(),
+                0
+            )
+            orientation = LinearLayoutCompat.HORIZONTAL
+            addView(
+                appIcon.apply {
+                    gravity = Gravity.CENTER_VERTICAL
+
+                },
+                LinearLayoutCompat.LayoutParams(
+                    parent.context.resources.getDimension(
+                        R.dimen.icon_size
+                    ).toInt(),
+                    parent.context.resources.getDimension(
+                        R.dimen.icon_size
+                    ).toInt()
+                )
+            )
+            addView(
+                appTitle.apply {
+                    gravity = Gravity.CENTER_VERTICAL
+                    setPadding(
+                        parent.context.resources.getDimension(
+                            R.dimen.launcher_padding
+                        ).toInt(),
+                        0,
+                        parent.context.resources.getDimension(
+                            R.dimen.launcher_padding
+                        ).toInt(),
+                        0
+                    )
+                },
+                LinearLayoutCompat.LayoutParams(
+                    LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                    LinearLayoutCompat.LayoutParams.WRAP_CONTENT
+                )
+            )
+        }
+
+
 //        val itemView: LinearLayoutCompat = LinearLayoutCompat(
 //            parent.context
 //        ).apply {
 //            layoutParams = LinearLayoutCompat.LayoutParams(
-//                LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-//                parent.context.resources.getDimension(
-//                    R.dimen.launcher_height
-//                ).toInt()
+//                parent.context.resources.getDimension(R.dimen.app_width).toInt(),
+//                parent.context.resources.getDimension(R.dimen.app_height).toInt()
 //            )
-//            orientation = LinearLayoutCompat.HORIZONTAL
+//            orientation = LinearLayoutCompat.VERTICAL
 //            addView(
 //                appIcon.apply {
-//                    gravity = Gravity.CENTER_VERTICAL
+//                    gravity = Gravity.CENTER_HORIZONTAL
 //                    setPadding(
-//                        parent.context.resources.getDimension(
-//                            R.dimen.launcher_padding
-//                        ).toInt(),
-//                        parent.context.resources.getDimension(
-//                            R.dimen.icon_padding
-//                        ).toInt(),
-//                        0,
 //                        parent.context.resources.getDimension(
 //                            R.dimen.icon_padding
 //                        ).toInt()
@@ -76,17 +121,8 @@ class AppsAdapter constructor(
 //            )
 //            addView(
 //                appTitle.apply {
-//                    gravity = Gravity.CENTER_VERTICAL
-//                    setPadding(
-//                        parent.context.resources.getDimension(
-//                            R.dimen.launcher_padding
-//                        ).toInt(),
-//                        0,
-//                        parent.context.resources.getDimension(
-//                            R.dimen.launcher_padding
-//                        ).toInt(),
-//                        0
-//                    )
+//                    gravity = Gravity.CENTER
+//                    setTextColor(Color.WHITE)
 //                },
 //                LinearLayoutCompat.LayoutParams(
 //                    LinearLayoutCompat.LayoutParams.MATCH_PARENT,
@@ -94,45 +130,6 @@ class AppsAdapter constructor(
 //                )
 //            )
 //        }
-
-
-        val itemView: LinearLayoutCompat = LinearLayoutCompat(
-            parent.context
-        ).apply {
-            layoutParams = LinearLayoutCompat.LayoutParams(
-                parent.context.resources.getDimension(R.dimen.app_width).toInt(),
-                parent.context.resources.getDimension(R.dimen.app_height).toInt()
-            )
-            orientation = LinearLayoutCompat.VERTICAL
-            addView(
-                appIcon.apply {
-                    gravity = Gravity.CENTER_HORIZONTAL
-                    setPadding(
-                        parent.context.resources.getDimension(
-                            R.dimen.icon_padding
-                        ).toInt()
-                    )
-                },
-                LinearLayoutCompat.LayoutParams(
-                    parent.context.resources.getDimension(
-                        R.dimen.icon_size
-                    ).toInt(),
-                    parent.context.resources.getDimension(
-                        R.dimen.icon_size
-                    ).toInt()
-                )
-            )
-            addView(
-                appTitle.apply {
-                    gravity = Gravity.CENTER
-                    setTextColor(Color.WHITE)
-                },
-                LinearLayoutCompat.LayoutParams(
-                    LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-                    LinearLayoutCompat.LayoutParams.WRAP_CONTENT
-                )
-            )
-        }
 
         return AppsViewHolder(item = itemView, icon = appIcon, title = appTitle)
     }

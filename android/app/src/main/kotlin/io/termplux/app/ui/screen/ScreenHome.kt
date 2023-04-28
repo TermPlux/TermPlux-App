@@ -108,7 +108,8 @@ fun ScreenHome(
         },
         bottomBar = {
             NavigationBar(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+              //  tonalElevation = 8.dp
             ) {
                 items.forEach { item ->
                     NavigationBarItem(

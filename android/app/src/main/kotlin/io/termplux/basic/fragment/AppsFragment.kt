@@ -8,18 +8,19 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import android.view.*
-import android.widget.FrameLayout
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.appbar.MaterialToolbar
 import io.termplux.BuildConfig
 import io.termplux.R
 import io.termplux.basic.adapter.AppsAdapter
-import io.termplux.basic.custom.FragmentScaffold
 import io.termplux.basic.receiver.AppsReceiver
-import io.termplux.databinding.FragmentAppsBinding
 import io.termplux.model.AppsModel
 import java.util.*
 
@@ -35,10 +36,7 @@ class AppsFragment constructor(
     private var mNavigation: (String) -> Unit
 
     private lateinit var mContext: Context
-
-    private var _binding: FragmentAppsBinding? = null
-    private val binding get() = _binding!!
-
+    private lateinit var mRecyclerView: RecyclerView
     private lateinit var appReceiver: BroadcastReceiver
 
     init {
@@ -59,19 +57,64 @@ class AppsFragment constructor(
         savedInstanceState: Bundle?
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
-        // 壁纸管理器
-        val wallpaperManager = WallpaperManager.getInstance(requireActivity())
-        _binding = FragmentAppsBinding.inflate(inflater, container, false)
-        return FragmentScaffold(
-            context = requireActivity()
+
+        mRecyclerView = RecyclerView(
+            requireActivity()
+        ).apply {
+//            layoutManager = GridLayoutManager(
+//                mContext,
+//                4,
+//                RecyclerView.VERTICAL,
+//                false
+//            )
+            layoutManager = LinearLayoutManager(
+                mContext,
+                RecyclerView.VERTICAL,
+                false
+            )
+        }
+
+       // return mRecyclerView
+
+        return LinearLayoutCompat(
+            requireActivity()
         ).apply {
             // 设置背景
-            background = wallpaperManager.drawable
+            background = ContextCompat.getDrawable(
+                requireActivity(),
+                R.drawable.custom_wallpaper_24
+            )
+            orientation = LinearLayoutCompat.VERTICAL
             addView(
-                binding.root,
-                FrameLayout.LayoutParams(
-                    FrameLayout.LayoutParams.MATCH_PARENT,
-                    FrameLayout.LayoutParams.MATCH_PARENT
+                AppBarLayout(
+                    requireActivity()
+                ).apply {
+                    addView(
+                        MaterialToolbar(
+                            requireActivity()
+                        ).apply {
+                            title = getString(R.string.menu_apps)
+                            navigationIcon = ContextCompat.getDrawable(
+                                requireActivity(),
+                                R.drawable.baseline_arrow_back_24
+                            )
+                        },
+                        LinearLayoutCompat.LayoutParams(
+                            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                            LinearLayoutCompat.LayoutParams.WRAP_CONTENT
+                        )
+                    )
+                },
+                LinearLayoutCompat.LayoutParams(
+                    LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                    LinearLayoutCompat.LayoutParams.WRAP_CONTENT
+                )
+            )
+            addView(
+                mRecyclerView,
+                LinearLayoutCompat.LayoutParams(
+                    LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                    LinearLayoutCompat.LayoutParams.MATCH_PARENT
                 )
             )
         }
@@ -79,12 +122,6 @@ class AppsFragment constructor(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.recyclerView.layoutManager = GridLayoutManager(
-            mContext,
-            4,
-            RecyclerView.VERTICAL,
-            false
-        )
 
         // 加载应用列表
         loadApp()
@@ -108,7 +145,6 @@ class AppsFragment constructor(
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
         // 注销广播接收器
         mContext.unregisterReceiver(appReceiver)
     }
@@ -137,10 +173,12 @@ class AppsFragment constructor(
         }
 
         // 设置适配器
-        binding.recyclerView.adapter = AppsAdapter.newInstance(
-            applicationList = applicationList,
-            viewPager = mViewPager
-        )
+        mRecyclerView.apply {
+            adapter = AppsAdapter.newInstance(
+                applicationList = applicationList,
+                viewPager = mViewPager
+            )
+        }
     }
 
     /**

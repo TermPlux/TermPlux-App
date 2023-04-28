@@ -24,13 +24,13 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  void navToLauncher() {
-    if (!kIsWeb) {
-      if (Platform.isAndroid) {
-        channel.invokeMethod("navToLauncher");
-      }
-    }
-  }
+  // void navToLauncher() {
+  //   if (!kIsWeb) {
+  //     if (Platform.isAndroid) {
+  //       channel.invokeMethod("navToLauncher");
+  //     }
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -49,14 +49,13 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
-            TextButton(onPressed: _incrementCounter, child: const Text("增加"))
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: navToLauncher,
-        tooltip: 'Launcher',
-        child: const Icon(Icons.arrow_forward),
+        onPressed: _incrementCounter,
+        tooltip: '增加',
+        child: const Icon(Icons.add),
       ),
     );
   }

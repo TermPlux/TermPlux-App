@@ -27,6 +27,7 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
@@ -482,7 +483,7 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
         ).apply {
             orientation = ViewPager2.ORIENTATION_HORIZONTAL
             isUserInputEnabled = false
-            setPageTransformer(ZoomOutPageTransformer())
+          //  setPageTransformer(ZoomOutPageTransformer())
         }
 
         // 加载TabLayout
@@ -822,7 +823,7 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
                     )
                     WindowCompat.getInsetsController(
                         window,
-                        mComposeView
+                        hostView
                     )
                 }
             }

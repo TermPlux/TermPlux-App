@@ -2,7 +2,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" /> <!-- 完全的网络访问权限 -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- 读取内部存储 -->
+<!--    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"-->
+<!--        android:maxSdkVersion="32" /> &lt;!&ndash; 读取内部存储 &ndash;&gt;-->
+<!--    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />-->
     <uses-permission
         android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" /> <!-- 获取所有软件包 -->
@@ -38,6 +40,7 @@
             android:name=".app.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true"
+            android:hardwareAccelerated="true"
             android:theme="@style/Theme.TermPlux"
             android:windowSoftInputMode="adjustResize">
             <meta-data
@@ -59,22 +62,22 @@
             </intent-filter>
         </activity>
 
-<!--        <activity-->
-<!--            android:name=".basic.activity.FlutterActivity"-->
-<!--            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density"-->
-<!--            android:exported="false"-->
-<!--            android:hardwareAccelerated="true"-->
-<!--            android:icon="@mipmap/ic_flutter"-->
-<!--            android:launchMode="singleTop"-->
-<!--            android:roundIcon="@mipmap/ic_flutter_round"-->
-<!--            android:windowSoftInputMode="adjustResize">-->
-<!--            <meta-data-->
-<!--                android:name="android.app.lib_name"-->
-<!--                android:value="termplux" />-->
-<!--            <meta-data-->
-<!--                android:name="io.flutter.embedding.android.NormalTheme"-->
-<!--                android:resource="@style/NormalTheme" />-->
-<!--        </activity>-->
+        <activity
+            android:name=".basic.activity.FlutterActivity"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density"
+            android:exported="true"
+            android:hardwareAccelerated="true"
+            android:icon="@mipmap/ic_flutter"
+            android:launchMode="singleTop"
+            android:roundIcon="@mipmap/ic_flutter_round"
+            android:windowSoftInputMode="adjustResize">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="termplux" />
+            <meta-data
+                android:name="io.flutter.embedding.android.NormalTheme"
+                android:resource="@style/NormalTheme" />
+        </activity>
 
         <service
             android:name=".basic.services.MainService"

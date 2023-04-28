@@ -54,8 +54,6 @@ class LauncherFragment constructor(
         savedInstanceState: Bundle?
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
-        // 壁纸管理器
-        val wallpaperManager = WallpaperManager.getInstance(requireActivity())
         // 加载XML布局
         _binding = FragmentLauncherBinding.inflate(inflater, container, false)
         // 屏闪动画LOGO
@@ -93,7 +91,10 @@ class LauncherFragment constructor(
             context = requireActivity()
         ).apply {
             // 设置背景
-            background = wallpaperManager.drawable
+            background = ContextCompat.getDrawable(
+                requireActivity(),
+                R.drawable.custom_wallpaper_24
+            )
             addView(
                 FrameLayout(
                     requireActivity()
