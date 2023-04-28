@@ -2,9 +2,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" /> <!-- 完全的网络访问权限 -->
-<!--    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"-->
-<!--        android:maxSdkVersion="32" /> &lt;!&ndash; 读取内部存储 &ndash;&gt;-->
-<!--    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />-->
     <uses-permission
         android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" /> <!-- 获取所有软件包 -->
@@ -63,7 +60,7 @@
         </activity>
 
         <activity
-            android:name=".basic.activity.FlutterActivity"
+            android:name=".basic.activity.TermPluxFlutter"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density"
             android:exported="true"
             android:hardwareAccelerated="true"

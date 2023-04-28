@@ -4,12 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.FragmentManager
 import io.flutter.embedding.android.FlutterFragment
-import io.termplux.basic.custom.FragmentScaffold
-import io.termplux.databinding.FragmentHomeBinding
+import io.termplux.R
 
 class HomeFragment constructor(
     flutterFragment: FlutterFragment
@@ -18,8 +17,7 @@ class HomeFragment constructor(
     private val mFlutter: FlutterFragment
 
     private var flutterFragment: FlutterFragment? = null
-    private var _binding: FragmentHomeBinding? = null
-    private val binding get() = _binding!!
+
 
     init {
         mFlutter = flutterFragment
@@ -37,17 +35,10 @@ class HomeFragment constructor(
         savedInstanceState: Bundle?
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        return FragmentScaffold(
-            context = requireActivity()
+        return FragmentContainerView(
+            requireActivity()
         ).apply {
-            addView(
-                binding.root,
-                FrameLayout.LayoutParams(
-                    FrameLayout.LayoutParams.MATCH_PARENT,
-                    FrameLayout.LayoutParams.MATCH_PARENT
-                )
-            )
+            id = R.id.flutter_container
         }
     }
 
@@ -57,7 +48,7 @@ class HomeFragment constructor(
             flutterFragment = mFlutter
             childFragmentManager.beginTransaction()
                 .add(
-                    binding.flutterContainer.id,
+                    R.id.flutter_container,
                     mFlutter,
                     TAG_FLUTTER_FRAGMENT
                 )
@@ -67,7 +58,6 @@ class HomeFragment constructor(
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
         flutterFragment = null
     }
 

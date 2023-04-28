@@ -11,10 +11,14 @@ import android.os.IBinder
 import android.os.Looper
 import android.util.Log
 import android.view.*
+import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.ProgressBar
 import android.window.OnBackInvokedCallback
 import android.window.OnBackInvokedDispatcher
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -118,7 +122,7 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
 
     private lateinit var mToolbar: MaterialToolbar
     private lateinit var mAppBarLayout: AppBarLayout
-    private lateinit var mComposeView: ComposeView
+    //private lateinit var mComposeView: ComposeView
     private lateinit var mViewPager2: ViewPager2
 
     private lateinit var mTabLayout: TabLayout
@@ -162,16 +166,29 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
 
     override fun resetContentView(): View {
         super.resetContentView()
-        // 加载ComposeView
-        mComposeView = ComposeView(
-            context = mBaseContext
+//        // 加载ComposeView
+//        mComposeView = ComposeView(
+//            context = mBaseContext
+//        ).apply {
+//            setOnTouchListener(delayHideTouchListener)
+//            setViewCompositionStrategy(
+//                strategy = ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
+//            )
+//        }
+        return FrameLayout(
+            mBaseContext
         ).apply {
-            setOnTouchListener(delayHideTouchListener)
-            setViewCompositionStrategy(
-                strategy = ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
+            addView(
+                ProgressBar(
+                    mBaseContext
+                ),
+                FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                    Gravity.CENTER
+                )
             )
         }
-        return View(mBaseContext)
     }
 
     /**

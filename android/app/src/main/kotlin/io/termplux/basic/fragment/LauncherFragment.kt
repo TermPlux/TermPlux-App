@@ -1,10 +1,6 @@
 package io.termplux.basic.fragment
 
 import android.annotation.SuppressLint
-import android.app.WallpaperManager
-import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.telephony.TelephonyManager
 import android.view.Gravity
@@ -18,11 +14,9 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.blankj.utilcode.util.BarUtils
 import com.google.android.material.appbar.AppBarLayout
 import com.kongzue.baseframework.BaseApp
 import io.termplux.R
-import io.termplux.basic.custom.FragmentScaffold
 import io.termplux.basic.utils.ChineseCaleUtils
 import io.termplux.databinding.FragmentLauncherBinding
 import kotlin.math.hypot
@@ -71,6 +65,11 @@ class LauncherFragment constructor(
         // 页面内容
         mContentLinear = LinearLayoutCompat(requireActivity()).apply {
             orientation = LinearLayoutCompat.VERTICAL
+            // 设置背景
+            background = ContextCompat.getDrawable(
+                requireActivity(),
+                R.drawable.custom_wallpaper_24
+            )
             addView(
                 mAppBarLayout,
                 LinearLayoutCompat.LayoutParams(
@@ -87,38 +86,22 @@ class LauncherFragment constructor(
             )
         }
         // 跟布局
-        return FragmentScaffold(
-            context = requireActivity()
+        return  FrameLayout(
+            requireActivity()
         ).apply {
-            // 设置背景
-            background = ContextCompat.getDrawable(
-                requireActivity(),
-                R.drawable.custom_wallpaper_24
-            )
             addView(
-                FrameLayout(
-                    requireActivity()
-                ).apply {
-                    addView(
-                        mContentLinear,
-                        FrameLayout.LayoutParams(
-                            FrameLayout.LayoutParams.MATCH_PARENT,
-                            FrameLayout.LayoutParams.MATCH_PARENT
-                        )
-                    )
-                    addView(
-                        mSplashLogo,
-                        FrameLayout.LayoutParams(
-                            FrameLayout.LayoutParams.WRAP_CONTENT,
-                            FrameLayout.LayoutParams.WRAP_CONTENT
-                        ).apply {
-                            gravity = Gravity.CENTER
-                        }
-                    )
-                },
+                mContentLinear,
                 FrameLayout.LayoutParams(
                     FrameLayout.LayoutParams.MATCH_PARENT,
                     FrameLayout.LayoutParams.MATCH_PARENT
+                )
+            )
+            addView(
+                mSplashLogo,
+                FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                    Gravity.CENTER
                 )
             )
         }
