@@ -14,18 +14,13 @@ import io.termplux.app.ui.preview.TermPluxPreviews
 fun ScreenContent(
     pager: @Composable (modifier: Modifier) -> Unit
 ) {
-    Scaffold(
+    Surface(
         modifier = Modifier.fillMaxSize(),
-        contentWindowInsets = ScaffoldDefaults.contentWindowInsets
-    ) { innerPadding ->
-        Surface(
-            modifier = Modifier.fillMaxSize().padding(paddingValues = innerPadding),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            pager(
-                modifier = Modifier.fillMaxSize()
-            )
-        }
+        color = MaterialTheme.colorScheme.background
+    ) {
+        pager(
+            modifier = Modifier.fillMaxSize()
+        )
     }
 }
 

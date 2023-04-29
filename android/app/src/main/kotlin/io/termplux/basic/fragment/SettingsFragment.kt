@@ -43,47 +43,52 @@ class SettingsFragment constructor(
         savedInstanceState: Bundle?
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
-        return LinearLayoutCompat(
+        return  FragmentContainerView(
             requireActivity()
         ).apply {
-            orientation = LinearLayoutCompat.VERTICAL
-            addView(
-                AppBarLayout(
-                    requireActivity()
-                ).apply {
-                    addView(
-                        MaterialToolbar(
-                            requireActivity()
-                        ).apply {
-                            title = getString(R.string.menu_settings)
-                            navigationIcon = ContextCompat.getDrawable(
-                                requireActivity(),
-                                R.drawable.baseline_arrow_back_24
-                            )
-                        },
-                        LinearLayoutCompat.LayoutParams(
-                            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-                            LinearLayoutCompat.LayoutParams.WRAP_CONTENT
-                        )
-                    )
-                },
-                LinearLayoutCompat.LayoutParams(
-                    LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-                    LinearLayoutCompat.LayoutParams.WRAP_CONTENT
-                )
-            )
-            addView(
-                FragmentContainerView(
-                    requireActivity()
-                ).apply {
-                    id = R.id.settings_container
-                },
-                LinearLayoutCompat.LayoutParams(
-                    LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-                    LinearLayoutCompat.LayoutParams.MATCH_PARENT
-                )
-            )
+            id = R.id.settings_container
         }
+//        return LinearLayoutCompat(
+//            requireActivity()
+//        ).apply {
+//            orientation = LinearLayoutCompat.VERTICAL
+//            addView(
+//                AppBarLayout(
+//                    requireActivity()
+//                ).apply {
+//                    addView(
+//                        MaterialToolbar(
+//                            requireActivity()
+//                        ).apply {
+//                            title = getString(R.string.menu_settings)
+//                            navigationIcon = ContextCompat.getDrawable(
+//                                requireActivity(),
+//                                R.drawable.baseline_arrow_back_24
+//                            )
+//                        },
+//                        LinearLayoutCompat.LayoutParams(
+//                            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+//                            LinearLayoutCompat.LayoutParams.WRAP_CONTENT
+//                        )
+//                    )
+//                },
+//                LinearLayoutCompat.LayoutParams(
+//                    LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+//                    LinearLayoutCompat.LayoutParams.WRAP_CONTENT
+//                )
+//            )
+//            addView(
+//                FragmentContainerView(
+//                    requireActivity()
+//                ).apply {
+//                    id = R.id.settings_container
+//                },
+//                LinearLayoutCompat.LayoutParams(
+//                    LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+//                    LinearLayoutCompat.LayoutParams.MATCH_PARENT
+//                )
+//            )
+//        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

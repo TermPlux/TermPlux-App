@@ -18,6 +18,9 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -69,7 +72,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Runnable
 import kotlinx.coroutines.launch
 import rikka.shizuku.Shizuku
-
 
 abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
 
@@ -353,6 +355,7 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         super.onOptionsItemSelected(item)
         when (item.itemId) {
+            android.R.id.home -> onBack()
             R.id.action_settings -> {
                 current(item = ContentAdapter.settings)
             }
@@ -433,15 +436,16 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
         mAppBarLayout = AppBarLayout(
             mBaseContext
         ).apply {
-            fitsSystemWindows = true
+            setBackgroundColor(android.graphics.Color.TRANSPARENT)
             addView(
                 MaterialToolbar(
                     mBaseContext
                 ).apply {
-                    navigationIcon = ContextCompat.getDrawable(
-                        mBaseContext,
-                        R.drawable.baseline_menu_24
-                    )
+                    setBackgroundColor(android.graphics.Color.TRANSPARENT)
+//                    navigationIcon = ContextCompat.getDrawable(
+//                        mBaseContext,
+//                        R.drawable.baseline_menu_24
+//                    )
                     logo = ContextCompat.getDrawable(
                         mBaseContext,
                         R.drawable.baseline_terminal_24
@@ -449,7 +453,8 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
                 }.also { toolbar ->
                     // 设置操作栏
                     setSupportActionBar(toolbar)
-                    mToolbar = toolbar
+                    supportActionBar?.setDisplayHomeAsUpEnabled(true)
+                    //mToolbar = toolbar
                 },
                 AppBarLayout.LayoutParams(
                     AppBarLayout.LayoutParams.MATCH_PARENT,
@@ -746,9 +751,11 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
     /**
      * 设置页面内容，仅在完整模式下生效
      */
+    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     protected fun setContents(
         content: @Composable (
             navController: NavHostController,
+            windowSize: WindowSizeClass,
             drawerState: DrawerState,
             content: @Composable (content: String, modifier: Modifier) -> Unit,
             event: (event: String) -> Unit,
@@ -764,6 +771,9 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
             // 导航控制器实例
             val navController = rememberNavController()
             val scope = rememberCoroutineScope()
+            val windowSize = calculateWindowSizeClass(
+                activity = mME
+            )
             val drawerState = rememberDrawerState(
                 initialValue = DrawerValue.Closed
             )
@@ -791,10 +801,10 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
             adapter(
                 navController = navController
             )
-            syncDrawer(
-                scope = scope,
-                drawerState = drawerState
-            )
+//            syncDrawer(
+//                scope = scope,
+//                drawerState = drawerState
+//            )
             mediator()
             // 设置系统界面样式
             if (!hostView.isInEditMode) {
@@ -816,6 +826,7 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
             ) {
                 content(
                     navController = navController,
+                    windowSize = windowSize,
                     drawerState = drawerState,
                     content = { content, modifier ->
                         when (content) {

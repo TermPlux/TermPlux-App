@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import android.view.*
+import android.widget.FrameLayout
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -72,9 +73,7 @@ class AppsFragment constructor(
             )
         }
 
-       // return mRecyclerView
-
-        return LinearLayoutCompat(
+        return FrameLayout(
             requireActivity()
         ).apply {
             // 设置背景
@@ -82,37 +81,11 @@ class AppsFragment constructor(
                 requireActivity(),
                 R.drawable.custom_wallpaper_24
             )
-            orientation = LinearLayoutCompat.VERTICAL
-            addView(
-                AppBarLayout(
-                    requireActivity()
-                ).apply {
-                    addView(
-                        MaterialToolbar(
-                            requireActivity()
-                        ).apply {
-                            title = getString(R.string.menu_apps)
-                            navigationIcon = ContextCompat.getDrawable(
-                                requireActivity(),
-                                R.drawable.baseline_arrow_back_24
-                            )
-                        },
-                        LinearLayoutCompat.LayoutParams(
-                            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-                            LinearLayoutCompat.LayoutParams.WRAP_CONTENT
-                        )
-                    )
-                },
-                LinearLayoutCompat.LayoutParams(
-                    LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-                    LinearLayoutCompat.LayoutParams.WRAP_CONTENT
-                )
-            )
             addView(
                 mRecyclerView,
-                LinearLayoutCompat.LayoutParams(
-                    LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-                    LinearLayoutCompat.LayoutParams.MATCH_PARENT
+                FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT,
+                    FrameLayout.LayoutParams.MATCH_PARENT
                 )
             )
         }
