@@ -605,13 +605,20 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
     /**
      * ViewPager2的适配器
      */
-    private fun adapter(navController: NavHostController) {
+    private fun adapter(
+        navController: NavHostController,
+        scope: CoroutineScope,
+        drawerState: DrawerState
+    ) {
         // 初始化适配器实例
         val adapter = ContentAdapter.newInstance(
             activity = mME,
             flutter = mFlutterFragment,
-            viewPager = mViewPager2,
             appBarLayout = mAppBarLayout,
+            current = { item ->
+                current(item = item)
+
+            },
             navigation = { route ->
                 navController.navigate(
                     route = route
@@ -799,7 +806,9 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
             )
             // 设置适配器
             adapter(
-                navController = navController
+                navController = navController,
+                scope = scope,
+                drawerState = drawerState
             )
 //            syncDrawer(
 //                scope = scope,

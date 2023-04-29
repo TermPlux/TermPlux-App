@@ -422,6 +422,8 @@ fun ActivityMain(
                 ) {
                     ScreenSettings(
                         navController = navController,
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
                         current = current,
                         onTaskBarSettings = {},
                         onSystemSettings = {},

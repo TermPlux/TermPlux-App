@@ -24,12 +24,12 @@ import io.termplux.model.AppsModel
 import java.util.*
 
 class AppsFragment constructor(
-    viewPager: ViewPager2,
+    current: (Int) -> Unit,
     navigation: (String) -> Unit
 ) : Fragment() {
 
     /** ViewPager2实例 */
-    private var mViewPager: ViewPager2
+    private val mCurrent: (Int) -> Unit
 
     /** Compose导航函数 */
     private var mNavigation: (String) -> Unit
@@ -39,7 +39,7 @@ class AppsFragment constructor(
     private lateinit var appReceiver: BroadcastReceiver
 
     init {
-        mViewPager = viewPager
+        mCurrent = current
         mNavigation = navigation
     }
 
@@ -147,7 +147,7 @@ class AppsFragment constructor(
         mRecyclerView.apply {
             adapter = AppsAdapter.newInstance(
                 applicationList = applicationList,
-                viewPager = mViewPager
+                current = mCurrent
             )
         }
     }
@@ -163,11 +163,11 @@ class AppsFragment constructor(
 
         // 初始化函数
         fun newInstance(
-            viewPager: ViewPager2,
+            current: (Int) -> Unit,
             navigation: (String) -> Unit
         ): AppsFragment {
             return AppsFragment(
-                viewPager = viewPager,
+                current = current,
                 navigation = navigation
             )
         }

@@ -38,22 +38,21 @@ import io.termplux.app.ui.navigation.Screen
 import io.termplux.app.ui.navigation.ScreenRoute
 import io.termplux.app.ui.preview.TermPluxPreviews
 import io.termplux.app.ui.widget.SettingsItem
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
 fun ScreenSettings(
     navController: NavHostController,
+    scope: CoroutineScope,
+    snackBarHostState: SnackbarHostState,
     current: (Int) -> Unit,
     onTaskBarSettings: () -> Unit,
     onSystemSettings: () -> Unit,
     onDefaultLauncherSettings: () -> Unit
 ) {
     val scrollState = rememberScrollState()
-    val scope = rememberCoroutineScope()
     val context = LocalContext.current
-    val snackBarHostState = remember {
-        SnackbarHostState()
-    }
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
@@ -195,6 +194,10 @@ fun ScreenSettings(
 private fun ScreenSettingsPreview() {
     ScreenSettings(
         navController = rememberNavController(),
+        scope = rememberCoroutineScope(),
+        snackBarHostState = remember {
+            SnackbarHostState()
+        },
         current = {},
         onTaskBarSettings = {},
         onSystemSettings = {},

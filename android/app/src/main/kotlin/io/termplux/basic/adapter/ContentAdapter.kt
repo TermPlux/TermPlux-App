@@ -12,15 +12,15 @@ import io.termplux.basic.fragment.*
 class ContentAdapter constructor(
     activity: FragmentActivity,
     flutter: FlutterFragment,
-    viewPager: ViewPager2,
     appBarLayout: AppBarLayout,
+    current: (Int) -> Unit,
     navigation: (String) -> Unit
 ) : FragmentStateAdapter(
     activity
 ) {
 
     private val mAppBarLayout: AppBarLayout
-    private val mViewPager: ViewPager2
+    private val mCurrent: (Int) -> Unit
     private val mFlutter: FlutterFragment
 
     private var mNavigation: (String) -> Unit
@@ -33,8 +33,7 @@ class ContentAdapter constructor(
 
     init {
         // 初始化变量
-        // 传入ViewPager2
-        mViewPager = viewPager
+        mCurrent = current
         // 传入FlutterFragment
         mFlutter = flutter
         mAppBarLayout = appBarLayout
@@ -79,12 +78,9 @@ class ContentAdapter constructor(
         mHome = HomeFragment.newInstance(
             flutterFragment = mFlutter
         )
-
-
-
         // 应用
         mApps = AppsFragment.newInstance(
-            viewPager = mViewPager,
+            current = mCurrent,
             navigation = mNavigation
         )
 
@@ -95,7 +91,7 @@ class ContentAdapter constructor(
 
         // 错误提示
         mError = ErrorFragment.newInstance(
-            viewPager = mViewPager
+            current = mCurrent
         )
     }
 
@@ -104,15 +100,15 @@ class ContentAdapter constructor(
         fun newInstance(
             activity: FragmentActivity,
             flutter: FlutterFragment,
-            viewPager: ViewPager2,
             appBarLayout: AppBarLayout,
+            current: (Int) -> Unit,
             navigation: (String) -> Unit
         ): ContentAdapter {
             return ContentAdapter(
                 activity = activity,
                 flutter = flutter,
-                viewPager = viewPager,
                 appBarLayout = appBarLayout,
+                current = current,
                 navigation = navigation
             )
         }

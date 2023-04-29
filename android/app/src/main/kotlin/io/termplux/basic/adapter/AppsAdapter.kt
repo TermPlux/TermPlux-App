@@ -9,7 +9,6 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager2.widget.ViewPager2
 import com.blankj.utilcode.util.AppUtils
 import com.google.android.material.snackbar.Snackbar
 import com.kongzue.dialogx.dialogs.PopMenu
@@ -21,15 +20,15 @@ import io.termplux.model.AppsModel
 
 class AppsAdapter constructor(
     applicationList: List<AppsModel>,
-    viewPager: ViewPager2
+    current: (Int) -> Unit
 ) : RecyclerView.Adapter<AppsViewHolder>() {
 
-    private var mApplicationList: List<AppsModel>
-    private var mViewPager: ViewPager2
+    private val mApplicationList: List<AppsModel>
+    private val mCurrent: (Int) -> Unit
 
     init {
         mApplicationList = applicationList
-        mViewPager = viewPager
+        mCurrent = current
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AppsViewHolder {
@@ -271,26 +270,26 @@ class AppsAdapter constructor(
     }
 
     private fun navToLauncher() {
-        mViewPager.currentItem = ContentAdapter.launcher
+        mCurrent(ContentAdapter.launcher)
     }
 
     private fun navToHome() {
-        mViewPager.currentItem = ContentAdapter.home
+        mCurrent(ContentAdapter.home)
     }
 
     private fun navToSettings() {
-        mViewPager.currentItem = ContentAdapter.settings
+        mCurrent(ContentAdapter.settings)
     }
 
     companion object {
 
         fun newInstance(
             applicationList: List<AppsModel>,
-            viewPager: ViewPager2
+            current: (Int) -> Unit
         ): AppsAdapter {
             return AppsAdapter(
                 applicationList = applicationList,
-                viewPager = viewPager
+                current = current
             )
         }
 
