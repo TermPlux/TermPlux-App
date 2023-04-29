@@ -605,11 +605,7 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
     /**
      * ViewPager2的适配器
      */
-    private fun adapter(
-        navController: NavHostController,
-        scope: CoroutineScope,
-        drawerState: DrawerState
-    ) {
+    private fun adapter(navController: NavHostController) {
         // 初始化适配器实例
         val adapter = ContentAdapter.newInstance(
             activity = mME,
@@ -763,7 +759,6 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
         content: @Composable (
             navController: NavHostController,
             windowSize: WindowSizeClass,
-            drawerState: DrawerState,
             content: @Composable (content: String, modifier: Modifier) -> Unit,
             event: (event: String) -> Unit,
             message: (message: String) -> String,
@@ -777,13 +772,10 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
             val hostView = LocalView.current
             // 导航控制器实例
             val navController = rememberNavController()
-            val scope = rememberCoroutineScope()
             val windowSize = calculateWindowSizeClass(
                 activity = mME
             )
-            val drawerState = rememberDrawerState(
-                initialValue = DrawerValue.Closed
-            )
+
             // 系统界面控制器实例
             val systemUiController = rememberSystemUiController()
             // 判断系统是否处于深色模式
@@ -805,15 +797,7 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
                 hostView = hostView
             )
             // 设置适配器
-            adapter(
-                navController = navController,
-                scope = scope,
-                drawerState = drawerState
-            )
-//            syncDrawer(
-//                scope = scope,
-//                drawerState = drawerState
-//            )
+            adapter(navController = navController)
             mediator()
             // 设置系统界面样式
             if (!hostView.isInEditMode) {
@@ -836,7 +820,6 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
                 content(
                     navController = navController,
                     windowSize = windowSize,
-                    drawerState = drawerState,
                     content = { content, modifier ->
                         when (content) {
                             tabBar -> TabLayout(modifier = modifier)

@@ -41,7 +41,6 @@ import kotlinx.coroutines.launch
 fun ActivityMain(
     navController: NavHostController,
     windowSize: WindowSizeClass,
-    drawerState: DrawerState,
     pager: @Composable (modifier: Modifier) -> Unit,
     tabBar: @Composable (modifier: Modifier) -> Unit,
     optionsMenu: () -> Unit,
@@ -76,6 +75,9 @@ fun ActivityMain(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val currentDestination = navBackStackEntry?.destination
+    val drawerState = rememberDrawerState(
+        initialValue = DrawerValue.Closed
+    )
     val snackBarHostState = remember {
         SnackbarHostState()
     }
@@ -457,9 +459,6 @@ fun ActivityMainPreview() {
     ActivityMain(
         navController = rememberNavController(),
         windowSize = WindowSizeClass.calculateFromSize(DpSize(400.dp, 900.dp)),
-        drawerState = rememberDrawerState(
-            initialValue = DrawerValue.Closed
-        ),
         pager = { modifier ->
             Box(
                 modifier = modifier,

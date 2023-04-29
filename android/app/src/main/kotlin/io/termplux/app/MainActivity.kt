@@ -9,7 +9,6 @@ class MainActivity : TermPluxActivity() {
     override fun onCreated(parameter: JumpParameter?) {
         setContents { navController,
                       windowSize,
-                      drawerState,
                       content,
                       event,
                       message,
@@ -18,7 +17,6 @@ class MainActivity : TermPluxActivity() {
             ActivityMain(
                 navController = navController,
                 windowSize = windowSize,
-                drawerState = drawerState,
                 pager = { modifier ->
                     content(
                         content = pager,
