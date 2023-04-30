@@ -28,7 +28,7 @@ sealed class Screen constructor(
         item = ItemType.Title,
         route = ScreenRoute.Title,
         imageVector = Icons.Filled.Android,
-        title = R.string.title_compose
+        title = R.string.menu_apps
     )
 
     object Home : Screen(
@@ -84,7 +84,7 @@ sealed class Screen constructor(
         item = ItemType.Title,
         route = ScreenRoute.Title,
         imageVector = Icons.Filled.Android,
-        title = R.string.title_fragment
+        title = R.string.menu_content
     )
 
     object LauncherFragment : Screen(

@@ -1,4 +1,4 @@
-package com.learnplus.widget
+package io.termplux.basic.custom
 
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint

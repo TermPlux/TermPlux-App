@@ -37,7 +37,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.preference.PreferenceManager
 import androidx.viewpager2.widget.ViewPager2
+import androidx.window.layout.DisplayFeature
 import com.farmerbb.taskbar.lib.Taskbar
+import com.google.accompanist.adaptive.calculateDisplayFeatures
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.MaterialToolbar
@@ -442,10 +444,6 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
                     mBaseContext
                 ).apply {
                     setBackgroundColor(android.graphics.Color.TRANSPARENT)
-//                    navigationIcon = ContextCompat.getDrawable(
-//                        mBaseContext,
-//                        R.drawable.baseline_menu_24
-//                    )
                     logo = ContextCompat.getDrawable(
                         mBaseContext,
                         R.drawable.baseline_terminal_24
@@ -453,8 +451,8 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
                 }.also { toolbar ->
                     // 设置操作栏
                     setSupportActionBar(toolbar)
+                    mToolbar = toolbar
                     supportActionBar?.setDisplayHomeAsUpEnabled(true)
-                    //mToolbar = toolbar
                 },
                 AppBarLayout.LayoutParams(
                     AppBarLayout.LayoutParams.MATCH_PARENT,
@@ -483,6 +481,7 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
         mTabLayout = TabLayout(
             mBaseContext
         ).apply {
+            setBackgroundColor(android.graphics.Color.TRANSPARENT)
             tabMode = TabLayout.MODE_AUTO
         }
     }
@@ -666,32 +665,6 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
     }
 
     /**
-     * 标签栏
-     */
-    @Composable
-    private fun TabLayout(modifier: Modifier) {
-        AndroidView(
-            factory = {
-                mTabLayout
-            },
-            modifier = modifier
-        )
-    }
-
-    /**
-     * 主页内容
-     */
-    @Composable
-    private fun ViewPager2(modifier: Modifier) {
-        AndroidView(
-            factory = {
-                mViewPager2
-            },
-            modifier = modifier
-        )
-    }
-
-    /**
      * ViewPager2切换页面
      */
     private fun current(item: Int) {
@@ -758,6 +731,7 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
         content: @Composable (
             navController: NavHostController,
             windowSize: WindowSizeClass,
+            displayFeatures: List<DisplayFeature>,
             content: @Composable (content: String, modifier: Modifier) -> Unit,
             event: (event: String) -> Unit,
             message: (message: String) -> String,
@@ -772,6 +746,9 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
             // 导航控制器实例
             val navController = rememberNavController()
             val windowSize = calculateWindowSizeClass(
+                activity = mME
+            )
+            val displayFeatures = calculateDisplayFeatures(
                 activity = mME
             )
 
@@ -792,9 +769,7 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
                 darkTheme -> DarkColorScheme
                 else -> LightColorScheme
             }
-            touch(
-                hostView = hostView
-            )
+            touch(hostView = hostView)
             // 设置适配器
             adapter(navController = navController)
             mediator()
@@ -819,10 +794,22 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
                 content(
                     navController = navController,
                     windowSize = windowSize,
+                    displayFeatures = displayFeatures,
                     content = { content, modifier ->
                         when (content) {
-                            tabBar -> TabLayout(modifier = modifier)
-                            pager -> ViewPager2(modifier = modifier)
+                            tabRow -> AndroidView(
+                                factory = {
+                                    mTabLayout
+                                },
+                                modifier = modifier
+                            )
+
+                            pager -> AndroidView(
+                                factory = {
+                                    mViewPager2
+                                },
+                                modifier = modifier
+                            )
                         }
                     },
                     event = { event ->
@@ -854,7 +841,7 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
 
     companion object {
 
-        const val tabBar: String = "tabBar"
+        const val tabRow: String = "tabRow"
         const val pager: String = "pager"
 
         const val toggle: String = "toggle"

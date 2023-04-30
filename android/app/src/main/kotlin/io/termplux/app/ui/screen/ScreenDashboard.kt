@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.Terminal
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -28,7 +29,7 @@ import io.termplux.app.ui.preview.TermPluxPreviews
 @Composable
 fun ScreenDashboard(
     navController: NavHostController,
-    tabBar: @Composable (modifier: Modifier) -> Unit,
+    tabRow: @Composable (modifier: Modifier) -> Unit,
     toggle: () -> Unit,
     current: (item: Int) -> Unit,
     targetAppName: String,
@@ -61,9 +62,6 @@ fun ScreenDashboard(
                     state = scrollState
                 )
         ) {
-            tabBar(
-                modifier = Modifier.fillMaxWidth()
-            )
             ElevatedCard(
                 modifier = Modifier.padding(
                     start = 16.dp,
@@ -72,7 +70,13 @@ fun ScreenDashboard(
                     bottom = 8.dp
                 )
             ) {
-
+                Box(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    tabRow(
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -103,7 +107,45 @@ fun ScreenDashboard(
                     }
 
                 }
+//                AssistChip(
+//                    onClick = {
+//
+//                    },
+//                    label = {
+//                        Text(
+//                            text = "切换到内容页",
+//                            color = MaterialTheme.colorScheme.primary
+//                        )
+//                    },
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .padding(horizontal = 5.dp),
+//                    enabled = true,
+//                    leadingIcon = {
+//                        Icon(
+//                            imageVector = Icons.Outlined.Terminal,
+//                            contentDescription = null,
+//                            modifier = Modifier.size(
+//                                AssistChipDefaults.IconSize
+//                            ),
+//                            tint = MaterialTheme.colorScheme.primary
+//                        )
+//                    }
+//                )
             }
+
+//            ElevatedCard(
+//                modifier = Modifier.padding(
+//                    start = 16.dp,
+//                    end = 16.dp,
+//                    top = 8.dp,
+//                    bottom = 8.dp
+//                )
+//            ) {
+//
+//
+//            }
+
             ElevatedCard(
                 modifier = Modifier.padding(
                     start = 16.dp,
@@ -246,99 +288,65 @@ fun ScreenDashboard(
                     ),
                 horizontalArrangement = Arrangement.Center
             ) {
-                Surface(
-                    modifier = Modifier
-                        .width(50.dp)
-                        .height(50.dp),
-                    shape = CircleShape,
-                    color = MaterialTheme.colorScheme.primary
+                FilledIconButton(
+                    onClick = { /*TODO*/ }
                 ) {
-                    IconButton(
-                        onClick = {
-
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Menu,
-                            contentDescription = null
-                        )
-                    }
+                    Icon(
+                        imageVector = Icons.Filled.Menu,
+                        contentDescription = null
+                    )
                 }
-                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                Surface(
-                    modifier = Modifier
-                        .width(50.dp)
-                        .height(50.dp),
-                    shape = CircleShape,
-                    color = MaterialTheme.colorScheme.primary
+                Spacer(
+                    modifier = Modifier.size(
+                        size = ButtonDefaults.IconSpacing
+                    )
+                )
+                FilledIconButton(
+                    onClick = { /*TODO*/ }
                 ) {
-                    IconButton(
-                        onClick = {
-
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.MoreVert,
-                            contentDescription = null
-                        )
-                    }
+                    Icon(
+                        imageVector = Icons.Filled.MoreVert,
+                        contentDescription = null
+                    )
                 }
-                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                Surface(
-                    modifier = Modifier
-                        .width(50.dp)
-                        .height(50.dp),
-                    shape = CircleShape,
-                    color = MaterialTheme.colorScheme.primary
+                Spacer(
+                    modifier = Modifier.size(
+                        size = ButtonDefaults.IconSpacing
+                    )
+                )
+                FilledIconButton(
+                    onClick = { /*TODO*/ }
                 ) {
-                    IconButton(
-                        onClick = {
-
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Apps,
-                            contentDescription = null
-                        )
-                    }
+                    Icon(
+                        imageVector = Icons.Filled.Apps,
+                        contentDescription = null
+                    )
                 }
-                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                Surface(
-                    modifier = Modifier
-                        .width(50.dp)
-                        .height(50.dp),
-                    shape = CircleShape,
-                    color = MaterialTheme.colorScheme.primary
+                Spacer(
+                    modifier = Modifier.size(
+                        size = ButtonDefaults.IconSpacing
+                    )
+                )
+                FilledIconButton(
+                    onClick = { /*TODO*/ }
                 ) {
-                    IconButton(
-                        onClick = {
-
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Search,
-                            contentDescription = null
-                        )
-                    }
+                    Icon(
+                        imageVector = Icons.Filled.Search,
+                        contentDescription = null
+                    )
                 }
-                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                Surface(
-                    modifier = Modifier
-                        .width(50.dp)
-                        .height(50.dp),
-                    shape = CircleShape,
-                    color = MaterialTheme.colorScheme.primary
+                Spacer(
+                    modifier = Modifier.size(
+                        size = ButtonDefaults.IconSpacing
+                    )
+                )
+                FilledIconButton(
+                    onClick = { /*TODO*/ }
                 ) {
-                    IconButton(
-                        onClick = {
-
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.SelectAll,
-                            contentDescription = null
-                        )
-                    }
+                    Icon(
+                        imageVector = Icons.Filled.SelectAll,
+                        contentDescription = null
+                    )
                 }
             }
 
@@ -563,7 +571,7 @@ fun ScreenDashboard(
 private fun ScreenDashboardPreview() {
     ScreenDashboard(
         navController = rememberNavController(),
-        tabBar = { modifier ->
+        tabRow = { modifier ->
             Text(
                 text = stringResource(
                     id = R.string.tab_layout_preview
