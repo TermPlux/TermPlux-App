@@ -7,15 +7,15 @@
 
 <!--    <dimen name="tip_padding">15dp</dimen>-->
 
-<!--    <dimen name="icon_padding">5dp</dimen>-->
+    <dimen name="icon_padding">5dp</dimen>
 
 
 
-    <dimen name="launcher_height">60dp</dimen>
-    <dimen name="launcher_padding">15dp</dimen>
+<!--    <dimen name="launcher_height">60dp</dimen>-->
+<!--    <dimen name="launcher_padding">15dp</dimen>-->
 
     <dimen name="icon_size">50dp</dimen>
 
-<!--    <dimen name="app_width">90dp</dimen>-->
-<!--    <dimen name="app_height">90dp</dimen>-->
+    <dimen name="app_width">90dp</dimen>
+    <dimen name="app_height">90dp</dimen>
 </resources>

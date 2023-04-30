@@ -1,10 +1,8 @@
 package io.termplux.basic.adapter
 
-import androidx.compose.material3.DrawerState
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.appbar.AppBarLayout
 import io.flutter.embedding.android.FlutterFragment
 import io.termplux.basic.fragment.*
@@ -26,7 +24,6 @@ class ContentAdapter constructor(
     private var mNavigation: (String) -> Unit
 
     private lateinit var mLauncher: LauncherFragment
-    private lateinit var mHome: HomeFragment
     private lateinit var mApps: AppsFragment
     private lateinit var mSettings: SettingsFragment
     private lateinit var mError: ErrorFragment
@@ -60,7 +57,7 @@ class ContentAdapter constructor(
         initFragment()
         return when (position) {
             launcher -> mLauncher
-            home -> mHome
+            home -> mFlutter
             apps -> mApps
             settings -> mSettings
             else -> mError
@@ -75,13 +72,9 @@ class ContentAdapter constructor(
         mLauncher = LauncherFragment.newInstance(
             appBarLayout = mAppBarLayout
         )
-        mHome = HomeFragment.newInstance(
-            flutterFragment = mFlutter
-        )
         // 应用
         mApps = AppsFragment.newInstance(
-            current = mCurrent,
-            navigation = mNavigation
+            current = mCurrent
         )
 
         // 设置

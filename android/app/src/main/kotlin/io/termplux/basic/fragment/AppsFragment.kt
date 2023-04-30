@@ -8,14 +8,10 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.view.*
 import android.widget.FrameLayout
-import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.appbar.MaterialToolbar
 import io.termplux.BuildConfig
 import io.termplux.R
 import io.termplux.basic.adapter.AppsAdapter
@@ -24,15 +20,11 @@ import io.termplux.model.AppsModel
 import java.util.*
 
 class AppsFragment constructor(
-    current: (Int) -> Unit,
-    navigation: (String) -> Unit
+    current: (Int) -> Unit
 ) : Fragment() {
 
     /** ViewPager2实例 */
     private val mCurrent: (Int) -> Unit
-
-    /** Compose导航函数 */
-    private var mNavigation: (String) -> Unit
 
     private lateinit var mContext: Context
     private lateinit var mRecyclerView: RecyclerView
@@ -40,7 +32,6 @@ class AppsFragment constructor(
 
     init {
         mCurrent = current
-        mNavigation = navigation
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,14 +51,9 @@ class AppsFragment constructor(
         mRecyclerView = RecyclerView(
             requireActivity()
         ).apply {
-//            layoutManager = GridLayoutManager(
-//                mContext,
-//                4,
-//                RecyclerView.VERTICAL,
-//                false
-//            )
-            layoutManager = LinearLayoutManager(
+            layoutManager = GridLayoutManager(
                 mContext,
+                4,
                 RecyclerView.VERTICAL,
                 false
             )
@@ -163,12 +149,10 @@ class AppsFragment constructor(
 
         // 初始化函数
         fun newInstance(
-            current: (Int) -> Unit,
-            navigation: (String) -> Unit
+            current: (Int) -> Unit
         ): AppsFragment {
             return AppsFragment(
-                current = current,
-                navigation = navigation
+                current = current
             )
         }
     }

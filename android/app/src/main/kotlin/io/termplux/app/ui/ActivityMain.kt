@@ -50,14 +50,14 @@ fun ActivityMain(
     toggle: () -> Unit
 ) {
     val pages = listOf(
+        Screen.ComposeTitle,
         Screen.Home,
         Screen.Dashboard,
         Screen.Content,
         Screen.Settings,
         Screen.About,
-
         Screen.Divider,
-
+        Screen.FragmentTitle,
         Screen.LauncherFragment,
         Screen.HomeFragment,
         Screen.AppsFragment,
@@ -69,7 +69,6 @@ fun ActivityMain(
         Screen.Content,
         Screen.Settings
     )
-
 
     val scope = rememberCoroutineScope()
     val navBackStackEntry by navController.currentBackStackEntryAsState()

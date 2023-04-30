@@ -36,78 +36,30 @@ class AppsAdapter constructor(
         val appIcon = AppCompatImageView(parent.context)
         val appTitle = AppCompatTextView(parent.context)
 
-        val itemView: LinearLayoutCompat = LinearLayoutCompat(
-            parent.context
-        ).apply {
-            layoutParams = LinearLayoutCompat.LayoutParams(
-                LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-                parent.context.resources.getDimension(
-                    R.dimen.launcher_height
-                ).toInt()
-            )
-            setPadding(
-                parent.context.resources.getDimension(
-                    R.dimen.launcher_padding
-                ).toInt(),
-                0,
-                parent.context.resources.getDimension(
-                    R.dimen.launcher_padding
-                ).toInt(),
-                0
-            )
-            orientation = LinearLayoutCompat.HORIZONTAL
-            addView(
-                appIcon.apply {
-                    gravity = Gravity.CENTER_VERTICAL
-
-                },
-                LinearLayoutCompat.LayoutParams(
-                    parent.context.resources.getDimension(
-                        R.dimen.icon_size
-                    ).toInt(),
-                    parent.context.resources.getDimension(
-                        R.dimen.icon_size
-                    ).toInt()
-                )
-            )
-            addView(
-                appTitle.apply {
-                    gravity = Gravity.CENTER_VERTICAL
-                    setPadding(
-                        parent.context.resources.getDimension(
-                            R.dimen.launcher_padding
-                        ).toInt(),
-                        0,
-                        parent.context.resources.getDimension(
-                            R.dimen.launcher_padding
-                        ).toInt(),
-                        0
-                    )
-                },
-                LinearLayoutCompat.LayoutParams(
-                    LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-                    LinearLayoutCompat.LayoutParams.WRAP_CONTENT
-                )
-            )
-        }
-
-
 //        val itemView: LinearLayoutCompat = LinearLayoutCompat(
 //            parent.context
 //        ).apply {
 //            layoutParams = LinearLayoutCompat.LayoutParams(
-//                parent.context.resources.getDimension(R.dimen.app_width).toInt(),
-//                parent.context.resources.getDimension(R.dimen.app_height).toInt()
+//                LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+//                parent.context.resources.getDimension(
+//                    R.dimen.launcher_height
+//                ).toInt()
 //            )
-//            orientation = LinearLayoutCompat.VERTICAL
+//            setPadding(
+//                parent.context.resources.getDimension(
+//                    R.dimen.launcher_padding
+//                ).toInt(),
+//                0,
+//                parent.context.resources.getDimension(
+//                    R.dimen.launcher_padding
+//                ).toInt(),
+//                0
+//            )
+//            orientation = LinearLayoutCompat.HORIZONTAL
 //            addView(
 //                appIcon.apply {
-//                    gravity = Gravity.CENTER_HORIZONTAL
-//                    setPadding(
-//                        parent.context.resources.getDimension(
-//                            R.dimen.icon_padding
-//                        ).toInt()
-//                    )
+//                    gravity = Gravity.CENTER_VERTICAL
+//
 //                },
 //                LinearLayoutCompat.LayoutParams(
 //                    parent.context.resources.getDimension(
@@ -120,8 +72,17 @@ class AppsAdapter constructor(
 //            )
 //            addView(
 //                appTitle.apply {
-//                    gravity = Gravity.CENTER
-//                    setTextColor(Color.WHITE)
+//                    gravity = Gravity.CENTER_VERTICAL
+//                    setPadding(
+//                        parent.context.resources.getDimension(
+//                            R.dimen.launcher_padding
+//                        ).toInt(),
+//                        0,
+//                        parent.context.resources.getDimension(
+//                            R.dimen.launcher_padding
+//                        ).toInt(),
+//                        0
+//                    )
 //                },
 //                LinearLayoutCompat.LayoutParams(
 //                    LinearLayoutCompat.LayoutParams.MATCH_PARENT,
@@ -130,7 +91,54 @@ class AppsAdapter constructor(
 //            )
 //        }
 
-        return AppsViewHolder(item = itemView, icon = appIcon, title = appTitle)
+
+        val itemView: LinearLayoutCompat = LinearLayoutCompat(
+            parent.context
+        ).apply {
+            layoutParams = LinearLayoutCompat.LayoutParams(
+                parent.context.resources.getDimension(R.dimen.app_width).toInt(),
+                parent.context.resources.getDimension(R.dimen.app_height).toInt()
+            )
+            setPadding(
+                0,
+                parent.context.resources.getDimension(
+                    R.dimen.icon_padding
+                ).toInt(),
+                0,
+                parent.context.resources.getDimension(
+                    R.dimen.icon_padding
+                ).toInt()
+            )
+            orientation = LinearLayoutCompat.VERTICAL
+            addView(
+                appIcon.apply {
+                    gravity = Gravity.CENTER_HORIZONTAL
+                },
+                LinearLayoutCompat.LayoutParams(
+                    parent.context.resources.getDimension(
+                        R.dimen.icon_size
+                    ).toInt(),
+                    parent.context.resources.getDimension(
+                        R.dimen.icon_size
+                    ).toInt()
+                )
+            )
+            addView(
+                appTitle.apply {
+                    gravity = Gravity.CENTER
+                },
+                LinearLayoutCompat.LayoutParams(
+                    LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                    LinearLayoutCompat.LayoutParams.WRAP_CONTENT
+                )
+            )
+        }
+
+        return AppsViewHolder(
+            item = itemView,
+            icon = appIcon,
+            title = appTitle
+        )
     }
 
     override fun onBindViewHolder(holder: AppsViewHolder, position: Int) {

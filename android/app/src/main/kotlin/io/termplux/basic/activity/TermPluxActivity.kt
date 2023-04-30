@@ -613,7 +613,6 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
             appBarLayout = mAppBarLayout,
             current = { item ->
                 current(item = item)
-
             },
             navigation = { route ->
                 navController.navigate(
@@ -846,7 +845,7 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
                         )
                     },
                     browser = { url ->
-
+                        PopTip.show(url)
                     }
                 )
             }
