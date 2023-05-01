@@ -53,7 +53,7 @@ class AppsFragment constructor(
         ).apply {
             layoutManager = GridLayoutManager(
                 mContext,
-                8,
+                4,
                 RecyclerView.VERTICAL,
                 false
             )
