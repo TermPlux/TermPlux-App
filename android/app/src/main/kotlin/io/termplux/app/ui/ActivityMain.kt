@@ -27,15 +27,15 @@ import androidx.window.layout.DisplayFeature
 import androidx.window.layout.FoldingFeature
 import io.termplux.BuildConfig
 import io.termplux.R
-import io.termplux.app.ui.window.ContentType
-import io.termplux.app.ui.window.DevicePosture
 import io.termplux.app.ui.navigation.ItemType
-import io.termplux.app.ui.window.NavigationType
 import io.termplux.app.ui.navigation.Screen
 import io.termplux.app.ui.navigation.ScreenType
-import io.termplux.app.ui.window.isBookPosture
-import io.termplux.app.ui.window.isSeparating
 import io.termplux.app.ui.screen.*
+import io.termplux.app.ui.widget.window.ContentType
+import io.termplux.app.ui.widget.window.DevicePosture
+import io.termplux.app.ui.widget.window.NavigationType
+import io.termplux.app.ui.widget.window.isBookPosture
+import io.termplux.app.ui.widget.window.isSeparating
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -69,28 +69,28 @@ fun ActivityMain(
 
     when (windowSize.widthSizeClass) {
         WindowWidthSizeClass.Compact -> {
-            navigationType = NavigationType.BOTTOM_NAVIGATION
-            contentType = ContentType.SINGLE_PANE
+            navigationType = NavigationType.BottomNavigation
+            contentType = ContentType.Single
         }
         WindowWidthSizeClass.Medium -> {
-            navigationType = NavigationType.NAVIGATION_RAIL
+            navigationType = NavigationType.NavigationRail
             contentType = if (foldingDevicePosture != DevicePosture.NormalPosture) {
-                ContentType.DUAL_PANE
+                ContentType.Dual
             } else {
-                ContentType.SINGLE_PANE
+                ContentType.Single
             }
         }
         WindowWidthSizeClass.Expanded -> {
             navigationType = if (foldingDevicePosture is DevicePosture.BookPosture) {
-                NavigationType.NAVIGATION_RAIL
+                NavigationType.NavigationRail
             } else {
-                NavigationType.PERMANENT_NAVIGATION_DRAWER
+                NavigationType.PermanentNavigationDrawer
             }
-            contentType = ContentType.DUAL_PANE
+            contentType = ContentType.Dual
         }
         else -> {
-            navigationType = NavigationType.BOTTOM_NAVIGATION
-            contentType = ContentType.SINGLE_PANE
+            navigationType = NavigationType.BottomNavigation
+            contentType = ContentType.Single
         }
     }
 
@@ -126,6 +126,12 @@ fun ActivityMain(
         SnackbarHostState()
     }
 
+    val navHost = remember {
+        movableContentOf<PaddingValues> { innerPadding ->
+
+        }
+    }
+
 
     @Composable
     fun nav() {
@@ -152,12 +158,12 @@ fun ActivityMain(
                         color = MaterialTheme.colorScheme.primary
                     )
                     AnimatedVisibility(
-                        visible = navigationType != NavigationType.PERMANENT_NAVIGATION_DRAWER
+                        visible = navigationType != NavigationType.PermanentNavigationDrawer
                     ) {
                         IconButton(
                             onClick = {
                                 if (
-                                    navigationType != NavigationType.PERMANENT_NAVIGATION_DRAWER
+                                    navigationType != NavigationType.PermanentNavigationDrawer
                                 ) {
                                     scope.launch {
                                         drawerState.close()
@@ -199,7 +205,7 @@ fun ActivityMain(
                             restoreState = true
                         }.also {
                             if (
-                                navigationType != NavigationType.PERMANENT_NAVIGATION_DRAWER
+                                navigationType != NavigationType.PermanentNavigationDrawer
                             ) {
                                 scope.launch {
                                     drawerState.close()
@@ -260,7 +266,7 @@ fun ActivityMain(
                                         restoreState = true
                                     }.also {
                                         if (
-                                            navigationType != NavigationType.PERMANENT_NAVIGATION_DRAWER
+                                            navigationType != NavigationType.PermanentNavigationDrawer
                                         ) {
                                             scope.launch {
                                                 drawerState.close()
@@ -283,7 +289,7 @@ fun ActivityMain(
                                             restoreState = true
                                         }.also {
                                             if (
-                                                navigationType != NavigationType.PERMANENT_NAVIGATION_DRAWER
+                                                navigationType != NavigationType.PermanentNavigationDrawer
                                             ) {
                                                 scope.launch {
                                                     drawerState.close()
@@ -293,7 +299,7 @@ fun ActivityMain(
                                     }
 
                                     ScreenType.Title -> if (
-                                        navigationType != NavigationType.PERMANENT_NAVIGATION_DRAWER
+                                        navigationType != NavigationType.PermanentNavigationDrawer
                                     ) {
                                         scope.launch {
                                             drawerState.close()
@@ -301,7 +307,7 @@ fun ActivityMain(
                                     }
 
                                     ScreenType.Divider -> if (
-                                        navigationType != NavigationType.PERMANENT_NAVIGATION_DRAWER
+                                        navigationType != NavigationType.PermanentNavigationDrawer
                                     ) {
                                         scope.launch {
                                             drawerState.close()
@@ -368,12 +374,12 @@ fun ActivityMain(
                     modifier = Modifier.fillMaxWidth(),
                     navigationIcon = {
                         AnimatedVisibility(
-                            visible = navigationType != NavigationType.PERMANENT_NAVIGATION_DRAWER
+                            visible = navigationType != NavigationType.PermanentNavigationDrawer
                         ) {
                             IconButton(
                                 onClick = {
                                     if (
-                                        navigationType != NavigationType.PERMANENT_NAVIGATION_DRAWER
+                                        navigationType != NavigationType.PermanentNavigationDrawer
                                     ) {
                                         scope.launch {
                                             drawerState.open()
@@ -406,7 +412,7 @@ fun ActivityMain(
             },
             bottomBar = {
                 AnimatedVisibility(
-                    visible = navigationType == NavigationType.BOTTOM_NAVIGATION
+                    visible = navigationType == NavigationType.BottomNavigation
                 ) {
                     NavigationBar(
                         modifier = Modifier.fillMaxWidth()
@@ -464,7 +470,7 @@ fun ActivityMain(
                     )
             ) {
                 AnimatedVisibility(
-                    visible = navigationType == NavigationType.NAVIGATION_RAIL
+                    visible = navigationType == NavigationType.NavigationRail
                 ) {
                     NavigationRail(
                         modifier = Modifier.fillMaxHeight(),
@@ -610,7 +616,7 @@ fun ActivityMain(
 
 
 
-    if (navigationType == NavigationType.PERMANENT_NAVIGATION_DRAWER) {
+    if (navigationType == NavigationType.PermanentNavigationDrawer) {
         PermanentNavigationDrawer(
             drawerContent = {
                 PermanentDrawerSheet {

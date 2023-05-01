@@ -1,4 +1,4 @@
-package io.termplux.app.ui.window
+package io.termplux.app.ui.widget.window
 
 import android.graphics.Rect
 import androidx.window.layout.FoldingFeature
