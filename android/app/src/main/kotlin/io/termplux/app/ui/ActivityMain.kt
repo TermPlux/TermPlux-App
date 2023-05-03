@@ -46,6 +46,7 @@ fun ActivityMain(
     navigationType: NavigationType,
     contentType: ContentType,
     pager: @Composable (modifier: Modifier) -> Unit,
+    navBar: @Composable (modifier: Modifier) -> Unit,
     tabRow: @Composable (modifier: Modifier) -> Unit,
     optionsMenu: () -> Unit,
     androidVersion: String,
@@ -63,7 +64,7 @@ fun ActivityMain(
         Screen.About,
         Screen.Divider,
         Screen.FragmentTitle,
-        Screen.LauncherFragment,
+     //   Screen.LauncherFragment,
         Screen.HomeFragment,
         Screen.AppsFragment,
         Screen.SettingsFragment
@@ -83,7 +84,7 @@ fun ActivityMain(
         SnackbarHostState()
     }
 
-    val navHost = remember {
+    val navDrawer = remember {
         movableContentOf<PaddingValues> { innerPadding ->
 
         }
@@ -317,256 +318,260 @@ fun ActivityMain(
 
     @Composable
     fun content() {
-        Scaffold(
-            modifier = Modifier.fillMaxSize(),
-            topBar = {
-                TopAppBar(
-                    title = {
-                        Text(
-                            text = stringResource(
-                                id = R.string.app_name
-                            )
-                        )
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    navigationIcon = {
-                        AnimatedVisibility(
-                            visible = navigationType != NavigationType.PermanentNavigationDrawer
-                        ) {
-                            IconButton(
-                                onClick = {
-                                    if (
-                                        navigationType != NavigationType.PermanentNavigationDrawer
-                                    ) {
-                                        scope.launch {
-                                            drawerState.open()
-                                        }
-                                    }
-                                }
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.Menu,
-                                    contentDescription = null
-                                )
-                            }
-                        }
-                    },
-                    actions = {
-                        IconButton(
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+//                .padding(
+//                    paddingValues = innerPadding
+//                )
+        ) {
+            AnimatedVisibility(
+                visible = navigationType == NavigationType.NavigationRail
+            ) {
+                NavigationRail(
+                    modifier = Modifier.fillMaxHeight(),
+                    header = {
+                        FloatingActionButton(
                             onClick = {
-
+                                navController.navigate(
+                                    route = Screen.Content.route
+                                ) {
+                                    popUpTo(
+                                        id = navController.graph.findStartDestination().id
+                                    ) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
                             }
                         ) {
                             Icon(
-                                imageVector = Icons.Filled.MoreVert,
+                                imageVector = Icons.Outlined.Terminal,
                                 contentDescription = null
                             )
                         }
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(),
-                    scrollBehavior = scrollBehavior
-                )
-            },
-            bottomBar = {
-                AnimatedVisibility(
-                    visible = navigationType == NavigationType.BottomNavigation
-                ) {
-                    NavigationBar(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        items.forEach { item ->
-                            NavigationBarItem(
-                                selected = currentDestination?.hierarchy?.any {
-                                    it.route == item.route
-                                } == true,
-                                onClick = {
-                                    if (item.type == ScreenType.Compose) navController.navigate(
-                                        route = item.route
-                                    ) {
-                                        popUpTo(
-                                            id = navController.graph.findStartDestination().id
-                                        ) {
-                                            saveState = true
-                                        }
-                                        launchSingleTop = true
-                                        restoreState = true
-                                    }
-                                },
-                                icon = {
-                                    Icon(
-                                        imageVector = item.imageVector,
-                                        contentDescription = null
-                                    )
-                                },
-                                enabled = true,
-                                label = {
-                                    Text(
-                                        stringResource(
-                                            id = item.title
-                                        )
-                                    )
-                                },
-                                alwaysShowLabel = false
-                            )
-                        }
                     }
-                }
-            },
-            snackbarHost = {
-                SnackbarHost(
-                    hostState = snackBarHostState
-                )
-            },
-            contentWindowInsets = ScaffoldDefaults.contentWindowInsets
-        ) { innerPadding ->
-            Row(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(
-                        paddingValues = innerPadding
-                    )
-            ) {
-                AnimatedVisibility(
-                    visible = navigationType == NavigationType.NavigationRail
                 ) {
-                    NavigationRail(
-                        modifier = Modifier.fillMaxHeight(),
-                        header = {
-                            FloatingActionButton(
-                                onClick = {
-                                    navController.navigate(
-                                        route = Screen.Content.route
+                    items.forEach { item ->
+                        NavigationRailItem(
+                            selected = currentDestination?.hierarchy?.any {
+                                it.route == item.route
+                            } == true,
+                            onClick = {
+                                if (item.type == ScreenType.Compose) navController.navigate(
+                                    route = item.route
+                                ) {
+                                    popUpTo(
+                                        id = navController.graph.findStartDestination().id
                                     ) {
-                                        popUpTo(
-                                            id = navController.graph.findStartDestination().id
-                                        ) {
-                                            saveState = true
-                                        }
-                                        launchSingleTop = true
-                                        restoreState = true
+                                        saveState = true
                                     }
+                                    launchSingleTop = true
+                                    restoreState = true
                                 }
-                            ) {
+                            },
+                            icon = {
                                 Icon(
-                                    imageVector = Icons.Outlined.Terminal,
+                                    imageVector = item.imageVector,
                                     contentDescription = null
                                 )
-                            }
-                        }
-                    ) {
-                        items.forEach { item ->
-                            NavigationRailItem(
-                                selected = currentDestination?.hierarchy?.any {
-                                    it.route == item.route
-                                } == true,
-                                onClick = {
-                                    if (item.type == ScreenType.Compose) navController.navigate(
-                                        route = item.route
-                                    ) {
-                                        popUpTo(
-                                            id = navController.graph.findStartDestination().id
-                                        ) {
-                                            saveState = true
-                                        }
-                                        launchSingleTop = true
-                                        restoreState = true
-                                    }
-                                },
-                                icon = {
-                                    Icon(
-                                        imageVector = item.imageVector,
-                                        contentDescription = null
+                            },
+                            enabled = true,
+                            label = {
+                                Text(
+                                    stringResource(
+                                        id = item.title
                                     )
-                                },
-                                enabled = true,
-                                label = {
-                                    Text(
-                                        stringResource(
-                                            id = item.title
-                                        )
-                                    )
-                                },
-                                alwaysShowLabel = false
-                            )
-                        }
-                    }
-                }
-                NavHost(
-                    navController = navController,
-                    startDestination = Screen.Home.route,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .nestedScroll(
-                            connection = scrollBehavior.nestedScrollConnection
-                        )
-                ) {
-                    composable(
-                        route = Screen.Home.route
-                    ) {
-                        ScreenHome(
-                            navController = navController,
-                            shizukuVersion = shizukuVersion
-                        )
-                    }
-                    composable(
-                        route = Screen.Dashboard.route
-                    ) {
-                        ScreenDashboard(
-                            navController = navController,
-                            tabRow = tabRow,
-                            toggle = toggle,
-                            current = current,
-                            targetAppName = stringResource(id = R.string.app_name),
-                            targetAppPackageName = BuildConfig.APPLICATION_ID,
-                            targetAppDescription = stringResource(id = R.string.app_description),
-                            targetAppVersionName = BuildConfig.VERSION_NAME,
-                            NavigationOnClick = { /*TODO*/ },
-                            MenuOnClick = { /*TODO*/ },
-                            SearchOnClick = { /*TODO*/ },
-                            SheetOnClick = { /*TODO*/ },
-                            AppsOnClick = { /*TODO*/ },
-                            SelectOnClick = { /*TODO*/ }) {
-
-                        }
-                    }
-                    composable(
-                        route = Screen.Content.route
-                    ) {
-                        ScreenContent(
-                            pager = pager
-                        )
-                    }
-                    composable(
-                        route = Screen.Settings.route
-                    ) {
-                        ScreenSettings(
-                            navController = navController,
-                            scope = scope,
-                            snackBarHostState = snackBarHostState,
-                            current = current,
-                            onTaskBarSettings = {},
-                            onSystemSettings = {},
-                            onDefaultLauncherSettings = {}
-                        )
-                    }
-                    composable(
-                        route = Screen.About.route
-                    ) {
-                        ScreenAbout(
-                            scope = scope,
-                            snackBarHostState = snackBarHostState,
-                            onEasterEgg = {},
-                            onNotice = {},
-                            onSource = {},
-                            onDevGitHub = {},
-                            onDevTwitter = {},
-                            onTeamGitHub = {}
+                                )
+                            },
+                            alwaysShowLabel = false
                         )
                     }
                 }
-
             }
+            NavHost(
+                navController = navController,
+                startDestination = Screen.Home.route,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .nestedScroll(
+                        connection = scrollBehavior.nestedScrollConnection
+                    )
+            ) {
+                composable(
+                    route = Screen.Home.route
+                ) {
+                    ScreenContent(
+                        pager = pager,
+                        navBar = navBar
+                    )
+
+                }
+                composable(
+                    route = Screen.Dashboard.route
+                ) {
+                    ScreenHome(
+                        navController = navController,
+                        shizukuVersion = shizukuVersion
+                    )
+
+                }
+                composable(
+                    route = Screen.Content.route
+                ) {
+                    ScreenDashboard(
+                        navController = navController,
+                        tabRow = tabRow,
+                        toggle = toggle,
+                        current = current,
+                        targetAppName = stringResource(id = R.string.app_name),
+                        targetAppPackageName = BuildConfig.APPLICATION_ID,
+                        targetAppDescription = stringResource(id = R.string.app_description),
+                        targetAppVersionName = BuildConfig.VERSION_NAME,
+                        NavigationOnClick = { /*TODO*/ },
+                        MenuOnClick = { /*TODO*/ },
+                        SearchOnClick = { /*TODO*/ },
+                        SheetOnClick = { /*TODO*/ },
+                        AppsOnClick = { /*TODO*/ },
+                        SelectOnClick = { /*TODO*/ }) {
+
+                    }
+                }
+                composable(
+                    route = Screen.Settings.route
+                ) {
+                    ScreenSettings(
+                        navController = navController,
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        current = current,
+                        onTaskBarSettings = {},
+                        onSystemSettings = {},
+                        onDefaultLauncherSettings = {}
+                    )
+                }
+                composable(
+                    route = Screen.About.route
+                ) {
+                    ScreenAbout(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        onEasterEgg = {},
+                        onNotice = {},
+                        onSource = {},
+                        onDevGitHub = {},
+                        onDevTwitter = {},
+                        onTeamGitHub = {}
+                    )
+                }
+            }
+
         }
+//        Scaffold(
+//            modifier = Modifier.fillMaxSize(),
+//            topBar = {
+//                TopAppBar(
+//                    title = {
+//                        Text(
+//                            text = stringResource(
+//                                id = R.string.app_name
+//                            )
+//                        )
+//                    },
+//                    modifier = Modifier.fillMaxWidth(),
+//                    navigationIcon = {
+//                        AnimatedVisibility(
+//                            visible = navigationType != NavigationType.PermanentNavigationDrawer
+//                        ) {
+//                            IconButton(
+//                                onClick = {
+//                                    if (
+//                                        navigationType != NavigationType.PermanentNavigationDrawer
+//                                    ) {
+//                                        scope.launch {
+//                                            drawerState.open()
+//                                        }
+//                                    }
+//                                }
+//                            ) {
+//                                Icon(
+//                                    imageVector = Icons.Filled.Menu,
+//                                    contentDescription = null
+//                                )
+//                            }
+//                        }
+//                    },
+//                    actions = {
+//                        IconButton(
+//                            onClick = {
+//
+//                            }
+//                        ) {
+//                            Icon(
+//                                imageVector = Icons.Filled.MoreVert,
+//                                contentDescription = null
+//                            )
+//                        }
+//                    },
+//                    colors = TopAppBarDefaults.topAppBarColors(),
+//                    scrollBehavior = scrollBehavior
+//                )
+//            },
+//            bottomBar = {
+//                AnimatedVisibility(
+//                    visible = navigationType == NavigationType.BottomNavigation
+//                ) {
+//                    NavigationBar(
+//                        modifier = Modifier.fillMaxWidth()
+//                    ) {
+//                        items.forEach { item ->
+//                            NavigationBarItem(
+//                                selected = currentDestination?.hierarchy?.any {
+//                                    it.route == item.route
+//                                } == true,
+//                                onClick = {
+//                                    if (item.type == ScreenType.Compose) navController.navigate(
+//                                        route = item.route
+//                                    ) {
+//                                        popUpTo(
+//                                            id = navController.graph.findStartDestination().id
+//                                        ) {
+//                                            saveState = true
+//                                        }
+//                                        launchSingleTop = true
+//                                        restoreState = true
+//                                    }
+//                                },
+//                                icon = {
+//                                    Icon(
+//                                        imageVector = item.imageVector,
+//                                        contentDescription = null
+//                                    )
+//                                },
+//                                enabled = true,
+//                                label = {
+//                                    Text(
+//                                        stringResource(
+//                                            id = item.title
+//                                        )
+//                                    )
+//                                },
+//                                alwaysShowLabel = false
+//                            )
+//                        }
+//                    }
+//                }
+//            },
+//            snackbarHost = {
+//                SnackbarHost(
+//                    hostState = snackBarHostState
+//                )
+//            },
+//            contentWindowInsets = ScaffoldDefaults.contentWindowInsets
+//        ) { innerPadding ->
+//
+//        }
 
 
     }
@@ -584,7 +589,6 @@ fun ActivityMain(
         ) {
             content()
         }
-
     } else {
         ModalNavigationDrawer(
             drawerContent = {

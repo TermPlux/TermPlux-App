@@ -28,10 +28,11 @@ class TermPluxApp extends StatelessWidget {
                     useMaterial3: true),
                 themeMode: ThemeMode.system,
                 home: const MyHomePage(title: appName),
+                debugShowCheckedModeBanner: false,
               );
             }),
         isToolbarVisible: true,
         availableLocales: const [Locale('zh_CN')],
-        enabled: true);
+        enabled: false);
   }
 }

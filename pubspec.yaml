@@ -36,6 +36,8 @@ dependencies:
   dynamic_color: ^1.6.3
   device_preview: ^1.1.0
   xterm: ^3.5.0
+  dartssh2: ^2.5.0
+  flutter_pty: ^0.3.0
   flutter_rfb: ^0.6.2
 
 dev_dependencies:

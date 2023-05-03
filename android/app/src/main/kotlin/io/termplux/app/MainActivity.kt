@@ -33,6 +33,12 @@ class MainActivity : TermPluxActivity() {
                         modifier = modifier
                     )
                 },
+                navBar = { modifier ->
+                    content(
+                        content = navBar,
+                        modifier = modifier
+                    )
+                },
                 tabRow = { modifier ->
                     content(
                         content = tabRow,
@@ -73,6 +79,9 @@ class MainActivity : TermPluxActivity() {
                         ), textAlign = TextAlign.Center, style = MaterialTheme.typography.titleLarge
                     )
                 }
+            },
+            navBar = { modifier ->
+
             },
             tabRow = { modifier ->
                 Text(

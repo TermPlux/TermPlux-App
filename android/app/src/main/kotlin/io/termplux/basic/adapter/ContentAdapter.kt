@@ -20,7 +20,6 @@ class ContentAdapter constructor(
     private val mAppBarLayout: AppBarLayout
     private val mCurrent: (Int) -> Unit
     private val mFlutter: FlutterFragment
-
     private var mNavigation: (String) -> Unit
 
     private lateinit var mLauncher: LauncherFragment
@@ -44,7 +43,7 @@ class ContentAdapter constructor(
      */
     override fun getItemCount(): Int {
         return intArrayOf(
-            launcher,
+   //         launcher,
             home,
             apps,
             settings
@@ -57,7 +56,7 @@ class ContentAdapter constructor(
     override fun createFragment(position: Int): Fragment {
         initFragment()
         return when (position) {
-            launcher -> mLauncher
+   //         launcher -> mLauncher
             home -> mHome
             apps -> mApps
             settings -> mSettings
@@ -112,9 +111,9 @@ class ContentAdapter constructor(
         }
 
         // 页面代码，从0开始，以此类推
-        const val launcher: Int = 0
-        const val home: Int = 1
-        const val apps: Int = 2
-        const val settings: Int = 3
+        const val launcher: Int = 114514
+        const val home: Int = 0
+        const val apps: Int = 1
+        const val settings: Int = 2
     }
 }
