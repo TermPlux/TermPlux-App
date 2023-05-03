@@ -15,11 +15,13 @@ import android.window.OnBackInvokedCallback
 import android.window.OnBackInvokedDispatcher
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -38,6 +40,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.preference.PreferenceManager
 import androidx.viewpager2.widget.ViewPager2
 import androidx.window.layout.DisplayFeature
+import androidx.window.layout.FoldingFeature
 import com.farmerbb.taskbar.lib.Taskbar
 import com.google.accompanist.adaptive.calculateDisplayFeatures
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -60,10 +63,18 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.FlutterEngineCache
 import io.flutter.embedding.engine.dart.DartExecutor
 import io.flutter.plugin.common.MethodChannel
+import io.flutter.plugin.common.StandardMessageCodec
+import io.flutter.plugin.platform.PlatformView
+import io.flutter.plugin.platform.PlatformViewFactory
 import io.flutter.plugins.GeneratedPluginRegistrant
 import io.termplux.BuildConfig
 import io.termplux.IUserService
 import io.termplux.R
+import io.termplux.app.ui.widget.window.ContentType
+import io.termplux.app.ui.widget.window.DevicePosture
+import io.termplux.app.ui.widget.window.NavigationType
+import io.termplux.app.ui.widget.window.isBookPosture
+import io.termplux.app.ui.widget.window.isSeparating
 import io.termplux.basic.adapter.ContentAdapter
 import io.termplux.basic.custom.LinkNativeViewFactory
 import io.termplux.basic.services.MainService
@@ -296,8 +307,54 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
      */
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         GeneratedPluginRegistrant.registerWith(flutterEngine)
-        val registry = flutterEngine.platformViewsController.registry
-        registry.registerViewFactory("android_view", LinkNativeViewFactory())
+//        val registry = flutterEngine.platformViewsController.registry
+//        registry.registerViewFactory("android_view", LinkNativeViewFactory())
+
+        flutterEngine.platformViewsController.registry.registerViewFactory(
+            "android_view",
+            object : PlatformViewFactory(
+                StandardMessageCodec.INSTANCE
+            ) {
+                override fun create(context: Context?, viewId: Int, args: Any?): PlatformView {
+                    return object : PlatformView {
+                        override fun getView(): View {
+
+                            return LinearLayoutCompat(context!!).apply {
+                                orientation = LinearLayoutCompat.VERTICAL
+                                background = ContextCompat.getDrawable(
+                                    context,
+                                    R.drawable.custom_wallpaper_24
+                                )
+                                addView(
+                                    AppBarLayout(context).apply {
+                                        addView(
+                                            MaterialToolbar(context).apply {
+                                                title = "6"
+                                                subtitle = "6"
+                                                logo = ContextCompat.getDrawable(
+                                                    context,
+                                                    R.drawable.baseline_terminal_24
+                                                )
+                                            },
+                                            ViewGroup.LayoutParams(
+                                                ViewGroup.LayoutParams.MATCH_PARENT,
+                                                ViewGroup.LayoutParams.WRAP_CONTENT
+                                            )
+                                        )
+                                    },
+                                    ViewGroup.LayoutParams(
+                                        ViewGroup.LayoutParams.MATCH_PARENT,
+                                        ViewGroup.LayoutParams.WRAP_CONTENT
+                                    )
+                                )
+                            }
+                        }
+
+                        override fun dispose() {}
+                    }
+                }
+            }
+        )
 
         val messenger = flutterEngine.dartExecutor.binaryMessenger
         val channel = MethodChannel(messenger, "termplux_channel")
@@ -357,7 +414,7 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         super.onOptionsItemSelected(item)
         when (item.itemId) {
-            android.R.id.home -> onBack()
+            //android.R.id.home -> onBack()
             R.id.action_settings -> {
                 current(item = ContentAdapter.settings)
             }
@@ -444,6 +501,10 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
                     mBaseContext
                 ).apply {
                     setBackgroundColor(android.graphics.Color.TRANSPARENT)
+                    navigationIcon = ContextCompat.getDrawable(
+                        mBaseContext,
+                        R.drawable.baseline_menu_24
+                    )
                     logo = ContextCompat.getDrawable(
                         mBaseContext,
                         R.drawable.baseline_terminal_24
@@ -452,7 +513,7 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
                     // 设置操作栏
                     setSupportActionBar(toolbar)
                     mToolbar = toolbar
-                    supportActionBar?.setDisplayHomeAsUpEnabled(true)
+                    //supportActionBar?.setDisplayHomeAsUpEnabled(true)
                 },
                 AppBarLayout.LayoutParams(
                     AppBarLayout.LayoutParams.MATCH_PARENT,
@@ -730,8 +791,9 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
     protected fun setContents(
         content: @Composable (
             navController: NavHostController,
-            windowSize: WindowSizeClass,
-            displayFeatures: List<DisplayFeature>,
+            drawerState: DrawerState,
+            navigationType: NavigationType,
+            contentType: ContentType,
             content: @Composable (content: String, modifier: Modifier) -> Unit,
             event: (event: String) -> Unit,
             message: (message: String) -> String,
@@ -743,14 +805,64 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
         setContent {
             // 获取根View
             val hostView = LocalView.current
+
+            val scope = rememberCoroutineScope()
+            val drawerState = rememberDrawerState(
+                initialValue = DrawerValue.Closed
+            )
+
             // 导航控制器实例
             val navController = rememberNavController()
+
+
             val windowSize = calculateWindowSizeClass(
                 activity = mME
             )
             val displayFeatures = calculateDisplayFeatures(
                 activity = mME
             )
+
+            val navigationType: NavigationType
+            val contentType: ContentType
+
+            val foldingFeature = displayFeatures.filterIsInstance<FoldingFeature>().firstOrNull()
+
+            val foldingDevicePosture = when {
+                isBookPosture(foldingFeature) ->
+                    DevicePosture.BookPosture(foldingFeature.bounds)
+
+                isSeparating(foldingFeature) ->
+                    DevicePosture.Separating(foldingFeature.bounds, foldingFeature.orientation)
+
+                else -> DevicePosture.NormalPosture
+            }
+
+            when (windowSize.widthSizeClass) {
+                WindowWidthSizeClass.Compact -> {
+                    navigationType = NavigationType.BottomNavigation
+                    contentType = ContentType.Single
+                }
+                WindowWidthSizeClass.Medium -> {
+                    navigationType = NavigationType.NavigationRail
+                    contentType = if (foldingDevicePosture != DevicePosture.NormalPosture) {
+                        ContentType.Dual
+                    } else {
+                        ContentType.Single
+                    }
+                }
+                WindowWidthSizeClass.Expanded -> {
+                    navigationType = if (foldingDevicePosture is DevicePosture.BookPosture) {
+                        NavigationType.NavigationRail
+                    } else {
+                        NavigationType.PermanentNavigationDrawer
+                    }
+                    contentType = ContentType.Dual
+                }
+                else -> {
+                    navigationType = NavigationType.BottomNavigation
+                    contentType = ContentType.Single
+                }
+            }
 
             // 系统界面控制器实例
             val systemUiController = rememberSystemUiController()
@@ -769,9 +881,17 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
                 darkTheme -> DarkColorScheme
                 else -> LightColorScheme
             }
-            touch(hostView = hostView)
+            touch(
+                hostView = hostView
+            )
             // 设置适配器
-            adapter(navController = navController)
+            adapter(
+                navController = navController
+            )
+            syncDrawer(
+                scope = scope,
+                drawerState = drawerState
+            )
             mediator()
             // 设置系统界面样式
             if (!hostView.isInEditMode) {
@@ -793,8 +913,9 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
             ) {
                 content(
                     navController = navController,
-                    windowSize = windowSize,
-                    displayFeatures = displayFeatures,
+                    drawerState = drawerState,
+                    navigationType = navigationType,
+                    contentType = contentType,
                     content = { content, modifier ->
                         when (content) {
                             tabRow -> AndroidView(

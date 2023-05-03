@@ -70,13 +70,13 @@ class LauncherFragment constructor(
                 requireActivity(),
                 R.drawable.custom_wallpaper_24
             )
-            addView(
-                mAppBarLayout,
-                LinearLayoutCompat.LayoutParams(
-                    LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-                    LinearLayoutCompat.LayoutParams.WRAP_CONTENT
-                )
-            )
+//            addView(
+//                mAppBarLayout,
+//                LinearLayoutCompat.LayoutParams(
+//                    LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+//                    LinearLayoutCompat.LayoutParams.WRAP_CONTENT
+//                )
+//            )
             addView(
                 binding.root,
                 LinearLayoutCompat.LayoutParams(

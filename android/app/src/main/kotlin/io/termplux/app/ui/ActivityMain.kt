@@ -42,8 +42,9 @@ import kotlinx.coroutines.launch
 @Composable
 fun ActivityMain(
     navController: NavHostController,
-    windowSize: WindowSizeClass,
-    displayFeatures: List<DisplayFeature>,
+    drawerState: DrawerState,
+    navigationType: NavigationType,
+    contentType: ContentType,
     pager: @Composable (modifier: Modifier) -> Unit,
     tabRow: @Composable (modifier: Modifier) -> Unit,
     optionsMenu: () -> Unit,
@@ -52,47 +53,6 @@ fun ActivityMain(
     current: (item: Int) -> Unit,
     toggle: () -> Unit
 ) {
-    val navigationType: NavigationType
-    val contentType: ContentType
-
-    val foldingFeature = displayFeatures.filterIsInstance<FoldingFeature>().firstOrNull()
-
-    val foldingDevicePosture = when {
-        isBookPosture(foldingFeature) ->
-            DevicePosture.BookPosture(foldingFeature.bounds)
-
-        isSeparating(foldingFeature) ->
-            DevicePosture.Separating(foldingFeature.bounds, foldingFeature.orientation)
-
-        else -> DevicePosture.NormalPosture
-    }
-
-    when (windowSize.widthSizeClass) {
-        WindowWidthSizeClass.Compact -> {
-            navigationType = NavigationType.BottomNavigation
-            contentType = ContentType.Single
-        }
-        WindowWidthSizeClass.Medium -> {
-            navigationType = NavigationType.NavigationRail
-            contentType = if (foldingDevicePosture != DevicePosture.NormalPosture) {
-                ContentType.Dual
-            } else {
-                ContentType.Single
-            }
-        }
-        WindowWidthSizeClass.Expanded -> {
-            navigationType = if (foldingDevicePosture is DevicePosture.BookPosture) {
-                NavigationType.NavigationRail
-            } else {
-                NavigationType.PermanentNavigationDrawer
-            }
-            contentType = ContentType.Dual
-        }
-        else -> {
-            navigationType = NavigationType.BottomNavigation
-            contentType = ContentType.Single
-        }
-    }
 
     val pages = listOf(
         Screen.ComposeTitle,
@@ -119,9 +79,6 @@ fun ActivityMain(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val currentDestination = navBackStackEntry?.destination
-    val drawerState = rememberDrawerState(
-        initialValue = DrawerValue.Closed
-    )
     val snackBarHostState = remember {
         SnackbarHostState()
     }

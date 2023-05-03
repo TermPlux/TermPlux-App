@@ -1,8 +1,10 @@
 package io.termplux.basic.custom
 
 import android.content.Context
-import android.widget.Toast
-import androidx.appcompat.widget.AppCompatButton
+import android.view.View
+import android.view.ViewGroup.LayoutParams
+import androidx.appcompat.widget.LinearLayoutCompat
+import com.google.android.material.button.MaterialButton
 import io.flutter.plugin.platform.PlatformView
 
 class LinkNativeView constructor(
@@ -10,26 +12,26 @@ class LinkNativeView constructor(
 ) : PlatformView {
 
     private var mContext: Context
-    private lateinit var button: AppCompatButton
-//    private var mWebView: WebView
 
     init {
         mContext = context
-
-//        mWebView = WebView(mContext)
-
-
     }
 
-    override fun getView(): AppCompatButton {
+    override fun getView(): View {
+        return LinearLayoutCompat(mContext).apply {
+            orientation = LinearLayoutCompat.VERTICAL
 
-        button = AppCompatButton(mContext)
+            addView(
+                MaterialButton(mContext).apply {
+                    text = "666"
 
-        button.text = "fuck"
-        button.setOnClickListener {
-            Toast.makeText(mContext, "oh ye", Toast.LENGTH_SHORT).show()
+                },
+                LayoutParams(
+                    LayoutParams.MATCH_PARENT,
+                    LayoutParams.WRAP_CONTENT
+                )
+            )
         }
-        return button
     }
 
     override fun dispose() {

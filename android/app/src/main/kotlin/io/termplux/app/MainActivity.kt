@@ -1,38 +1,32 @@
 package io.termplux.app
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
-import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.DpSize
-import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.kongzue.baseframework.util.JumpParameter
 import io.termplux.R
 import io.termplux.app.ui.ActivityMain
 import io.termplux.app.ui.preview.TermPluxPreviews
+import io.termplux.app.ui.widget.window.ContentType
+import io.termplux.app.ui.widget.window.NavigationType
 import io.termplux.basic.activity.TermPluxActivity
 
 class MainActivity : TermPluxActivity() {
 
     override fun onCreated(parameter: JumpParameter?) {
-        setContents { navController,
-                      windowSize,
-                      displayFeatures,
-                      content,
-                      event,
-                      message,
-                      current,
-                      browser ->
+        setContents { navController, drawerState, navigationType, contentType, content, event, message, current, browser ->
             ActivityMain(
                 navController = navController,
-                windowSize = windowSize,
-                displayFeatures = displayFeatures,
+                drawerState = drawerState,
+                navigationType = navigationType,
+                contentType = contentType,
                 pager = { modifier ->
                     content(
                         content = pager,
@@ -58,19 +52,16 @@ class MainActivity : TermPluxActivity() {
         }
     }
 
-    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     @Composable
     @TermPluxPreviews
     private fun ActivityMainPreview() {
         ActivityMain(
             navController = rememberNavController(),
-            windowSize = WindowSizeClass.calculateFromSize(
-                size = DpSize(
-                    width = 400.dp,
-                    height = 900.dp
-                )
+            drawerState = rememberDrawerState(
+                initialValue = DrawerValue.Closed
             ),
-            displayFeatures = emptyList(),
+            navigationType = NavigationType.BottomNavigation,
+            contentType = ContentType.Single,
             pager = { modifier ->
                 Box(
                     modifier = modifier,
@@ -79,9 +70,7 @@ class MainActivity : TermPluxActivity() {
                     Text(
                         text = stringResource(
                             id = R.string.view_pager_preview
-                        ),
-                        textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.titleLarge
+                        ), textAlign = TextAlign.Center, style = MaterialTheme.typography.titleLarge
                     )
                 }
             },
