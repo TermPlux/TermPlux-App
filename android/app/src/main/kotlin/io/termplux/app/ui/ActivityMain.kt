@@ -59,7 +59,7 @@ fun ActivityMain(
         Screen.ComposeTitle,
         Screen.Home,
         Screen.Dashboard,
-        Screen.Content,
+        Screen.Manager,
         Screen.Settings,
         Screen.About,
         Screen.Divider,
@@ -72,7 +72,7 @@ fun ActivityMain(
     val items = listOf(
         Screen.Home,
         Screen.Dashboard,
-        Screen.Content,
+        Screen.Manager,
         Screen.Settings
     )
 
@@ -152,7 +152,7 @@ fun ActivityMain(
                     },
                     onClick = {
                         navController.navigate(
-                            route = Screen.Content.route
+                            route = Screen.Home.route
                         ) {
                             popUpTo(
                                 id = navController.graph.findStartDestination().id
@@ -236,7 +236,7 @@ fun ActivityMain(
                                         item.route.toInt()
                                     ).also {
                                         navController.navigate(
-                                            route = Screen.Content.route
+                                            route = Screen.Home.route
                                         ) {
                                             popUpTo(
                                                 id = navController.graph.findStartDestination().id
@@ -318,158 +318,9 @@ fun ActivityMain(
 
     @Composable
     fun content() {
-        Row(
-            modifier = Modifier
-                .fillMaxSize()
-//                .padding(
-//                    paddingValues = innerPadding
-//                )
-        ) {
-            AnimatedVisibility(
-                visible = navigationType == NavigationType.NavigationRail
-            ) {
-                NavigationRail(
-                    modifier = Modifier.fillMaxHeight(),
-                    header = {
-                        FloatingActionButton(
-                            onClick = {
-                                navController.navigate(
-                                    route = Screen.Content.route
-                                ) {
-                                    popUpTo(
-                                        id = navController.graph.findStartDestination().id
-                                    ) {
-                                        saveState = true
-                                    }
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
-                            }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Outlined.Terminal,
-                                contentDescription = null
-                            )
-                        }
-                    }
-                ) {
-                    items.forEach { item ->
-                        NavigationRailItem(
-                            selected = currentDestination?.hierarchy?.any {
-                                it.route == item.route
-                            } == true,
-                            onClick = {
-                                if (item.type == ScreenType.Compose) navController.navigate(
-                                    route = item.route
-                                ) {
-                                    popUpTo(
-                                        id = navController.graph.findStartDestination().id
-                                    ) {
-                                        saveState = true
-                                    }
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
-                            },
-                            icon = {
-                                Icon(
-                                    imageVector = item.imageVector,
-                                    contentDescription = null
-                                )
-                            },
-                            enabled = true,
-                            label = {
-                                Text(
-                                    stringResource(
-                                        id = item.title
-                                    )
-                                )
-                            },
-                            alwaysShowLabel = false
-                        )
-                    }
-                }
-            }
-            NavHost(
-                navController = navController,
-                startDestination = Screen.Home.route,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .nestedScroll(
-                        connection = scrollBehavior.nestedScrollConnection
-                    )
-            ) {
-                composable(
-                    route = Screen.Home.route
-                ) {
-                    ScreenContent(
-                        pager = pager,
-                        navBar = navBar
-                    )
 
-                }
-                composable(
-                    route = Screen.Dashboard.route
-                ) {
-                    ScreenHome(
-                        navController = navController,
-                        shizukuVersion = shizukuVersion
-                    )
-
-                }
-                composable(
-                    route = Screen.Content.route
-                ) {
-                    ScreenDashboard(
-                        navController = navController,
-                        tabRow = tabRow,
-                        toggle = toggle,
-                        current = current,
-                        targetAppName = stringResource(id = R.string.app_name),
-                        targetAppPackageName = BuildConfig.APPLICATION_ID,
-                        targetAppDescription = stringResource(id = R.string.app_description),
-                        targetAppVersionName = BuildConfig.VERSION_NAME,
-                        NavigationOnClick = { /*TODO*/ },
-                        MenuOnClick = { /*TODO*/ },
-                        SearchOnClick = { /*TODO*/ },
-                        SheetOnClick = { /*TODO*/ },
-                        AppsOnClick = { /*TODO*/ },
-                        SelectOnClick = { /*TODO*/ }) {
-
-                    }
-                }
-                composable(
-                    route = Screen.Settings.route
-                ) {
-                    ScreenSettings(
-                        navController = navController,
-                        scope = scope,
-                        snackBarHostState = snackBarHostState,
-                        current = current,
-                        onTaskBarSettings = {},
-                        onSystemSettings = {},
-                        onDefaultLauncherSettings = {}
-                    )
-                }
-                composable(
-                    route = Screen.About.route
-                ) {
-                    ScreenAbout(
-                        scope = scope,
-                        snackBarHostState = snackBarHostState,
-                        onEasterEgg = {},
-                        onNotice = {},
-                        onSource = {},
-                        onDevGitHub = {},
-                        onDevTwitter = {},
-                        onTeamGitHub = {}
-                    )
-                }
-            }
-
-        }
-//        Scaffold(
-//            modifier = Modifier.fillMaxSize(),
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
 //            topBar = {
 //                TopAppBar(
 //                    title = {
@@ -518,13 +369,16 @@ fun ActivityMain(
 //                    scrollBehavior = scrollBehavior
 //                )
 //            },
-//            bottomBar = {
-//                AnimatedVisibility(
-//                    visible = navigationType == NavigationType.BottomNavigation
-//                ) {
-//                    NavigationBar(
-//                        modifier = Modifier.fillMaxWidth()
-//                    ) {
+            bottomBar = {
+                AnimatedVisibility(
+                    visible = navigationType == NavigationType.BottomNavigation
+                ) {
+                    NavigationBar(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        navBar(
+                            modifier = Modifier.fillMaxWidth()
+                        )
 //                        items.forEach { item ->
 //                            NavigationBarItem(
 //                                selected = currentDestination?.hierarchy?.any {
@@ -560,18 +414,166 @@ fun ActivityMain(
 //                                alwaysShowLabel = false
 //                            )
 //                        }
-//                    }
-//                }
-//            },
-//            snackbarHost = {
-//                SnackbarHost(
-//                    hostState = snackBarHostState
-//                )
-//            },
-//            contentWindowInsets = ScaffoldDefaults.contentWindowInsets
-//        ) { innerPadding ->
-//
-//        }
+                    }
+                }
+            },
+            snackbarHost = {
+                SnackbarHost(
+                    hostState = snackBarHostState
+                )
+            },
+            contentWindowInsets = ScaffoldDefaults.contentWindowInsets
+        ) { innerPadding ->
+
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                .padding(
+                    paddingValues = innerPadding
+                )
+            ) {
+                AnimatedVisibility(
+                    visible = navigationType == NavigationType.NavigationRail
+                ) {
+                    NavigationRail(
+                        modifier = Modifier.fillMaxHeight(),
+                        header = {
+                            FloatingActionButton(
+                                onClick = {
+                                    navController.navigate(
+                                        route = Screen.Home.route
+                                    ) {
+                                        popUpTo(
+                                            id = navController.graph.findStartDestination().id
+                                        ) {
+                                            saveState = true
+                                        }
+                                        launchSingleTop = true
+                                        restoreState = true
+                                    }
+                                }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Terminal,
+                                    contentDescription = null
+                                )
+                            }
+                        }
+                    ) {
+                        items.forEach { item ->
+                            NavigationRailItem(
+                                selected = currentDestination?.hierarchy?.any {
+                                    it.route == item.route
+                                } == true,
+                                onClick = {
+                                    if (item.type == ScreenType.Compose) navController.navigate(
+                                        route = item.route
+                                    ) {
+                                        popUpTo(
+                                            id = navController.graph.findStartDestination().id
+                                        ) {
+                                            saveState = true
+                                        }
+                                        launchSingleTop = true
+                                        restoreState = true
+                                    }
+                                },
+                                icon = {
+                                    Icon(
+                                        imageVector = item.imageVector,
+                                        contentDescription = null
+                                    )
+                                },
+                                enabled = true,
+                                label = {
+                                    Text(
+                                        stringResource(
+                                            id = item.title
+                                        )
+                                    )
+                                },
+                                alwaysShowLabel = false
+                            )
+                        }
+                    }
+                }
+                NavHost(
+                    navController = navController,
+                    startDestination = Screen.Home.route,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .nestedScroll(
+                            connection = scrollBehavior.nestedScrollConnection
+                        )
+                ) {
+                    composable(
+                        route = Screen.Home.route
+                    ) {
+                        ScreenHome(
+                            pager = pager,
+                            navBar = navBar
+                        )
+                    }
+                    composable(
+                        route = Screen.Dashboard.route
+                    ) {
+                        ScreenDashboard(
+                            navController = navController,
+                            shizukuVersion = shizukuVersion
+                        )
+                    }
+                    composable(
+                        route = Screen.Manager.route
+                    ) {
+                        ScreenManager(
+                            navController = navController,
+                            tabRow = tabRow,
+                            toggle = toggle,
+                            current = current,
+                            targetAppName = stringResource(id = R.string.app_name),
+                            targetAppPackageName = BuildConfig.APPLICATION_ID,
+                            targetAppDescription = stringResource(id = R.string.app_description),
+                            targetAppVersionName = BuildConfig.VERSION_NAME,
+                            NavigationOnClick = { /*TODO*/ },
+                            MenuOnClick = { /*TODO*/ },
+                            SearchOnClick = { /*TODO*/ },
+                            SheetOnClick = { /*TODO*/ },
+                            AppsOnClick = { /*TODO*/ },
+                            SelectOnClick = { /*TODO*/ }) {
+
+                        }
+                    }
+                    composable(
+                        route = Screen.Settings.route
+                    ) {
+                        ScreenSettings(
+                            navController = navController,
+                            scope = scope,
+                            snackBarHostState = snackBarHostState,
+                            current = current,
+                            onTaskBarSettings = {},
+                            onSystemSettings = {},
+                            onDefaultLauncherSettings = {}
+                        )
+                    }
+                    composable(
+                        route = Screen.About.route
+                    ) {
+                        ScreenAbout(
+                            scope = scope,
+                            snackBarHostState = snackBarHostState,
+                            onEasterEgg = {},
+                            onNotice = {},
+                            onSource = {},
+                            onDevGitHub = {},
+                            onDevTwitter = {},
+                            onTeamGitHub = {}
+                        )
+                    }
+                }
+
+            }
+        }
 
 
     }

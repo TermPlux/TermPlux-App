@@ -61,6 +61,26 @@ class _MyHomePageState extends State<MyHomePage> {
             const Text(
               '请选择目标平台:',
             ),
+            MaterialButton(
+              onPressed: _incrementCounter,
+              child: const Text("Android")
+            ),
+            MaterialButton(
+                onPressed: _incrementCounter,
+                child: const Text("iOS")
+            ),
+            MaterialButton(
+                onPressed: _incrementCounter,
+                child: const Text("Windows")
+            ),
+            MaterialButton(
+                onPressed: _incrementCounter,
+                child: const Text("macOS")
+            ),
+            MaterialButton(
+                onPressed: _incrementCounter,
+                child: const Text("Linux")
+            ),
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,

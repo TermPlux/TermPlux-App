@@ -14,14 +14,11 @@ import android.widget.ProgressBar
 import android.window.OnBackInvokedCallback
 import android.window.OnBackInvokedDispatcher
 import androidx.activity.compose.setContent
-import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
-import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.*
@@ -40,7 +37,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.preference.PreferenceManager
 import androidx.viewpager2.widget.ViewPager2
-import androidx.window.layout.DisplayFeature
 import androidx.window.layout.FoldingFeature
 import com.farmerbb.taskbar.lib.Taskbar
 import com.google.accompanist.adaptive.calculateDisplayFeatures
@@ -49,10 +45,8 @@ import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.internal.EdgeToEdgeUtils
-import com.google.android.material.internal.ToolbarUtils
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayoutMediator
 import com.kongzue.baseframework.BaseActivity
 import com.kongzue.baseframework.interfaces.LifeCircleListener
 import com.kongzue.baseframework.util.AppManager
@@ -66,9 +60,6 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.FlutterEngineCache
 import io.flutter.embedding.engine.dart.DartExecutor
 import io.flutter.plugin.common.MethodChannel
-import io.flutter.plugin.common.StandardMessageCodec
-import io.flutter.plugin.platform.PlatformView
-import io.flutter.plugin.platform.PlatformViewFactory
 import io.flutter.plugins.GeneratedPluginRegistrant
 import io.termplux.BuildConfig
 import io.termplux.IUserService
@@ -84,7 +75,6 @@ import io.termplux.basic.services.MainService
 import io.termplux.basic.services.UserService
 import io.termplux.basic.utils.BackInvokedCallbackUtils
 import io.termplux.basic.utils.MediatorUtils
-import io.termplux.basic.utils.ZoomOutPageTransformer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Runnable
 import kotlinx.coroutines.launch
@@ -134,23 +124,6 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
 
     private lateinit var mFlutterFragment: FlutterFragment
 
-
-//    @Suppress("DEPRECATION")
-//    private val hidePart2Runnable = Runnable {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-//            mComposeView.windowInsetsController?.hide(
-//                WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars()
-//            )
-//        } else {
-//            mComposeView.systemUiVisibility =
-//                View.SYSTEM_UI_FLAG_LOW_PROFILE or
-//                        View.SYSTEM_UI_FLAG_FULLSCREEN or
-//                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-//                        View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or
-//                        View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
-//                        View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-//        }
-//    }
 
     private val showPart2Runnable = Runnable {
         // 延迟显示UI元素
@@ -298,71 +271,10 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
         )
     }
 
-    /**
-     * Configures the given [io.flutter.embedding.engine.FlutterEngine].
-     *
-     *
-     * This method is called after the given [io.flutter.embedding.engine.FlutterEngine] has
-     * been attached to the owning `FragmentActivity`. See [ ][io.flutter.embedding.engine.plugins.activity.ActivityControlSurface.attachToActivity].
-     *
-     *
-     * It is possible that the owning `FragmentActivity` opted not to connect itself as an
-     * [io.flutter.embedding.engine.plugins.activity.ActivityControlSurface]. In that case, any
-     * configuration, e.g., plugins, must not expect or depend upon an available `Activity` at
-     * the time that this method is invoked.
-     *
-     * [flutterEngine] The Flutter engine.
-     */
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         GeneratedPluginRegistrant.registerWith(flutterEngine)
-//        val registry = flutterEngine.platformViewsController.registry
-//        registry.registerViewFactory("android_view", LinkNativeViewFactory())
-
-        flutterEngine.platformViewsController.registry.registerViewFactory(
-            "android_view",
-            object : PlatformViewFactory(
-                StandardMessageCodec.INSTANCE
-            ) {
-                override fun create(context: Context?, viewId: Int, args: Any?): PlatformView {
-                    return object : PlatformView {
-                        override fun getView(): View {
-
-                            return LinearLayoutCompat(context!!).apply {
-                                orientation = LinearLayoutCompat.VERTICAL
-                                background = ContextCompat.getDrawable(
-                                    context,
-                                    R.drawable.custom_wallpaper_24
-                                )
-                                addView(
-                                    AppBarLayout(context).apply {
-                                        addView(
-                                            MaterialToolbar(context).apply {
-                                                title = "6"
-                                                subtitle = "6"
-                                                logo = ContextCompat.getDrawable(
-                                                    context,
-                                                    R.drawable.baseline_terminal_24
-                                                )
-                                            },
-                                            ViewGroup.LayoutParams(
-                                                ViewGroup.LayoutParams.MATCH_PARENT,
-                                                ViewGroup.LayoutParams.WRAP_CONTENT
-                                            )
-                                        )
-                                    },
-                                    ViewGroup.LayoutParams(
-                                        ViewGroup.LayoutParams.MATCH_PARENT,
-                                        ViewGroup.LayoutParams.WRAP_CONTENT
-                                    )
-                                )
-                            }
-                        }
-
-                        override fun dispose() {}
-                    }
-                }
-            }
-        )
+        val registry = flutterEngine.platformViewsController.registry
+        registry.registerViewFactory("android_view", LinkNativeViewFactory())
 
         val messenger = flutterEngine.dartExecutor.binaryMessenger
         val channel = MethodChannel(messenger, "termplux_channel")
@@ -656,20 +568,10 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
         supportActionBar?.hide()
         mVisible = false
         hideHandler.removeCallbacks(showPart2Runnable)
-        // hideHandler.postDelayed(hidePart2Runnable, uiAnimatorDelay.toLong())
     }
 
-    @Suppress("DEPRECATION")
     private fun show() {
-//        if (Build.VERSION.SDK_INT >= 30) {
-//            mComposeView.windowInsetsController?.show(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
-//        } else {
-//            mComposeView.systemUiVisibility =
-//                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
-//                        View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-//        }
         mVisible = true
-        //    hideHandler.removeCallbacks(hidePart2Runnable)
         hideHandler.postDelayed(showPart2Runnable, uiAnimatorDelay.toLong())
     }
 
@@ -718,7 +620,7 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
         }
     }
 
-    private fun mediator() {
+    private fun mediator(navController: NavHostController) {
         val title = arrayOf(
             getString(R.string.menu_launcher),
             getString(R.string.menu_home),
@@ -729,8 +631,21 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
             bottomNavigation = mBottomNavigationView,
             tabLayout = mTabLayout,
             viewPager = mViewPager2,
-        ) { tab, position ->
-            tab.text = title[position]
+            config = { tab, position ->
+                tab.text = title[position]
+            }
+        ) {
+            navController.navigate(
+                route = configViewPagerRoute()
+            ) {
+                popUpTo(
+                    id = navController.graph.findStartDestination().id
+                ) {
+                    saveState = true
+                }
+                launchSingleTop = true
+                restoreState = true
+            }
         }.attach()
     }
 
@@ -796,6 +711,12 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
      * 子类的入口函数
      */
     abstract fun onCreated(parameter: JumpParameter?)
+
+    /**
+     *
+     */
+    abstract fun configViewPagerRoute(): String
+    abstract fun configSettingsRoute(): String
 
     /**
      * 设置页面内容，仅在完整模式下生效
@@ -914,7 +835,7 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
                 drawerState = drawerState
             )
             // 绑定ViewPager2，页面标签和底部导航
-            mediator()
+            mediator(navController = navController)
             // 设置系统界面样式
             if (!hostView.isInEditMode) {
                 SideEffect {

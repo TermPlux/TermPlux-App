@@ -86,7 +86,7 @@ fun ScreenSettings(
                         ScreenRoute.routeSettingsFragment.toInt()
                     ).also {
                         navController.navigate(
-                            route = Screen.Content.route
+                            route = Screen.Home.route
                         ) {
                             popUpTo(
                                 id = navController.graph.findStartDestination().id

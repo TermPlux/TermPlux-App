@@ -7,6 +7,7 @@ import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.FlutterDash
 import androidx.compose.material.icons.filled.RocketLaunch
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.twotone.AppSettingsAlt
 import androidx.compose.material.icons.twotone.Dashboard
 import androidx.compose.material.icons.twotone.Home
 import androidx.compose.material.icons.twotone.Info
@@ -47,12 +48,12 @@ sealed class Screen constructor(
         title = R.string.menu_dashboard
     )
 
-    object Content : Screen(
+    object Manager : Screen(
         type = ScreenType.Compose,
         item = ItemType.Default,
-        route = ScreenRoute.routeContent,
-        imageVector = Icons.TwoTone.Terminal,
-        title = R.string.menu_content
+        route = ScreenRoute.routeManager,
+        imageVector = Icons.TwoTone.AppSettingsAlt,
+        title = R.string.menu_manager
     )
 
     object Settings : Screen(
@@ -84,7 +85,7 @@ sealed class Screen constructor(
         item = ItemType.Title,
         route = ScreenRoute.Title,
         imageVector = Icons.Filled.Android,
-        title = R.string.menu_content
+        title = R.string.menu_home
     )
 
     object LauncherFragment : Screen(

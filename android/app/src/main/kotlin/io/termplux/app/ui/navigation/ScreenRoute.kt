@@ -11,7 +11,7 @@ import io.termplux.basic.adapter.ContentAdapter
 object ScreenRoute {
     const val routeHome: String = "home"
     const val routeDashboard: String = "dashboard"
-    const val routeContent : String = "content"
+    const val routeManager : String = "manager"
     const val routeSettings: String = "settings"
     const val routeAbout: String = "about"
 

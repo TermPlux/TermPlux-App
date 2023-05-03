@@ -13,6 +13,7 @@ import androidx.navigation.compose.rememberNavController
 import com.kongzue.baseframework.util.JumpParameter
 import io.termplux.R
 import io.termplux.app.ui.ActivityMain
+import io.termplux.app.ui.navigation.Screen
 import io.termplux.app.ui.preview.TermPluxPreviews
 import io.termplux.app.ui.widget.window.ContentType
 import io.termplux.app.ui.widget.window.NavigationType
@@ -64,6 +65,20 @@ class MainActivity : TermPluxActivity() {
                 }
             )
         }
+    }
+
+    /**
+     * 传入主页路由
+     */
+    override fun configViewPagerRoute(): String {
+        return Screen.Home.route
+    }
+
+    /**
+     * 传入设置路由
+     */
+    override fun configSettingsRoute(): String {
+        return Screen.Settings.route
     }
 
     @Composable
