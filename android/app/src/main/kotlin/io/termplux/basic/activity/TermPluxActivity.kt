@@ -538,9 +538,9 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
         ).apply {
             orientation = ViewPager2.ORIENTATION_HORIZONTAL
             isUserInputEnabled = false
-            setPageTransformer(
-                ZoomOutPageTransformer()
-            )
+//            setPageTransformer(
+//                ZoomOutPageTransformer()
+//            )
         }
 
         mBottomNavigationView = BottomNavigationView(
@@ -553,9 +553,8 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
         mTabLayout = TabLayout(
             mBaseContext
         ).apply {
-            setBackgroundColor(
-                android.graphics.Color.TRANSPARENT
-            )
+            setBackgroundColor(android.graphics.Color.TRANSPARENT)
+            tabMode = TabLayout.MODE_AUTO
         }
     }
 

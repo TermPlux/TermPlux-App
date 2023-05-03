@@ -25,7 +25,7 @@ class ContentAdapter constructor(
     private lateinit var mLauncher: LauncherFragment
     private lateinit var mHome: HomeFragment
     private lateinit var mApps: AppsFragment
-    private lateinit var mSettings: SettingsFragment
+    private lateinit var mSettings: Settings
     private lateinit var mError: ErrorFragment
 
     init {
@@ -82,7 +82,7 @@ class ContentAdapter constructor(
         )
 
         // 设置
-        mSettings = SettingsFragment.newInstance(
+        mSettings = Settings.newInstance(
             navigation = mNavigation
         )
 

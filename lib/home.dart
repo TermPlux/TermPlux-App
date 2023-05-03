@@ -22,6 +22,8 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _counter++;
     });
+
+
   }
 
   // void navToLauncher() {
@@ -32,18 +34,32 @@ class _MyHomePageState extends State<MyHomePage> {
   //   }
   // }
 
+  AppBar? topAppBar() {
+    if (!kIsWeb){
+      if (!Platform.isAndroid){
+        return AppBar(
+          title: Text(widget.title),
+        );
+      } else {
+        return null;
+      }
+    } else {
+      return AppBar(
+        title: Text(widget.title),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text(widget.title),
-      // ),
+      appBar: topAppBar(),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(
-              'You have pushed the button this many times:',
+              '请选择目标平台:',
             ),
             Text(
               '$_counter',

@@ -36,10 +36,9 @@ class MediatorUtils constructor(
 
     fun attach() {
         mBottomNavigationView.setOnItemSelectedListener { item ->
-            mViewPager2.currentItem = map[item] ?: error("没有对应${item.title}的ViewPager2的元素")
+            mViewPager2.currentItem = map[item] ?: error("没有${item.title}对应的Fragment")
             true
         }
-        mTabLayout.tabMode = TabLayout.MODE_AUTO
         mViewPager2.registerOnPageChangeCallback(
             object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {

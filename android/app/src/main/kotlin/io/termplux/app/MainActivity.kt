@@ -21,7 +21,15 @@ import io.termplux.basic.activity.TermPluxActivity
 class MainActivity : TermPluxActivity() {
 
     override fun onCreated(parameter: JumpParameter?) {
-        setContents { navController, drawerState, navigationType, contentType, content, event, message, current, browser ->
+        setContents { navController,
+                      drawerState,
+                      navigationType,
+                      contentType,
+                      content,
+                      event,
+                      message,
+                      current,
+                      browser ->
             ActivityMain(
                 navController = navController,
                 drawerState = drawerState,
