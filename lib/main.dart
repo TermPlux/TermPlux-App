@@ -2,6 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'app.dart';
 
-void main() {
+Future main() async{
    runApp(const TermPluxApp());
 }

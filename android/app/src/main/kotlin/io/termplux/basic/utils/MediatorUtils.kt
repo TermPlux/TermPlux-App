@@ -12,18 +12,19 @@ class MediatorUtils constructor(
     bottomNavigation: BottomNavigationView,
     tabLayout: TabLayout,
     viewPager: ViewPager2,
+    home: () -> Unit,
     config: (
         tab: TabLayout.Tab,
         position: Int
-    ) -> Unit,
-    home: () -> Unit
+    ) -> Unit
+
 ) {
 
     private val mBottomNavigationView: BottomNavigationView
     private val mTabLayout: TabLayout
     private val mViewPager2: ViewPager2
-    private val mConfig: (tab: TabLayout.Tab, position: Int) -> Unit
     private val mNavToHome: () -> Unit
+    private val mConfig: (tab: TabLayout.Tab, position: Int) -> Unit
 
     private val map = mutableMapOf<MenuItem, Int>()
 
@@ -41,8 +42,9 @@ class MediatorUtils constructor(
     fun attach() {
         mBottomNavigationView.setOnItemSelectedListener { item ->
             mNavToHome().apply {
-                if (mViewPager2.currentItem != map[item]){
-                    mViewPager2.currentItem = map[item] ?: error("没有${item.title}对应的Fragment")
+                if (mViewPager2.currentItem != map[item]) {
+                    mViewPager2.currentItem = map[item]
+                        ?: error("没有${item.title}对应的Fragment")
                 }
             }
             true

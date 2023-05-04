@@ -1,15 +1,22 @@
 package io.termplux.basic.fragment
 
-import android.view.View
-import com.kongzue.baseframework.BaseFragment
+import android.content.Context
+import android.content.SharedPreferences
+import android.os.Bundle
+import androidx.preference.Preference
+import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.PreferenceManager
+import io.termplux.R
 import io.termplux.app.ui.navigation.Screen
-import io.termplux.basic.activity.TermPluxActivity
 
 class SettingsFragment constructor(
     navigation: (String) -> Unit
-) : BaseFragment<TermPluxActivity>() {
+) : PreferenceFragmentCompat() {
 
-    private val mNavigation: () -> Unit
+    private var mNavigation: () -> Unit
+
+    private lateinit var mContext: Context
+    private lateinit var mSharedPreferences: SharedPreferences
 
     init {
         mNavigation = {
@@ -19,30 +26,24 @@ class SettingsFragment constructor(
         }
     }
 
-    override fun resetContentView(): View {
-        return super.resetContentView()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        mContext = requireActivity()
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext)
     }
 
-    override fun initViews() {
-
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        setPreferencesFromResource(R.xml.root_preferences, rootKey)
+        val settings: Preference? = findPreference("navigation_settings")
+        settings?.setOnPreferenceClickListener {
+            mNavigation()
+            true
+        }
     }
 
-    override fun initDatas() {
-
-    }
-
-    override fun setEvents() {
-
-    }
-
-    companion object {
-
-        fun newInstance(
-            navigation: (String) -> Unit
-        ): SettingsFragment{
-            return SettingsFragment(
-                navigation = navigation
-            )
+    companion object{
+        fun newInstance(navigation: (String) -> Unit): SettingsFragment{
+            return SettingsFragment(navigation = navigation)
         }
     }
 }

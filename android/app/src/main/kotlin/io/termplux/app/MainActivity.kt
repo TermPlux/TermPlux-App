@@ -36,6 +36,12 @@ class MainActivity : TermPluxActivity() {
                 drawerState = drawerState,
                 navigationType = navigationType,
                 contentType = contentType,
+                topBar = { modifier ->
+                    content(
+                        content = topBar,
+                        modifier = modifier
+                    )
+                },
                 pager = { modifier ->
                     content(
                         content = pager,
@@ -91,6 +97,9 @@ class MainActivity : TermPluxActivity() {
             ),
             navigationType = NavigationType.BottomNavigation,
             contentType = ContentType.Single,
+            topBar = { modifier ->
+
+            },
             pager = { modifier ->
                 Box(
                     modifier = modifier,

@@ -31,13 +31,13 @@ class HomeFragment constructor(
         super.resetContentView()
         return LinearLayoutCompat(me).apply {
             orientation = LinearLayoutCompat.VERTICAL
-            addView(
-                mAppBar,
-                LinearLayoutCompat.LayoutParams(
-                    LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-                    LinearLayoutCompat.LayoutParams.WRAP_CONTENT
-                )
-            )
+//            addView(
+//                mAppBar,
+//                LinearLayoutCompat.LayoutParams(
+//                    LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+//                    LinearLayoutCompat.LayoutParams.WRAP_CONTENT
+//                )
+//            )
             addView(
                 FragmentContainerView(me).apply {
                     id = R.id.flutter_container

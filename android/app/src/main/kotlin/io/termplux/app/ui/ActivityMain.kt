@@ -8,8 +8,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.Terminal
 import androidx.compose.material3.*
-import androidx.compose.material3.windowsizeclass.WindowSizeClass
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,19 +21,15 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.window.layout.DisplayFeature
-import androidx.window.layout.FoldingFeature
 import io.termplux.BuildConfig
 import io.termplux.R
 import io.termplux.app.ui.navigation.ItemType
 import io.termplux.app.ui.navigation.Screen
+import io.termplux.app.ui.navigation.ScreenRoute
 import io.termplux.app.ui.navigation.ScreenType
 import io.termplux.app.ui.screen.*
 import io.termplux.app.ui.widget.window.ContentType
-import io.termplux.app.ui.widget.window.DevicePosture
 import io.termplux.app.ui.widget.window.NavigationType
-import io.termplux.app.ui.widget.window.isBookPosture
-import io.termplux.app.ui.widget.window.isSeparating
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,6 +39,7 @@ fun ActivityMain(
     drawerState: DrawerState,
     navigationType: NavigationType,
     contentType: ContentType,
+    topBar: @Composable (modifier: Modifier) -> Unit,
     pager: @Composable (modifier: Modifier) -> Unit,
     navBar: @Composable (modifier: Modifier) -> Unit,
     tabRow: @Composable (modifier: Modifier) -> Unit,
@@ -64,7 +59,7 @@ fun ActivityMain(
         Screen.About,
         Screen.Divider,
         Screen.FragmentTitle,
-     //   Screen.LauncherFragment,
+        //   Screen.LauncherFragment,
         Screen.HomeFragment,
         Screen.AppsFragment,
         Screen.SettingsFragment
@@ -151,22 +146,26 @@ fun ActivityMain(
                         )
                     },
                     onClick = {
-                        navController.navigate(
-                            route = Screen.Home.route
-                        ) {
-                            popUpTo(
-                                id = navController.graph.findStartDestination().id
+                        current(
+                            ScreenRoute.routeAppsFragment.toInt()
+                        ).also {
+                            navController.navigate(
+                                route = Screen.Home.route
                             ) {
-                                saveState = true
-                            }
-                            launchSingleTop = true
-                            restoreState = true
-                        }.also {
-                            if (
-                                navigationType != NavigationType.PermanentNavigationDrawer
-                            ) {
-                                scope.launch {
-                                    drawerState.close()
+                                popUpTo(
+                                    id = navController.graph.findStartDestination().id
+                                ) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }.also {
+                                if (
+                                    navigationType != NavigationType.PermanentNavigationDrawer
+                                ) {
+                                    scope.launch {
+                                        drawerState.close()
+                                    }
                                 }
                             }
                         }
@@ -318,10 +317,17 @@ fun ActivityMain(
 
     @Composable
     fun content() {
-
         Scaffold(
             modifier = Modifier.fillMaxSize(),
-//            topBar = {
+            topBar = {
+                topBar(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .statusBarsPadding()
+                )
+
+
+
 //                TopAppBar(
 //                    title = {
 //                        Text(
@@ -368,7 +374,7 @@ fun ActivityMain(
 //                    colors = TopAppBarDefaults.topAppBarColors(),
 //                    scrollBehavior = scrollBehavior
 //                )
-//            },
+            },
             bottomBar = {
                 AnimatedVisibility(
                     visible = navigationType == NavigationType.BottomNavigation
@@ -379,41 +385,6 @@ fun ActivityMain(
                         navBar(
                             modifier = Modifier.fillMaxWidth()
                         )
-//                        items.forEach { item ->
-//                            NavigationBarItem(
-//                                selected = currentDestination?.hierarchy?.any {
-//                                    it.route == item.route
-//                                } == true,
-//                                onClick = {
-//                                    if (item.type == ScreenType.Compose) navController.navigate(
-//                                        route = item.route
-//                                    ) {
-//                                        popUpTo(
-//                                            id = navController.graph.findStartDestination().id
-//                                        ) {
-//                                            saveState = true
-//                                        }
-//                                        launchSingleTop = true
-//                                        restoreState = true
-//                                    }
-//                                },
-//                                icon = {
-//                                    Icon(
-//                                        imageVector = item.imageVector,
-//                                        contentDescription = null
-//                                    )
-//                                },
-//                                enabled = true,
-//                                label = {
-//                                    Text(
-//                                        stringResource(
-//                                            id = item.title
-//                                        )
-//                                    )
-//                                },
-//                                alwaysShowLabel = false
-//                            )
-//                        }
                     }
                 }
             },
@@ -424,13 +395,12 @@ fun ActivityMain(
             },
             contentWindowInsets = ScaffoldDefaults.contentWindowInsets
         ) { innerPadding ->
-
             Row(
                 modifier = Modifier
                     .fillMaxSize()
-                .padding(
-                    paddingValues = innerPadding
-                )
+                    .padding(
+                        paddingValues = innerPadding
+                    )
             ) {
                 AnimatedVisibility(
                     visible = navigationType == NavigationType.NavigationRail
@@ -440,16 +410,20 @@ fun ActivityMain(
                         header = {
                             FloatingActionButton(
                                 onClick = {
-                                    navController.navigate(
-                                        route = Screen.Home.route
-                                    ) {
-                                        popUpTo(
-                                            id = navController.graph.findStartDestination().id
+                                    current(
+                                        ScreenRoute.routeAppsFragment.toInt()
+                                    ).also {
+                                        navController.navigate(
+                                            route = Screen.Home.route
                                         ) {
-                                            saveState = true
+                                            popUpTo(
+                                                id = navController.graph.findStartDestination().id
+                                            ) {
+                                                saveState = true
+                                            }
+                                            launchSingleTop = true
+                                            restoreState = true
                                         }
-                                        launchSingleTop = true
-                                        restoreState = true
                                     }
                                 }
                             ) {
@@ -460,47 +434,55 @@ fun ActivityMain(
                             }
                         }
                     ) {
-                        items.forEach { item ->
-                            NavigationRailItem(
-                                selected = currentDestination?.hierarchy?.any {
-                                    it.route == item.route
-                                } == true,
-                                onClick = {
-                                    if (item.type == ScreenType.Compose) navController.navigate(
-                                        route = item.route
-                                    ) {
-                                        popUpTo(
-                                            id = navController.graph.findStartDestination().id
-                                        ) {
-                                            saveState = true
-                                        }
-                                        launchSingleTop = true
-                                        restoreState = true
-                                    }
-                                },
-                                icon = {
-                                    Icon(
-                                        imageVector = item.imageVector,
-                                        contentDescription = null
-                                    )
-                                },
-                                enabled = true,
-                                label = {
-                                    Text(
-                                        stringResource(
-                                            id = item.title
-                                        )
-                                    )
-                                },
-                                alwaysShowLabel = false
+                        Column(
+                            modifier = Modifier.verticalScroll(
+                                state = rememberScrollState()
                             )
+                        ) {
+                            items.forEach { item ->
+                                if (item.item == ItemType.Default) NavigationRailItem(
+                                    selected = currentDestination?.hierarchy?.any {
+                                        it.route == item.route
+                                    } == true,
+                                    onClick = {
+                                        if (item.type == ScreenType.Compose) navController.navigate(
+                                            route = item.route
+                                        ) {
+                                            popUpTo(
+                                                id = navController.graph.findStartDestination().id
+                                            ) {
+                                                saveState = true
+                                            }
+                                            launchSingleTop = true
+                                            restoreState = true
+                                        }
+                                    },
+                                    icon = {
+                                        Icon(
+                                            imageVector = item.imageVector,
+                                            contentDescription = null
+                                        )
+                                    },
+                                    enabled = true,
+                                    label = {
+                                        Text(
+                                            stringResource(
+                                                id = item.title
+                                            )
+                                        )
+                                    },
+                                    alwaysShowLabel = false
+                                )
+                            }
                         }
                     }
                 }
                 NavHost(
                     navController = navController,
                     startDestination = Screen.Home.route,
-                    modifier = Modifier
+                    modifier = if (
+                        navigationType == NavigationType.PermanentNavigationDrawer
+                    ) Modifier.fillMaxSize() else Modifier
                         .fillMaxSize()
                         .nestedScroll(
                             connection = scrollBehavior.nestedScrollConnection
@@ -510,8 +492,7 @@ fun ActivityMain(
                         route = Screen.Home.route
                     ) {
                         ScreenHome(
-                            pager = pager,
-                            navBar = navBar
+                            pager = pager
                         )
                     }
                     composable(
@@ -534,14 +515,14 @@ fun ActivityMain(
                             targetAppPackageName = BuildConfig.APPLICATION_ID,
                             targetAppDescription = stringResource(id = R.string.app_description),
                             targetAppVersionName = BuildConfig.VERSION_NAME,
-                            NavigationOnClick = { /*TODO*/ },
-                            MenuOnClick = { /*TODO*/ },
-                            SearchOnClick = { /*TODO*/ },
-                            SheetOnClick = { /*TODO*/ },
-                            AppsOnClick = { /*TODO*/ },
-                            SelectOnClick = { /*TODO*/ }) {
-
-                        }
+                            NavigationOnClick = {},
+                            MenuOnClick = {},
+                            SearchOnClick = {},
+                            SheetOnClick = {},
+                            AppsOnClick = {},
+                            SelectOnClick = {},
+                            onNavigateToApps = {}
+                        )
                     }
                     composable(
                         route = Screen.Settings.route

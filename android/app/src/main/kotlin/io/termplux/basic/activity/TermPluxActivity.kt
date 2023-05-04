@@ -609,18 +609,13 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
         mViewPager2.offscreenPageLimit = count - 1
     }
 
-    private fun bindingDrawer(
-        scope: CoroutineScope,
-        drawerState: DrawerState
-    ) {
+    private fun bindingDrawer(open: () -> Unit) {
         mToolbar.setNavigationOnClickListener {
-            scope.launch {
-                drawerState.open()
-            }
+            open()
         }
     }
 
-    private fun mediator(navController: NavHostController) {
+    private fun mediator(home: () -> Unit) {
         val title = arrayOf(
             getString(R.string.menu_launcher),
             getString(R.string.menu_home),
@@ -631,21 +626,11 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
             bottomNavigation = mBottomNavigationView,
             tabLayout = mTabLayout,
             viewPager = mViewPager2,
-            config = { tab, position ->
-                tab.text = title[position]
+            home = {
+                home()
             }
-        ) {
-            navController.navigate(
-                route = configViewPagerRoute()
-            ) {
-                popUpTo(
-                    id = navController.graph.findStartDestination().id
-                ) {
-                    saveState = true
-                }
-                launchSingleTop = true
-                restoreState = true
-            }
+        ) { tab, position ->
+            tab.text = title[position]
         }.attach()
     }
 
@@ -713,9 +698,13 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
     abstract fun onCreated(parameter: JumpParameter?)
 
     /**
-     *
+     * 获取主页路由
      */
     abstract fun configViewPagerRoute(): String
+
+    /**
+     * 获取设置页路由
+     */
     abstract fun configSettingsRoute(): String
 
     /**
@@ -830,12 +819,25 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
             // 设置ViewPager2适配器，传入导航控制器用于在Fragment里控制Compose的导航
             adapter(navController = navController)
             // 绑定操作栏与导航抽屉
-            bindingDrawer(
-                scope = scope,
-                drawerState = drawerState
-            )
+            bindingDrawer {
+                scope.launch {
+                    drawerState.open()
+                }
+            }
             // 绑定ViewPager2，页面标签和底部导航
-            mediator(navController = navController)
+            mediator {
+                navController.navigate(
+                    route = configViewPagerRoute()
+                ) {
+                    popUpTo(
+                        id = navController.graph.findStartDestination().id
+                    ) {
+                        saveState = true
+                    }
+                    launchSingleTop = true
+                    restoreState = true
+                }
+            }
             // 设置系统界面样式
             if (!hostView.isInEditMode) {
                 SideEffect {
@@ -861,6 +863,13 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
                     contentType = contentType,
                     content = { content, modifier ->
                         when (content) {
+                            topBar -> AndroidView(
+                                factory = {
+                                    mAppBarLayout
+                                },
+                                modifier = modifier
+                            )
+
                             pager -> AndroidView(
                                 factory = {
                                     mViewPager2
@@ -912,6 +921,7 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
 
     companion object {
 
+        const val topBar: String = "topBar"
         const val pager: String = "pager"
         const val navBar: String = "navBar"
         const val tabRow: String = "tabRow"

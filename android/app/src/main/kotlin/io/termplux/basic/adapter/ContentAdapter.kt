@@ -25,7 +25,7 @@ class ContentAdapter constructor(
     private lateinit var mLauncher: LauncherFragment
     private lateinit var mHome: HomeFragment
     private lateinit var mApps: AppsFragment
-    private lateinit var mSettings: Settings
+    private lateinit var mSettings: SettingsFragment
     private lateinit var mError: ErrorFragment
 
     init {
@@ -57,7 +57,7 @@ class ContentAdapter constructor(
         initFragment()
         return when (position) {
    //         launcher -> mLauncher
-            home -> mHome
+            home -> mFlutter
             apps -> mApps
             settings -> mSettings
             else -> mError
@@ -82,7 +82,7 @@ class ContentAdapter constructor(
         )
 
         // 设置
-        mSettings = Settings.newInstance(
+        mSettings = SettingsFragment.newInstance(
             navigation = mNavigation
         )
 

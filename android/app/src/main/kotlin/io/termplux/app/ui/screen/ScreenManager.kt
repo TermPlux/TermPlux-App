@@ -103,7 +103,16 @@ fun ScreenManager(
                             style = MaterialTheme.typography.titleSmall
                         )
                     }
-
+//                    IconButton(
+//                        onClick = {
+//                            toggle()
+//                        }
+//                    ) {
+//                        Icon(
+//                            imageVector = Icons.Filled.Search,
+//                            contentDescription = null
+//                        )
+//                    }
                 }
 //                AssistChip(
 //                    onClick = {

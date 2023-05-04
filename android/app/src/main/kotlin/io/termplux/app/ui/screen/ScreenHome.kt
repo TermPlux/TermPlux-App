@@ -15,8 +15,7 @@ import io.termplux.app.ui.preview.TermPluxPreviews
 
 @Composable
 fun ScreenHome(
-    pager: @Composable (modifier: Modifier) -> Unit,
-    navBar: @Composable (modifier: Modifier) -> Unit
+    pager: @Composable (modifier: Modifier) -> Unit
 ) {
     Surface(
         modifier = Modifier
@@ -28,20 +27,6 @@ fun ScreenHome(
             modifier = Modifier.fillMaxSize()
         )
     }
-//    Scaffold(
-//        modifier = Modifier.fillMaxSize(),
-//        bottomBar = {
-//            NavigationBar {
-//                navBar(
-//                    modifier = Modifier.fillMaxWidth()
-//                )
-//            }
-//        }
-//    ) { innerPadding ->
-//
-//
-//    }
-
 }
 
 @Composable
@@ -61,9 +46,6 @@ fun ScreenHomePreview() {
                     style = MaterialTheme.typography.titleLarge
                 )
             }
-        },
-        navBar = {
-
         }
     )
 }
