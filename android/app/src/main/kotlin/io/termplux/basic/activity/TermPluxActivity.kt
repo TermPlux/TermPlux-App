@@ -14,6 +14,7 @@ import android.widget.ProgressBar
 import android.window.OnBackInvokedCallback
 import android.window.OnBackInvokedDispatcher
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
@@ -37,6 +38,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.preference.PreferenceManager
 import androidx.viewpager2.widget.ViewPager2
+import androidx.window.layout.DisplayFeature
 import androidx.window.layout.FoldingFeature
 import com.farmerbb.taskbar.lib.Taskbar
 import com.google.accompanist.adaptive.calculateDisplayFeatures
@@ -48,7 +50,11 @@ import com.google.android.material.internal.EdgeToEdgeUtils
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.tabs.TabLayout
 import com.kongzue.baseframework.BaseActivity
+import com.kongzue.baseframework.interfaces.DarkNavigationBarTheme
+import com.kongzue.baseframework.interfaces.DarkStatusBarTheme
 import com.kongzue.baseframework.interfaces.LifeCircleListener
+import com.kongzue.baseframework.interfaces.NavigationBarBackgroundColorHex
+import com.kongzue.baseframework.interfaces.SwipeBack
 import com.kongzue.baseframework.util.AppManager
 import com.kongzue.baseframework.util.JumpParameter
 import com.kongzue.dialogx.dialogs.PopTip
@@ -75,11 +81,14 @@ import io.termplux.basic.services.MainService
 import io.termplux.basic.services.UserService
 import io.termplux.basic.utils.BackInvokedCallbackUtils
 import io.termplux.basic.utils.MediatorUtils
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Runnable
 import kotlinx.coroutines.launch
 import rikka.shizuku.Shizuku
 
+@DarkStatusBarTheme(true)
+@DarkNavigationBarTheme(true)
+@NavigationBarBackgroundColorHex("#FFFFFF")
+@SwipeBack(true)
 abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
 
     private val mME: BaseActivity = me
@@ -169,11 +178,11 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
 
         initUi()
 
-//        val actionBar: ActionBar? = supportActionBar
-//        actionBar?.setDisplayUseLogoEnabled(true)
-//        actionBar?.setDisplayShowHomeEnabled(true)
-//        //supportActionBar?.setDisplayHomeAsUpEnabled(true)
-//        actionBar?.setIcon(R.drawable.baseline_terminal_24)
+        val actionBar: ActionBar? = supportActionBar
+        //actionBar?.setDisplayUseLogoEnabled(true)
+        //actionBar?.setDisplayShowHomeEnabled(true)
+        //supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        actionBar?.setIcon(R.drawable.baseline_terminal_24)
 
         initSP()
         initServices()
@@ -418,16 +427,7 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
             addView(
                 MaterialToolbar(
                     mBaseContext
-                ).apply {
-                    navigationIcon = ContextCompat.getDrawable(
-                        mBaseContext,
-                        R.drawable.baseline_menu_24
-                    )
-                    logo = ContextCompat.getDrawable(
-                        mBaseContext,
-                        R.drawable.baseline_terminal_24
-                    )
-                }.also { toolbar ->
+                ).also { toolbar ->
                     // 设置操作栏
                     setSupportActionBar(toolbar)
                     mToolbar = toolbar
@@ -448,11 +448,8 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
         mViewPager2 = ViewPager2(
             mBaseContext
         ).apply {
-            orientation = ViewPager2.ORIENTATION_HORIZONTAL
-            isUserInputEnabled = false
-//            setPageTransformer(
-//                ZoomOutPageTransformer()
-//            )
+
+
         }
 
         mBottomNavigationView = BottomNavigationView(
@@ -478,9 +475,9 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         WindowCompat.setDecorFitsSystemWindows(window, true)
 
-        setDarkStatusBarTheme(true)
-        setDarkNavigationBarTheme(true)
-        setNavigationBarBackgroundColor(android.graphics.Color.TRANSPARENT)
+//        setDarkStatusBarTheme(true)
+//        setDarkNavigationBarTheme(true)
+//        setNavigationBarBackgroundColor(android.graphics.Color.TRANSPARENT)
     }
 
     private fun initFlutter() {
@@ -609,13 +606,21 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
         mViewPager2.offscreenPageLimit = count - 1
     }
 
-    private fun bindingDrawer(open: () -> Unit) {
-        mToolbar.setNavigationOnClickListener {
-            open()
+    private fun bindingDrawer(navigationType: NavigationType, open: () -> Unit) {
+        mToolbar.apply {
+            if (navigationType != NavigationType.PermanentNavigationDrawer) {
+                navigationIcon = ContextCompat.getDrawable(
+                    mBaseContext,
+                    R.drawable.baseline_menu_24
+                )
+                setNavigationOnClickListener {
+                    open()
+                }
+            }
         }
     }
 
-    private fun mediator(home: () -> Unit) {
+    private fun mediator(navigationType: NavigationType, home: () -> Unit) {
         val title = arrayOf(
             getString(R.string.menu_launcher),
             getString(R.string.menu_home),
@@ -629,8 +634,19 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
             home = {
                 home()
             }
-        ) { tab, position ->
-            tab.text = title[position]
+        ) { page, tab, position ->
+            page.apply {
+                orientation = when (navigationType) {
+                    NavigationType.BottomNavigation -> ViewPager2.ORIENTATION_HORIZONTAL
+                    NavigationType.NavigationRail -> ViewPager2.ORIENTATION_VERTICAL
+                    NavigationType.PermanentNavigationDrawer -> ViewPager2.ORIENTATION_VERTICAL
+                }
+                //isUserInputEnabled = navigationType == NavigationType.BottomNavigation
+                isUserInputEnabled = false
+            }
+            tab.apply {
+                text = title[position]
+            }
         }.attach()
     }
 
@@ -707,6 +723,8 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
      */
     abstract fun configSettingsRoute(): String
 
+    abstract fun configManagerRoute(): String
+
     /**
      * 设置页面内容，仅在完整模式下生效
      */
@@ -714,10 +732,15 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
     protected fun setContents(
         content: @Composable (
             navController: NavHostController,
+            displayFeatures: List<DisplayFeature>,
             drawerState: DrawerState,
             navigationType: NavigationType,
             contentType: ContentType,
-            content: @Composable (content: String, modifier: Modifier) -> Unit,
+//            content: @Composable (String, Modifier) -> Unit,
+            topBar: @Composable (Modifier) -> Unit,
+            pager: @Composable (Modifier) -> Unit,
+            navBar: @Composable (Modifier) -> Unit,
+            tabRow: @Composable (Modifier) -> Unit,
             event: (event: String) -> Unit,
             message: (message: String) -> String,
             current: (item: Int) -> Unit,
@@ -819,25 +842,31 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
             // 设置ViewPager2适配器，传入导航控制器用于在Fragment里控制Compose的导航
             adapter(navController = navController)
             // 绑定操作栏与导航抽屉
-            bindingDrawer {
-                scope.launch {
-                    drawerState.open()
-                }
-            }
-            // 绑定ViewPager2，页面标签和底部导航
-            mediator {
-                navController.navigate(
-                    route = configViewPagerRoute()
-                ) {
-                    popUpTo(
-                        id = navController.graph.findStartDestination().id
-                    ) {
-                        saveState = true
+            bindingDrawer(
+                navigationType = navigationType,
+                open = {
+                    scope.launch {
+                        drawerState.open()
                     }
-                    launchSingleTop = true
-                    restoreState = true
                 }
-            }
+            )
+            // 绑定ViewPager2，页面标签和底部导航
+            mediator(
+                navigationType = navigationType,
+                home = {
+                    navController.navigate(
+                        route = configViewPagerRoute()
+                    ) {
+                        popUpTo(
+                            id = navController.graph.findStartDestination().id
+                        ) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
+            )
             // 设置系统界面样式
             if (!hostView.isInEditMode) {
                 SideEffect {
@@ -858,40 +887,73 @@ abstract class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
             ) {
                 content(
                     navController = navController,
+                    displayFeatures = displayFeatures,
                     drawerState = drawerState,
                     navigationType = navigationType,
                     contentType = contentType,
-                    content = { content, modifier ->
-                        when (content) {
-                            topBar -> AndroidView(
-                                factory = {
-                                    mAppBarLayout
-                                },
-                                modifier = modifier
-                            )
-
-                            pager -> AndroidView(
-                                factory = {
-                                    mViewPager2
-                                },
-                                modifier = modifier
-                            )
-
-                            navBar -> AndroidView(
-                                factory = {
-                                    mBottomNavigationView
-                                },
-                                modifier = modifier
-                            )
-
-                            tabRow -> AndroidView(
-                                factory = {
-                                    mTabLayout
-                                },
-                                modifier = modifier
-                            )
-                        }
+                    topBar = {
+                        AndroidView(
+                            factory = {
+                                mAppBarLayout
+                            },
+                            modifier = it
+                        )
                     },
+                    pager = {
+                        AndroidView(
+                            factory = {
+                                mViewPager2
+                            },
+                            modifier = it
+                        )
+                    },
+                    navBar = {
+                        AndroidView(
+                            factory = {
+                                mBottomNavigationView
+                            },
+                            modifier = it
+                        )
+                    },
+                    tabRow = {
+                        AndroidView(
+                            factory = {
+                                mTabLayout
+                            },
+                            modifier = it
+                        )
+                    },
+//                    content = { content, modifier ->
+//                        when (content) {
+//                            topBar -> AndroidView(
+//                                factory = {
+//                                    mAppBarLayout
+//                                },
+//                                modifier = modifier
+//                            )
+//
+//                            pager -> AndroidView(
+//                                factory = {
+//                                    mViewPager2
+//                                },
+//                                modifier = modifier
+//                            )
+//
+//                            navBar -> AndroidView(
+//                                factory = {
+//                                    mBottomNavigationView
+//                                },
+//                                modifier = modifier
+//                            )
+//
+//                            tabRow -> AndroidView(
+//                                factory = {
+//                                    mTabLayout
+//                                },
+//                                modifier = modifier
+//                            )
+//                        }
+//                    },
                     event = { event ->
                         when (event) {
                             toggle -> toggle()

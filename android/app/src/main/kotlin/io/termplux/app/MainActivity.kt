@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.compose.rememberNavController
+import com.kongzue.baseframework.interfaces.SwipeBack
 import com.kongzue.baseframework.util.JumpParameter
 import io.termplux.R
 import io.termplux.app.ui.ActivityMain
@@ -19,14 +20,19 @@ import io.termplux.app.ui.widget.window.ContentType
 import io.termplux.app.ui.widget.window.NavigationType
 import io.termplux.basic.activity.TermPluxActivity
 
+@SwipeBack(true)
 class MainActivity : TermPluxActivity() {
 
     override fun onCreated(parameter: JumpParameter?) {
         setContents { navController,
+                      displayFeatures,
                       drawerState,
                       navigationType,
                       contentType,
-                      content,
+                      topBar,
+                      pager,
+                      navBar,
+                      tabRow,
                       event,
                       message,
                       current,
@@ -36,30 +42,10 @@ class MainActivity : TermPluxActivity() {
                 drawerState = drawerState,
                 navigationType = navigationType,
                 contentType = contentType,
-                topBar = { modifier ->
-                    content(
-                        content = topBar,
-                        modifier = modifier
-                    )
-                },
-                pager = { modifier ->
-                    content(
-                        content = pager,
-                        modifier = modifier
-                    )
-                },
-                navBar = { modifier ->
-                    content(
-                        content = navBar,
-                        modifier = modifier
-                    )
-                },
-                tabRow = { modifier ->
-                    content(
-                        content = tabRow,
-                        modifier = modifier
-                    )
-                },
+                topBar = topBar,
+                pager = pager,
+                navBar = navBar,
+                tabRow = tabRow,
                 optionsMenu = {
                     event(options)
                 },
@@ -85,6 +71,13 @@ class MainActivity : TermPluxActivity() {
      */
     override fun configSettingsRoute(): String {
         return Screen.Settings.route
+    }
+
+    /**
+     * 传入管理器路由
+     */
+    override fun configManagerRoute(): String {
+        return Screen.Manager.route
     }
 
     @Composable

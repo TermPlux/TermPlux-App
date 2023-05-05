@@ -11,13 +11,15 @@ __警告！此应用严禁用于非法用途！不听劝阻，后果自负！使
 Powered by Flutter  
 
 ## 安装教程
-1.准备工作  
+1.准备工作
 - 检查设备兼容性：支持的设备架构有arm64-v8a、armeabi-v7a、x86_64、x86。支持的Android版本API24-API33(安卓7.0-安卓13)。  
 - 安装Shizuku：开启开发者选项，开启无线ADB调试(安卓11及以上版本可用)，配对并激活Shizuku。  
 
 2.下载[安装包](https://github.com/TermPlux/TermPlux-App/releases)进行安装。  
 
 3.按照软件中的提示使用即可。
+
+(由于没有足够的资金支持，macOS和iOS端不会上架Apple AppStore，仅提供安装包文件，需要通过特殊手段安装。)
 
 ## 开发/构建
 1.安装开发者工具包(SDK)  

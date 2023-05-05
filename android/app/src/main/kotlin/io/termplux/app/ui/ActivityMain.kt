@@ -79,13 +79,6 @@ fun ActivityMain(
         SnackbarHostState()
     }
 
-    val navDrawer = remember {
-        movableContentOf<PaddingValues> { innerPadding ->
-
-        }
-    }
-
-
     @Composable
     fun nav() {
         Column {
@@ -320,60 +313,61 @@ fun ActivityMain(
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             topBar = {
-                topBar(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .statusBarsPadding()
-                )
-
-
-
-//                TopAppBar(
-//                    title = {
-//                        Text(
-//                            text = stringResource(
-//                                id = R.string.app_name
-//                            )
-//                        )
-//                    },
-//                    modifier = Modifier.fillMaxWidth(),
-//                    navigationIcon = {
-//                        AnimatedVisibility(
-//                            visible = navigationType != NavigationType.PermanentNavigationDrawer
-//                        ) {
-//                            IconButton(
-//                                onClick = {
-//                                    if (
-//                                        navigationType != NavigationType.PermanentNavigationDrawer
-//                                    ) {
-//                                        scope.launch {
-//                                            drawerState.open()
-//                                        }
-//                                    }
-//                                }
-//                            ) {
-//                                Icon(
-//                                    imageVector = Icons.Filled.Menu,
-//                                    contentDescription = null
-//                                )
-//                            }
-//                        }
-//                    },
-//                    actions = {
-//                        IconButton(
-//                            onClick = {
-//
-//                            }
-//                        ) {
-//                            Icon(
-//                                imageVector = Icons.Filled.MoreVert,
-//                                contentDescription = null
-//                            )
-//                        }
-//                    },
-//                    colors = TopAppBarDefaults.topAppBarColors(),
-//                    scrollBehavior = scrollBehavior
+//                topBar(
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .statusBarsPadding()
 //                )
+                AnimatedVisibility(
+                    visible = false
+                ) {
+                    TopAppBar(
+                        title = {
+                            Text(
+                                text = stringResource(
+                                    id = R.string.app_name
+                                )
+                            )
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        navigationIcon = {
+                            AnimatedVisibility(
+                                visible = navigationType != NavigationType.PermanentNavigationDrawer
+                            ) {
+                                IconButton(
+                                    onClick = {
+                                        if (
+                                            navigationType != NavigationType.PermanentNavigationDrawer
+                                        ) {
+                                            scope.launch {
+                                                drawerState.open()
+                                            }
+                                        }
+                                    }
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Menu,
+                                        contentDescription = null
+                                    )
+                                }
+                            }
+                        },
+                        actions = {
+                            IconButton(
+                                onClick = {
+
+                                }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.MoreVert,
+                                    contentDescription = null
+                                )
+                            }
+                        },
+                        colors = TopAppBarDefaults.topAppBarColors(),
+                        scrollBehavior = scrollBehavior
+                    )
+                }
             },
             bottomBar = {
                 AnimatedVisibility(
@@ -568,7 +562,7 @@ fun ActivityMain(
                     nav()
                 }
             },
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize()
         ) {
             content()
         }
@@ -581,12 +575,9 @@ fun ActivityMain(
             },
             modifier = Modifier.fillMaxSize(),
             drawerState = drawerState,
-            gesturesEnabled = true
+            gesturesEnabled = false
         ) {
             content()
         }
     }
-
-
 }
-

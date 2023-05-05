@@ -18,9 +18,7 @@ fun ScreenHome(
     pager: @Composable (modifier: Modifier) -> Unit
 ) {
     Surface(
-        modifier = Modifier
-            .fillMaxSize()
-          ,
+        modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
         pager(

@@ -14,24 +14,24 @@ class MediatorUtils constructor(
     viewPager: ViewPager2,
     home: () -> Unit,
     config: (
+        page: ViewPager2,
         tab: TabLayout.Tab,
         position: Int
     ) -> Unit
-
 ) {
 
     private val mBottomNavigationView: BottomNavigationView
     private val mTabLayout: TabLayout
-    private val mViewPager2: ViewPager2
+    private val mViewPager: ViewPager2
     private val mNavToHome: () -> Unit
-    private val mConfig: (tab: TabLayout.Tab, position: Int) -> Unit
+    private val mConfig: (page: ViewPager2, tab: TabLayout.Tab, position: Int) -> Unit
 
     private val map = mutableMapOf<MenuItem, Int>()
 
     init {
         mBottomNavigationView = bottomNavigation
         mTabLayout = tabLayout
-        mViewPager2 = viewPager
+        mViewPager = viewPager
         mConfig = config
         mNavToHome = home
         mBottomNavigationView.menu.forEachIndexed { index, item ->
@@ -42,14 +42,14 @@ class MediatorUtils constructor(
     fun attach() {
         mBottomNavigationView.setOnItemSelectedListener { item ->
             mNavToHome().apply {
-                if (mViewPager2.currentItem != map[item]) {
-                    mViewPager2.currentItem = map[item]
+                if (mViewPager.currentItem != map[item]) {
+                    mViewPager.currentItem = map[item]
                         ?: error("没有${item.title}对应的Fragment")
                 }
             }
             true
         }.also {
-            mViewPager2.registerOnPageChangeCallback(
+            mViewPager.registerOnPageChangeCallback(
                 object : ViewPager2.OnPageChangeCallback() {
                     override fun onPageSelected(position: Int) {
                         super.onPageSelected(position)
@@ -60,9 +60,9 @@ class MediatorUtils constructor(
             )
         }.also {
             TabLayoutMediator(
-                mTabLayout, mViewPager2
+                mTabLayout, mViewPager
             ) { tab: TabLayout.Tab, position: Int ->
-                mConfig(tab, position)
+                mConfig(mViewPager, tab, position)
             }.attach()
         }
     }
