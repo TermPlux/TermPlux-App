@@ -9,8 +9,6 @@ import android.os.IBinder
 import android.os.Looper
 import android.util.Log
 import android.view.*
-import android.window.OnBackInvokedCallback
-import android.window.OnBackInvokedDispatcher
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.ActionBar
@@ -87,7 +85,6 @@ import io.termplux.ui.window.DevicePosture
 import io.termplux.ui.window.NavigationType
 import io.termplux.ui.window.isBookPosture
 import io.termplux.ui.window.isSeparating
-import io.termplux.utils.BackInvokedCallbackUtils
 import kotlinx.coroutines.Runnable
 import kotlinx.coroutines.launch
 import rikka.shizuku.Shizuku
@@ -124,12 +121,9 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
             onRequestPermissionsResults(requestCode, grantResult)
         }
 
-    private lateinit var onBackInvokedCallback: OnBackInvokedCallback
-
     private lateinit var userServices: IUserService
     private lateinit var mSharedPreferences: SharedPreferences
 
-    private var isNeedInterceptBackEvent: Boolean by mutableStateOf(value = true)
     private var isHome: Boolean by mutableStateOf(value = false)
     private var isFull: Boolean by mutableStateOf(value = false)
     private var mVisible: Boolean by mutableStateOf(value = false)
@@ -139,7 +133,6 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
 
     private lateinit var mToolbar: MaterialToolbar
     private lateinit var mAppBarLayout: AppBarLayout
-    //private lateinit var mViewPager2: ViewPager2
     private lateinit var mBottomNavigationView: BottomNavigationView
     private lateinit var mTabLayout: TabLayout
 
@@ -222,14 +215,6 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
             .shouldAttachEngineToActivity(true)
             .build()
 
-
-
-
-//        // 加载ViewPager2
-//        mViewPager2 = ViewPager2(
-//            mContext
-//        )
-
         // 初始化底部导航
         mBottomNavigationView = BottomNavigationView(
             mContext
@@ -244,10 +229,10 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
             addView(
                 MaterialToolbar(
                     mContext
-                ).also { toolbar ->
+                ).also {
                     // 设置操作栏
-                    setSupportActionBar(toolbar)
-                    mToolbar = toolbar
+                    setSupportActionBar(it)
+                    mToolbar = it
                 },
                 AppBarLayout.LayoutParams(
                     AppBarLayout.LayoutParams.MATCH_PARENT,
@@ -326,21 +311,6 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
 
                 override fun onCreate() {
                     super.onCreate()
-                    // Android 13 及以上版本的返回监听
-                    // 调用BaseActivity提供的onBack方法
-                    if (isNeedInterceptBackEvent && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        onBackInvokedCallback = BackInvokedCallbackUtils(
-                            baseActivity = mME,
-                            backEvent = {
-                                onBack()
-                            }
-                        ).also {
-                            onBackInvokedDispatcher.registerOnBackInvokedCallback(
-                                OnBackInvokedDispatcher.PRIORITY_DEFAULT,
-                                it
-                            )
-                        }
-                    }
                     // 注册监听器
                     Shizuku.addBinderReceivedListenerSticky(binderReceivedListener)
                     Shizuku.addBinderDeadListener(binderDeadListener)
@@ -357,12 +327,6 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
 
                 override fun onDestroy() {
                     super.onDestroy()
-                    // Android 13 及以上适配返回键事件，注销监听
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        onBackInvokedCallback.let {
-                            onBackInvokedDispatcher.unregisterOnBackInvokedCallback(it)
-                        }
-                    }
                     // 注销监听
                     Shizuku.removeBinderReceivedListener(binderReceivedListener)
                     Shizuku.removeBinderDeadListener(binderDeadListener)
@@ -751,29 +715,11 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
         )
     }
 
-
-    /**
-     * 子类的入口函数
-     */
-    //abstract fun onCreated(parameter: JumpParameter?)
-
-    /**
-     * 获取主页路由
-     */
-    //abstract fun configViewPagerRoute(): String
-
-    /**
-     * 获取设置页路由
-     */
-    //abstract fun configSettingsRoute(): String
-
-    //abstract fun configManagerRoute(): String
-
     /**
      * 设置页面内容，仅在完整模式下生效
      */
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
-    protected fun setContents(
+    private fun setContents(
         content: @Composable (
             navController: NavHostController,
             displayFeatures: List<DisplayFeature>,
@@ -883,8 +829,6 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
             }
             // 主机控件触摸事件
             touch(hostView = hostView)
-            // 设置ViewPager2适配器，传入导航控制器用于在Fragment里控制Compose的导航
-            //adapter(navController = navController)
             // 绑定操作栏与导航抽屉
             bindingDrawer(
                 navigationType = navigationType,
@@ -894,23 +838,6 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
                     }
                 }
             )
-            // 绑定ViewPager2，页面标签和底部导航
-//            mediator(
-//                navigationType = navigationType,
-//                home = {
-//                    navController.navigate(
-//                        route = Screen.Home.route
-//                    ) {
-//                        popUpTo(
-//                            id = navController.graph.findStartDestination().id
-//                        ) {
-//                            saveState = true
-//                        }
-//                        launchSingleTop = true
-//                        restoreState = true
-//                    }
-//                }
-//            )
             // 设置系统界面样式
             if (!hostView.isInEditMode) {
                 SideEffect {
@@ -967,37 +894,6 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
                             modifier = it
                         )
                     },
-//                    content = { content, modifier ->
-//                        when (content) {
-//                            topBar -> AndroidView(
-//                                factory = {
-//                                    mAppBarLayout
-//                                },
-//                                modifier = modifier
-//                            )
-//
-//                            pager -> AndroidView(
-//                                factory = {
-//                                    mViewPager2
-//                                },
-//                                modifier = modifier
-//                            )
-//
-//                            navBar -> AndroidView(
-//                                factory = {
-//                                    mBottomNavigationView
-//                                },
-//                                modifier = modifier
-//                            )
-//
-//                            tabRow -> AndroidView(
-//                                factory = {
-//                                    mTabLayout
-//                                },
-//                                modifier = modifier
-//                            )
-//                        }
-//                    },
                     event = { event ->
                         when (event) {
                             toggle -> toggle()
