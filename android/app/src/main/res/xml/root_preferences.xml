@@ -1,6 +1,15 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="@string/app_name">
+    <PreferenceCategory
+        android:icon="@drawable/baseline_terminal_24"
+        android:title="@string/app_name">
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:icon="@drawable/baseline_view_in_ar_24"
+            android:key="full_mode"
+            android:summary="完整的用户界面"
+            android:title="以完整模式运行" />
 
         <SwitchPreference
             android:defaultValue="true"
@@ -15,6 +24,20 @@
             android:key="desktop"
             android:summary="@string/desktop_summary"
             android:title="@string/desktop_title" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:icon="@drawable/baseline_arrow_circle_left_24"
+            android:key="back"
+            android:summary="重启应用后生效。仅支持Android 13+"
+            android:title="预测性返回手势兼容" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:icon="@drawable/baseline_arrow_back_24"
+            android:key="back"
+            android:summary="拦截应用的返回操作用于将此应用设置为默认启动器后。"
+            android:title="拦截返回手势" />
 
         <Preference
             android:icon="@drawable/baseline_open_in_new_24"

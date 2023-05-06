@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.FAKE_PACKAGE_SIGNATURE" /> <!-- 签名欺骗 -->
 
     <application
-        android:name=".basic.application.TermPluxApp"
+        android:name=".application.TermPluxApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:enableOnBackInvokedCallback="true"
@@ -34,7 +34,7 @@
             android:value="@string/fake_signature" />
 
         <activity
-            android:name=".app.MainActivity"
+                android:name=".activity.TermPluxActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true"
             android:hardwareAccelerated="true"
@@ -60,7 +60,7 @@
         </activity>
 
         <activity
-            android:name=".basic.activity.TermPluxFlutter"
+            android:name=".activity.TermPluxFlutter"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density"
             android:exported="true"
             android:hardwareAccelerated="true"
@@ -77,7 +77,7 @@
         </activity>
 
         <service
-            android:name=".basic.services.MainService"
+            android:name=".services.MainService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.android.vending.billing.InAppBillingService.BIND" />
@@ -85,7 +85,7 @@
         </service>
 
         <service
-            android:name=".basic.services.LiveWallpaper"
+            android:name=".services.LiveWallpaper"
             android:exported="true"
             android:permission="android.permission.BIND_WALLPAPER">
             <intent-filter>
@@ -97,7 +97,7 @@
         </service>
 
         <service
-            android:name=".basic.services.TermPluxTile"
+            android:name=".services.TermPluxTile"
             android:exported="true"
             android:icon="@drawable/baseline_terminal_24"
             android:label="@string/app_name"
@@ -112,7 +112,7 @@
         </service>
 
         <provider
-            android:name=".basic.provider.MainProvider"
+            android:name=".provider.MainProvider"
             android:authorities="${applicationId}.shizuku"
             android:enabled="true"
             android:exported="true"

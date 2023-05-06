@@ -421,7 +421,7 @@
 
     </androidx.cardview.widget.CardView>
 
-    <io.termplux.basic.custom.DragFloatActionButton
+    <io.termplux.custom.DragFloatActionButton
         android:id="@+id/dragFloatActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
