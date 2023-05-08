@@ -9,7 +9,6 @@ import android.os.IBinder
 import android.os.Looper
 import android.util.Log
 import android.view.*
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatDelegate
@@ -31,7 +30,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -86,7 +84,6 @@ import io.termplux.ui.window.NavigationType
 import io.termplux.ui.window.isBookPosture
 import io.termplux.ui.window.isSeparating
 import kotlinx.coroutines.Runnable
-import kotlinx.coroutines.launch
 import rikka.shizuku.Shizuku
 
 @SuppressLint("NonConstantResourceId")
@@ -255,15 +252,12 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
         }
 
 
-
         val actionBar: ActionBar? = supportActionBar
         actionBar?.setIcon(R.drawable.baseline_terminal_24)
+        actionBar?.setDisplayHomeAsUpEnabled(true)
 
 
         initServices()
-
-
-
 
 
     }
@@ -275,6 +269,20 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
      */
     override fun initDatas(parameter: JumpParameter?) {
         check()
+
+//        val map = mutableMapOf<MenuItem, Int>()
+//        mBottomNavigationView.menu.forEachIndexed { index, item ->
+//            map[item] = index
+//        }
+//        mBottomNavigationView.setOnItemSelectedListener { items ->
+//            map[items]?.let { item ->
+//                changeFragment(item)
+//            }
+//            true
+//        }
+//        fragmentChangeUtil.onFragmentChangeListener = OnFragmentChangeListener { index, _ ->
+//            mBottomNavigationView.selectedItemId = mBottomNavigationView.menu[index -1].itemId
+//        }
 
 
         if (isFull) setContents { navController, displayFeatures, drawerState, navigationType, contentType, topBar, pager, navBar, tabRow, event, message, current, browser ->
@@ -442,7 +450,7 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         super.onOptionsItemSelected(item)
         when (item.itemId) {
-            //android.R.id.home -> onBack()
+            android.R.id.home -> onBack()
             R.id.action_settings -> {
                 //current(item = ContentAdapter.settings)
             }
@@ -613,19 +621,25 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
 //        mViewPager2.offscreenPageLimit = count - 1
 //    }
 
-    private fun bindingDrawer(navigationType: NavigationType, open: () -> Unit) {
-        mToolbar.apply {
-            if (navigationType != NavigationType.PermanentNavigationDrawer) {
-                navigationIcon = ContextCompat.getDrawable(
-                    mContext,
-                    R.drawable.baseline_menu_24
-                )
-                setNavigationOnClickListener {
-                    open()
-                }
-            }
-        }
-    }
+
+
+
+//    private fun bindingDrawer(navigationType: NavigationType, open: () -> Unit) {
+//        mToolbar.apply {
+//            if (navigationType != NavigationType.PermanentNavigationDrawer) {
+//                navigationIcon = ContextCompat.getDrawable(
+//                    mContext,
+//                    R.drawable.baseline_menu_24
+//                )
+//                setNavigationOnClickListener {
+//                    open()
+//                }
+//            }
+//        }
+//    }
+
+
+
 
 //    private fun mediator(navigationType: NavigationType, home: () -> Unit) {
 //        val title = arrayOf(
@@ -829,14 +843,14 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
             // 主机控件触摸事件
             touch(hostView = hostView)
             // 绑定操作栏与导航抽屉
-            bindingDrawer(
-                navigationType = navigationType,
-                open = {
-                    scope.launch {
-                        drawerState.open()
-                    }
-                }
-            )
+//            bindingDrawer(
+//                navigationType = navigationType,
+//                open = {
+//                    scope.launch {
+//                        drawerState.open()
+//                    }
+//                }
+//            )
             // 设置系统界面样式
             if (!hostView.isInEditMode) {
                 SideEffect {

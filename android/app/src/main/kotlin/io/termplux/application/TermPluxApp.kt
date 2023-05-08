@@ -9,12 +9,14 @@ import androidx.preference.PreferenceManager
 import com.farmerbb.taskbar.lib.Taskbar
 import com.google.android.material.color.DynamicColors
 import com.kongzue.baseframework.BaseApp
+import com.kongzue.baseframework.BaseFrameworkSettings
 import com.kongzue.baseframework.interfaces.OnBugReportListener
 import com.kongzue.baseframework.util.AppManager
 import com.kongzue.dialogx.DialogX
 import com.kongzue.dialogx.dialogs.MessageDialog
 import com.kongzue.dialogx.dialogs.PopTip
 import com.kongzue.dialogxmaterialyou.style.MaterialYouStyle
+import io.termplux.BuildConfig
 import org.lsposed.hiddenapibypass.HiddenApiBypass
 import java.io.File
 
@@ -76,6 +78,9 @@ class TermPluxApp : BaseApp<TermPluxApp>() {
      */
     override fun initSDKs() {
         super.initSDKs()
+
+        BaseFrameworkSettings.DEBUGMODE = BuildConfig.DEBUG
+        BaseFrameworkSettings.BETA_PLAN = true
 
         // 初始化DialogX
         DialogX.init(this@TermPluxApp)
