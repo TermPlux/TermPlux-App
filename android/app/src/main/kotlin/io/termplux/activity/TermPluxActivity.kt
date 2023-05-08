@@ -303,7 +303,6 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
     /**
      * setEvents会在数据加载后执行，建议在此方法内绑定设置监听器、设置执行回调事件等操作
      */
-
     override fun setEvents() {
         // 生命周期监听
         setLifeCircleListener(
@@ -968,12 +967,6 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
         )
     }
 
-    internal abstract class TermPluxBase : ComponentActivity() {
-
-        abstract fun onCreate()
-
-    }
-
     companion object {
 
         const val toggle: String = "toggle"
@@ -1028,13 +1021,5 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
         const val uiAnimatorDelay = 300
 
         const val termplux_flutter = "termplux_flutter"
-
-
-        private class MainActivity : TermPluxBase() {
-            override fun onCreate() {
-                TODO("Not yet implemented")
-            }
-
-        }
     }
 }

@@ -122,7 +122,7 @@ class AppsFragment constructor(
             0
         )) {
             val pkg = resolveInfo.activityInfo.packageName
-            if (packageFilter(pkg = pkg)) {
+            if (pkg == BuildConfig.APPLICATION_ID) {
                 applicationList.add(
                     AppsModel(pkgName = pkg)
                 )
@@ -136,13 +136,6 @@ class AppsFragment constructor(
                 current = mCurrent
             )
         }
-    }
-
-    /**
-     * 包过滤器 - 过滤不必要应用
-     */
-    private fun packageFilter(pkg: String): Boolean {
-        return pkg != BuildConfig.APPLICATION_ID
     }
 
     companion object {
