@@ -126,7 +126,7 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
     private var mVisible: Boolean by mutableStateOf(value = false)
     private var isDynamicColor: Boolean by mutableStateOf(value = true)
 
-    private lateinit var mViewPager: ViewPager
+    private lateinit var mFlutterPager: ViewPager
 
     private lateinit var mToolbar: MaterialToolbar
     private lateinit var mAppBarLayout: AppBarLayout
@@ -170,11 +170,11 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
             true
         )
         // 初始化ViewPager
-        mViewPager = ViewPager(mContext).apply {
+        mFlutterPager = ViewPager(mContext).apply {
             id = R.id.fragment_container
         }
         // 返回ViewPager
-        return mViewPager
+        return mFlutterPager
     }
 
     /**
@@ -199,10 +199,11 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
             dartExecutor.executeDartEntrypoint(
                 DartExecutor.DartEntrypoint.createDefault()
             )
-        }.also {
-            FlutterEngineCache.getInstance().put(termplux_flutter, it)
+        }.also { engine ->
+            FlutterEngineCache.getInstance().apply {
+                put(termplux_flutter, engine)
+            }
         }
-
 
         // 初始化FlutterFragment
         mFlutterFragment = FlutterFragment
@@ -226,10 +227,10 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
             addView(
                 MaterialToolbar(
                     mContext
-                ).also {
+                ).also { toolbar ->
                     // 设置操作栏
-                    setSupportActionBar(it)
-                    mToolbar = it
+                    setSupportActionBar(toolbar)
+                    mToolbar = toolbar
                 },
                 AppBarLayout.LayoutParams(
                     AppBarLayout.LayoutParams.MATCH_PARENT,
@@ -369,21 +370,7 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
         val home = HomeFragment.newInstance(
             flutter = mFlutterFragment
         )
-        val apps = AppsFragment.newInstance(
-            current = {
-                changeFragment(it)
-            }
-        )
-        val settings = SettingsFragment.newInstance(
-            navigation = {
-
-            }
-        )
-
         fragmentChangeUtil?.addFragment(home, true)
-//        fragmentChangeUtil?.addFragment(apps, true)
-//        fragmentChangeUtil?.addFragment(settings, true)
-
         changeFragment(0)
     }
 
@@ -622,8 +609,6 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
 //    }
 
 
-
-
 //    private fun bindingDrawer(navigationType: NavigationType, open: () -> Unit) {
 //        mToolbar.apply {
 //            if (navigationType != NavigationType.PermanentNavigationDrawer) {
@@ -637,8 +622,6 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
 //            }
 //        }
 //    }
-
-
 
 
 //    private fun mediator(navigationType: NavigationType, home: () -> Unit) {
@@ -886,7 +869,7 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
                     pager = {
                         AndroidView(
                             factory = {
-                                mViewPager
+                                mFlutterPager
                             },
                             modifier = it
                         )

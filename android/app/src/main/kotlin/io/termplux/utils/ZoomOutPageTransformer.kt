@@ -1,9 +1,7 @@
 package io.termplux.utils
 
 import android.view.View
-import androidx.core.content.ContextCompat
 import androidx.viewpager2.widget.ViewPager2
-import io.termplux.R
 import kotlin.math.abs
 
 class ZoomOutPageTransformer : ViewPager2.PageTransformer {
