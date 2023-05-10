@@ -71,9 +71,7 @@ import io.termplux.BuildConfig
 import io.termplux.IUserService
 import io.termplux.R
 import io.termplux.custom.LinkNativeViewFactory
-import io.termplux.fragment.AppsFragment
 import io.termplux.fragment.HomeFragment
-import io.termplux.fragment.SettingsFragment
 import io.termplux.services.MainService
 import io.termplux.services.UserService
 import io.termplux.ui.ActivityMain
@@ -259,7 +257,6 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
 
 
         initServices()
-
 
     }
 

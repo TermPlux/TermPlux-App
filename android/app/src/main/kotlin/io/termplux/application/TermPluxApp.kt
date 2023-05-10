@@ -29,7 +29,6 @@ class TermPluxApp : BaseApp<TermPluxApp>() {
      * 应用启动时执行
      */
     override fun init() {
-
         // 加载首选项
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this@TermPluxApp)
 
@@ -78,7 +77,7 @@ class TermPluxApp : BaseApp<TermPluxApp>() {
      */
     override fun initSDKs() {
         super.initSDKs()
-
+        // 初始化BaseFramework
         BaseFrameworkSettings.DEBUGMODE = BuildConfig.DEBUG
         BaseFrameworkSettings.BETA_PLAN = true
 
@@ -99,8 +98,9 @@ class TermPluxApp : BaseApp<TermPluxApp>() {
                 "dynamic_colors",
                 true
             ) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
-        ) DynamicColors.applyToActivitiesIfAvailable(this@TermPluxApp)
-
+        ) DynamicColors.applyToActivitiesIfAvailable(
+            this@TermPluxApp
+        )
 
         // 初始化任务栏
         Taskbar.setEnabled(
