@@ -42,8 +42,12 @@ class SettingsFragment constructor(
     }
 
     companion object{
-        fun newInstance(navigation: (String) -> Unit): SettingsFragment {
-            return SettingsFragment(navigation = navigation)
+        fun newInstance(
+            navigation: (String) -> Unit
+        ): SettingsFragment {
+            return SettingsFragment(
+                navigation = navigation
+            )
         }
     }
 }
