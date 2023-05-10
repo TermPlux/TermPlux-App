@@ -719,7 +719,6 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
             drawerState: DrawerState,
             navigationType: NavigationType,
             contentType: ContentType,
-//            content: @Composable (String, Modifier) -> Unit,
             topBar: @Composable (Modifier) -> Unit,
             pager: @Composable (Modifier) -> Unit,
             navBar: @Composable (Modifier) -> Unit,

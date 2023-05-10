@@ -11,8 +11,10 @@ class TermPluxFlutter : FlutterActivity() {
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         GeneratedPluginRegistrant.registerWith(flutterEngine)
+
         val registry = flutterEngine.platformViewsController.registry
         registry.registerViewFactory("android_view", LinkNativeViewFactory())
+
         val messenger = flutterEngine.dartExecutor.binaryMessenger
         val channel = MethodChannel(messenger, "termplux_channel")
         channel.setMethodCallHandler { call, res ->
