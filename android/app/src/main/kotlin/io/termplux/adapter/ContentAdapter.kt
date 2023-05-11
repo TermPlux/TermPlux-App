@@ -7,7 +7,7 @@ import com.google.android.material.appbar.AppBarLayout
 import io.flutter.embedding.android.FlutterFragment
 import io.termplux.fragment.AppsFragment
 import io.termplux.fragment.ErrorFragment
-import io.termplux.fragment.HomeFragment
+import io.termplux.utils.BaseFragmentUtils
 import io.termplux.fragment.LauncherFragment
 import io.termplux.fragment.SettingsFragment
 
@@ -27,7 +27,7 @@ class ContentAdapter constructor(
     private var mNavigation: (String) -> Unit
 
     private lateinit var mLauncher: LauncherFragment
-    private lateinit var mHome: HomeFragment
+    private lateinit var mHome: BaseFragmentUtils
     private lateinit var mApps: AppsFragment
     private lateinit var mSettings: SettingsFragment
     private lateinit var mError: ErrorFragment
@@ -76,7 +76,7 @@ class ContentAdapter constructor(
         mLauncher = LauncherFragment.newInstance(
             appBarLayout = mAppBarLayout
         )
-        mHome = HomeFragment.newInstance(
+        mHome = BaseFragmentUtils.newInstance(
             flutter = mFlutter
         )
         // 应用

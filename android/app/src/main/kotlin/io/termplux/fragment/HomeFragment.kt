@@ -1,75 +1,56 @@
 package io.termplux.fragment
 
+import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
-import androidx.fragment.app.FragmentContainerView
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.commit
-import com.kongzue.baseframework.BaseFragment
-import com.kongzue.baseframework.interfaces.LifeCircleListener
-import io.flutter.embedding.android.FlutterFragment
-import io.termplux.R
-import io.termplux.activity.TermPluxActivity
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.appcompat.widget.LinearLayoutCompat
+import com.idlefish.flutterboost.containers.FlutterBoostFragment
 
-class HomeFragment constructor(
-    flutter: FlutterFragment
-) : BaseFragment<TermPluxActivity>() {
+class HomeFragment : FlutterBoostFragment() {
 
-    private val mFlutter: FlutterFragment
-    private lateinit var fragmentManager: FragmentManager
-    private var flutterFragment: FlutterFragment? = null
-
-    init {
-        mFlutter = flutter
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
     }
 
-    override fun resetContentView(): View {
-        super.resetContentView()
-        return FragmentContainerView(me).apply {
-            id = R.id.flutter_container
-        }
-    }
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        val flutter = super.onCreateView(inflater, container, savedInstanceState)
+        return LinearLayoutCompat(requireActivity()).apply {
+            addView(TextView(requireActivity()).apply {
+                text = "fuck"
+            })
 
-    override fun initViews() {
-        fragmentManager = childFragmentManager
-        flutterFragment = fragmentManager.findFragmentByTag(tagFlutterFragment) as FlutterFragment?
-    }
-
-    override fun initDatas() {
-        if (flutterFragment == null) {
-            fragmentManager.commit(
-                allowStateLoss = false,
-                body = {
-                    flutterFragment = mFlutter
-                    add(
-                        R.id.flutter_container,
-                        mFlutter,
-                        tagFlutterFragment
-                    )
-                }
+            addView(
+                flutter,
+                LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                LinearLayoutCompat.LayoutParams.MATCH_PARENT
             )
         }
     }
 
-    override fun setEvents() {
-        setLifeCircleListener(
-            object : LifeCircleListener() {
-                override fun onDestroy() {
-                    super.onDestroy()
-                    flutterFragment = null
-                }
-            }
-        )
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
     }
 
-    companion object {
-        private const val tagFlutterFragment = "flutter_fragment"
+    override fun onResume() {
+        super.onResume()
+    }
 
-        fun newInstance(
-            flutter: FlutterFragment
-        ): HomeFragment {
-            return HomeFragment(
-                flutter = flutter
-            )
-        }
+    override fun onDestroy() {
+        super.onDestroy()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+    }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
     }
 }

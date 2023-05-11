@@ -1,6 +1,7 @@
 package io.termplux.application
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Build
@@ -8,6 +9,10 @@ import android.util.Log
 import androidx.preference.PreferenceManager
 import com.farmerbb.taskbar.lib.Taskbar
 import com.google.android.material.color.DynamicColors
+import com.idlefish.flutterboost.FlutterBoost
+import com.idlefish.flutterboost.FlutterBoostDelegate
+import com.idlefish.flutterboost.FlutterBoostRouteOptions
+import com.idlefish.flutterboost.containers.FlutterBoostActivity
 import com.kongzue.baseframework.BaseApp
 import com.kongzue.baseframework.BaseFrameworkSettings
 import com.kongzue.baseframework.interfaces.OnBugReportListener
@@ -16,9 +21,14 @@ import com.kongzue.dialogx.DialogX
 import com.kongzue.dialogx.dialogs.MessageDialog
 import com.kongzue.dialogx.dialogs.PopTip
 import com.kongzue.dialogxmaterialyou.style.MaterialYouStyle
+import io.flutter.embedding.android.FlutterActivityLaunchConfigs
+import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.plugins.GeneratedPluginRegistrant
 import io.termplux.BuildConfig
+import io.termplux.delegate.BoostDelegate
 import org.lsposed.hiddenapibypass.HiddenApiBypass
 import java.io.File
+
 
 class TermPluxApp : BaseApp<TermPluxApp>() {
 
@@ -31,6 +41,8 @@ class TermPluxApp : BaseApp<TermPluxApp>() {
     override fun init() {
         // 加载首选项
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this@TermPluxApp)
+
+
 
         // 触发错误时调用
         setOnCrashListener(

@@ -46,6 +46,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.internal.EdgeToEdgeUtils
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.tabs.TabLayout
+import com.idlefish.flutterboost.FlutterBoost
+import com.idlefish.flutterboost.containers.FlutterBoostFragment
 import com.kongzue.baseframework.BaseActivity
 import com.kongzue.baseframework.interfaces.DarkNavigationBarTheme
 import com.kongzue.baseframework.interfaces.DarkStatusBarTheme
@@ -71,6 +73,7 @@ import io.termplux.BuildConfig
 import io.termplux.IUserService
 import io.termplux.R
 import io.termplux.custom.LinkNativeViewFactory
+import io.termplux.delegate.BoostDelegate
 import io.termplux.fragment.HomeFragment
 import io.termplux.services.MainService
 import io.termplux.services.UserService
@@ -81,6 +84,7 @@ import io.termplux.ui.window.DevicePosture
 import io.termplux.ui.window.NavigationType
 import io.termplux.ui.window.isBookPosture
 import io.termplux.ui.window.isSeparating
+import io.termplux.utils.BaseFragmentUtils
 import kotlinx.coroutines.Runnable
 import rikka.shizuku.Shizuku
 
@@ -190,6 +194,17 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
         // 设置页面布局边界
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
+        FlutterBoost.instance().apply {
+            setup(
+                application,
+                BoostDelegate()
+            ) { engine: FlutterEngine? ->
+                engine?.let {
+                    GeneratedPluginRegistrant.registerWith(it)
+                }
+            }
+        }
+
         // 初始化Flutter引擎,创建Flutter引擎缓存
         mFlutterEngine = FlutterEngine(
             mContext
@@ -209,6 +224,15 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
             .renderMode(RenderMode.surface)
             .transparencyMode(TransparencyMode.opaque)
             .shouldAttachEngineToActivity(true)
+            .build()
+
+        mFlutterFragment = FlutterBoostFragment.CachedEngineFragmentBuilder(
+            HomeFragment().javaClass
+        )
+            .url("home")
+            .renderMode(RenderMode.surface)
+            .transparencyMode(TransparencyMode.opaque)
+            .shouldAttachEngineToActivity(false)
             .build()
 
         // 初始化底部导航
@@ -364,7 +388,7 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
 
     override fun initFragment(fragmentChangeUtil: FragmentChangeUtil?) {
         super.initFragment(fragmentChangeUtil)
-        val home = HomeFragment.newInstance(
+        val home = BaseFragmentUtils.newInstance(
             flutter = mFlutterFragment
         )
         fragmentChangeUtil?.addFragment(home, true)

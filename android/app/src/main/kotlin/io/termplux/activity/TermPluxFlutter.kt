@@ -1,12 +1,12 @@
 package io.termplux.activity
 
-import io.flutter.embedding.android.FlutterActivity
+import com.idlefish.flutterboost.containers.FlutterBoostActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugins.GeneratedPluginRegistrant
 import io.termplux.custom.LinkNativeViewFactory
 
-class TermPluxFlutter : FlutterActivity() {
+class TermPluxFlutter : FlutterBoostActivity() {
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)

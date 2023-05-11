@@ -34,6 +34,6 @@ class TermPluxApp extends StatelessWidget {
             }),
         isToolbarVisible: true,
         availableLocales: const [Locale('zh_CN')],
-        enabled: false);
+        enabled: kDebugMode);
   }
 }

@@ -95,6 +95,8 @@ flutter {
 
 dependencies {
     // 第三方库
+    // FlutterBoost: https://github.com/alibaba/flutter_boost
+    implementation project(':flutter_boost')
     // AndroidUtilCode: https://github.com/Blankj/AndroidUtilCode
     implementation 'com.blankj:utilcodex:1.31.1'
     // LibTaskbar: https://github.com/farmerbb/libtaskbar
