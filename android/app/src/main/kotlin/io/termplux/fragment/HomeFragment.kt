@@ -27,8 +27,10 @@ class HomeFragment : FlutterBoostFragment() {
 
             addView(
                 flutter,
-                LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-                LinearLayoutCompat.LayoutParams.MATCH_PARENT
+                LinearLayoutCompat.LayoutParams(
+                    LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                    LinearLayoutCompat.LayoutParams.MATCH_PARENT
+                )
             )
         }
     }

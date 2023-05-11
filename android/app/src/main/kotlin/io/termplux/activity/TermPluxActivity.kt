@@ -128,7 +128,7 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
     private var mVisible: Boolean by mutableStateOf(value = false)
     private var isDynamicColor: Boolean by mutableStateOf(value = true)
 
-    private lateinit var mFlutterPager: ViewPager
+    private lateinit var mViewPager: ViewPager
 
     private lateinit var mToolbar: MaterialToolbar
     private lateinit var mAppBarLayout: AppBarLayout
@@ -137,7 +137,7 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
 
     private lateinit var mFlutterEngine: FlutterEngine
 
-    private lateinit var mHomeFragment: FlutterFragment
+    private lateinit var mHomeFragment: FlutterBoostFragment
 
 
     private val showPart2Runnable = Runnable {
@@ -172,11 +172,11 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
             true
         )
         // 初始化ViewPager
-        mFlutterPager = ViewPager(mContext).apply {
+        mViewPager = ViewPager(mContext).apply {
             id = R.id.fragment_container
         }
         // 返回ViewPager
-        return mFlutterPager
+        return mViewPager
     }
 
     /**
@@ -194,17 +194,21 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
         // 设置页面布局边界
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-//        // 初始化FlutterBoost
-//        FlutterBoost.instance().apply {
-//            setup(
-//                application,
-//                BoostDelegate()
-//            ) { engine: FlutterEngine? ->
-//                engine?.let {
-//                    GeneratedPluginRegistrant.registerWith(it)
-//                }
-//            }
-//        }
+        // 初始化FlutterBoost
+        FlutterBoost.instance().apply {
+            setup(
+                application,
+                BoostDelegate { options ->
+                    when (options.pageName()){
+                        "" -> {}
+                    }
+                }
+            ) { engine: FlutterEngine? ->
+                engine?.let {
+                    GeneratedPluginRegistrant.registerWith(it)
+                }
+            }
+        }
 
         // 初始化Flutter引擎,创建Flutter引擎缓存
         mFlutterEngine = FlutterEngine(
@@ -219,23 +223,23 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
             }
         }
 
-        // 初始化FlutterFragment
-        mHomeFragment = FlutterFragment
-            .withCachedEngine(termplux_flutter)
+//        // 初始化FlutterFragment
+//        mHomeFragment = FlutterFragment
+//            .withCachedEngine(termplux_flutter)
+//            .renderMode(RenderMode.surface)
+//            .transparencyMode(TransparencyMode.opaque)
+//            .shouldAttachEngineToActivity(true)
+//            .build()
+
+        // 初始化FlutterBoostFragment
+        mHomeFragment = FlutterBoostFragment.CachedEngineFragmentBuilder(
+            FlutterBoostFragment().javaClass
+        )
+            .url("home")
             .renderMode(RenderMode.surface)
             .transparencyMode(TransparencyMode.opaque)
             .shouldAttachEngineToActivity(true)
             .build()
-
-//        // 初始化FlutterBoostFragment
-//        mHomeFragment = FlutterBoostFragment.CachedEngineFragmentBuilder(
-//            HomeFragment().javaClass
-//        )
-//            .url("home")
-//            .renderMode(RenderMode.surface)
-//            .transparencyMode(TransparencyMode.opaque)
-//            .shouldAttachEngineToActivity(false)
-//            .build()
 
         // 初始化底部导航
         mBottomNavigationView = BottomNavigationView(
@@ -891,7 +895,7 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
                     pager = {
                         AndroidView(
                             factory = {
-                                mFlutterPager
+                                mViewPager
                             },
                             modifier = it
                         )
