@@ -34,7 +34,7 @@
             android:value="@string/fake_signature" />
 
         <activity
-                android:name=".activity.TermPluxActivity"
+            android:name=".activity.TermPluxActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true"
             android:hardwareAccelerated="true"
@@ -62,7 +62,7 @@
         <activity
             android:name=".activity.TermPluxFlutter"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density"
-            android:exported="true"
+            android:exported="false"
             android:hardwareAccelerated="true"
             android:icon="@mipmap/ic_flutter"
             android:launchMode="singleTop"

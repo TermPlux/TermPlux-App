@@ -135,6 +135,7 @@ class TermPluxActivity : BaseActivity() {
     private lateinit var mTabLayout: TabLayout
 
     private lateinit var mFlutterBoostFragment: FlutterBoostFragment
+    private lateinit var mSettingsFragment: SettingsFragment
 
 
 
@@ -170,7 +171,9 @@ class TermPluxActivity : BaseActivity() {
             true
         )
         // 初始化ViewPager
-        mDisableSwipeViewPager = DisableSwipeViewPager(mContext).apply {
+        mDisableSwipeViewPager = DisableSwipeViewPager(
+            mContext
+        ).apply {
             id = R.id.fragment_container
         }
         // 返回ViewPager
@@ -390,9 +393,6 @@ class TermPluxActivity : BaseActivity() {
         )
     }
 
-
-
-
     override fun initFragment(fragmentChangeUtil: FragmentChangeUtil?) {
         super.initFragment(fragmentChangeUtil)
 
@@ -406,7 +406,7 @@ class TermPluxActivity : BaseActivity() {
             .shouldAttachEngineToActivity(true)
             .build()
 
-        val mSettingsFragment: SettingsFragment = SettingsFragment.newInstance {
+        mSettingsFragment = SettingsFragment.newInstance {
 
         }
 
@@ -493,7 +493,7 @@ class TermPluxActivity : BaseActivity() {
 
         fragmentChangeUtil?.addFragment(home)
         fragmentChangeUtil?.addFragment(settings)
-        changeFragment(1)
+        changeFragment(0)
     }
 
     /**
