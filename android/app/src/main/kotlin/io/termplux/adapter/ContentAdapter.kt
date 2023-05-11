@@ -27,7 +27,7 @@ class ContentAdapter constructor(
     private var mNavigation: (String) -> Unit
 
     private lateinit var mLauncher: LauncherFragment
-    private lateinit var mHome: BaseFragmentUtils
+   // private lateinit var mHome: BaseFragmentUtils
     private lateinit var mApps: AppsFragment
     private lateinit var mSettings: SettingsFragment
     private lateinit var mError: ErrorFragment
@@ -76,9 +76,9 @@ class ContentAdapter constructor(
         mLauncher = LauncherFragment.newInstance(
             appBarLayout = mAppBarLayout
         )
-        mHome = BaseFragmentUtils.newInstance(
-            flutter = mFlutter
-        )
+//        mHome = BaseFragmentUtils.newInstance(
+//            flutter = mFlutter
+//        )
         // 应用
         mApps = AppsFragment.newInstance(
             current = mCurrent

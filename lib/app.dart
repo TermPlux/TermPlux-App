@@ -38,6 +38,7 @@ class _TermPluxApp extends State<TermPluxApp> {
   }
 
   Widget appBuilder(Widget home) {
+
     return DynamicColorBuilder(builder: (lightColorScheme, darkColorScheme) {
       return MaterialApp(
         builder: (_, __) => home,
@@ -62,60 +63,7 @@ class _TermPluxApp extends State<TermPluxApp> {
     return FlutterBoostApp(
       routeFactory,
       appBuilder: appBuilder,
+
     );
-    // return FlutterBoostApp(
-    //   routeFactory,
-    //     // 如果自定了appBuilder，需要将传入的参数添加到widget层次结构中去，
-    //     // 否则会导致FluttBoost初始化失败。
-    //     appBuilder: (child) => DynamicColorBuilder(builder: (lightColorScheme, darkColorScheme) {
-    //       return MaterialApp(
-    //         locale: DevicePreview.locale(context),
-    //         builder: DevicePreview.appBuilder,
-    //         title: appName,
-    //         theme: ThemeData(
-    //             colorScheme: lightColorScheme,
-    //             brightness: Brightness.light,
-    //             useMaterial3: true),
-    //         darkTheme: ThemeData(
-    //             colorScheme: darkColorScheme,
-    //             brightness: Brightness.dark,
-    //             useMaterial3: true),
-    //         themeMode: ThemeMode.system,
-    //         home: child,
-    //         debugShowCheckedModeBanner: false,
-    //       );
-    //     }),
-    //     // interceptors: [
-    //     //   CustomInterceptor1(),
-    //     //   CustomInterceptor2(),
-    //     //   CustomInterceptor3(),
-    //     // ]
-    // );
-
-
-
-    // return DevicePreview(
-    //     builder: (context) =>
-    //         DynamicColorBuilder(builder: (lightColorScheme, darkColorScheme) {
-    //           return MaterialApp(
-    //             locale: DevicePreview.locale(context),
-    //             builder: DevicePreview.appBuilder,
-    //             title: appName,
-    //             theme: ThemeData(
-    //                 colorScheme: lightColorScheme,
-    //                 brightness: Brightness.light,
-    //                 useMaterial3: true),
-    //             darkTheme: ThemeData(
-    //                 colorScheme: darkColorScheme,
-    //                 brightness: Brightness.dark,
-    //                 useMaterial3: true),
-    //             themeMode: ThemeMode.system,
-    //             home: const MyHomePage(title: appName),
-    //             debugShowCheckedModeBanner: false,
-    //           );
-    //         }),
-    //     isToolbarVisible: true,
-    //     availableLocales: const [Locale('zh_CN')],
-    //     enabled: kDebugMode);
   }
 }

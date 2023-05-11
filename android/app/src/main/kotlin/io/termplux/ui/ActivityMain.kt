@@ -319,7 +319,7 @@ fun ActivityMain(
             modifier = Modifier.fillMaxSize(),
             topBar = {
                 AnimatedVisibility(
-                    visible = false
+                    visible = true
                 ) {
                     TopAppBar(
                         title = {
@@ -376,9 +376,44 @@ fun ActivityMain(
                     NavigationBar(
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        navBar(
-                            modifier = Modifier.fillMaxWidth()
-                        )
+                        items.forEach { item ->
+                            NavigationBarItem(
+                                selected = currentDestination?.hierarchy?.any {
+                                    it.route == item.route
+                                } == true,
+                                onClick = {
+                                    if (item.type == ScreenType.Compose) navController.navigate(
+                                        route = item.route
+                                    ) {
+                                        popUpTo(
+                                            id = navController.graph.findStartDestination().id
+                                        ) {
+                                            saveState = true
+                                        }
+                                        launchSingleTop = true
+                                        restoreState = true
+                                    }
+                                },
+                                icon = {
+                                    Icon(
+                                        imageVector = item.imageVector,
+                                        contentDescription = null
+                                    )
+                                },
+                                enabled = true,
+                                label = {
+                                    Text(
+                                        stringResource(
+                                            id = item.title
+                                        )
+                                    )
+                                },
+                                alwaysShowLabel = false
+                            )
+                        }
+//                        navBar(
+//                            modifier = Modifier.fillMaxWidth()
+//                        )
                     }
                 }
             },
@@ -434,7 +469,7 @@ fun ActivityMain(
                             )
                         ) {
                             items.forEach { item ->
-                                if (item.item == ItemType.Default) NavigationRailItem(
+                                NavigationRailItem(
                                     selected = currentDestination?.hierarchy?.any {
                                         it.route == item.route
                                     } == true,

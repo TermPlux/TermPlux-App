@@ -1,74 +1,52 @@
 package io.termplux.utils
 
 import android.view.View
-import androidx.fragment.app.FragmentContainerView
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.commit
+import com.kongzue.baseframework.BaseActivity
 import com.kongzue.baseframework.BaseFragment
-import com.kongzue.baseframework.interfaces.LifeCircleListener
-import io.flutter.embedding.android.FlutterFragment
-import io.termplux.R
-import io.termplux.activity.TermPluxActivity
 
-class BaseFragmentUtils constructor(
-    flutter: FlutterFragment
-) : BaseFragment<TermPluxActivity>() {
+class BaseFragmentUtils<Activity : BaseActivity> constructor(
+    resetContentView: View,
+    initView: () -> Unit,
+    initData: () -> Unit,
+    setEvent: () -> Unit
+) : BaseFragment<Activity>() {
 
-    private val mFlutter: FlutterFragment
-    private lateinit var fragmentManager: FragmentManager
-    private var flutterFragment: FlutterFragment? = null
+    private val mResetContentView: View
+    private val mInitView: () -> Unit
+    private val mInitData: () -> Unit
+    private val mSetEvent: () -> Unit
 
     init {
-        mFlutter = flutter
+        mResetContentView = resetContentView
+        mInitView = initView
+        mInitData = initData
+        mSetEvent = setEvent
     }
 
     override fun resetContentView(): View {
         super.resetContentView()
-        return FragmentContainerView(me).apply {
-            id = R.id.flutter_container
-        }
+        return mResetContentView
     }
 
-    override fun initViews() {
-        fragmentManager = childFragmentManager
-        flutterFragment = fragmentManager.findFragmentByTag(tagFlutterFragment) as FlutterFragment?
-    }
+    override fun initViews() = mInitView()
 
-    override fun initDatas() {
-        if (flutterFragment == null) {
-            fragmentManager.commit(
-                allowStateLoss = false,
-                body = {
-                    flutterFragment = mFlutter
-                    add(
-                        R.id.flutter_container,
-                        mFlutter,
-                        tagFlutterFragment
-                    )
-                }
-            )
-        }
-    }
+    override fun initDatas() = mInitData()
 
-    override fun setEvents() {
-        setLifeCircleListener(
-            object : LifeCircleListener() {
-                override fun onDestroy() {
-                    super.onDestroy()
-                    flutterFragment = null
-                }
-            }
-        )
-    }
+    override fun setEvents() = mSetEvent()
 
     companion object {
-        private const val tagFlutterFragment = "flutter_fragment"
 
-        fun newInstance(
-            flutter: FlutterFragment
-        ): BaseFragmentUtils {
+        fun <Activity : BaseActivity> newInstance(
+            resetContentView: View,
+            initView: () -> Unit,
+            initData: () -> Unit,
+            setEvent: () -> Unit
+        ): BaseFragmentUtils<Activity> {
             return BaseFragmentUtils(
-                flutter = flutter
+                resetContentView = resetContentView,
+                initView = initView,
+                initData = initData,
+                setEvent = setEvent
             )
         }
     }

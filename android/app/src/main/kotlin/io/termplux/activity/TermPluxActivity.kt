@@ -31,10 +31,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.view.WindowCompat
+import androidx.fragment.app.FragmentContainerView
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.commit
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.preference.PreferenceManager
-import androidx.viewpager.widget.ViewPager
 import androidx.window.layout.DisplayFeature
 import androidx.window.layout.FoldingFeature
 import com.farmerbb.taskbar.lib.Taskbar
@@ -60,21 +62,18 @@ import com.kongzue.baseframework.util.AppManager
 import com.kongzue.baseframework.util.FragmentChangeUtil
 import com.kongzue.baseframework.util.JumpParameter
 import com.kongzue.dialogx.dialogs.PopTip
-import io.flutter.embedding.android.FlutterEngineConfigurator
-import io.flutter.embedding.android.FlutterFragment
 import io.flutter.embedding.android.RenderMode
 import io.flutter.embedding.android.TransparencyMode
 import io.flutter.embedding.engine.FlutterEngine
-import io.flutter.embedding.engine.FlutterEngineCache
-import io.flutter.embedding.engine.dart.DartExecutor
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugins.GeneratedPluginRegistrant
 import io.termplux.BuildConfig
 import io.termplux.IUserService
 import io.termplux.R
+import io.termplux.custom.DisableSwipeViewPager
 import io.termplux.custom.LinkNativeViewFactory
 import io.termplux.delegate.BoostDelegate
-import io.termplux.fragment.HomeFragment
+import io.termplux.fragment.SettingsFragment
 import io.termplux.services.MainService
 import io.termplux.services.UserService
 import io.termplux.ui.ActivityMain
@@ -95,7 +94,7 @@ import rikka.shizuku.Shizuku
 @FragmentLayout(R.id.fragment_container)
 @EnterAnim(enterAnimResId = R.anim.fade, holdAnimResId = R.anim.hold)
 @ExitAnim(holdAnimResId = R.anim.hold, exitAnimResId = R.anim.back)
-class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
+class TermPluxActivity : BaseActivity() {
 
     private val mME: BaseActivity = me
     private val mContext: Context = mME
@@ -128,16 +127,15 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
     private var mVisible: Boolean by mutableStateOf(value = false)
     private var isDynamicColor: Boolean by mutableStateOf(value = true)
 
-    private lateinit var mViewPager: ViewPager
+    private lateinit var mDisableSwipeViewPager: DisableSwipeViewPager
 
     private lateinit var mToolbar: MaterialToolbar
     private lateinit var mAppBarLayout: AppBarLayout
     private lateinit var mBottomNavigationView: BottomNavigationView
     private lateinit var mTabLayout: TabLayout
 
-    private lateinit var mFlutterEngine: FlutterEngine
+    private lateinit var mFlutterBoostFragment: FlutterBoostFragment
 
-    private lateinit var mHomeFragment: FlutterBoostFragment
 
 
     private val showPart2Runnable = Runnable {
@@ -172,11 +170,11 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
             true
         )
         // 初始化ViewPager
-        mViewPager = ViewPager(mContext).apply {
+        mDisableSwipeViewPager = DisableSwipeViewPager(mContext).apply {
             id = R.id.fragment_container
         }
         // 返回ViewPager
-        return mViewPager
+        return mDisableSwipeViewPager
     }
 
     /**
@@ -199,47 +197,47 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
             setup(
                 application,
                 BoostDelegate { options ->
-                    when (options.pageName()){
+                    when (options.pageName()) {
                         "" -> {}
                     }
                 }
             ) { engine: FlutterEngine? ->
+                // 引擎操作
                 engine?.let {
+                    // 初始化插件
                     GeneratedPluginRegistrant.registerWith(it)
+                    // 绑定原生控件
+                    val registry = it.platformViewsController.registry
+                    registry.registerViewFactory("android_view", LinkNativeViewFactory())
+                    // 通信
+                    val messenger = it.dartExecutor.binaryMessenger
+                    val channel = MethodChannel(messenger, "termplux_channel")
+                    channel.setMethodCallHandler { call, res ->
+                        when (call.method) {
+                            // 跳转桌面
+                            "navToLauncher" -> {
+                                //current(item = ContentAdapter.launcher)
+                                res.success("success")
+                            }
+                            // 显示/隐藏ActionBar
+                            "toggle" -> {
+                                toggle()
+                                res.success("success")
+                            }
+                            // 打开ActionBar菜单
+                            "option" -> {
+                                optionsMenu()
+                                res.success("success")
+                            }
+
+                            else -> {
+                                res.error("error", "error_message", null)
+                            }
+                        }
+                    }
                 }
             }
         }
-
-        // 初始化Flutter引擎,创建Flutter引擎缓存
-        mFlutterEngine = FlutterEngine(
-            mContext
-        ).apply {
-            dartExecutor.executeDartEntrypoint(
-                DartExecutor.DartEntrypoint.createDefault()
-            )
-        }.also { engine ->
-            FlutterEngineCache.getInstance().apply {
-                put(termplux_flutter, engine)
-            }
-        }
-
-//        // 初始化FlutterFragment
-//        mHomeFragment = FlutterFragment
-//            .withCachedEngine(termplux_flutter)
-//            .renderMode(RenderMode.surface)
-//            .transparencyMode(TransparencyMode.opaque)
-//            .shouldAttachEngineToActivity(true)
-//            .build()
-
-        // 初始化FlutterBoostFragment
-        mHomeFragment = FlutterBoostFragment.CachedEngineFragmentBuilder(
-            FlutterBoostFragment().javaClass
-        )
-            .url("home")
-            .renderMode(RenderMode.surface)
-            .transparencyMode(TransparencyMode.opaque)
-            .shouldAttachEngineToActivity(true)
-            .build()
 
         // 初始化底部导航
         mBottomNavigationView = BottomNavigationView(
@@ -392,55 +390,110 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
         )
     }
 
+
+
+
     override fun initFragment(fragmentChangeUtil: FragmentChangeUtil?) {
         super.initFragment(fragmentChangeUtil)
-        val home = BaseFragmentUtils.newInstance(
-            flutter = mHomeFragment
+
+        // 初始化FlutterBoostFragment
+        mFlutterBoostFragment = FlutterBoostFragment.CachedEngineFragmentBuilder(
+            FlutterBoostFragment().javaClass
         )
-        fragmentChangeUtil?.addFragment(home, true)
-        changeFragment(0)
-    }
+            .url("home")
+            .renderMode(RenderMode.surface)
+            .transparencyMode(TransparencyMode.opaque)
+            .shouldAttachEngineToActivity(true)
+            .build()
 
-    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
-        GeneratedPluginRegistrant.registerWith(flutterEngine)
-        val registry = flutterEngine.platformViewsController.registry
-        registry.registerViewFactory("android_view", LinkNativeViewFactory())
+        val mSettingsFragment: SettingsFragment = SettingsFragment.newInstance {
 
-        val messenger = flutterEngine.dartExecutor.binaryMessenger
-        val channel = MethodChannel(messenger, "termplux_channel")
-        channel.setMethodCallHandler { call, res ->
-            when (call.method) {
-                // 跳转桌面
-                "navToLauncher" -> {
-                    //current(item = ContentAdapter.launcher)
-                    res.success("success")
-                }
-                // 显示/隐藏ActionBar
-                "toggle" -> {
-                    toggle()
-                    res.success("success")
-                }
-                // 打开ActionBar菜单
-                "option" -> {
-                    optionsMenu()
-                    res.success("success")
-                }
-
-                else -> {
-                    res.error("error", "error_message", null)
-                }
-            }
         }
-    }
 
-    /**
-     * Cleans up references that were established in [.configureFlutterEngine]
-     * before the host is destroyed or detached.
-     *
-     * [flutterEngine] The Flutter engine.
-     */
-    override fun cleanUpFlutterEngine(flutterEngine: FlutterEngine) {
+        var flutterBoostFragment: FlutterBoostFragment? = null
+        var settingsFragment: SettingsFragment? = null
 
+        val mFragmentManager: FragmentManager = supportFragmentManager
+
+        val home = BaseFragmentUtils.newInstance<TermPluxActivity>(
+            resetContentView = FragmentContainerView(
+                mContext
+            ).apply {
+                id = R.id.flutter_container
+            },
+            initView = {
+                flutterBoostFragment = mFragmentManager.findFragmentByTag(
+                    tagFlutterBoostFragment
+                ) as FlutterBoostFragment?
+            },
+            initData = {
+                if (flutterBoostFragment == null) {
+                    mFragmentManager.commit(
+                        allowStateLoss = false,
+                        body = {
+                            flutterBoostFragment = mFlutterBoostFragment
+                            add(
+                                R.id.flutter_container,
+                                mFlutterBoostFragment,
+                                tagFlutterBoostFragment
+                            )
+                        }
+                    )
+                }
+            },
+            setEvent = {
+                setLifeCircleListener(
+                    object : LifeCircleListener() {
+                        override fun onDestroy() {
+                            super.onDestroy()
+                            flutterBoostFragment = null
+                        }
+                    }
+                )
+            }
+        )
+
+        val settings = BaseFragmentUtils<TermPluxActivity>(
+            resetContentView = FragmentContainerView(
+                mContext
+            ).apply {
+                id = R.id.settings_container
+            },
+            initView = {
+                settingsFragment = mFragmentManager.findFragmentByTag(
+                    tagSettingsFragment
+                ) as SettingsFragment?
+            },
+            initData = {
+                if (settingsFragment == null) {
+                    mFragmentManager.commit(
+                        allowStateLoss = false,
+                        body = {
+                            settingsFragment = mSettingsFragment
+                            add(
+                                R.id.settings_container,
+                                mSettingsFragment,
+                                tagSettingsFragment
+                            )
+                        }
+                    )
+                }
+            },
+            setEvent = {
+                setLifeCircleListener(
+                    object : LifeCircleListener() {
+                        override fun onDestroy() {
+                            super.onDestroy()
+                            settingsFragment = null
+                        }
+                    }
+                )
+            }
+        )
+
+        fragmentChangeUtil?.addFragment(home)
+        fragmentChangeUtil?.addFragment(settings)
+        changeFragment(1)
     }
 
     /**
@@ -450,7 +503,7 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
     override fun onBack(): Boolean {
         super.onBack()
         if (!isHome) {
-            mHomeFragment.onBackPressed()
+            mFlutterBoostFragment.onBackPressed()
         }
         return isHome
     }
@@ -474,12 +527,12 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
 
     override fun onPostResume() {
         super.onPostResume()
-        mHomeFragment.onPostResume()
+        mFlutterBoostFragment.onPostResume()
     }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        mHomeFragment.onNewIntent(intent)
+        mFlutterBoostFragment.onNewIntent(intent)
     }
 
     override fun onRequestPermissionsResult(
@@ -488,7 +541,7 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        mHomeFragment.onRequestPermissionsResult(
+        mFlutterBoostFragment.onRequestPermissionsResult(
             requestCode,
             permissions,
             grantResults
@@ -497,13 +550,13 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
 
     override fun onUserLeaveHint() {
         super.onUserLeaveHint()
-        mHomeFragment.onUserLeaveHint()
+        mFlutterBoostFragment.onUserLeaveHint()
     }
 
     @SuppressLint("MissingSuperCall")
     override fun onTrimMemory(level: Int) {
         super.onTrimMemory(level)
-        mHomeFragment.onTrimMemory(level)
+        mFlutterBoostFragment.onTrimMemory(level)
     }
 
     private fun onRequestPermissionsResults(requestCode: Int, grantResult: Int) {
@@ -895,7 +948,7 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
                     pager = {
                         AndroidView(
                             factory = {
-                                mViewPager
+                                mDisableSwipeViewPager
                             },
                             modifier = it
                         )
@@ -992,6 +1045,9 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
 
     companion object {
 
+        private const val tagFlutterBoostFragment: String = "flutter_boost_fragment"
+        private const val tagSettingsFragment: String = "settings_fragment"
+
         const val toggle: String = "toggle"
         const val taskbar: String = "taskbar"
         const val options: String = "options"
@@ -1042,7 +1098,5 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
 
         /** 一些较老的设备需要在小部件更新和状态和导航栏更改之间有一个小的延迟。*/
         const val uiAnimatorDelay = 300
-
-        const val termplux_flutter = "termplux_flutter"
     }
 }

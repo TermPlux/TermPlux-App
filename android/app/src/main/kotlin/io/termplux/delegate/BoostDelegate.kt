@@ -7,7 +7,6 @@ import com.idlefish.flutterboost.containers.FlutterBoostActivity
 import io.flutter.embedding.android.FlutterActivityLaunchConfigs
 import io.termplux.activity.TermPluxFlutter
 
-
 class BoostDelegate constructor(
     push: (FlutterBoostRouteOptions) -> Unit
 ) : FlutterBoostDelegate {
@@ -18,18 +17,7 @@ class BoostDelegate constructor(
         mPush = push
     }
 
-    override fun pushNativeRoute(options: FlutterBoostRouteOptions) {
-        mPush(options)
-//        // 这里根据options.pageName来判断你想跳转哪个页面，这里简单给一个
-//        // 这里根据options.pageName来判断你想跳转哪个页面，这里简单给一个
-//        val intent = Intent(
-//            FlutterBoost.instance().currentActivity(),
-//            TermPluxActivity().javaClass
-//        )
-//        FlutterBoost.instance().currentActivity().startActivityForResult(
-//            intent, options.requestCode()
-//        )
-    }
+    override fun pushNativeRoute(options: FlutterBoostRouteOptions) = mPush(options)
 
     override fun pushFlutterRoute(options: FlutterBoostRouteOptions) {
         val intent = FlutterBoostActivity.CachedEngineIntentBuilder(
