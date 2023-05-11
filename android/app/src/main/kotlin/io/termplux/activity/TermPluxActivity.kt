@@ -137,7 +137,7 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
 
     private lateinit var mFlutterEngine: FlutterEngine
 
-    private lateinit var mFlutterFragment: FlutterFragment
+    private lateinit var mHomeFragment: FlutterFragment
 
 
     private val showPart2Runnable = Runnable {
@@ -194,16 +194,17 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
         // 设置页面布局边界
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        FlutterBoost.instance().apply {
-            setup(
-                application,
-                BoostDelegate()
-            ) { engine: FlutterEngine? ->
-                engine?.let {
-                    GeneratedPluginRegistrant.registerWith(it)
-                }
-            }
-        }
+//        // 初始化FlutterBoost
+//        FlutterBoost.instance().apply {
+//            setup(
+//                application,
+//                BoostDelegate()
+//            ) { engine: FlutterEngine? ->
+//                engine?.let {
+//                    GeneratedPluginRegistrant.registerWith(it)
+//                }
+//            }
+//        }
 
         // 初始化Flutter引擎,创建Flutter引擎缓存
         mFlutterEngine = FlutterEngine(
@@ -219,21 +220,22 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
         }
 
         // 初始化FlutterFragment
-        mFlutterFragment = FlutterFragment
+        mHomeFragment = FlutterFragment
             .withCachedEngine(termplux_flutter)
             .renderMode(RenderMode.surface)
             .transparencyMode(TransparencyMode.opaque)
             .shouldAttachEngineToActivity(true)
             .build()
 
-        mFlutterFragment = FlutterBoostFragment.CachedEngineFragmentBuilder(
-            HomeFragment().javaClass
-        )
-            .url("home")
-            .renderMode(RenderMode.surface)
-            .transparencyMode(TransparencyMode.opaque)
-            .shouldAttachEngineToActivity(false)
-            .build()
+//        // 初始化FlutterBoostFragment
+//        mHomeFragment = FlutterBoostFragment.CachedEngineFragmentBuilder(
+//            HomeFragment().javaClass
+//        )
+//            .url("home")
+//            .renderMode(RenderMode.surface)
+//            .transparencyMode(TransparencyMode.opaque)
+//            .shouldAttachEngineToActivity(false)
+//            .build()
 
         // 初始化底部导航
         mBottomNavigationView = BottomNavigationView(
@@ -389,7 +391,7 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
     override fun initFragment(fragmentChangeUtil: FragmentChangeUtil?) {
         super.initFragment(fragmentChangeUtil)
         val home = BaseFragmentUtils.newInstance(
-            flutter = mFlutterFragment
+            flutter = mHomeFragment
         )
         fragmentChangeUtil?.addFragment(home, true)
         changeFragment(0)
@@ -444,7 +446,7 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
     override fun onBack(): Boolean {
         super.onBack()
         if (!isHome) {
-            mFlutterFragment.onBackPressed()
+            mHomeFragment.onBackPressed()
         }
         return isHome
     }
@@ -468,12 +470,12 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
 
     override fun onPostResume() {
         super.onPostResume()
-        mFlutterFragment.onPostResume()
+        mHomeFragment.onPostResume()
     }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        mFlutterFragment.onNewIntent(intent)
+        mHomeFragment.onNewIntent(intent)
     }
 
     override fun onRequestPermissionsResult(
@@ -482,7 +484,7 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        mFlutterFragment.onRequestPermissionsResult(
+        mHomeFragment.onRequestPermissionsResult(
             requestCode,
             permissions,
             grantResults
@@ -491,13 +493,13 @@ class TermPluxActivity : BaseActivity(), FlutterEngineConfigurator {
 
     override fun onUserLeaveHint() {
         super.onUserLeaveHint()
-        mFlutterFragment.onUserLeaveHint()
+        mHomeFragment.onUserLeaveHint()
     }
 
     @SuppressLint("MissingSuperCall")
     override fun onTrimMemory(level: Int) {
         super.onTrimMemory(level)
-        mFlutterFragment.onTrimMemory(level)
+        mHomeFragment.onTrimMemory(level)
     }
 
     private fun onRequestPermissionsResults(requestCode: Int, grantResult: Int) {
