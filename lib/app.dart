@@ -39,36 +39,23 @@ class _TermPluxApp extends State<TermPluxApp> {
   }
 
   Widget appBuilder(Widget home) {
-    return DevicePreview(
-      builder: (context) {
-        return DynamicColorBuilder(builder: (lightColorScheme, darkColorScheme) {
-          return MaterialApp(
-            useInheritedMediaQuery: true,
-            locale: DevicePreview.locale(context),
-            builder: EasyLoading.init(builder: (context, child) {
-              child = DevicePreview.appBuilder(context, child);
-              child = home;
-              return child;
-            }),
-            title: appName,
-            theme: ThemeData(
-                colorScheme: lightColorScheme,
-                brightness: Brightness.light,
-                useMaterial3: true),
-            darkTheme: ThemeData(
-                colorScheme: darkColorScheme,
-                brightness: Brightness.dark,
-                useMaterial3: true),
-            themeMode: ThemeMode.system,
-            home: home,
-            debugShowCheckedModeBanner: false,
-          );
-        });
-      }, // Wrap your app
-      isToolbarVisible: true,
-      availableLocales: const [Locale('zh_CN')],
-      enabled: true,
-    );
+    return DynamicColorBuilder(builder: (lightColorScheme, darkColorScheme) {
+      return MaterialApp(
+        builder: (_, __) => home,
+        title: appName,
+        theme: ThemeData(
+            colorScheme: lightColorScheme,
+            brightness: Brightness.light,
+            useMaterial3: true),
+        darkTheme: ThemeData(
+            colorScheme: darkColorScheme,
+            brightness: Brightness.dark,
+            useMaterial3: true),
+        themeMode: ThemeMode.system,
+        home: home,
+        debugShowCheckedModeBanner: false,
+      );
+    });
   }
 
   @override
