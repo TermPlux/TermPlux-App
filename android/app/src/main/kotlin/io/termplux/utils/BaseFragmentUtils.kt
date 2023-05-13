@@ -4,17 +4,17 @@ import android.view.View
 import com.kongzue.baseframework.BaseActivity
 import com.kongzue.baseframework.BaseFragment
 
-class BaseFragmentUtils<Activity : BaseActivity> constructor(
+class BaseFragmentUtils<Activity : BaseActivity>(
     resetContentView: View,
-    initView: () -> Unit,
-    initData: () -> Unit,
-    setEvent: () -> Unit
+    initView: (() -> Unit)? = null,
+    initData: (() -> Unit)? = null,
+    setEvent: (() -> Unit)? = null
 ) : BaseFragment<Activity>() {
 
     private val mResetContentView: View
-    private val mInitView: () -> Unit
-    private val mInitData: () -> Unit
-    private val mSetEvent: () -> Unit
+    private val mInitView: (() -> Unit)?
+    private val mInitData: (() -> Unit)?
+    private val mSetEvent: (() -> Unit)?
 
     init {
         mResetContentView = resetContentView
@@ -28,19 +28,25 @@ class BaseFragmentUtils<Activity : BaseActivity> constructor(
         return mResetContentView
     }
 
-    override fun initViews() = mInitView()
+    override fun initViews() = mInitView?.let { view ->
+        view()
+    } ?: Unit
 
-    override fun initDatas() = mInitData()
+    override fun initDatas() = mInitData?.let { data ->
+        data()
+    } ?: Unit
 
-    override fun setEvents() = mSetEvent()
+    override fun setEvents() = mSetEvent?.let { event ->
+        event()
+    } ?: Unit
 
     companion object {
 
         fun <Activity : BaseActivity> newInstance(
             resetContentView: View,
-            initView: () -> Unit,
-            initData: () -> Unit,
-            setEvent: () -> Unit
+            initView: (() -> Unit)? = null,
+            initData: (() -> Unit)? = null,
+            setEvent: (() -> Unit)? = null
         ): BaseFragmentUtils<Activity> {
             return BaseFragmentUtils(
                 resetContentView = resetContentView,

@@ -12,6 +12,7 @@ import android.view.*
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -34,9 +35,11 @@ import androidx.core.view.WindowCompat
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.preference.PreferenceManager
+import androidx.viewpager2.widget.ViewPager2
 import androidx.window.layout.DisplayFeature
 import androidx.window.layout.FoldingFeature
 import com.farmerbb.taskbar.lib.Taskbar
@@ -58,6 +61,7 @@ import com.kongzue.baseframework.interfaces.ExitAnim
 import com.kongzue.baseframework.interfaces.FragmentLayout
 import com.kongzue.baseframework.interfaces.LifeCircleListener
 import com.kongzue.baseframework.interfaces.NavigationBarBackgroundColorHex
+import com.kongzue.baseframework.interfaces.NavigationBarBackgroundColorRes
 import com.kongzue.baseframework.util.AppManager
 import com.kongzue.baseframework.util.FragmentChangeUtil
 import com.kongzue.baseframework.util.JumpParameter
@@ -70,6 +74,7 @@ import io.flutter.plugins.GeneratedPluginRegistrant
 import io.termplux.BuildConfig
 import io.termplux.IUserService
 import io.termplux.R
+import io.termplux.adapter.ContentAdapter
 import io.termplux.custom.DisableSwipeViewPager
 import io.termplux.custom.LinkNativeViewFactory
 import io.termplux.delegate.BoostDelegate
@@ -84,13 +89,14 @@ import io.termplux.ui.window.NavigationType
 import io.termplux.ui.window.isBookPosture
 import io.termplux.ui.window.isSeparating
 import io.termplux.utils.BaseFragmentUtils
+import io.termplux.utils.MediatorUtils
 import kotlinx.coroutines.Runnable
 import rikka.shizuku.Shizuku
 
 @SuppressLint("NonConstantResourceId")
 @DarkStatusBarTheme(true)
 @DarkNavigationBarTheme(true)
-@NavigationBarBackgroundColorHex("#FFFFFF")
+@NavigationBarBackgroundColorRes(R.color.white)
 @FragmentLayout(R.id.fragment_container)
 @EnterAnim(enterAnimResId = R.anim.fade, holdAnimResId = R.anim.hold)
 @ExitAnim(holdAnimResId = R.anim.hold, exitAnimResId = R.anim.back)
@@ -131,11 +137,12 @@ class TermPluxActivity : BaseActivity() {
 
     private lateinit var mToolbar: MaterialToolbar
     private lateinit var mAppBarLayout: AppBarLayout
+    private lateinit var mViewPager2: ViewPager2
     private lateinit var mBottomNavigationView: BottomNavigationView
     private lateinit var mTabLayout: TabLayout
 
     private lateinit var mFlutterBoostFragment: FlutterBoostFragment
-    private lateinit var mSettingsFragment: SettingsFragment
+    //private lateinit var mSettingsFragment: SettingsFragment
 
 
 
@@ -242,6 +249,12 @@ class TermPluxActivity : BaseActivity() {
             }
         }
 
+        mViewPager2 = ViewPager2(
+            mContext
+        ).apply {
+
+        }
+
         // 初始化底部导航
         mBottomNavigationView = BottomNavigationView(
             mContext
@@ -289,6 +302,88 @@ class TermPluxActivity : BaseActivity() {
 
         initServices()
 
+    }
+
+    override fun initFragment(fragmentChangeUtil: FragmentChangeUtil?) {
+        super.initFragment(fragmentChangeUtil)
+
+        var flutterBoostFragment: FlutterBoostFragment? = null
+        val mFragmentManager: FragmentManager = supportFragmentManager
+
+        // 初始化FlutterBoostFragment
+        mFlutterBoostFragment = FlutterBoostFragment.CachedEngineFragmentBuilder(
+            FlutterBoostFragment().javaClass
+        )
+            .url("home")
+            .renderMode(RenderMode.surface)
+            .transparencyMode(TransparencyMode.opaque)
+            .shouldAttachEngineToActivity(true)
+            .build()
+
+        val home = BaseFragmentUtils.newInstance<TermPluxActivity>(
+            resetContentView = FragmentContainerView(
+                mContext
+            ).apply {
+                id = R.id.flutter_container
+            },
+            initView = {
+                flutterBoostFragment = mFragmentManager.findFragmentByTag(
+                    tagFlutterBoostFragment
+                ) as FlutterBoostFragment?
+            },
+            initData = {
+                if (flutterBoostFragment == null) {
+                    mFragmentManager.commit(
+                        allowStateLoss = false,
+                        body = {
+                            flutterBoostFragment = mFlutterBoostFragment
+                            add(
+                                R.id.flutter_container,
+                                mFlutterBoostFragment,
+                                tagFlutterBoostFragment
+                            )
+                        }
+                    )
+                }
+            },
+            setEvent = {
+                setLifeCircleListener(
+                    object : LifeCircleListener() {
+                        override fun onDestroy() {
+                            super.onDestroy()
+                            flutterBoostFragment = null
+                        }
+                    }
+                )
+            }
+        )
+
+        val pager = BaseFragmentUtils<TermPluxActivity>(
+            resetContentView = LinearLayoutCompat(
+                mContext
+            ).apply {
+                orientation = LinearLayoutCompat.VERTICAL
+                addView(
+                    mAppBarLayout,
+                    LinearLayoutCompat.LayoutParams(
+                        LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                        LinearLayoutCompat.LayoutParams.WRAP_CONTENT
+                    )
+                )
+                addView(
+                    mViewPager2,
+                    LinearLayoutCompat.LayoutParams(
+                        LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                        LinearLayoutCompat.LayoutParams.MATCH_PARENT
+                    )
+                )
+            }
+        )
+
+        fragmentChangeUtil?.addFragment(home, true)
+        fragmentChangeUtil?.addFragment(pager, true)
+
+        changeFragment(1)
     }
 
     /**
@@ -393,108 +488,7 @@ class TermPluxActivity : BaseActivity() {
         )
     }
 
-    override fun initFragment(fragmentChangeUtil: FragmentChangeUtil?) {
-        super.initFragment(fragmentChangeUtil)
 
-        // 初始化FlutterBoostFragment
-        mFlutterBoostFragment = FlutterBoostFragment.CachedEngineFragmentBuilder(
-            FlutterBoostFragment().javaClass
-        )
-            .url("home")
-            .renderMode(RenderMode.surface)
-            .transparencyMode(TransparencyMode.opaque)
-            .shouldAttachEngineToActivity(true)
-            .build()
-
-        mSettingsFragment = SettingsFragment.newInstance {
-
-        }
-
-        var flutterBoostFragment: FlutterBoostFragment? = null
-        var settingsFragment: SettingsFragment? = null
-
-        val mFragmentManager: FragmentManager = supportFragmentManager
-
-        val home = BaseFragmentUtils.newInstance<TermPluxActivity>(
-            resetContentView = FragmentContainerView(
-                mContext
-            ).apply {
-                id = R.id.flutter_container
-            },
-            initView = {
-                flutterBoostFragment = mFragmentManager.findFragmentByTag(
-                    tagFlutterBoostFragment
-                ) as FlutterBoostFragment?
-            },
-            initData = {
-                if (flutterBoostFragment == null) {
-                    mFragmentManager.commit(
-                        allowStateLoss = false,
-                        body = {
-                            flutterBoostFragment = mFlutterBoostFragment
-                            add(
-                                R.id.flutter_container,
-                                mFlutterBoostFragment,
-                                tagFlutterBoostFragment
-                            )
-                        }
-                    )
-                }
-            },
-            setEvent = {
-                setLifeCircleListener(
-                    object : LifeCircleListener() {
-                        override fun onDestroy() {
-                            super.onDestroy()
-                            flutterBoostFragment = null
-                        }
-                    }
-                )
-            }
-        )
-
-        val settings = BaseFragmentUtils<TermPluxActivity>(
-            resetContentView = FragmentContainerView(
-                mContext
-            ).apply {
-                id = R.id.settings_container
-            },
-            initView = {
-                settingsFragment = mFragmentManager.findFragmentByTag(
-                    tagSettingsFragment
-                ) as SettingsFragment?
-            },
-            initData = {
-                if (settingsFragment == null) {
-                    mFragmentManager.commit(
-                        allowStateLoss = false,
-                        body = {
-                            settingsFragment = mSettingsFragment
-                            add(
-                                R.id.settings_container,
-                                mSettingsFragment,
-                                tagSettingsFragment
-                            )
-                        }
-                    )
-                }
-            },
-            setEvent = {
-                setLifeCircleListener(
-                    object : LifeCircleListener() {
-                        override fun onDestroy() {
-                            super.onDestroy()
-                            settingsFragment = null
-                        }
-                    }
-                )
-            }
-        )
-
-        fragmentChangeUtil?.addFragment(home)
-        fragmentChangeUtil?.addFragment(settings)
-        changeFragment(0)
-    }
 
     /**
      * 如果是默认桌面就拦截返回指令
@@ -519,7 +513,7 @@ class TermPluxActivity : BaseActivity() {
         when (item.itemId) {
             android.R.id.home -> onBack()
             R.id.action_settings -> {
-                //current(item = ContentAdapter.settings)
+                current(item = ContentAdapter.settings)
             }
         }
         return true
@@ -654,39 +648,37 @@ class TermPluxActivity : BaseActivity() {
         hideHandler.postDelayed(showPart2Runnable, uiAnimatorDelay.toLong())
     }
 
-//    /**
-//     * ViewPager2的适配器
-//     */
-//    private fun adapter(navController: NavHostController) {
-//        // 初始化适配器实例
-//        val adapter = ContentAdapter.newInstance(
-//            activity = mME,
-//            flutter = mFlutterFragment,
-//            appBarLayout = mAppBarLayout,
-//            current = { item ->
-//                current(item = item)
-//            },
-//            navigation = { route ->
-//                navController.navigate(
-//                    route = route
-//                ) {
-//                    popUpTo(
-//                        id = navController.graph.findStartDestination().id
-//                    ) {
-//                        saveState = true
-//                    }
-//                    launchSingleTop = true
-//                    restoreState = true
-//                }
-//            }
-//        )
-//        // 获取页面个数
-//        val count = adapter.itemCount
-//        // 设置适配器
-//        mViewPager2.adapter = adapter
-//        // 预加载页面
-//        mViewPager2.offscreenPageLimit = count - 1
-//    }
+    /**
+     * ViewPager2的适配器
+     */
+    private fun adapter(navController: NavHostController) {
+        // 初始化适配器实例
+        val adapter = ContentAdapter.newInstance(
+            activity = mME,
+            current = { item ->
+                current(item = item)
+            },
+            navigation = { route ->
+                navController.navigate(
+                    route = route
+                ) {
+                    popUpTo(
+                        id = navController.graph.findStartDestination().id
+                    ) {
+                        saveState = true
+                    }
+                    launchSingleTop = true
+                    restoreState = true
+                }
+            }
+        )
+        // 获取页面个数
+        val count = adapter.itemCount
+        // 设置适配器
+        mViewPager2.adapter = adapter
+        // 预加载页面
+        mViewPager2.offscreenPageLimit = count - 1
+    }
 
 
 //    private fun bindingDrawer(navigationType: NavigationType, open: () -> Unit) {
@@ -704,48 +696,48 @@ class TermPluxActivity : BaseActivity() {
 //    }
 
 
-//    private fun mediator(navigationType: NavigationType, home: () -> Unit) {
-//        val title = arrayOf(
-//            getString(R.string.menu_launcher),
+    private fun mediator(navigationType: NavigationType, home: () -> Unit) {
+        val title = arrayOf(
+            getString(R.string.menu_launcher),
 //            getString(R.string.menu_home),
-//            getString(R.string.menu_apps),
-//            getString(R.string.menu_settings)
-//        )
-//        MediatorUtils(
-//            bottomNavigation = mBottomNavigationView,
-//            tabLayout = mTabLayout,
-//            viewPager = mViewPager2,
-//            home = {
-//                home()
-//            }
-//        ) { page, tab, position ->
-//            page.apply {
-//                orientation = when (navigationType) {
-//                    NavigationType.BottomNavigation -> ViewPager2.ORIENTATION_HORIZONTAL
-//                    NavigationType.NavigationRail -> ViewPager2.ORIENTATION_VERTICAL
-//                    NavigationType.PermanentNavigationDrawer -> ViewPager2.ORIENTATION_VERTICAL
-//                }
-//                //isUserInputEnabled = navigationType == NavigationType.BottomNavigation
-//                isUserInputEnabled = false
-//            }
-//            tab.apply {
-//                text = title[position]
-//            }
-//        }.attach()
-//    }
+            getString(R.string.menu_apps),
+            getString(R.string.menu_settings)
+        )
+        MediatorUtils(
+            bottomNavigation = mBottomNavigationView,
+            tabLayout = mTabLayout,
+            viewPager = mViewPager2,
+            home = {
+                home()
+            }
+        ) { page, tab, position ->
+            page.apply {
+                orientation = when (navigationType) {
+                    NavigationType.BottomNavigation -> ViewPager2.ORIENTATION_HORIZONTAL
+                    NavigationType.NavigationRail -> ViewPager2.ORIENTATION_VERTICAL
+                    NavigationType.PermanentNavigationDrawer -> ViewPager2.ORIENTATION_VERTICAL
+                }
+                //isUserInputEnabled = navigationType == NavigationType.BottomNavigation
+                isUserInputEnabled = true
+            }
+            tab.apply {
+                text = title[position]
+            }
+        }.attach()
+    }
 
     private fun touch(hostView: View) {
         hostView.setOnTouchListener(delayHideTouchListener)
     }
 
-//    /**
-//     * ViewPager2切换页面
-//     */
-//    private fun current(item: Int) {
-//        if (mViewPager2.currentItem != item) {
-//            mViewPager2.currentItem = item
-//        }
-//    }
+    /**
+     * ViewPager2切换页面
+     */
+    private fun current(item: Int) {
+        if (mViewPager2.currentItem != item) {
+            mViewPager2.currentItem = item
+        }
+    }
 
     private fun getAndroidVersion(): String {
         return when (Build.VERSION.SDK_INT) {
@@ -902,6 +894,10 @@ class TermPluxActivity : BaseActivity() {
                 darkTheme -> DarkColorScheme
                 else -> LightColorScheme
             }
+            adapter(navController = navController)
+            mediator(navigationType = navigationType){
+
+            }
             // 主机控件触摸事件
             touch(hostView = hostView)
             // 绑定操作栏与导航抽屉
@@ -984,10 +980,9 @@ class TermPluxActivity : BaseActivity() {
                         }
                     },
                     current = { item ->
-//                        current(
-//                            item = item
-//                        )
-                        changeFragment(item)
+                        current(
+                            item = item
+                        )
                     },
                     browser = { url ->
                         PopTip.show(url)
@@ -1046,14 +1041,14 @@ class TermPluxActivity : BaseActivity() {
     companion object {
 
         private const val tagFlutterBoostFragment: String = "flutter_boost_fragment"
-        private const val tagSettingsFragment: String = "settings_fragment"
+      //  private const val tagSettingsFragment: String = "settings_fragment"
 
-        const val toggle: String = "toggle"
-        const val taskbar: String = "taskbar"
-        const val options: String = "options"
+        private const val toggle: String = "toggle"
+        private const val taskbar: String = "taskbar"
+        private const val options: String = "options"
 
-        const val shizukuVersion: String = "shizukuVersion"
-        const val androidVersion: String = "androidVersion"
+        private const val shizukuVersion: String = "shizukuVersion"
+        private const val androidVersion: String = "androidVersion"
 
         // 浅色模式配色
         private val Purple80 = Color(0xFFD0BCFF)
@@ -1091,12 +1086,12 @@ class TermPluxActivity : BaseActivity() {
         )
 
         /** 操作栏是否应该在[autoHideDelayMillis]毫秒后自动隐藏。*/
-        const val autoHide = true
+        private const val autoHide = true
 
         /** 如果设置了[autoHide]，则在用户交互后隐藏操作栏之前等待的毫秒数。*/
-        const val autoHideDelayMillis = 3000
+        private const val autoHideDelayMillis = 3000
 
         /** 一些较老的设备需要在小部件更新和状态和导航栏更改之间有一个小的延迟。*/
-        const val uiAnimatorDelay = 300
+        private const val uiAnimatorDelay = 300
     }
 }

@@ -21,11 +21,8 @@ import io.termplux.utils.ChineseCaleUtils
 import io.termplux.databinding.LauncherBinding
 import kotlin.math.hypot
 
-class LauncherFragment constructor(
-    appBarLayout: AppBarLayout
-) : Fragment(), Runnable {
+class LauncherFragment : Fragment(), Runnable {
 
-    private var mAppBarLayout: AppBarLayout
 
     private lateinit var mSplashLogo: AppCompatImageView
     private lateinit var mContentLinear: LinearLayoutCompat
@@ -34,7 +31,7 @@ class LauncherFragment constructor(
     private val binding get() = _binding!!
 
     init {
-        mAppBarLayout = appBarLayout
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -179,8 +176,8 @@ class LauncherFragment constructor(
 
     companion object {
 
-        fun newInstance(appBarLayout: AppBarLayout): LauncherFragment {
-            return LauncherFragment(appBarLayout = appBarLayout)
+        fun newInstance(): LauncherFragment {
+            return LauncherFragment()
         }
 
         /** 开屏图标动画时长 */

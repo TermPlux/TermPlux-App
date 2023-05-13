@@ -16,7 +16,7 @@ object ScreenRoute {
     const val routeAbout: String = "about"
 
     const val routeLauncherFragment: String = ContentAdapter.launcher.toString()
-    const val routeHomeFragment: String = ContentAdapter.home.toString()
+    const val routeHomeFragment: String = ""
     const val routeAppsFragment: String= ContentAdapter.apps.toString()
     const val routeSettingsFragment: String = ContentAdapter.settings.toString()
 

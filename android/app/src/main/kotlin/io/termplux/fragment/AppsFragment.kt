@@ -122,7 +122,7 @@ class AppsFragment constructor(
             0
         )) {
             val pkg = resolveInfo.activityInfo.packageName
-            if (pkg == BuildConfig.APPLICATION_ID) {
+            if (pkg != BuildConfig.APPLICATION_ID) {
                 applicationList.add(
                     AppsModel(pkgName = pkg)
                 )

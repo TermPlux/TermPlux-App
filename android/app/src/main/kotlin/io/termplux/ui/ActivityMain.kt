@@ -608,7 +608,7 @@ fun ActivityMain(
             },
             modifier = Modifier.fillMaxSize(),
             drawerState = drawerState,
-            gesturesEnabled = true
+            gesturesEnabled = false
         ) {
             content()
         }

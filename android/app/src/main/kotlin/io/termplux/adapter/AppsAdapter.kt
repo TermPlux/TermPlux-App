@@ -282,7 +282,7 @@ class AppsAdapter constructor(
     }
 
     private fun navToHome() {
-        mCurrent(ContentAdapter.home)
+        //mCurrent(ContentAdapter.home)
     }
 
     private fun navToSettings() {

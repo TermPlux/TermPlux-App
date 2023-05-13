@@ -43,7 +43,7 @@ class ErrorFragment constructor(
     }
 
     private fun navigationToHome() {
-        mCurrent(ContentAdapter.home)
+       // mCurrent(ContentAdapter.home)
     }
 
     companion object {
