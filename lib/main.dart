@@ -1,57 +1,56 @@
-import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_boost/flutter_boost.dart';
+import 'package:window_manager/window_manager.dart';
 
-import 'app.dart';
+import 'app/app.dart';
 import 'boost/binding.dart';
+import 'boost/observer.dart';
 
 Future main() async {
-  PageVisibilityBinding.instance
-      .addGlobalObserver(AppGlobalPageVisibilityObserver());
-  CustomFlutterBinding();
-  runApp(const TermPluxApp());
+  if (isUseBoost) {
+    PageVisibilityBinding.instance
+        .addGlobalObserver(AppGlobalPageVisibilityObserver());
+    CustomFlutterBinding();
+  }
 
-  // runApp(DevicePreview(
-  //   enabled: !kReleaseMode,
-  //   builder: (context) => const TermPluxApp(), // Wrap your app
-  // ));
+  if (isDesktop) {
+    WidgetsFlutterBinding.ensureInitialized();
+
+    await windowManager.ensureInitialized();
+
+    WindowOptions windowOptions = const WindowOptions(
+      size: Size(800, 600),
+      center: true,
+      fullScreen: false,
+      backgroundColor: Colors.transparent,
+      skipTaskbar: false,
+      title: 'TermPlux',
+      titleBarStyle: TitleBarStyle.hidden,
+    );
+
+    windowManager.waitUntilReadyToShow(windowOptions, () async {
+      await windowManager.show();
+      await windowManager.focus();
+    });
+  }
+
+  runApp(const TermPluxApp());
 }
 
-class AppGlobalPageVisibilityObserver extends GlobalPageVisibilityObserver {
-  @override
-  void onPagePush(Route<dynamic> route) {
-    Logger.log(
-        'boost_lifecycle: AppGlobalPageVisibilityObserver.onPageCreate route:${route.settings.name}');
-  }
+bool get isDesktop {
+  if (kIsWeb) return false;
+  return [
+    TargetPlatform.windows,
+    TargetPlatform.linux,
+    TargetPlatform.macOS,
+  ].contains(defaultTargetPlatform);
+}
 
-  @override
-  void onPageShow(Route<dynamic> route) {
-    Logger.log(
-        'boost_lifecycle: AppGlobalPageVisibilityObserver.onPageShow route:${route.settings.name}');
-  }
-
-  @override
-  void onPageHide(Route<dynamic> route) {
-    Logger.log(
-        'boost_lifecycle: AppGlobalPageVisibilityObserver.onPageHide route:${route.settings.name}');
-  }
-
-  @override
-  void onPagePop(Route<dynamic> route) {
-    Logger.log(
-        'boost_lifecycle: AppGlobalPageVisibilityObserver.onPageDestroy route:${route.settings.name}');
-  }
-
-  @override
-  void onForeground(Route route) {
-    Logger.log(
-        'boost_lifecycle: AppGlobalPageVisibilityObserver.onForeground route:${route.settings.name}');
-  }
-
-  @override
-  void onBackground(Route<dynamic> route) {
-    Logger.log(
-        'boost_lifecycle: AppGlobalPageVisibilityObserver.onBackground route:${route.settings.name}');
-  }
+bool get isUseBoost {
+  if (kIsWeb) return false;
+  return [
+    TargetPlatform.android,
+    TargetPlatform.iOS,
+  ].contains(defaultTargetPlatform);
 }

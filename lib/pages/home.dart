@@ -22,31 +22,13 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _counter++;
     });
-
-
   }
 
-  // void navToLauncher() {
-  //   if (!kIsWeb) {
-  //     if (Platform.isAndroid) {
-  //       channel.invokeMethod("navToLauncher");
-  //     }
-  //   }
-  // }
-
-  AppBar? topAppBar() {
-    if (!kIsWeb){
-      if (!Platform.isAndroid){
-        return AppBar(
-          title: Text(widget.title),
-        );
-      } else {
-        return null;
+  void navToPager() {
+    if (!kIsWeb) {
+      if (Platform.isAndroid) {
+        channel.invokeMethod("pager");
       }
-    } else {
-      return AppBar(
-        title: Text(widget.title),
-      );
     }
   }
 
@@ -55,6 +37,10 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        actions: [
+          IconButton(onPressed: navToPager, icon: const Icon(Icons.arrow_forward))
+
+        ],
       ),
       body: Center(
         child: Column(

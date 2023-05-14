@@ -224,6 +224,7 @@ class TermPluxActivity : BaseActivity() {
                     val channel = MethodChannel(messenger, "termplux_channel")
                     channel.setMethodCallHandler { call, res ->
                         when (call.method) {
+                            "pager" -> changeFragment(fragment_pager)
                             // 跳转桌面
                             "navToLauncher" -> {
                                 //current(item = ContentAdapter.launcher)
@@ -383,7 +384,7 @@ class TermPluxActivity : BaseActivity() {
         fragmentChangeUtil?.addFragment(home, true)
         fragmentChangeUtil?.addFragment(pager, true)
 
-        changeFragment(1)
+        changeFragment(fragment_home)
     }
 
     /**
@@ -511,7 +512,7 @@ class TermPluxActivity : BaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         super.onOptionsItemSelected(item)
         when (item.itemId) {
-            android.R.id.home -> onBack()
+            android.R.id.home -> changeFragment(0, R.anim.fade, R.anim.hold)
             R.id.action_settings -> {
                 current(item = ContentAdapter.settings)
             }
@@ -1049,6 +1050,9 @@ class TermPluxActivity : BaseActivity() {
 
         private const val shizukuVersion: String = "shizukuVersion"
         private const val androidVersion: String = "androidVersion"
+
+        private const val fragment_home: Int = 0
+        private const val fragment_pager: Int = 1
 
         // 浅色模式配色
         private val Purple80 = Color(0xFFD0BCFF)
