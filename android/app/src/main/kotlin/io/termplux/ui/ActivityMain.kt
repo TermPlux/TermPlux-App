@@ -332,7 +332,7 @@ fun ActivityMain(
                         modifier = Modifier.fillMaxWidth(),
                         navigationIcon = {
                             AnimatedVisibility(
-                                visible = navigationType != NavigationType.PermanentNavigationDrawer
+                                visible = navigationType == NavigationType.NavigationRail
                             ) {
                                 IconButton(
                                     onClick = {
@@ -588,8 +588,8 @@ fun ActivityMain(
 
     }
 
-    if (navigationType == NavigationType.PermanentNavigationDrawer) {
-        PermanentNavigationDrawer(
+    when (navigationType){
+        NavigationType.PermanentNavigationDrawer -> PermanentNavigationDrawer(
             drawerContent = {
                 PermanentDrawerSheet {
                     nav()
@@ -599,8 +599,7 @@ fun ActivityMain(
         ) {
             content()
         }
-    } else {
-        ModalNavigationDrawer(
+        NavigationType.NavigationRail -> ModalNavigationDrawer(
             drawerContent = {
                 ModalDrawerSheet {
                     nav()
@@ -608,9 +607,10 @@ fun ActivityMain(
             },
             modifier = Modifier.fillMaxSize(),
             drawerState = drawerState,
-            gesturesEnabled = false
+            gesturesEnabled = true
         ) {
             content()
         }
+        NavigationType.BottomNavigation -> content()
     }
 }

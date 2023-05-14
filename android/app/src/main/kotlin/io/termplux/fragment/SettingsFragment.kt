@@ -3,6 +3,11 @@ package io.termplux.fragment
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
@@ -30,6 +35,31 @@ class SettingsFragment constructor(
         super.onCreate(savedInstanceState)
         mContext = requireActivity()
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext)
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        return LinearLayoutCompat(requireActivity()).apply {
+            orientation = LinearLayoutCompat.VERTICAL
+
+            addView(TextView(requireActivity()).apply {
+                text = "sjxssb"
+            })
+            addView(
+                super.onCreateView(
+                    inflater,
+                    container,
+                    savedInstanceState
+                ),
+                LinearLayoutCompat.LayoutParams(
+                    LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                    LinearLayoutCompat.LayoutParams.MATCH_PARENT
+                )
+            )
+        }
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
