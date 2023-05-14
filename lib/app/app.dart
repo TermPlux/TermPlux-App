@@ -39,7 +39,9 @@ class _TermPluxApp extends State<TermPluxApp> with WindowListener {
     'home': (settings, uniqueId) {
       return PageRouteBuilder<dynamic>(
           settings: settings,
-          pageBuilder: (_, __, ___) => const MyHomePage(title: appName));
+          pageBuilder: (_, __, ___) {
+            return const MyHomePage(title: appName);
+          });
     },
   };
 

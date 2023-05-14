@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_boost/flutter_boost.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -32,6 +33,14 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  void aaa() {
+    BoostNavigator.instance.push(
+        "home",
+      withContainer: true,
+      opaque: true
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,6 +58,9 @@ class _MyHomePageState extends State<MyHomePage> {
             const Text(
               '你这个BYD的点击数:',
             ),
+            TextButton(
+                onPressed: aaa,
+                child: const Text("PUSH")),
             // const Text(
             //   '请选择目标平台:',
             // ),

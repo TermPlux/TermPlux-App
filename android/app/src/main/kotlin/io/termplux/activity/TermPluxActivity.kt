@@ -319,7 +319,7 @@ class TermPluxActivity : BaseActivity() {
             .url("home")
             .renderMode(RenderMode.surface)
             .transparencyMode(TransparencyMode.opaque)
-            .shouldAttachEngineToActivity(true)
+            .shouldAttachEngineToActivity(false)
             .build()
 
         fragmentChangeUtil?.addFragment(
