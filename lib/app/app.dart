@@ -53,7 +53,7 @@ class _TermPluxApp extends State<TermPluxApp> with WindowListener {
     return func(settings, uniqueId);
   }
 
-  Widget mbuilder(BuildContext context, Widget? widget, Widget home) {
+  Widget mBuilder(BuildContext context, Widget? widget, Widget home) {
     if (isUseBoost) return home;
     return DevicePreview.appBuilder(context, widget);
   }
@@ -63,7 +63,7 @@ class _TermPluxApp extends State<TermPluxApp> with WindowListener {
       return MaterialApp(
         useInheritedMediaQuery: true,
         locale: DevicePreview.locale(context),
-        builder: (context, widget) => mbuilder(context, widget, home),
+        builder: (context, widget) => mBuilder(context, widget, home),
         title: appName,
         theme: ThemeData(
             colorScheme: lightColorScheme,

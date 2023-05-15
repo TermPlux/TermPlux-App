@@ -46,10 +46,6 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
-        actions: [
-          IconButton(onPressed: navToPager, icon: const Icon(Icons.arrow_forward))
-
-        ],
       ),
       body: Center(
         child: Column(
@@ -58,6 +54,9 @@ class _MyHomePageState extends State<MyHomePage> {
             const Text(
               '你这个BYD的点击数:',
             ),
+            TextButton(
+                onPressed: navToPager,
+                child: const Text("PAGE")),
             TextButton(
                 onPressed: aaa,
                 child: const Text("PUSH")),

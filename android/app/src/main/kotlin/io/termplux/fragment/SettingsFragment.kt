@@ -37,31 +37,6 @@ class SettingsFragment constructor(
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        return LinearLayoutCompat(requireActivity()).apply {
-            orientation = LinearLayoutCompat.VERTICAL
-
-            addView(TextView(requireActivity()).apply {
-                text = "sjxssb"
-            })
-            addView(
-                super.onCreateView(
-                    inflater,
-                    container,
-                    savedInstanceState
-                ),
-                LinearLayoutCompat.LayoutParams(
-                    LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-                    LinearLayoutCompat.LayoutParams.MATCH_PARENT
-                )
-            )
-        }
-    }
-
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
         val settings: Preference? = findPreference("navigation_settings")

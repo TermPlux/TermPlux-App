@@ -3,6 +3,7 @@ package io.termplux.adapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.google.android.material.appbar.AppBarLayout
 import io.termplux.fragment.AppsFragment
 import io.termplux.fragment.ErrorFragment
 import io.termplux.fragment.LauncherFragment
@@ -10,12 +11,14 @@ import io.termplux.fragment.SettingsFragment
 
 class ContentAdapter constructor(
     activity: FragmentActivity,
+    appBar: AppBarLayout,
     current: (Int) -> Unit,
     navigation: (String) -> Unit
 ) : FragmentStateAdapter(
     activity
 ) {
 
+    private val mAppBarLayout: AppBarLayout
     private val mCurrent: (Int) -> Unit
 
     private var mNavigation: (String) -> Unit
@@ -26,6 +29,7 @@ class ContentAdapter constructor(
     private lateinit var mError: ErrorFragment
 
     init {
+        mAppBarLayout = appBar
         // 初始化变量
         mCurrent = current
         // 传入FlutterFragment
@@ -63,7 +67,9 @@ class ContentAdapter constructor(
      */
     private fun initFragment() {
 
-        mLauncher = LauncherFragment.newInstance()
+        mLauncher = LauncherFragment.newInstance(
+            appBar = mAppBarLayout
+        )
         // 应用
         mApps = AppsFragment.newInstance(
             current = mCurrent
@@ -84,11 +90,13 @@ class ContentAdapter constructor(
 
         fun newInstance(
             activity: FragmentActivity,
+            appBar: AppBarLayout,
             current: (Int) -> Unit,
             navigation: (String) -> Unit
         ): ContentAdapter {
             return ContentAdapter(
                 activity = activity,
+                appBar = appBar,
                 current = current,
                 navigation = navigation
             )

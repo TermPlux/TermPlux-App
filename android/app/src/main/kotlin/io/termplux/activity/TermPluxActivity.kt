@@ -32,6 +32,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.FragmentManager
@@ -254,7 +255,10 @@ class TermPluxActivity : BaseActivity() {
         mViewPager2 = ViewPager2(
             mContext
         ).apply {
-
+            background = ContextCompat.getDrawable(
+                mContext,
+                R.drawable.custom_wallpaper_24
+            )
         }
 
         // 初始化底部导航
@@ -268,10 +272,13 @@ class TermPluxActivity : BaseActivity() {
         mAppBarLayout = AppBarLayout(
             mContext
         ).apply {
+            setBackgroundColor(android.graphics.Color.TRANSPARENT)
             addView(
                 MaterialToolbar(
                     mContext
-                ).also { toolbar ->
+                ).apply {
+                    setBackgroundColor(android.graphics.Color.TRANSPARENT)
+                }.also { toolbar ->
                     // 设置操作栏
                     setSupportActionBar(toolbar)
                     mToolbar = toolbar
@@ -799,6 +806,7 @@ class TermPluxActivity : BaseActivity() {
         // 初始化适配器实例
         val adapter = ContentAdapter.newInstance(
             activity = mME,
+            appBar = mAppBarLayout,
             current = { item ->
                 current(item = item)
             },
@@ -945,7 +953,8 @@ class TermPluxActivity : BaseActivity() {
                     Text(
                         text = stringResource(
                             id = R.string.view_pager_preview
-                        ), textAlign = TextAlign.Center, style = MaterialTheme.typography.titleLarge
+                        ),
+                        textAlign = TextAlign.Center, style = MaterialTheme.typography.titleLarge
                     )
                 }
             },

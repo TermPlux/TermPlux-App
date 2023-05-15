@@ -59,22 +59,7 @@ class AppsFragment constructor(
             )
         }
 
-        return FrameLayout(
-            requireActivity()
-        ).apply {
-            // 设置背景
-            background = ContextCompat.getDrawable(
-                requireActivity(),
-                R.drawable.custom_wallpaper_24
-            )
-            addView(
-                mRecyclerView,
-                FrameLayout.LayoutParams(
-                    FrameLayout.LayoutParams.MATCH_PARENT,
-                    FrameLayout.LayoutParams.MATCH_PARENT
-                )
-            )
-        }
+        return mRecyclerView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

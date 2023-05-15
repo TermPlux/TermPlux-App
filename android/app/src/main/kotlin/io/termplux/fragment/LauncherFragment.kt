@@ -21,9 +21,12 @@ import io.termplux.utils.ChineseCaleUtils
 import io.termplux.databinding.LauncherBinding
 import kotlin.math.hypot
 
-class LauncherFragment : Fragment(), Runnable {
+class LauncherFragment constructor(
+    appBar: AppBarLayout
+) : Fragment(), Runnable {
 
 
+    private val mAppBarLayout: AppBarLayout
     private lateinit var mSplashLogo: AppCompatImageView
     private lateinit var mContentLinear: LinearLayoutCompat
 
@@ -31,7 +34,7 @@ class LauncherFragment : Fragment(), Runnable {
     private val binding get() = _binding!!
 
     init {
-
+        mAppBarLayout = appBar
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,18 +65,13 @@ class LauncherFragment : Fragment(), Runnable {
         // 页面内容
         mContentLinear = LinearLayoutCompat(requireActivity()).apply {
             orientation = LinearLayoutCompat.VERTICAL
-            // 设置背景
-            background = ContextCompat.getDrawable(
-                requireActivity(),
-                R.drawable.custom_wallpaper_24
+            addView(
+                mAppBarLayout,
+                LinearLayoutCompat.LayoutParams(
+                    LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                    LinearLayoutCompat.LayoutParams.WRAP_CONTENT
+                )
             )
-//            addView(
-//                mAppBarLayout,
-//                LinearLayoutCompat.LayoutParams(
-//                    LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-//                    LinearLayoutCompat.LayoutParams.WRAP_CONTENT
-//                )
-//            )
             addView(
                 binding.root,
                 LinearLayoutCompat.LayoutParams(
@@ -176,8 +174,12 @@ class LauncherFragment : Fragment(), Runnable {
 
     companion object {
 
-        fun newInstance(): LauncherFragment {
-            return LauncherFragment()
+        fun newInstance(
+            appBar: AppBarLayout
+        ): LauncherFragment {
+            return LauncherFragment(
+                appBar = appBar
+            )
         }
 
         /** 开屏图标动画时长 */
