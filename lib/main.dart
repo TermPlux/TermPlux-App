@@ -54,3 +54,11 @@ bool get isUseBoost {
     TargetPlatform.iOS,
   ].contains(defaultTargetPlatform);
 }
+
+bool get isUsePreview {
+  if (kIsWeb) return true;
+  return ![
+    TargetPlatform.android,
+    TargetPlatform.iOS,
+  ].contains(defaultTargetPlatform);
+}

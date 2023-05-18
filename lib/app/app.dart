@@ -61,7 +61,6 @@ class _TermPluxApp extends State<TermPluxApp> with WindowListener {
   Widget appBuilder(Widget home) {
     return DynamicColorBuilder(builder: (lightColorScheme, darkColorScheme) {
       return MaterialApp(
-        useInheritedMediaQuery: true,
         locale: DevicePreview.locale(context),
         builder: (context, widget) => mBuilder(context, widget, home),
         title: appName,

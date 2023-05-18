@@ -36,9 +36,17 @@ class _MyHomePageState extends State<MyHomePage> {
   void aaa() {
     BoostNavigator.instance.push(
         "home",
-      withContainer: true,
-      opaque: true
+        withContainer: true,
+        opaque: true
     );
+  }
+
+  bool get isUseBoost {
+    if (kIsWeb) return false;
+    return [
+      TargetPlatform.android,
+      TargetPlatform.iOS,
+    ].contains(defaultTargetPlatform);
   }
 
   @override
