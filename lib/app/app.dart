@@ -68,11 +68,11 @@ class _TermPluxApp extends State<TermPluxApp> with WindowListener {
         theme: ThemeData(
             colorScheme: lightColorScheme,
             brightness: Brightness.light,
-            useMaterial3: true),
+            useMaterial3: false),
         darkTheme: ThemeData(
             colorScheme: darkColorScheme,
             brightness: Brightness.dark,
-            useMaterial3: true),
+            useMaterial3: false),
         themeMode: ThemeMode.system,
         home: home,
         debugShowCheckedModeBanner: false,
@@ -109,16 +109,17 @@ class _TermPluxApp extends State<TermPluxApp> with WindowListener {
   Widget build(BuildContext context) {
     if (isUseBoost) {
       return FlutterBoostApp(routeFactory, appBuilder: appBuilder);
+    } else {
+      return DevicePreview(
+        builder: (context) {
+          return appBuilder(const MyHomePage(title: appName));
+        },
+        isToolbarVisible: true,
+        availableLocales: const [
+          Locale('zh_CN'),
+        ],
+        enabled: isUsePreview,
+      );
     }
-    return DevicePreview(
-      builder: (context) {
-        return appBuilder(const MyHomePage(title: appName));
-      },
-      isToolbarVisible: true,
-      availableLocales: const [
-        Locale('zh_CN'),
-      ],
-      enabled: isUsePreview,
-    );
   }
 }
