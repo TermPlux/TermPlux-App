@@ -1,5 +1,6 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:dynamic_color/dynamic_color.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_boost/flutter_boost.dart';
@@ -37,10 +38,10 @@ class _TermPluxApp extends State<TermPluxApp> with WindowListener {
 
   static Map<String, FlutterBoostRouteFactory> routerMap = {
     'home': (settings, uniqueId) {
-      return PageRouteBuilder<dynamic>(
+      return CupertinoPageRoute(
           settings: settings,
-          pageBuilder: (_, __, ___) {
-            return const MyHomePage(title: appName);
+          builder: (_) {
+            return const MyHomePage(title: appName,);
           });
     },
   };
@@ -53,30 +54,18 @@ class _TermPluxApp extends State<TermPluxApp> with WindowListener {
     return func(settings, uniqueId);
   }
 
-  Widget mBuilder(BuildContext context, Widget? widget, Widget home) {
-    if (isUseBoost) return home;
-    return DevicePreview.appBuilder(context, widget);
-  }
-
   Widget appBuilder(Widget home) {
-    return DynamicColorBuilder(builder: (lightColorScheme, darkColorScheme) {
-      return MaterialApp(
-        locale: DevicePreview.locale(context),
-        builder: (context, widget) => mBuilder(context, widget, home),
-        title: appName,
-        theme: ThemeData(
-            colorScheme: lightColorScheme,
-            brightness: Brightness.light,
-            useMaterial3: false),
-        darkTheme: ThemeData(
-            colorScheme: darkColorScheme,
-            brightness: Brightness.dark,
-            useMaterial3: false),
-        themeMode: ThemeMode.system,
-        home: home,
-        debugShowCheckedModeBanner: false,
-      );
-    });
+    return CupertinoApp(
+      useInheritedMediaQuery: true,
+      locale: DevicePreview.locale(context),
+      builder: (context, widget) {
+        if (isUseBoost) return home;
+        return DevicePreview.appBuilder(context, widget);
+      },
+      title: appName,
+      home: home,
+    );
+
   }
 
   bool get isUsePreview {
@@ -107,17 +96,41 @@ class _TermPluxApp extends State<TermPluxApp> with WindowListener {
   @override
   Widget build(BuildContext context) {
     if (isUseBoost) {
-      return FlutterBoostApp(routeFactory, appBuilder: appBuilder);
+      return FlutterBoostApp(
+          routeFactory,
+          appBuilder: appBuilder);
     } else {
-      return DevicePreview(
-        builder: (context) {
-          return appBuilder(const MyHomePage(title: appName));
-        },
-        isToolbarVisible: true,
-        availableLocales: const [
-          Locale('zh_CN'),
-        ],
-        enabled: isUsePreview,
+      return MaterialApp(
+        locale: DevicePreview.locale(context),
+        builder: DevicePreview.appBuilder,
+        title: appName,
+        theme: ThemeData(
+            primaryColor: Colors.blue,
+            brightness: Brightness.light,
+            useMaterial3: false
+        ),
+        darkTheme: ThemeData(
+          //    colorScheme: darkColorScheme,
+            primaryColor: Colors.blue,
+            brightness: Brightness.dark,
+            useMaterial3: false),
+        themeMode: ThemeMode.system,
+        home: Scaffold(
+          appBar: AppBar(
+            title: const Text(appName),
+          ),
+          body: DevicePreview(
+            builder: (context) {
+              return appBuilder(const MyHomePage(title: appName,));
+            },
+            isToolbarVisible: true,
+            availableLocales: const [
+              Locale('zh_CN'),
+            ],
+            enabled: isUsePreview,
+          ),
+        ),
+        debugShowCheckedModeBanner: false,
       );
     }
   }

@@ -15,7 +15,7 @@ import com.kongzue.baseframework.util.AppManager
 import com.kongzue.dialogx.DialogX
 import com.kongzue.dialogx.dialogs.MessageDialog
 import com.kongzue.dialogx.dialogs.PopTip
-import com.kongzue.dialogxmaterialyou.style.MaterialYouStyle
+import com.kongzue.dialogx.style.IOSStyle
 import io.termplux.BuildConfig
 import org.lsposed.hiddenapibypass.HiddenApiBypass
 import java.io.File
@@ -84,7 +84,7 @@ class TermPluxApp : BaseApp<TermPluxApp>() {
 
         // 初始化DialogX
         DialogX.init(this@TermPluxApp)
-        DialogX.globalStyle = MaterialYouStyle()
+        DialogX.globalStyle = IOSStyle()
         DialogX.globalTheme = DialogX.THEME.AUTO
         DialogX.autoShowInputKeyboard = true
         DialogX.onlyOnePopTip = false

@@ -26,7 +26,7 @@ Future main() async {
       backgroundColor: Colors.transparent,
       skipTaskbar: false,
       title: 'TermPlux',
-      titleBarStyle: TitleBarStyle.normal,
+      titleBarStyle: TitleBarStyle.hidden,
     );
 
     windowManager.waitUntilReadyToShow(windowOptions, () async {
