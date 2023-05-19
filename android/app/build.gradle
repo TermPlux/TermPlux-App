@@ -47,9 +47,6 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
 
-        renderscriptTargetApi 24
-        renderscriptSupportModeEnabled true
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         externalNativeBuild {
@@ -109,8 +106,7 @@ dependencies {
     // DialogX: https://github.com/kongzue/DialogX
     implementation 'com.kongzue.dialogx:DialogX:0.0.47'
     // DialogX: https://github.com/kongzue/DialogX
-    //implementation 'com.kongzue.dialogx.style:DialogXMaterialYouStyle:0.0.47'
-    implementation 'com.kongzue.dialogx.style:DialogXIOSStyle:0.0.47'
+    implementation 'com.kongzue.dialogx.style:DialogXMaterialYouStyle:0.0.47'
     // LicensesDialog: https://github.com/PSDev/LicensesDialog
     implementation 'de.psdev.licensesdialog:licensesdialog:2.2.0'
     // Shizuku-API: https://github.com/RikkaApps/Shizuku-API

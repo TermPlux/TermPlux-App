@@ -1,7 +1,7 @@
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_boost/flutter_boost.dart';
-import 'package:window_manager/window_manager.dart';
 
 import 'app/app.dart';
 import 'boost/binding.dart';
@@ -17,21 +17,13 @@ Future main() async {
   if (isDesktop) {
     WidgetsFlutterBinding.ensureInitialized();
 
-    await windowManager.ensureInitialized();
-
-    WindowOptions windowOptions = const WindowOptions(
-      size: Size(1280, 720),
-      center: true,
-      fullScreen: false,
-      backgroundColor: Colors.transparent,
-      skipTaskbar: false,
-      title: 'TermPlux',
-      titleBarStyle: TitleBarStyle.hidden,
-    );
-
-    windowManager.waitUntilReadyToShow(windowOptions, () async {
-      await windowManager.show();
-      await windowManager.focus();
+    doWhenWindowReady(() {
+      const initialSize = Size(1280, 720);
+      appWindow.minSize = initialSize;
+      appWindow.size = initialSize;
+      appWindow.alignment = Alignment.center;
+      appWindow.title = 'TermPlux';
+      appWindow.show();
     });
   }
 
@@ -50,14 +42,6 @@ bool get isDesktop {
 bool get isUseBoost {
   if (kIsWeb) return false;
   return [
-    TargetPlatform.android,
-    TargetPlatform.iOS,
-  ].contains(defaultTargetPlatform);
-}
-
-bool get isUsePreview {
-  if (kIsWeb) return true;
-  return ![
     TargetPlatform.android,
     TargetPlatform.iOS,
   ].contains(defaultTargetPlatform);

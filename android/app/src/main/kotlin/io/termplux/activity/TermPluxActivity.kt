@@ -22,7 +22,6 @@ import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
@@ -42,7 +41,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.preference.PreferenceManager
 import androidx.viewpager2.widget.ViewPager2
-import androidx.window.layout.DisplayFeature
 import androidx.window.layout.FoldingFeature
 import com.farmerbb.taskbar.lib.Taskbar
 import com.google.accompanist.adaptive.calculateDisplayFeatures
@@ -56,14 +54,12 @@ import com.google.android.material.tabs.TabLayout
 import com.idlefish.flutterboost.FlutterBoost
 import com.idlefish.flutterboost.containers.FlutterBoostFragment
 import com.kongzue.baseframework.BaseActivity
-import com.kongzue.baseframework.BaseFragment
 import com.kongzue.baseframework.interfaces.DarkNavigationBarTheme
 import com.kongzue.baseframework.interfaces.DarkStatusBarTheme
 import com.kongzue.baseframework.interfaces.EnterAnim
 import com.kongzue.baseframework.interfaces.ExitAnim
 import com.kongzue.baseframework.interfaces.FragmentLayout
 import com.kongzue.baseframework.interfaces.LifeCircleListener
-import com.kongzue.baseframework.interfaces.NavigationBarBackgroundColorHex
 import com.kongzue.baseframework.interfaces.NavigationBarBackgroundColorRes
 import com.kongzue.baseframework.util.AppManager
 import com.kongzue.baseframework.util.FragmentChangeUtil
@@ -81,7 +77,7 @@ import io.termplux.adapter.ContentAdapter
 import io.termplux.custom.DisableSwipeViewPager
 import io.termplux.custom.LinkNativeViewFactory
 import io.termplux.delegate.BoostDelegate
-import io.termplux.fragment.SettingsFragment
+import io.termplux.fragment.MainFragment
 import io.termplux.services.MainService
 import io.termplux.services.UserService
 import io.termplux.ui.ActivityMain
@@ -204,54 +200,6 @@ class TermPluxActivity : BaseActivity() {
         // 设置页面布局边界
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        // 初始化FlutterBoost
-        FlutterBoost.instance().apply {
-            setup(
-                application,
-                BoostDelegate { options ->
-                    when (options.pageName()) {
-                        "" -> {}
-                    }
-                }
-            ) { engine: FlutterEngine? ->
-                // 引擎操作
-                engine?.let {
-                    // 初始化插件
-                    GeneratedPluginRegistrant.registerWith(it)
-                    // 绑定原生控件
-                    val registry = it.platformViewsController.registry
-                    registry.registerViewFactory("android_view", LinkNativeViewFactory())
-                    // 通信
-                    val messenger = it.dartExecutor.binaryMessenger
-                    val channel = MethodChannel(messenger, "termplux_channel")
-                    channel.setMethodCallHandler { call, res ->
-                        when (call.method) {
-                            "pager" -> changeFragment(pager)
-                            // 跳转桌面
-                            "navToLauncher" -> {
-                                //current(item = ContentAdapter.launcher)
-                                res.success("success")
-                            }
-                            // 显示/隐藏ActionBar
-                            "toggle" -> {
-                                toggle()
-                                res.success("success")
-                            }
-                            // 打开ActionBar菜单
-                            "option" -> {
-                                optionsMenu()
-                                res.success("success")
-                            }
-
-                            else -> {
-                                res.error("error", "error_message", null)
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
         mViewPager2 = ViewPager2(
             mContext
         ).apply {
@@ -321,7 +269,7 @@ class TermPluxActivity : BaseActivity() {
 
         // 初始化FlutterBoostFragment
         mFlutterBoostFragment = FlutterBoostFragment.CachedEngineFragmentBuilder(
-            FlutterBoostFragment().javaClass
+            MainFragment().javaClass
         )
             .url("home")
             .renderMode(RenderMode.surface)

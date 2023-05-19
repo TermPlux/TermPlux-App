@@ -1,10 +1,11 @@
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_boost/flutter_boost.dart';
+import 'package:termplux/desktop/window_buttons.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -35,10 +36,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void aaa() {
-    BoostNavigator.instance.push(
-        "home",
-        withContainer: false
-    );
+    BoostNavigator.instance.push("home", withContainer: false, opaque: true);
   }
 
   bool get isUseBoost {
@@ -49,86 +47,74 @@ class _MyHomePageState extends State<MyHomePage> {
     ].contains(defaultTargetPlatform);
   }
 
+  bool get isDesktop {
+    if (kIsWeb) return false;
+    return [
+      TargetPlatform.windows,
+      TargetPlatform.linux,
+      TargetPlatform.macOS,
+    ].contains(defaultTargetPlatform);
+  }
+
+  AppBar topAppBar() {
+    if (isDesktop) {
+      return AppBar(
+        title: WindowTitleBarBox(child: MoveWindow()),
+        actions: const [WindowButtons()],
+      );
+    } else {
+      return AppBar(title: const Text('TermPlux'));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-      navigationBar: const CupertinoNavigationBar(
-        middle: Text("TermPlux"),
-      ),
-      child: Center(
+    return Scaffold(
+      appBar: topAppBar(),
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(
               '你这个BYD的点击数:',
             ),
-            CupertinoButton(
-                onPressed: navToPager,
-                child: const Text("PAGE")),
-            CupertinoButton(
-                onPressed: aaa,
-                child: const Text("PUSH")),
-            CupertinoButton(
-              onPressed: _incrementCounter,
-              child: const Text("ADD"),
+            TextButton(onPressed: navToPager, child: const Text("PAGE")),
+            TextButton(onPressed: aaa, child: const Text("PUSH")),
+            // const Text(
+            //   '请选择目标平台:',
+            // ),
+            // MaterialButton(
+            //   onPressed: _incrementCounter,
+            //   child: const Text("Android")
+            // ),
+            // MaterialButton(
+            //     onPressed: _incrementCounter,
+            //     child: const Text("iOS")
+            // ),
+            // MaterialButton(
+            //     onPressed: _incrementCounter,
+            //     child: const Text("Windows")
+            // ),
+            // MaterialButton(
+            //     onPressed: _incrementCounter,
+            //     child: const Text("macOS")
+            // ),
+            // MaterialButton(
+            //     onPressed: _incrementCounter,
+            //     child: const Text("Linux")
+            // ),
+            Text(
+              '$_counter',
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
-            Text(_counter.toString()),
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _incrementCounter,
+        tooltip: '增加',
+        child: const Icon(Icons.add),
+      ),
     );
-    // return Scaffold(
-    //   appBar: AppBar(
-    //     title: Text(widget.title),
-    //   ),
-    //   body: Center(
-    //     child: Column(
-    //       mainAxisAlignment: MainAxisAlignment.center,
-    //       children: <Widget>[
-    //         const Text(
-    //           '你这个BYD的点击数:',
-    //         ),
-    //         TextButton(
-    //             onPressed: navToPager,
-    //             child: const Text("PAGE")),
-    //         TextButton(
-    //             onPressed: aaa,
-    //             child: const Text("PUSH")),
-    //         // const Text(
-    //         //   '请选择目标平台:',
-    //         // ),
-    //         // MaterialButton(
-    //         //   onPressed: _incrementCounter,
-    //         //   child: const Text("Android")
-    //         // ),
-    //         // MaterialButton(
-    //         //     onPressed: _incrementCounter,
-    //         //     child: const Text("iOS")
-    //         // ),
-    //         // MaterialButton(
-    //         //     onPressed: _incrementCounter,
-    //         //     child: const Text("Windows")
-    //         // ),
-    //         // MaterialButton(
-    //         //     onPressed: _incrementCounter,
-    //         //     child: const Text("macOS")
-    //         // ),
-    //         // MaterialButton(
-    //         //     onPressed: _incrementCounter,
-    //         //     child: const Text("Linux")
-    //         // ),
-    //         Text(
-    //           '$_counter',
-    //           style: Theme.of(context).textTheme.headlineMedium,
-    //         ),
-    //       ],
-    //     ),
-    //   ),
-    //   floatingActionButton: FloatingActionButton(
-    //     onPressed: _incrementCounter,
-    //     tooltip: '增加',
-    //     child: const Icon(Icons.add),
-    //   ),
-    // );
   }
 }
