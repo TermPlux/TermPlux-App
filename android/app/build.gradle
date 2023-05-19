@@ -104,9 +104,9 @@ dependencies {
     // BaseFramework: https://github.com/kongzue/BaseFramework
     implementation 'com.github.kongzue:BaseFramework:6.8.9.1'
     // DialogX: https://github.com/kongzue/DialogX
-    implementation 'com.kongzue.dialogx:DialogX:0.0.47'
+    implementation 'com.kongzue.dialogx:DialogX:0.0.48'
     // DialogX: https://github.com/kongzue/DialogX
-    implementation 'com.kongzue.dialogx.style:DialogXMaterialYouStyle:0.0.47'
+    implementation 'com.kongzue.dialogx.style:DialogXMaterialYouStyle:0.0.48'
     // LicensesDialog: https://github.com/PSDev/LicensesDialog
     implementation 'de.psdev.licensesdialog:licensesdialog:2.2.0'
     // Shizuku-API: https://github.com/RikkaApps/Shizuku-API
