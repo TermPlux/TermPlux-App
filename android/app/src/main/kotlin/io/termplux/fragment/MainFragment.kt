@@ -7,7 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.viewpager2.widget.ViewPager2
 import com.idlefish.flutterboost.containers.FlutterBoostFragment
+import io.flutter.embedding.android.FlutterView
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 
@@ -17,6 +19,7 @@ class MainFragment constructor(
 
     private lateinit var mContext: Context
     private lateinit var mFlutterView: View
+    private lateinit var mViewPager2: ViewPager2
 
     private lateinit var channel: MethodChannel
 
@@ -35,15 +38,19 @@ class MainFragment constructor(
             mFlutterView = it
         }
         // 返回新的布局
-        return LinearLayoutCompat(mContext).apply {
-            orientation = LinearLayoutCompat.VERTICAL
-            addView(mFlutterView)
+//        return LinearLayoutCompat(mContext).apply {
+//            orientation = LinearLayoutCompat.VERTICAL
+//            addView(mFlutterView)
+//        }
+        mViewPager2 = ViewPager2(mContext).apply {
+            orientation = ViewPager2.ORIENTATION_HORIZONTAL
         }
+        return mViewPager2
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        
+
     }
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {

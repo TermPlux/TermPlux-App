@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_boost/flutter_boost.dart';
 
 import '../desktop/window_buttons.dart';
-import '../desktop/window_move.dart';
+import '../desktop/window_title_bar.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -57,6 +57,8 @@ class _MyHomePageState extends State<MyHomePage> {
     ].contains(defaultTargetPlatform);
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,7 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            WindowMove(enable: isDesktop, tip: '长按此处拖动窗口'),
+            WindowTitleBar(enable: isDesktop),
             const Text(
               '你这个BYD的点击数:',
             ),

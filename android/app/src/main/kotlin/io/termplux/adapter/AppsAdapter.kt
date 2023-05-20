@@ -36,62 +36,6 @@ class AppsAdapter constructor(
         val appIcon = AppCompatImageView(parent.context)
         val appTitle = AppCompatTextView(parent.context)
 
-//        val itemView: LinearLayoutCompat = LinearLayoutCompat(
-//            parent.context
-//        ).apply {
-//            layoutParams = LinearLayoutCompat.LayoutParams(
-//                LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-//                parent.context.resources.getDimension(
-//                    R.dimen.launcher_height
-//                ).toInt()
-//            )
-//            setPadding(
-//                parent.context.resources.getDimension(
-//                    R.dimen.launcher_padding
-//                ).toInt(),
-//                0,
-//                parent.context.resources.getDimension(
-//                    R.dimen.launcher_padding
-//                ).toInt(),
-//                0
-//            )
-//            orientation = LinearLayoutCompat.HORIZONTAL
-//            addView(
-//                appIcon.apply {
-//                    gravity = Gravity.CENTER_VERTICAL
-//
-//                },
-//                LinearLayoutCompat.LayoutParams(
-//                    parent.context.resources.getDimension(
-//                        R.dimen.icon_size
-//                    ).toInt(),
-//                    parent.context.resources.getDimension(
-//                        R.dimen.icon_size
-//                    ).toInt()
-//                )
-//            )
-//            addView(
-//                appTitle.apply {
-//                    gravity = Gravity.CENTER_VERTICAL
-//                    setPadding(
-//                        parent.context.resources.getDimension(
-//                            R.dimen.launcher_padding
-//                        ).toInt(),
-//                        0,
-//                        parent.context.resources.getDimension(
-//                            R.dimen.launcher_padding
-//                        ).toInt(),
-//                        0
-//                    )
-//                },
-//                LinearLayoutCompat.LayoutParams(
-//                    LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-//                    LinearLayoutCompat.LayoutParams.WRAP_CONTENT
-//                )
-//            )
-//        }
-
-
         val itemView: LinearLayoutCompat = LinearLayoutCompat(
             parent.context
         ).apply {
