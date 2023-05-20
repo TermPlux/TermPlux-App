@@ -51,7 +51,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.internal.EdgeToEdgeUtils
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.tabs.TabLayout
-import com.idlefish.flutterboost.FlutterBoost
 import com.idlefish.flutterboost.containers.FlutterBoostFragment
 import com.kongzue.baseframework.BaseActivity
 import com.kongzue.baseframework.interfaces.DarkNavigationBarTheme
@@ -67,16 +66,11 @@ import com.kongzue.baseframework.util.JumpParameter
 import com.kongzue.dialogx.dialogs.PopTip
 import io.flutter.embedding.android.RenderMode
 import io.flutter.embedding.android.TransparencyMode
-import io.flutter.embedding.engine.FlutterEngine
-import io.flutter.plugin.common.MethodChannel
-import io.flutter.plugins.GeneratedPluginRegistrant
 import io.termplux.BuildConfig
 import io.termplux.IUserService
 import io.termplux.R
 import io.termplux.adapter.ContentAdapter
 import io.termplux.custom.DisableSwipeViewPager
-import io.termplux.custom.LinkNativeViewFactory
-import io.termplux.delegate.BoostDelegate
 import io.termplux.fragment.MainFragment
 import io.termplux.services.MainService
 import io.termplux.services.UserService

@@ -43,7 +43,7 @@ class MainFragment constructor(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        
     }
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {

@@ -1,11 +1,12 @@
 import 'dart:io';
 
-import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_boost/flutter_boost.dart';
-import 'package:termplux/desktop/window_buttons.dart';
+
+import '../desktop/window_buttons.dart';
+import '../desktop/window_move.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -56,25 +57,22 @@ class _MyHomePageState extends State<MyHomePage> {
     ].contains(defaultTargetPlatform);
   }
 
-  AppBar topAppBar() {
-    if (isDesktop) {
-      return AppBar(
-        title: WindowTitleBarBox(child: MoveWindow()),
-        actions: const [WindowButtons()],
-      );
-    } else {
-      return AppBar(title: const Text('TermPlux'));
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: topAppBar(),
+      appBar: AppBar(
+        title: Text(widget.title),
+        actions: [
+          IconButton(onPressed: navToPager, icon: const Icon(Icons.arrow_forward)),
+          IconButton(onPressed: navToPager, icon: const Icon(Icons.more_vert)),
+          WindowButtons(enable: isDesktop)
+        ],
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            WindowMove(enable: isDesktop, tip: '长按此处拖动窗口'),
             const Text(
               '你这个BYD的点击数:',
             ),

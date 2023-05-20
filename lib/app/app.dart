@@ -6,14 +6,9 @@ import 'package:flutter_boost/flutter_boost.dart';
 
 import '../pages/home.dart';
 
-class TermPluxApp extends StatefulWidget {
+class TermPluxApp extends StatelessWidget {
   const TermPluxApp({super.key});
 
-  @override
-  State<StatefulWidget> createState() => _TermPluxApp();
-}
-
-class _TermPluxApp extends State<TermPluxApp> {
   static const String appName = "TermPlux";
 
   static Map<String, FlutterBoostRouteFactory> routerMap = {
@@ -34,10 +29,12 @@ class _TermPluxApp extends State<TermPluxApp> {
     return func(settings, uniqueId);
   }
 
-  Widget appBuilder(Widget home) {
+  Widget appBuilder(BuildContext context, Widget home) {
     return DynamicColorBuilder(builder: (lightColorScheme, darkColorScheme) {
       return MaterialApp(
         home: home,
+        // routes: ,
+        // initialRoute: 'home',
         builder: (context, widget) {
           if (isUseBoost) {
             return home;
@@ -89,13 +86,17 @@ class _TermPluxApp extends State<TermPluxApp> {
   @override
   Widget build(BuildContext context) {
     if (isUseBoost) {
-      return FlutterBoostApp(routeFactory, appBuilder: appBuilder);
+      return FlutterBoostApp(routeFactory, appBuilder: (home) {
+        return appBuilder(context, home);
+      });
     } else {
       return DevicePreview(
         builder: (context) {
-          return appBuilder(const MyHomePage(
-            title: appName,
-          ));
+          return appBuilder(
+              context,
+              const MyHomePage(
+                title: appName,
+              ));
         },
         isToolbarVisible: true,
         availableLocales: const [
