@@ -45,7 +45,8 @@ class MainFragment constructor(
         mViewPager2 = ViewPager2(mContext).apply {
             orientation = ViewPager2.ORIENTATION_HORIZONTAL
         }
-        return mViewPager2
+        //return mViewPager2
+        return mFlutterView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

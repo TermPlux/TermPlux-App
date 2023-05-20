@@ -12,7 +12,8 @@ final closeButtonColors = WindowButtonColors(
     mouseOver: const Color(0xFFD32F2F),
     mouseDown: const Color(0xFFB71C1C),
     iconNormal: const Color(0xE6000000),
-    iconMouseOver: Colors.white);
+    iconMouseOver: Colors.white,
+    iconMouseDown: Colors.white);
 
 class WindowButtons extends StatelessWidget {
   const WindowButtons({super.key, required this.enable});
@@ -22,7 +23,6 @@ class WindowButtons extends StatelessWidget {
   Widget? button() {
     if (enable) {
       return Row(children: <Widget>[
-        RestoreWindowButton(),
         MinimizeWindowButton(colors: buttonColors),
         MaximizeWindowButton(colors: buttonColors),
         CloseWindowButton(colors: closeButtonColors)
