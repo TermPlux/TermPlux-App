@@ -1,10 +1,13 @@
 package io.termplux.adapter
 
+import android.graphics.Color
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.compose.ui.platform.ComposeView
 import androidx.recyclerview.widget.RecyclerView
+import io.termplux.R
 
 
 class ViewPager2Adapter constructor(
@@ -14,6 +17,7 @@ class ViewPager2Adapter constructor(
 
     private val mFlutterView: View
     private val mComposeView: ComposeView
+    private lateinit var mTextView: AppCompatTextView
 
     init {
         mFlutterView = flutterView
@@ -21,6 +25,11 @@ class ViewPager2Adapter constructor(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewPagerViewHolder {
+        mTextView = AppCompatTextView(parent.context).apply {
+            text = parent.context.getString(R.string.error)
+            textSize = 50f
+            setTextColor(Color.RED)
+        }
         return ViewPagerViewHolder(
             itemView = FrameLayout(
                 parent.context
@@ -43,7 +52,7 @@ class ViewPager2Adapter constructor(
                 when (position) {
                     0 -> mFlutterView
                     1 -> mComposeView
-                    else -> View(context)
+                    else -> mTextView
                 },
                 FrameLayout.LayoutParams(
                     FrameLayout.LayoutParams.MATCH_PARENT,
