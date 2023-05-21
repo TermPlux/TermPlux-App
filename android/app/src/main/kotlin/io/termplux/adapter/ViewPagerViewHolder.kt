@@ -1,16 +1,10 @@
 package io.termplux.adapter
 
-import android.view.View
+import android.widget.FrameLayout
 import androidx.recyclerview.widget.RecyclerView
 
 class ViewPagerViewHolder constructor(
-    itemView: View
+    itemView: FrameLayout
 ) : RecyclerView.ViewHolder(
     itemView
-) {
-
-    //实现构造函数
-    init {
-
-    }
-}
+)

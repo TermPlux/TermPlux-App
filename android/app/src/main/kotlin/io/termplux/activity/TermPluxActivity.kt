@@ -349,7 +349,7 @@ class TermPluxActivity : BaseActivity() {
         check()
 
         // 设置内容
-        if (isFull) setContent {
+        if (1==2) setContent {
             // 获取根View
             val hostView = LocalView.current
 

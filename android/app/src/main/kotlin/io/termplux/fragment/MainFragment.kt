@@ -6,19 +6,31 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
 import androidx.viewpager2.widget.ViewPager2
 import com.idlefish.flutterboost.containers.FlutterBoostFragment
-import io.flutter.embedding.android.FlutterView
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
+import io.termplux.adapter.ViewPager2Adapter
 
 class MainFragment constructor(
 
-): FlutterBoostFragment() {
+) : FlutterBoostFragment() {
 
     private lateinit var mContext: Context
     private lateinit var mFlutterView: View
+    private lateinit var mComposeView: ComposeView
     private lateinit var mViewPager2: ViewPager2
 
     private lateinit var channel: MethodChannel
@@ -28,6 +40,7 @@ class MainFragment constructor(
         mContext = requireActivity()
     }
 
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -37,21 +50,56 @@ class MainFragment constructor(
         super.onCreateView(inflater, container, savedInstanceState)?.let {
             mFlutterView = it
         }
-        // 返回新的布局
-//        return LinearLayoutCompat(mContext).apply {
-//            orientation = LinearLayoutCompat.VERTICAL
-//            addView(mFlutterView)
-//        }
+        // 初始化ComposeView
+        mComposeView = ComposeView(requireActivity()).apply {
+            setContent {
+                Scaffold(
+                    topBar = {
+                        TopAppBar(
+                            navigationIcon = {
+                                IconButton(
+                                    onClick = {
+                                        mViewPager2.currentItem = mViewPager2.currentItem - 1
+                                    }
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Filled.ArrowBack,
+                                        contentDescription = null
+                                    )
+                                }
+                            },
+                            title = {
+                                Text(text = "Demo")
+                            }
+                        )
+                    }
+                ) { paddingValues ->
+                    Box(
+                        modifier = Modifier.padding(paddingValues)
+                    ){
+                        Text(text = "test")
+                    }
+                }
+            }
+        }
+        // 初始化ViewPager
         mViewPager2 = ViewPager2(mContext).apply {
             orientation = ViewPager2.ORIENTATION_HORIZONTAL
         }
-        //return mViewPager2
-        return mFlutterView
+        // 返回新的布局
+        return mViewPager2
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        val mainAdapter = ViewPager2Adapter(
+            flutterView = mFlutterView,
+            composeView = mComposeView
+        )
+        mViewPager2.apply {
+            adapter = mainAdapter
+            offscreenPageLimit = mainAdapter.itemCount
+        }
     }
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
@@ -61,7 +109,7 @@ class MainFragment constructor(
         channel.setMethodCallHandler { call, res ->
             when (call.method) {
                 "pager" -> {
-                    Toast.makeText(requireActivity(), "6", Toast.LENGTH_SHORT).show()
+                    mViewPager2.currentItem = mViewPager2.currentItem + 1
                     res.success("success")
                 }
 
@@ -83,7 +131,7 @@ class MainFragment constructor(
 
     companion object {
 
-        fun newInstance(): MainFragment{
+        fun newInstance(): MainFragment {
             return MainFragment()
         }
     }
