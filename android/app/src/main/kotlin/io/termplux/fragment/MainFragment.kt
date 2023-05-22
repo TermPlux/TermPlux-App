@@ -19,6 +19,7 @@ import androidx.fragment.app.FragmentContainerView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.idlefish.flutterboost.containers.FlutterBoostFragment
+import com.kongzue.dialogx.dialogs.PopTip
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import io.termplux.adapter.ViewPager2Adapter
@@ -34,6 +35,14 @@ class MainFragment : FlutterBoostFragment(), Runnable {
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var mFragmentContainerView: FragmentContainerView
     private lateinit var mViewPager2: ViewPager2
+
+    private lateinit var channel: MethodChannel
+
+    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+        super.configureFlutterEngine(flutterEngine)
+        val messenger = flutterEngine.dartExecutor.binaryMessenger
+        channel = MethodChannel(messenger, "termplux_channel")
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,6 +93,19 @@ class MainFragment : FlutterBoostFragment(), Runnable {
         mComposeView.apply {
             setContent {
 
+                channel.setMethodCallHandler { call, res ->
+                    when (call.method) {
+                        "pager" -> {
+                            //mViewPager2.currentItem = mViewPager2.currentItem + 1
+                            PopTip.show("6")
+                            res.success("success")
+                        }
+
+                        else -> {
+                            res.error("error", "error_message", null)
+                        }
+                    }
+                }
 
                 Scaffold(
                     topBar = {
@@ -94,6 +116,7 @@ class MainFragment : FlutterBoostFragment(), Runnable {
                         )
                     }
                 ) { innerPadding ->
+
 
                     AndroidView(
                         factory = {
@@ -114,30 +137,15 @@ class MainFragment : FlutterBoostFragment(), Runnable {
         }
     }
 
-    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
-        super.configureFlutterEngine(flutterEngine)
-        val messenger = flutterEngine.dartExecutor.binaryMessenger
-        val channel = MethodChannel(messenger, "termplux_channel")
-        channel.setMethodCallHandler { call, res ->
-            when (call.method) {
-                "pager" -> {
-                    mViewPager2.currentItem = mViewPager2.currentItem + 1
-                    res.success("success")
-                }
-
-                else -> {
-                    res.error("error", "error_message", null)
-                }
-            }
-        }
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
     }
 
     override fun onDestroy() {
         super.onDestroy()
+    }
+
+    companion object {
 
     }
 }
