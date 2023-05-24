@@ -9,6 +9,7 @@ import androidx.preference.PreferenceManager
 import com.farmerbb.taskbar.lib.Taskbar
 import com.google.android.material.color.DynamicColors
 import com.idlefish.flutterboost.FlutterBoost
+import com.kongzue.baseframework.BaseActivity
 import com.kongzue.baseframework.BaseApp
 import com.kongzue.baseframework.BaseFrameworkSettings
 import com.kongzue.baseframework.interfaces.OnBugReportListener
@@ -20,11 +21,11 @@ import com.kongzue.dialogxmaterialyou.style.MaterialYouStyle
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugins.GeneratedPluginRegistrant
 import io.termplux.BuildConfig
+import io.termplux.activity.TermPluxActivity
 import io.termplux.custom.LinkNativeViewFactory
 import io.termplux.delegate.BoostDelegate
 import org.lsposed.hiddenapibypass.HiddenApiBypass
 import java.io.File
-
 
 class TermPluxApp : BaseApp<TermPluxApp>() {
 
@@ -42,10 +43,9 @@ class TermPluxApp : BaseApp<TermPluxApp>() {
         FlutterBoost.instance().apply {
             setup(
                 me,
-                BoostDelegate { options ->
-                    when (options.pageName()) {
-                        "" -> {}
-                    }
+                BoostDelegate {
+
+
                 }
             ) { engine: FlutterEngine? ->
                 // 引擎操作

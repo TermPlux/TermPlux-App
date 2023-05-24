@@ -23,7 +23,6 @@ import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -52,6 +51,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.internal.EdgeToEdgeUtils
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.tabs.TabLayout
+import com.idlefish.flutterboost.FlutterBoost
 import com.idlefish.flutterboost.containers.FlutterBoostFragment
 import com.kongzue.baseframework.BaseActivity
 import com.kongzue.baseframework.interfaces.DarkNavigationBarTheme
@@ -61,17 +61,22 @@ import com.kongzue.baseframework.interfaces.ExitAnim
 import com.kongzue.baseframework.interfaces.FragmentLayout
 import com.kongzue.baseframework.interfaces.LifeCircleListener
 import com.kongzue.baseframework.interfaces.NavigationBarBackgroundColorRes
+import com.kongzue.baseframework.interfaces.SwipeBack
 import com.kongzue.baseframework.util.AppManager
 import com.kongzue.baseframework.util.FragmentChangeUtil
 import com.kongzue.baseframework.util.JumpParameter
 import com.kongzue.dialogx.dialogs.PopTip
 import io.flutter.embedding.android.RenderMode
 import io.flutter.embedding.android.TransparencyMode
+import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.plugins.GeneratedPluginRegistrant
 import io.termplux.BuildConfig
 import io.termplux.IUserService
 import io.termplux.R
 import io.termplux.adapter.ContentAdapter
 import io.termplux.custom.DisableSwipeViewPager
+import io.termplux.custom.LinkNativeViewFactory
+import io.termplux.delegate.BoostDelegate
 import io.termplux.fragment.MainFragment
 import io.termplux.services.MainService
 import io.termplux.services.UserService
@@ -88,12 +93,11 @@ import kotlinx.coroutines.Runnable
 import rikka.shizuku.Shizuku
 
 @SuppressLint("NonConstantResourceId")
+@SwipeBack(false)
 @DarkStatusBarTheme(true)
 @DarkNavigationBarTheme(true)
 @NavigationBarBackgroundColorRes(R.color.white)
 @FragmentLayout(TermPluxActivity.fragment_container)
-@EnterAnim(enterAnimResId = R.anim.fade, holdAnimResId = R.anim.hold)
-@ExitAnim(holdAnimResId = R.anim.hold, exitAnimResId = R.anim.back)
 class TermPluxActivity : BaseActivity() {
 
     private val mME: BaseActivity = me
@@ -135,8 +139,7 @@ class TermPluxActivity : BaseActivity() {
     private lateinit var mBottomNavigationView: BottomNavigationView
     private lateinit var mTabLayout: TabLayout
 
-    private lateinit var mFlutterBoostFragment: FlutterBoostFragment
-    //private lateinit var mSettingsFragment: SettingsFragment
+    private lateinit var mFlutterBoostFragment: MainFragment
 
 
     private val showPart2Runnable = Runnable {
@@ -259,7 +262,7 @@ class TermPluxActivity : BaseActivity() {
     override fun initFragment(fragmentChangeUtil: FragmentChangeUtil?) {
         super.initFragment(fragmentChangeUtil)
 
-        var flutterBoostFragment: FlutterBoostFragment? = null
+        var flutterBoostFragment: MainFragment? = null
         val mFragmentManager: FragmentManager = supportFragmentManager
 
         // 初始化FlutterBoostFragment
@@ -282,7 +285,7 @@ class TermPluxActivity : BaseActivity() {
                 initView = {
                     flutterBoostFragment = mFragmentManager.findFragmentByTag(
                         tagFlutterBoostFragment
-                    ) as FlutterBoostFragment?
+                    ) as MainFragment?
                 },
                 initData = {
                     if (flutterBoostFragment == null) {
@@ -350,7 +353,7 @@ class TermPluxActivity : BaseActivity() {
         check()
 
         // 设置内容
-        if (1==2) setContent {
+        if (1 == 2) setContent {
             // 获取根View
             val hostView = LocalView.current
 

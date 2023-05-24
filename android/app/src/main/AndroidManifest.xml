@@ -45,7 +45,7 @@
                 android:value="termplux" />
             <meta-data
                 android:name="io.flutter.embedding.android.NormalTheme"
-                android:resource="@style/NormalTheme" />
+                android:resource="@style/Theme.TermPlux" />
 
             <intent-filter>
                 <action android:name="android.intent.action.APPLICATION_PREFERENCES" />

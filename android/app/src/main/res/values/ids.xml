@@ -2,4 +2,5 @@
 <resources>
     <item name="fragment_container" type="id" />
     <item name="flutter_container" type="id" />
+    <item name="boost_container" type="id" />
 </resources>

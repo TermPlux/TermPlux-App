@@ -8,16 +8,16 @@ import io.flutter.embedding.android.FlutterActivityLaunchConfigs
 import io.termplux.activity.TermPluxFlutter
 
 class BoostDelegate constructor(
-    push: (FlutterBoostRouteOptions) -> Unit
+    native: (FlutterBoostRouteOptions) -> Unit
 ) : FlutterBoostDelegate {
 
-    private val mPush: (FlutterBoostRouteOptions) -> Unit
+    private val mNative: (FlutterBoostRouteOptions) -> Unit
 
     init {
-        mPush = push
+        mNative = native
     }
 
-    override fun pushNativeRoute(options: FlutterBoostRouteOptions) = mPush(options)
+    override fun pushNativeRoute(options: FlutterBoostRouteOptions) = mNative(options)
 
     override fun pushFlutterRoute(options: FlutterBoostRouteOptions) {
         val intent = FlutterBoostActivity.CachedEngineIntentBuilder(
