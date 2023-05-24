@@ -7,16 +7,13 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import android.view.*
-import android.widget.FrameLayout
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.termplux.BuildConfig
-import io.termplux.R
 import io.termplux.adapter.AppsAdapter
-import io.termplux.receiver.AppsReceiver
 import io.termplux.model.AppsModel
+import io.termplux.receiver.AppsReceiver
 import java.util.*
 
 class AppsFragment constructor(

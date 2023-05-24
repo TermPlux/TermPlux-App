@@ -1,6 +1,7 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_boost/flutter_boost.dart';
 import 'package:url_strategy/url_strategy.dart';
 
@@ -15,6 +16,10 @@ void main() async {
       case TargetPlatform.android:
         boost();
         run();
+        SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarIconBrightness: Brightness.dark
+        ));
         break;
       case TargetPlatform.fuchsia:
         run();
