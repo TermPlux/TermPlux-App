@@ -103,8 +103,12 @@ fun ScreenAbout(
                             modifier = Modifier.fillMaxHeight()
                         )
                         Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(
+                                    start = 16.dp
+                                ),
+                            contentAlignment = Alignment.CenterStart,
                         ) {
                             Text(
                                 text = stringResource(
