@@ -65,7 +65,7 @@ fun ScreenDashboard(
                         .fillMaxWidth()
                         .clickable {
                             navController.navigate(
-                                route = Screen.Dashboard.route
+                                route = Screen.Manager.route
                             ) {
                                 popUpTo(
                                     id = navController.graph.findStartDestination().id

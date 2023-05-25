@@ -57,6 +57,7 @@ class TermPluxApp : BaseApp<TermPluxApp>() {
                     registry.registerViewFactory("android_view", LinkNativeViewFactory())
                 }
             }
+
         }
 
         // 触发错误时调用
