@@ -14,23 +14,13 @@ import androidx.annotation.IdRes
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
-import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.FragmentContainerView
@@ -41,23 +31,17 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.preference.PreferenceManager
 import androidx.viewpager2.widget.ViewPager2
-import androidx.window.layout.FoldingFeature
 import com.farmerbb.taskbar.lib.Taskbar
-import com.google.accompanist.adaptive.calculateDisplayFeatures
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.internal.EdgeToEdgeUtils
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.tabs.TabLayout
-import com.idlefish.flutterboost.FlutterBoost
 import com.idlefish.flutterboost.containers.FlutterBoostFragment
 import com.kongzue.baseframework.BaseActivity
 import com.kongzue.baseframework.interfaces.DarkNavigationBarTheme
 import com.kongzue.baseframework.interfaces.DarkStatusBarTheme
-import com.kongzue.baseframework.interfaces.EnterAnim
-import com.kongzue.baseframework.interfaces.ExitAnim
 import com.kongzue.baseframework.interfaces.FragmentLayout
 import com.kongzue.baseframework.interfaces.LifeCircleListener
 import com.kongzue.baseframework.interfaces.NavigationBarBackgroundColorRes
@@ -68,25 +52,18 @@ import com.kongzue.baseframework.util.JumpParameter
 import com.kongzue.dialogx.dialogs.PopTip
 import io.flutter.embedding.android.RenderMode
 import io.flutter.embedding.android.TransparencyMode
-import io.flutter.embedding.engine.FlutterEngine
-import io.flutter.plugins.GeneratedPluginRegistrant
 import io.termplux.BuildConfig
 import io.termplux.IUserService
 import io.termplux.R
 import io.termplux.adapter.ContentAdapter
 import io.termplux.custom.DisableSwipeViewPager
-import io.termplux.custom.LinkNativeViewFactory
-import io.termplux.delegate.BoostDelegate
 import io.termplux.fragment.MainFragment
 import io.termplux.services.MainService
 import io.termplux.services.UserService
 import io.termplux.ui.ActivityMain
 import io.termplux.ui.preview.TermPluxPreviews
 import io.termplux.ui.window.ContentType
-import io.termplux.ui.window.DevicePosture
 import io.termplux.ui.window.NavigationType
-import io.termplux.ui.window.isBookPosture
-import io.termplux.ui.window.isSeparating
 import io.termplux.utils.BaseFragmentUtils
 import io.termplux.utils.MediatorUtils
 import kotlinx.coroutines.Runnable
@@ -267,12 +244,13 @@ class TermPluxActivity : BaseActivity() {
 
         // 初始化FlutterBoostFragment
         mFlutterBoostFragment = FlutterBoostFragment.CachedEngineFragmentBuilder(
-            MainFragment().javaClass
+            MainFragment::class.java
         )
             .url("home")
+            .destroyEngineWithFragment(false)
             .renderMode(RenderMode.surface)
             .transparencyMode(TransparencyMode.opaque)
-            .shouldAttachEngineToActivity(false)
+            .shouldAttachEngineToActivity(true)
             .build()
 
         fragmentChangeUtil?.addFragment(
@@ -773,41 +751,6 @@ class TermPluxActivity : BaseActivity() {
 
         @IdRes
         const val flutter_container: Int = R.id.flutter_container
-
-        // 浅色模式配色
-        private val Purple80 = Color(0xFFD0BCFF)
-        private val PurpleGrey80 = Color(0xFFCCC2DC)
-        private val Pink80 = Color(0xFFEFB8C8)
-
-        // 深色模式配色
-        private val Purple40 = Color(0xFF6650a4)
-        private val PurpleGrey40 = Color(0xFF625b71)
-        private val Pink40 = Color(0xFF7D5260)
-
-        // 样式
-        private val Typography = Typography(
-            bodyLarge = TextStyle(
-                fontFamily = FontFamily.Default,
-                fontWeight = FontWeight.Normal,
-                fontSize = 16.sp,
-                lineHeight = 24.sp,
-                letterSpacing = 0.5.sp
-            )
-        )
-
-        // 深色模式
-        private val DarkColorScheme = darkColorScheme(
-            primary = Purple80,
-            secondary = PurpleGrey80,
-            tertiary = Pink80
-        )
-
-        // 浅色模式
-        private val LightColorScheme = lightColorScheme(
-            primary = Purple40,
-            secondary = PurpleGrey40,
-            tertiary = Pink40
-        )
 
         /** 操作栏是否应该在[autoHideDelayMillis]毫秒后自动隐藏。*/
         const val autoHide = true

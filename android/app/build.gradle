@@ -102,7 +102,7 @@ dependencies {
     // LibTaskbar: https://github.com/farmerbb/libtaskbar
     implementation 'com.github.farmerbb:libtaskbar:2.2.0'
     // BaseFramework: https://github.com/kongzue/BaseFramework
-    implementation 'com.github.kongzue:BaseFramework:6.8.9.1'
+    implementation 'com.github.kongzue:BaseFramework:6.9.0.1'
     // DialogX: https://github.com/kongzue/DialogX
     implementation 'com.kongzue.dialogx:DialogX:0.0.48'
     // DialogX: https://github.com/kongzue/DialogX
@@ -124,8 +124,8 @@ dependencies {
     implementation 'androidx.annotation:annotation:1.6.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.browser:browser:1.5.0'
-    implementation 'androidx.activity:activity-compose:1.7.1'
-    implementation 'androidx.activity:activity-ktx:1.7.1'
+    implementation 'androidx.activity:activity-compose:1.7.2'
+    implementation 'androidx.activity:activity-ktx:1.7.2'
     implementation 'androidx.preference:preference:1.2.0'
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
