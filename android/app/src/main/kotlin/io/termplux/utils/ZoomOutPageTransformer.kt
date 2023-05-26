@@ -8,8 +8,10 @@ class ZoomOutPageTransformer : ViewPager2.PageTransformer {
 
     override fun transformPage(view: View, position: Float) {
         view.apply {
+
             val pageWidth = width
             val pageHeight = height
+
             when {
                 position < -1 -> {
                     alpha = 0f
@@ -41,6 +43,6 @@ class ZoomOutPageTransformer : ViewPager2.PageTransformer {
 
     companion object {
         private const val MIN_SCALE = 0.85f
-        private const val MIN_ALPHA = 0.5f
+        private const val MIN_ALPHA = 0.8f
     }
 }

@@ -4,10 +4,12 @@ import android.app.Activity
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -32,6 +34,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.FragmentContainerView
 import androidx.navigation.compose.rememberNavController
@@ -45,6 +48,7 @@ import com.idlefish.flutterboost.containers.FlutterBoostFragment
 import com.kongzue.dialogx.dialogs.PopTip
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
+import io.termplux.R
 import io.termplux.adapter.ViewPager2Adapter
 import io.termplux.ui.ActivityMain
 import io.termplux.ui.window.ContentType
@@ -52,18 +56,19 @@ import io.termplux.ui.window.DevicePosture
 import io.termplux.ui.window.NavigationType
 import io.termplux.ui.window.isBookPosture
 import io.termplux.ui.window.isSeparating
+import io.termplux.utils.ZoomOutPageTransformer
 import kotlinx.coroutines.Runnable
 
 class MainFragment : FlutterBoostFragment(), Runnable {
 
     private lateinit var channel: MethodChannel
-
-    private lateinit var mComposeView: ComposeView
-    private lateinit var mViewPager2: ViewPager2
     private lateinit var mContext: Context
 
+    private lateinit var mComposeView: ComposeView
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var mFragmentContainerView: FragmentContainerView
+    private lateinit var mViewPager2: ViewPager2
+    private lateinit var mAppCompatImageView:AppCompatImageView
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
@@ -81,50 +86,72 @@ class MainFragment : FlutterBoostFragment(), Runnable {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        super.onCreateView(inflater, container, savedInstanceState).apply {
-            this@apply?.let {
+        super.onCreateView(inflater, container, savedInstanceState)?.let {
 
-                mComposeView = ComposeView(mContext)
-                mViewPager2 = ViewPager2(mContext)
-                mRecyclerView = RecyclerView(mContext)
-                mFragmentContainerView = FragmentContainerView(mContext)
+            // 初始化View
+            mComposeView = ComposeView(mContext)
+            mRecyclerView = RecyclerView(mContext)
+            mFragmentContainerView = FragmentContainerView(mContext)
+            mViewPager2 = ViewPager2(mContext)
+            mAppCompatImageView = AppCompatImageView(mContext)
 
-                val mainAdapter = ViewPager2Adapter(
-                    flutterView = it,
-                    composeView = mComposeView
-                )
+            // 初始化适配器并传入View
+            val mainAdapter = ViewPager2Adapter(
+                flutterView = it,
+                composeView = mComposeView,
+                recyclerView = mRecyclerView,
+                fragmentContainerView = mFragmentContainerView
+            )
 
-                mComposeView.apply {
-                    setViewCompositionStrategy(
-                        ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
-                    )
-                }
-
-                mRecyclerView.apply {
-                    layoutManager = GridLayoutManager(
-                        mContext,
-                        4,
-                        RecyclerView.VERTICAL,
-                        false
-                    )
-                }
-
-                mViewPager2.apply {
-                    orientation = ViewPager2.ORIENTATION_HORIZONTAL
-                    isUserInputEnabled = true
-                    adapter = mainAdapter
-                    offscreenPageLimit = mainAdapter.itemCount
-                }
-            }
-            return FrameLayout(mContext).apply {
-                addView(
-                    mViewPager2,
-                    FrameLayout.LayoutParams(
-                        FrameLayout.LayoutParams.MATCH_PARENT,
-                        FrameLayout.LayoutParams.MATCH_PARENT
-                    )
+            // 配置View
+            mComposeView.apply {
+                setViewCompositionStrategy(
+                    ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
                 )
             }
+
+            mRecyclerView.apply {
+                layoutManager = GridLayoutManager(
+                    mContext,
+                    4,
+                    RecyclerView.VERTICAL,
+                    false
+                )
+            }
+
+            mViewPager2.apply {
+                orientation = ViewPager2.ORIENTATION_HORIZONTAL
+                isUserInputEnabled = true
+                setPageTransformer(ZoomOutPageTransformer())
+                adapter = mainAdapter
+                offscreenPageLimit = mainAdapter.itemCount
+            }
+
+            mAppCompatImageView.apply {
+
+            }
+        }
+        // 返回布局
+        return FrameLayout(mContext).apply {
+            background = ContextCompat.getDrawable(
+                mContext,
+                R.drawable.custom_wallpaper_24
+            )
+            addView(
+                mViewPager2,
+                FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT,
+                    FrameLayout.LayoutParams.MATCH_PARENT
+                )
+            )
+            addView(
+                mAppCompatImageView,
+                FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                    Gravity.CENTER
+                )
+            )
         }
     }
 
@@ -324,7 +351,7 @@ class MainFragment : FlutterBoostFragment(), Runnable {
         super.onDestroy()
     }
 
-    private fun setContent(content: @Composable () -> Unit){
+    private fun setContent(content: @Composable () -> Unit) {
         mComposeView.apply {
             setContent {
                 content()

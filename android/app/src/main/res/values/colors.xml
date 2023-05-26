@@ -2,6 +2,7 @@
 <resources>
     <color name="ic_flutter_background">#FFFFFF</color>
     <color name="ic_launcher_background">#219BCC</color>
+    <color name="pager_background">#FFFCFCFF</color>
     <color name="red">#FFFF0000</color>
     <color name="transparent">#00000000</color>
     <color name="white">#FFFFFFFF</color>
