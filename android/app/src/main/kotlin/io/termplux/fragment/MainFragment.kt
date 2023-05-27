@@ -82,14 +82,14 @@ class MainFragment : FlutterBoostFragment(), Runnable {
     private lateinit var mFlutterView: View
     private lateinit var mComposeView: ComposeView
     private lateinit var mRecyclerView: RecyclerView
-    private lateinit var mFragmentContainerView: FragmentContainerView
-    private lateinit var mViewPager2: ViewPager2
+    private lateinit var mSettingsView: FragmentContainerView
+    private lateinit var mViewPager: ViewPager2
     private lateinit var mSplashLogo: AppCompatImageView
 
     private var settingsFragment: SettingsFragment? = null
 
     private lateinit var appReceiver: BroadcastReceiver
-    private lateinit var mFragmentManager: FragmentManager
+    private lateinit var intentFilter: IntentFilter
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
@@ -100,10 +100,6 @@ class MainFragment : FlutterBoostFragment(), Runnable {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mContext = requireActivity()
-        mFragmentManager = childFragmentManager
-        settingsFragment = mFragmentManager.findFragmentByTag(
-            tagSettingsFragment
-        ) as SettingsFragment?
     }
 
     override fun onCreateView(
@@ -111,39 +107,99 @@ class MainFragment : FlutterBoostFragment(), Runnable {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        super.onCreateView(inflater, container, savedInstanceState).also { parent ->
-            parent?.let { flutter ->
-                mFlutterView = flutter
-                mComposeView = ComposeView(mContext)
-                mRecyclerView = RecyclerView(mContext)
-                mFragmentContainerView = FragmentContainerView(mContext).apply {
-                    id = R.id.settings_container
-                    fitsSystemWindows = true
+        super.onCreateView(inflater, container, savedInstanceState)?.let { parent ->
+            mFlutterView = parent
+        }
+        mComposeView = ComposeView(mContext).apply {
+            setViewCompositionStrategy(
+                ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
+            )
+        }
+        mRecyclerView = RecyclerView(mContext).apply {
+            fitsSystemWindows = true
+            layoutManager = GridLayoutManager(
+                mContext,
+                4,
+                RecyclerView.VERTICAL,
+                false
+            )
+        }
+        mSettingsView = FragmentContainerView(mContext).apply {
+            id = R.id.settings_containerssss
+            fitsSystemWindows = true
+        }
+
+
+
+
+
+        val mFragmentManager: FragmentManager = childFragmentManager
+        settingsFragment = mFragmentManager.findFragmentByTag(tagSettingsFragment) as SettingsFragment?
+        if (settingsFragment == null) {
+            val newSettingsFragment = SettingsFragment.newInstance {}
+            mFragmentManager.commit(
+                allowStateLoss = false,
+                body = {
+                    settingsFragment = newSettingsFragment
+                    add(
+                        mSettingsView.id,
+                        newSettingsFragment,
+                        tagSettingsFragment
+                    )
                 }
-                mViewPager2 = ViewPager2(mContext)
-                mSplashLogo = AppCompatImageView(mContext)
-            }
-            return FrameLayout(mContext).apply {
-                background = ContextCompat.getDrawable(
-                    mContext,
-                    R.drawable.custom_wallpaper_24
+            )
+        }
+
+
+
+
+        mSplashLogo = AppCompatImageView(mContext).apply {
+            scaleType = ImageView.ScaleType.CENTER
+            setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireActivity(),
+                    R.drawable.custom_termplux_24
                 )
-                addView(
-                    mViewPager2,
-                    FrameLayout.LayoutParams(
-                        FrameLayout.LayoutParams.MATCH_PARENT,
-                        FrameLayout.LayoutParams.MATCH_PARENT
-                    )
+            )
+        }
+        mViewPager = ViewPager2(mContext).apply {
+            visibility = View.INVISIBLE
+            post(this@MainFragment)
+            orientation = ViewPager2.ORIENTATION_HORIZONTAL
+            isUserInputEnabled = true
+            setPageTransformer(
+                ZoomOutPageTransformer()
+            )
+            adapter = ViewPager2Adapter(
+                flutterView = mFlutterView,
+                composeView = mComposeView,
+                recyclerView = mRecyclerView,
+                fragmentContainerView = mSettingsView
+            )
+        }
+
+
+
+        return FrameLayout(mContext).apply {
+            background = ContextCompat.getDrawable(
+                mContext,
+                R.drawable.custom_wallpaper_24
+            )
+            addView(
+                mViewPager,
+                FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT,
+                    FrameLayout.LayoutParams.MATCH_PARENT
                 )
-                addView(
-                    mSplashLogo,
-                    FrameLayout.LayoutParams(
-                        FrameLayout.LayoutParams.WRAP_CONTENT,
-                        FrameLayout.LayoutParams.WRAP_CONTENT,
-                        Gravity.CENTER
-                    )
+            )
+            addView(
+                mSplashLogo,
+                FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                    Gravity.CENTER
                 )
-            }
+            )
         }
     }
 
@@ -155,12 +211,12 @@ class MainFragment : FlutterBoostFragment(), Runnable {
             y = mSplashLogo.height.toFloat()
         )
         val endRadius = hypot(
-            x = mViewPager2.width.toFloat(),
-            y = mViewPager2.height.toFloat()
+            x = mViewPager.width.toFloat(),
+            y = mViewPager.height.toFloat()
         )
         val circularAnim = ViewAnimationUtils
             .createCircularReveal(
-                mViewPager2,
+                mViewPager,
                 cx.toInt(),
                 cy.toInt(),
                 startRadius,
@@ -180,101 +236,55 @@ class MainFragment : FlutterBoostFragment(), Runnable {
                 mSplashLogo.visibility = View.GONE
             }
             .withStartAction {
-                mViewPager2.visibility = View.VISIBLE
+                mViewPager.visibility = View.VISIBLE
                 circularAnim.start()
             }
             .start()
     }
 
-    @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3WindowSizeClassApi::class)
+    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // 初始化适配器并传入View
-        val mainAdapter = ViewPager2Adapter(
-            flutterView = mFlutterView,
-            composeView = mComposeView,
-            recyclerView = mRecyclerView,
-            fragmentContainerView = mFragmentContainerView
-        )
-
-        // 配置View
-        mComposeView.apply {
-            setViewCompositionStrategy(
-                ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
-            )
-        }
-
-        mRecyclerView.apply {
-            fitsSystemWindows = true
-            layoutManager = GridLayoutManager(
-                mContext,
-                4,
-                RecyclerView.VERTICAL,
-                false
-            )
-        }
-
-//        mFragmentContainerView.also {
-//            val settings = SettingsFragment.newInstance {
-//
-//            }
-//            if (settingsFragment == null) {
-//                mFragmentManager.commit(
-//                    allowStateLoss = false,
-//                    body = {
-//                        settingsFragment = settings
-//                        add(
-//                            it.id,
-//                            settings,
-//                            tagSettingsFragment
-//                        )
-//                    }
-//                )
-//            }
-//        }
 
 
 
 
 
-        mViewPager2.apply {
-            orientation = ViewPager2.ORIENTATION_HORIZONTAL
-            isUserInputEnabled = true
-            setPageTransformer(ZoomOutPageTransformer())
-            adapter = mainAdapter
-            offscreenPageLimit = mainAdapter.itemCount
-        }
 
-        mSplashLogo.apply {
-            scaleType = ImageView.ScaleType.CENTER
-            setImageDrawable(
-                ContextCompat.getDrawable(
-                    requireActivity(),
-                    R.drawable.custom_termplux_24
-                )
-            )
-        }
 
-        mViewPager2.visibility = View.INVISIBLE
-        mViewPager2.post(this@MainFragment)
+
+
+
+
         // 加载应用列表
         loadApp()
 
         // 意图过滤器
-        val intentFilter = IntentFilter()
-        intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED)
-        intentFilter.addAction(Intent.ACTION_PACKAGE_REMOVED)
-        intentFilter.addDataScheme("package")
+        intentFilter = IntentFilter().apply {
+            addAction(Intent.ACTION_PACKAGE_ADDED)
+            addAction(Intent.ACTION_PACKAGE_REMOVED)
+            addDataScheme("package")
+        }
 
         // 用于刷新应用列表的广播接收器
-        appReceiver = AppsReceiver(
-            refresh = {
-                loadApp()
-            }
-        )
+        appReceiver = AppsReceiver {
+            loadApp()
+        }
 
         // 注册广播接收器
         mContext.registerReceiver(appReceiver, intentFilter)
+
+
+
+
+
+
+
+
+
+
+
+
 
         setContent {
             channel.setMethodCallHandler { call, res ->
@@ -455,12 +465,15 @@ class MainFragment : FlutterBoostFragment(), Runnable {
                 )
             }
         }
+
+
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
         mContext.unregisterReceiver(appReceiver)
-        mViewPager2.removeCallbacks(this@MainFragment)
+        mViewPager.removeCallbacks(this@MainFragment)
     }
 
     override fun onDestroy() {
