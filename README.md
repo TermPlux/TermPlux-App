@@ -1,6 +1,6 @@
 # TermPlux Project
 
-![TermPlux-App](https://raw.github.com/TermPlux/TermPlux-App/master/cover.jpg "TermPlux-App")
+![TermPlux-App](https://raw.github.com/TermPlux/TermPlux-App/master/assets/cover.jpg "TermPlux-App")
 
 __警告！此应用严禁用于非法用途！不听劝阻，后果自负！使用此应用则代表用户自行承担使用后导致的一切后果，与开发者无关！__
 ## 介绍

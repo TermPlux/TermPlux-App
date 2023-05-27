@@ -293,30 +293,6 @@ class TermPluxActivity : BaseActivity() {
             ), true
         )
 
-        fragmentChangeUtil?.addFragment(
-            BaseFragmentUtils<TermPluxActivity>(
-                resetContentView = LinearLayoutCompat(
-                    mContext
-                ).apply {
-                    orientation = LinearLayoutCompat.VERTICAL
-                    addView(
-                        mTabLayout,
-                        LinearLayoutCompat.LayoutParams(
-                            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-                            LinearLayoutCompat.LayoutParams.WRAP_CONTENT
-                        )
-                    )
-                    addView(
-                        mViewPager2,
-                        LinearLayoutCompat.LayoutParams(
-                            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-                            LinearLayoutCompat.LayoutParams.MATCH_PARENT
-                        )
-                    )
-                }
-            ), true
-        )
-
         // 默认切换到主页
         changeFragment(home)
     }
@@ -329,11 +305,6 @@ class TermPluxActivity : BaseActivity() {
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun initDatas(parameter: JumpParameter?) {
         check()
-
-        // 设置内容
-        if (1 == 2) setContent {
-
-        }
     }
 
     /**

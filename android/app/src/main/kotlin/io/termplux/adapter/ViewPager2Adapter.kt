@@ -37,10 +37,6 @@ class ViewPager2Adapter constructor(
             itemView = FrameLayout(
                 parent.context
             ).apply {
-                background = ContextCompat.getDrawable(
-                    parent.context,
-                    R.color.pager_background
-                )
                 layoutParams = ViewGroup.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT
@@ -62,6 +58,10 @@ class ViewPager2Adapter constructor(
 
     override fun onBindViewHolder(holder: ViewPagerViewHolder, position: Int) {
         (holder.itemView as FrameLayout).apply {
+            background = ContextCompat.getDrawable(
+                holder.itemView.context,
+                R.color.pager_background
+            )
             addView(
                 when (position) {
                     0 -> mFlutterView
