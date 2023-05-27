@@ -53,7 +53,7 @@ class ViewPager2Adapter constructor(
     }
 
     override fun getItemCount(): Int {
-        return 4
+        return 3
     }
 
     override fun onBindViewHolder(holder: ViewPagerViewHolder, position: Int) {

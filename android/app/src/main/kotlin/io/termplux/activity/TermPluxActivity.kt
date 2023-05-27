@@ -55,7 +55,7 @@ import io.flutter.embedding.android.TransparencyMode
 import io.termplux.BuildConfig
 import io.termplux.IUserService
 import io.termplux.R
-import io.termplux.adapter.ContentAdapter
+
 import io.termplux.custom.DisableSwipeViewPager
 import io.termplux.fragment.MainFragment
 import io.termplux.services.MainService
@@ -387,7 +387,7 @@ class TermPluxActivity : BaseActivity() {
         when (item.itemId) {
             android.R.id.home -> changeFragment(0, R.anim.fade, R.anim.hold)
             R.id.action_settings -> {
-                current(item = ContentAdapter.settings)
+                //current(item = ContentAdapter.settings)
             }
         }
         return true
@@ -526,33 +526,33 @@ class TermPluxActivity : BaseActivity() {
      * ViewPager2的适配器
      */
     private fun adapter(navController: NavHostController) {
-        // 初始化适配器实例
-        val adapter = ContentAdapter.newInstance(
-            activity = mME,
-            appBar = mAppBarLayout,
-            current = { item ->
-                current(item = item)
-            },
-            navigation = { route ->
-                navController.navigate(
-                    route = route
-                ) {
-                    popUpTo(
-                        id = navController.graph.findStartDestination().id
-                    ) {
-                        saveState = true
-                    }
-                    launchSingleTop = true
-                    restoreState = true
-                }
-            }
-        )
-        // 获取页面个数
-        val count = adapter.itemCount
-        // 设置适配器
-        mViewPager2.adapter = adapter
-        // 预加载页面
-        mViewPager2.offscreenPageLimit = count - 1
+//        // 初始化适配器实例
+//        val adapter = ContentAdapter.newInstance(
+//            activity = mME,
+//            appBar = mAppBarLayout,
+//            current = { item ->
+//                current(item = item)
+//            },
+//            navigation = { route ->
+//                navController.navigate(
+//                    route = route
+//                ) {
+//                    popUpTo(
+//                        id = navController.graph.findStartDestination().id
+//                    ) {
+//                        saveState = true
+//                    }
+//                    launchSingleTop = true
+//                    restoreState = true
+//                }
+//            }
+//        )
+//        // 获取页面个数
+//        val count = adapter.itemCount
+//        // 设置适配器
+//        mViewPager2.adapter = adapter
+//        // 预加载页面
+//        mViewPager2.offscreenPageLimit = count - 1
     }
 
 

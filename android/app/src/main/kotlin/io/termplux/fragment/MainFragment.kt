@@ -116,7 +116,6 @@ class MainFragment : FlutterBoostFragment(), Runnable {
             )
         }
         mRecyclerView = RecyclerView(mContext).apply {
-            fitsSystemWindows = true
             layoutManager = GridLayoutManager(
                 mContext,
                 4,
@@ -133,22 +132,22 @@ class MainFragment : FlutterBoostFragment(), Runnable {
 
 
 
-        val mFragmentManager: FragmentManager = childFragmentManager
-        settingsFragment = mFragmentManager.findFragmentByTag(tagSettingsFragment) as SettingsFragment?
-        if (settingsFragment == null) {
-            val newSettingsFragment = SettingsFragment.newInstance {}
-            mFragmentManager.commit(
-                allowStateLoss = false,
-                body = {
-                    settingsFragment = newSettingsFragment
-                    add(
-                        mSettingsView.id,
-                        newSettingsFragment,
-                        tagSettingsFragment
-                    )
-                }
-            )
-        }
+//        val mFragmentManager: FragmentManager = childFragmentManager
+//        settingsFragment = mFragmentManager.findFragmentByTag(tagSettingsFragment) as SettingsFragment?
+//        if (settingsFragment == null) {
+//            val newSettingsFragment = SettingsFragment()
+//            mFragmentManager.commit(
+//                allowStateLoss = false,
+//                body = {
+//                    settingsFragment = newSettingsFragment
+//                    add(
+//                        mSettingsView.id,
+//                        newSettingsFragment,
+//                        tagSettingsFragment
+//                    )
+//                }
+//            )
+//        }
 
 
 
@@ -162,6 +161,12 @@ class MainFragment : FlutterBoostFragment(), Runnable {
                 )
             )
         }
+        val a = ViewPager2Adapter(
+            flutterView = mFlutterView,
+            composeView = mComposeView,
+            recyclerView = mRecyclerView,
+            fragmentContainerView = mSettingsView
+        )
         mViewPager = ViewPager2(mContext).apply {
             visibility = View.INVISIBLE
             post(this@MainFragment)
@@ -170,12 +175,8 @@ class MainFragment : FlutterBoostFragment(), Runnable {
             setPageTransformer(
                 ZoomOutPageTransformer()
             )
-            adapter = ViewPager2Adapter(
-                flutterView = mFlutterView,
-                composeView = mComposeView,
-                recyclerView = mRecyclerView,
-                fragmentContainerView = mSettingsView
-            )
+            adapter = a
+            offscreenPageLimit = a.itemCount
         }
 
 

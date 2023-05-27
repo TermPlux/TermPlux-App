@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.Fragment
 import io.termplux.R
-import io.termplux.adapter.ContentAdapter
+
 
 class ErrorFragment constructor(
     current: (Int) -> Unit,

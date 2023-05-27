@@ -9,9 +9,7 @@ import androidx.preference.PreferenceManager
 import io.termplux.R
 import io.termplux.ui.navigation.Screen
 
-class SettingsFragment constructor(
-    navigation: (String) -> Unit
-) : PreferenceFragmentCompat() {
+class SettingsFragment : PreferenceFragmentCompat() {
 
     private var mNavigation: () -> Unit
 
@@ -20,9 +18,9 @@ class SettingsFragment constructor(
 
     init {
         mNavigation = {
-            navigation(
-                Screen.Settings.route
-            )
+//            navigation(
+//                Screen.Settings.route
+//            )
         }
     }
 
@@ -41,13 +39,13 @@ class SettingsFragment constructor(
         }
     }
 
-    companion object{
-        fun newInstance(
-            navigation: (String) -> Unit
-        ): SettingsFragment {
-            return SettingsFragment(
-                navigation = navigation
-            )
-        }
-    }
+//    companion object{
+//        fun newInstance(
+//            navigation: (String) -> Unit
+//        ): SettingsFragment {
+//            return SettingsFragment(
+//                navigation = navigation
+//            )
+//        }
+//    }
 }

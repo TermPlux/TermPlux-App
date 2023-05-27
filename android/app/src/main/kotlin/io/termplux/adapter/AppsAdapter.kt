@@ -222,7 +222,7 @@ class AppsAdapter constructor(
     }
 
     private fun navToLauncher() {
-        mCurrent(ContentAdapter.launcher)
+        //mCurrent(ContentAdapter.launcher)
     }
 
     private fun navToHome() {
@@ -230,7 +230,7 @@ class AppsAdapter constructor(
     }
 
     private fun navToSettings() {
-        mCurrent(ContentAdapter.settings)
+        //mCurrent(ContentAdapter.settings)
     }
 
     companion object {
