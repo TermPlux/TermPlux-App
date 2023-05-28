@@ -1,9 +1,9 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:dynamic_color/dynamic_color.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_boost/flutter_boost.dart';
 
+import '../platform/platform.dart';
 import '../pages/home.dart';
 
 class TermPluxApp extends StatelessWidget {
@@ -12,7 +12,7 @@ class TermPluxApp extends StatelessWidget {
   static const String appName = "TermPlux";
 
   static Map<String, FlutterBoostRouteFactory> routerMap = {
-    'home': (settings, uniqueId) {
+    '/': (settings, uniqueId) {
       return PageRouteBuilder<dynamic>(
           settings: settings,
           pageBuilder: (_, __, ___) {
@@ -22,7 +22,7 @@ class TermPluxApp extends StatelessWidget {
   };
 
   static Map<String, Widget Function(BuildContext)> routes = {
-    'home': (context) => const MyHomePage(title: appName),
+    //'home': (context) => const MyHomePage(title: appName),
   };
 
   Route<dynamic>? routeFactory(RouteSettings settings, String? uniqueId) {
@@ -33,20 +33,20 @@ class TermPluxApp extends StatelessWidget {
     return func(settings, uniqueId);
   }
 
-  String? initial(){
-    if (!isUseBoost) return 'home';
+  String? initial() {
+    if (!kIsUseBoost) return 'home';
     return null;
   }
 
-  Widget appBuilder(BuildContext context, Widget? home) {
+  Widget appBuilder(BuildContext context, Widget home) {
     return DynamicColorBuilder(builder: (lightColorScheme, darkColorScheme) {
       return MaterialApp(
         home: home,
         routes: routes,
         initialRoute: initial(),
         builder: (context, widget) {
-          if (isUseBoost) {
-            return home!;
+          if (kIsUseBoost) {
+            return home;
           } else {
             return DevicePreview.appBuilder(context, widget);
           }
@@ -67,47 +67,22 @@ class TermPluxApp extends StatelessWidget {
     });
   }
 
-  bool get isUsePreview {
-    if (kIsWeb) return true;
-    return ![
-      TargetPlatform.android,
-      TargetPlatform.iOS,
-    ].contains(defaultTargetPlatform);
-  }
-
-  bool get isDesktop {
-    if (kIsWeb) return false;
-    return [
-      TargetPlatform.windows,
-      TargetPlatform.linux,
-      TargetPlatform.macOS,
-    ].contains(defaultTargetPlatform);
-  }
-
-  bool get isUseBoost {
-    if (kIsWeb) return false;
-    return [
-      TargetPlatform.android,
-      TargetPlatform.iOS,
-    ].contains(defaultTargetPlatform);
-  }
-
   @override
   Widget build(BuildContext context) {
-    if (isUseBoost) {
+    if (kIsUseBoost) {
       return FlutterBoostApp(routeFactory, appBuilder: (home) {
         return appBuilder(context, home);
       });
     } else {
       return DevicePreview(
         builder: (context) {
-          return appBuilder(context, null);
+          return appBuilder(context, const MyHomePage(title: appName));
         },
         isToolbarVisible: true,
         availableLocales: const [
           Locale('zh_CN'),
         ],
-        enabled: isUsePreview,
+        enabled: kIsUsePreview,
       );
     }
   }

@@ -3,10 +3,11 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_boost/flutter_boost.dart';
 
 import '../desktop/window_buttons.dart';
 import '../desktop/window_title_bar.dart';
+import '../platform/platform.dart';
+import '../navigation/navigation.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -36,36 +37,17 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  void navigation(String route) {
-    if (isUseBoost){
-      BoostNavigator.instance.push(route, withContainer: false);
-    } else {
-      Navigator.pushNamed(context, route);
-    }
+  // void navigation(String route) {
+  //   if (isUseBoost){
+  //     BoostNavigator.instance.push(route, withContainer: false);
+  //   } else {
+  //     Navigator.pushNamed(context, route);
+  //   }
+  // }
+
+  void aaa() {
+    navigation(context, '/');
   }
-
-  void aaa(){
-    navigation('home');
-  }
-
-  bool get isUseBoost {
-    if (kIsWeb) return false;
-    return [
-      TargetPlatform.android,
-      TargetPlatform.iOS,
-    ].contains(defaultTargetPlatform);
-  }
-
-  bool get isDesktop {
-    if (kIsWeb) return false;
-    return [
-      TargetPlatform.windows,
-      TargetPlatform.linux,
-      TargetPlatform.macOS,
-    ].contains(defaultTargetPlatform);
-  }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -73,16 +55,17 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
         actions: [
-          IconButton(onPressed: navToPager, icon: const Icon(Icons.arrow_forward)),
+          IconButton(
+              onPressed: navToPager, icon: const Icon(Icons.arrow_forward)),
           IconButton(onPressed: navToPager, icon: const Icon(Icons.more_vert)),
-          WindowButtons(enable: isDesktop)
+          WindowButtons(enable: kIsDesktop)
         ],
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            WindowTitleBar(enable: isDesktop),
+            WindowTitleBar(enable: kIsDesktop),
             const Text(
               '你这个BYD的点击数:',
             ),

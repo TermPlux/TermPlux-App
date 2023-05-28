@@ -239,7 +239,6 @@ class TermPluxActivity : BaseActivity() {
         mFlutterBoostFragment = FlutterBoostFragment.CachedEngineFragmentBuilder(
             MainFragment::class.java
         )
-            .url("home")
             .destroyEngineWithFragment(false)
             .renderMode(RenderMode.surface)
             .transparencyMode(TransparencyMode.opaque)
