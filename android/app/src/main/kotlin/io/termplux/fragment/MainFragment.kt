@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.ServiceConnection
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -24,6 +25,7 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.MaterialTheme
@@ -37,7 +39,10 @@ import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSiz
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalView
@@ -51,6 +56,7 @@ import androidx.core.view.WindowCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentContainerView
 import androidx.navigation.compose.rememberNavController
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
@@ -67,6 +73,7 @@ import io.termplux.IUserService
 import io.termplux.R
 import io.termplux.adapter.AppsAdapter
 import io.termplux.adapter.PagerAdapter
+import io.termplux.custom.ClockView
 import io.termplux.model.AppsModel
 import io.termplux.receiver.AppsReceiver
 import io.termplux.services.MainService
@@ -84,6 +91,15 @@ import kotlin.math.hypot
 
 class MainFragment : FlutterBoostFragment(), Runnable {
 
+
+    private lateinit var channel: MethodChannel
+    private lateinit var mContext: FragmentActivity
+
+    private lateinit var mSharedPreferences: SharedPreferences
+    private var isDynamicColor: Boolean by mutableStateOf(value = true)
+
+    private lateinit var userServices: IUserService
+
     private val binderReceivedListener = Shizuku.OnBinderReceivedListener {
         // shizuku进程已激活
 
@@ -98,11 +114,6 @@ class MainFragment : FlutterBoostFragment(), Runnable {
         Shizuku.OnRequestPermissionResultListener { requestCode: Int, grantResult: Int ->
             onRequestPermissionsResults(requestCode, grantResult)
         }
-
-    private lateinit var channel: MethodChannel
-    private lateinit var mContext: FragmentActivity
-
-    private lateinit var userServices: IUserService
 
     private val hideHandler = Handler(
         Looper.myLooper()!!
@@ -150,6 +161,16 @@ class MainFragment : FlutterBoostFragment(), Runnable {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mContext = requireActivity()
+
+        // 获取首选项
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext)
+        // 获取动态颜色首选项
+        isDynamicColor = mSharedPreferences.getBoolean(
+            "dynamic_colors",
+            true
+        ) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+
+
         initServices()
         check()
         // 注册监听器
@@ -184,22 +205,32 @@ class MainFragment : FlutterBoostFragment(), Runnable {
                     }.also { compose ->
                         mComposeView = compose
                     },
-                    recyclerView = RecyclerView(mContext).apply {
+                    recyclerView = LinearLayoutCompat(mContext).apply {
                         fitsSystemWindows = true
-                        layoutManager = GridLayoutManager(
-                            mContext,
-                            4,
-                            RecyclerView.VERTICAL,
-                            false
+                        orientation = LinearLayoutCompat.VERTICAL
+                        addView(
+                            ClockView(mContext),
+                            LinearLayoutCompat.LayoutParams(
+                                LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                                LinearLayoutCompat.LayoutParams.WRAP_CONTENT
+                            )
                         )
-                    }.also { apps ->
-                        mRecyclerView = apps
-                    },
-                    fragmentContainerView = FragmentContainerView(mContext).apply {
-                        id = R.id.settings_container
-                        fitsSystemWindows = true
-                    }.also { settings ->
-                        mSettingsView = settings
+                        addView(
+                            RecyclerView(mContext).apply {
+                                layoutManager = GridLayoutManager(
+                                    mContext,
+                                    4,
+                                    RecyclerView.VERTICAL,
+                                    false
+                                )
+                            }.also { apps ->
+                                mRecyclerView = apps
+                            },
+                            LinearLayoutCompat.LayoutParams(
+                                LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                                LinearLayoutCompat.LayoutParams.MATCH_PARENT
+                            )
+                        )
                     }
                 )
 
@@ -226,10 +257,6 @@ class MainFragment : FlutterBoostFragment(), Runnable {
             }
         }.apply {
             return FrameLayout(mContext).apply {
-                background = ContextCompat.getDrawable(
-                    mContext,
-                    R.drawable.custom_wallpaper_24
-                )
                 addView(
                     mViewPager,
                     FrameLayout.LayoutParams(
@@ -293,6 +320,8 @@ class MainFragment : FlutterBoostFragment(), Runnable {
         super.onViewCreated(view, savedInstanceState)
         mVisible = true
 
+
+
         // 加载应用列表
         loadApp()
 
@@ -334,14 +363,8 @@ class MainFragment : FlutterBoostFragment(), Runnable {
 
     override fun onResume() {
         super.onResume()
-        delayedHide(100)
+        if (mVisible) delayedHide(100)
     }
-
-    override fun onPause() {
-        super.onPause()
-        //show()
-    }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -542,7 +565,10 @@ class MainFragment : FlutterBoostFragment(), Runnable {
                             //mViewPager2.currentItem = mViewPager2.currentItem + 1
                             PopTip.show("6")
                             res.success("success")
+
                         }
+
+                        "dynamic_colors" -> res.success(isDynamicColor)
 
                         else -> {
                             res.error("error", "error_message", null)
@@ -629,7 +655,7 @@ class MainFragment : FlutterBoostFragment(), Runnable {
                 val darkTheme = isSystemInDarkTheme()
                 // 配色方案
                 val colorScheme = when {
-                    Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+                    isDynamicColor -> {
                         if (darkTheme) dynamicDarkColorScheme(
                             context = mContext
                         ) else dynamicLightColorScheme(

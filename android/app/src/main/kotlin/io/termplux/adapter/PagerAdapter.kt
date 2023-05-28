@@ -8,29 +8,25 @@ import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.FragmentContainerView
 import androidx.recyclerview.widget.RecyclerView
 import io.termplux.R
 import io.termplux.holder.PagerViewHolder
 
 class PagerAdapter constructor(
     flutterView: View,
-    composeView: ComposeView,
-    recyclerView: RecyclerView,
-    fragmentContainerView: FragmentContainerView
+    composeView: View,
+    recyclerView: View,
 ) : RecyclerView.Adapter<PagerViewHolder>() {
 
     private val mFlutterView: View
-    private val mComposeView: ComposeView
-    private val mRecyclerView: RecyclerView
-    private val mFragmentContainerView: FragmentContainerView
+    private val mComposeView: View
+    private val mRecyclerView: View
     private lateinit var mTextView: AppCompatTextView
 
     init {
         mFlutterView = flutterView
         mComposeView = composeView
         mRecyclerView = recyclerView
-        mFragmentContainerView = fragmentContainerView
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PagerViewHolder {
@@ -54,21 +50,20 @@ class PagerAdapter constructor(
     }
 
     override fun getItemCount(): Int {
-        return 4
+        return arrayOf(flutter, compose, recycler).size
     }
 
     override fun onBindViewHolder(holder: PagerViewHolder, position: Int) {
         (holder.itemView as FrameLayout).apply {
-            background = ContextCompat.getDrawable(
+            if (position != recycler) background = ContextCompat.getDrawable(
                 holder.itemView.context,
                 R.color.pager_background
             )
             addView(
                 when (position) {
-                    0 -> mFlutterView
-                    1 -> mComposeView
-                    2 -> mRecyclerView
-                    3 -> mFragmentContainerView
+                    flutter -> mFlutterView
+                    compose -> mComposeView
+                    recycler -> mRecyclerView
                     else -> mTextView
                 },
                 FrameLayout.LayoutParams(
@@ -77,5 +72,11 @@ class PagerAdapter constructor(
                 )
             )
         }
+    }
+
+    companion object {
+        const val flutter: Int = 0
+        const val compose: Int = 1
+        const val recycler: Int = 2
     }
 }

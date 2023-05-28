@@ -27,10 +27,15 @@ import java.io.File
 
 class TermPluxApp : BaseApp<TermPluxApp>() {
 
+    /** 首选项 */
+    private lateinit var mSharedPreferences: SharedPreferences
+
     /**
      * 应用启动时执行
      */
     override fun init() {
+        // 加载首选项
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this@TermPluxApp)
 
         // 初始化FlutterBoost
         FlutterBoost.instance().apply {
@@ -115,16 +120,21 @@ class TermPluxApp : BaseApp<TermPluxApp>() {
         DialogX.useHaptic = true
 
         // 初始化动态颜色
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            DynamicColors.applyToActivitiesIfAvailable(
-                this@TermPluxApp
-            )
-        }
+        if (mSharedPreferences.getBoolean(
+                "dynamic_colors",
+                true
+            ) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+        ) DynamicColors.applyToActivitiesIfAvailable(
+            this@TermPluxApp
+        )
 
         // 初始化任务栏
         Taskbar.setEnabled(
             this@TermPluxApp,
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
+            mSharedPreferences.getBoolean(
+                "desktop",
+                true
+            ) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
         )
     }
 
