@@ -36,8 +36,16 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  void aaa() {
-    BoostNavigator.instance.push("home", withContainer: false);
+  void navigation(String route) {
+    if (isUseBoost){
+      BoostNavigator.instance.push(route, withContainer: false);
+    } else {
+      Navigator.pushNamed(context, route);
+    }
+  }
+
+  void aaa(){
+    navigation('home');
   }
 
   bool get isUseBoost {

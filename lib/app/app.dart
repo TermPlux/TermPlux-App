@@ -21,6 +21,10 @@ class TermPluxApp extends StatelessWidget {
     },
   };
 
+  static Map<String, Widget Function(BuildContext)> routes = {
+    'home': (context) => const MyHomePage(title: appName),
+  };
+
   Route<dynamic>? routeFactory(RouteSettings settings, String? uniqueId) {
     FlutterBoostRouteFactory? func = routerMap[settings.name!];
     if (func == null) {
@@ -29,15 +33,20 @@ class TermPluxApp extends StatelessWidget {
     return func(settings, uniqueId);
   }
 
-  Widget appBuilder(BuildContext context, Widget home) {
+  String? initial(){
+    if (!isUseBoost) return 'home';
+    return null;
+  }
+
+  Widget appBuilder(BuildContext context, Widget? home) {
     return DynamicColorBuilder(builder: (lightColorScheme, darkColorScheme) {
       return MaterialApp(
         home: home,
-        // routes: ,
-        // initialRoute: 'home',
+        routes: routes,
+        initialRoute: initial(),
         builder: (context, widget) {
           if (isUseBoost) {
-            return home;
+            return home!;
           } else {
             return DevicePreview.appBuilder(context, widget);
           }
@@ -92,11 +101,7 @@ class TermPluxApp extends StatelessWidget {
     } else {
       return DevicePreview(
         builder: (context) {
-          return appBuilder(
-              context,
-              const MyHomePage(
-                title: appName,
-              ));
+          return appBuilder(context, null);
         },
         isToolbarVisible: true,
         availableLocales: const [
