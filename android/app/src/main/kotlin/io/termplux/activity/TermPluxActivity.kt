@@ -9,11 +9,8 @@ import android.os.IBinder
 import android.os.Looper
 import android.util.Log
 import android.view.*
-import androidx.activity.compose.setContent
-import androidx.annotation.IdRes
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
@@ -21,12 +18,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.preference.PreferenceManager
@@ -55,7 +50,6 @@ import io.flutter.embedding.android.TransparencyMode
 import io.termplux.BuildConfig
 import io.termplux.IUserService
 import io.termplux.R
-
 import io.termplux.custom.DisableSwipeViewPager
 import io.termplux.fragment.MainFragment
 import io.termplux.services.MainService
@@ -74,7 +68,7 @@ import rikka.shizuku.Shizuku
 @DarkStatusBarTheme(true)
 @DarkNavigationBarTheme(true)
 @NavigationBarBackgroundColorRes(R.color.white)
-@FragmentLayout(TermPluxActivity.fragment_container)
+@FragmentLayout(R.id.fragment_container)
 class TermPluxActivity : BaseActivity() {
 
     private val mME: BaseActivity = me
@@ -108,7 +102,7 @@ class TermPluxActivity : BaseActivity() {
     private var mVisible: Boolean by mutableStateOf(value = false)
     private var isDynamicColor: Boolean by mutableStateOf(value = true)
 
-    private lateinit var mDisableSwipeViewPager: DisableSwipeViewPager
+
 
     private lateinit var mToolbar: MaterialToolbar
     private lateinit var mAppBarLayout: AppBarLayout
@@ -150,14 +144,13 @@ class TermPluxActivity : BaseActivity() {
             "full_mode",
             true
         )
-        // 初始化ViewPager
-        mDisableSwipeViewPager = DisableSwipeViewPager(
+
+        // 返回ViewPager
+        return DisableSwipeViewPager(
             mContext
         ).apply {
-            id = fragment_container
+            id = R.id.fragment_container
         }
-        // 返回ViewPager
-        return mDisableSwipeViewPager
     }
 
     /**
@@ -175,21 +168,21 @@ class TermPluxActivity : BaseActivity() {
         // 设置页面布局边界
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        mViewPager2 = ViewPager2(
-            mContext
-        ).apply {
-            background = ContextCompat.getDrawable(
-                mContext,
-                R.drawable.custom_wallpaper_24
-            )
-        }
-
-        // 初始化底部导航
-        mBottomNavigationView = BottomNavigationView(
-            mContext
-        ).apply {
-            inflateMenu(R.menu.navigation)
-        }
+//        mViewPager2 = ViewPager2(
+//            mContext
+//        ).apply {
+//            background = ContextCompat.getDrawable(
+//                mContext,
+//                R.drawable.custom_wallpaper_24
+//            )
+//        }
+//
+//        // 初始化底部导航
+//        mBottomNavigationView = BottomNavigationView(
+//            mContext
+//        ).apply {
+//            inflateMenu(R.menu.navigation)
+//        }
 
         // 加载AppBarLayout
         mAppBarLayout = AppBarLayout(
@@ -258,7 +251,7 @@ class TermPluxActivity : BaseActivity() {
                 resetContentView = FragmentContainerView(
                     mContext
                 ).apply {
-                    id = flutter_container
+                    id = R.id.flutter_container
                 },
                 initView = {
                     flutterBoostFragment = mFragmentManager.findFragmentByTag(
@@ -272,7 +265,7 @@ class TermPluxActivity : BaseActivity() {
                             body = {
                                 flutterBoostFragment = mFlutterBoostFragment
                                 add(
-                                    flutter_container,
+                                    R.id.flutter_container,
                                     mFlutterBoostFragment,
                                     tagFlutterBoostFragment
                                 )
@@ -294,7 +287,7 @@ class TermPluxActivity : BaseActivity() {
         )
 
         // 默认切换到主页
-        changeFragment(home)
+        changeFragment(0)
     }
 
     /**
@@ -398,6 +391,7 @@ class TermPluxActivity : BaseActivity() {
         mFlutterBoostFragment.onPostResume()
     }
 
+    @SuppressLint("MissingSuperCall")
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         mFlutterBoostFragment.onNewIntent(intent)
@@ -705,23 +699,7 @@ class TermPluxActivity : BaseActivity() {
     companion object {
 
         const val tagFlutterBoostFragment: String = "flutter_boost_fragment"
-        //  private const val tagSettingsFragment: String = "settings_fragment"
 
-        const val toggle: String = "toggle"
-        const val taskbar: String = "taskbar"
-        const val options: String = "options"
-
-        const val shizukuVersion: String = "shizukuVersion"
-        const val androidVersion: String = "androidVersion"
-
-        const val home: Int = 0
-        const val pager: Int = 1
-
-        @IdRes
-        const val fragment_container: Int = R.id.fragment_container
-
-        @IdRes
-        const val flutter_container: Int = R.id.flutter_container
 
         /** 操作栏是否应该在[autoHideDelayMillis]毫秒后自动隐藏。*/
         const val autoHide = true

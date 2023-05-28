@@ -37,7 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void aaa() {
-    BoostNavigator.instance.push("home", withContainer: true, opaque: true);
+    BoostNavigator.instance.push("home", withContainer: false);
   }
 
   bool get isUseBoost {

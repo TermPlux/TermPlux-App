@@ -26,16 +26,28 @@
         android:theme="@style/Theme.TermPlux"
         android:usesCleartextTraffic="true"
         tools:targetApi="tiramisu">
+
+        <meta-data
+            android:name="flutterEmbedding"
+            android:value="2" />
+        <meta-data
+            android:name="fake-signature"
+            android:value="@string/fake_signature" />
+
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".activity.TermPluxActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true"
-           >
+            android:hardwareAccelerated="true"
+            android:theme="@style/Theme.TermPlux"
+            android:windowSoftInputMode="adjustResize">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="termplux" />
             <meta-data
                 android:name="io.flutter.embedding.android.NormalTheme"
                 android:resource="@style/Theme.TermPlux" />
+
             <intent-filter>
                 <action android:name="android.intent.action.APPLICATION_PREFERENCES" />
                 <action android:name="android.intent.action.MAIN" />
@@ -47,39 +59,6 @@
                 <category android:name="android.intent.category.LAUNCHER_APP" />
             </intent-filter>
         </activity>
-
-        <meta-data
-            android:name="flutterEmbedding"
-            android:value="2" />
-        <meta-data
-            android:name="fake-signature"
-            android:value="@string/fake_signature" />
-
-<!--        <activity-->
-<!--            android:name=".activity.TermPluxActivity"-->
-<!--            android:configChanges="orientation|keyboardHidden|screenSize"-->
-<!--            android:exported="true"-->
-<!--            android:hardwareAccelerated="true"-->
-<!--            android:theme="@style/Theme.TermPlux"-->
-<!--            android:windowSoftInputMode="adjustResize">-->
-<!--            <meta-data-->
-<!--                android:name="android.app.lib_name"-->
-<!--                android:value="termplux" />-->
-<!--            <meta-data-->
-<!--                android:name="io.flutter.embedding.android.NormalTheme"-->
-<!--                android:resource="@style/Theme.TermPlux" />-->
-
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.APPLICATION_PREFERENCES" />-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-
-<!--                <category android:name="android.intent.category.HOME" />-->
-<!--                <category android:name="android.intent.category.DEFAULT" />-->
-<!--                <category android:name="android.intent.category.MONKEY" />-->
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--                <category android:name="android.intent.category.LAUNCHER_APP" />-->
-<!--            </intent-filter>-->
-<!--        </activity>-->
         <activity
             android:name=".activity.TermPluxFlutter"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density"

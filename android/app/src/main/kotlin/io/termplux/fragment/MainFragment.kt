@@ -17,7 +17,6 @@ import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
@@ -28,7 +27,6 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.Color
@@ -42,8 +40,6 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.FragmentContainerView
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.commit
 import androidx.navigation.compose.rememberNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -57,7 +53,6 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import io.termplux.BuildConfig
 import io.termplux.R
-import io.termplux.activity.TermPluxActivity
 import io.termplux.adapter.AppsAdapter
 import io.termplux.adapter.ViewPager2Adapter
 import io.termplux.model.AppsModel
@@ -70,7 +65,6 @@ import io.termplux.ui.window.isBookPosture
 import io.termplux.ui.window.isSeparating
 import io.termplux.utils.ZoomOutPageTransformer
 import kotlinx.coroutines.Runnable
-import java.util.ArrayList
 import kotlin.math.hypot
 
 class MainFragment : FlutterBoostFragment(), Runnable {
@@ -78,13 +72,18 @@ class MainFragment : FlutterBoostFragment(), Runnable {
     private lateinit var channel: MethodChannel
     private lateinit var mContext: Context
 
+
+    private lateinit var mRootView: View
+
+    private lateinit var mViewPager: ViewPager2
+    private lateinit var mSplashLogo: AppCompatImageView
+
     // View
-    private lateinit var mFlutterView: View
     private lateinit var mComposeView: ComposeView
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var mSettingsView: FragmentContainerView
-    private lateinit var mViewPager: ViewPager2
-    private lateinit var mSplashLogo: AppCompatImageView
+
+
 
     private var settingsFragment: SettingsFragment? = null
 
@@ -107,100 +106,89 @@ class MainFragment : FlutterBoostFragment(), Runnable {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        super.onCreateView(inflater, container, savedInstanceState)?.let { parent ->
-            mFlutterView = parent
-        }
-        mComposeView = ComposeView(mContext).apply {
-            setViewCompositionStrategy(
-                ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
-            )
-        }
-        mRecyclerView = RecyclerView(mContext).apply {
-            layoutManager = GridLayoutManager(
-                mContext,
-                4,
-                RecyclerView.VERTICAL,
-                false
-            )
-        }
-        mSettingsView = FragmentContainerView(mContext).apply {
-            id = R.id.settings_containerssss
-            fitsSystemWindows = true
-        }
+        super.onCreateView(inflater, container, savedInstanceState).also { parent ->
+            parent?.let { root ->
+                root.apply {
+                    visibility = View.INVISIBLE
+                    post(this@MainFragment)
+                }.also { view ->
+                    mRootView = view
+                }
+            }
+        }.also { parent ->
+            parent?.let { flutter ->
+                mViewPager = ViewPager2(mContext).apply {
 
+                    // 适配器
+                    val viewAdapter = ViewPager2Adapter(
+                        flutterView = flutter,
+                        composeView = ComposeView(mContext).apply {
+                            setViewCompositionStrategy(
+                                ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
+                            )
+                        }.also { compose ->
+                            mComposeView = compose
+                        },
+                        recyclerView = RecyclerView(mContext).apply {
+                            fitsSystemWindows = true
+                            layoutManager = GridLayoutManager(
+                                mContext,
+                                4,
+                                RecyclerView.VERTICAL,
+                                false
+                            )
+                        }.also { apps ->
+                            mRecyclerView = apps
+                        },
+                        fragmentContainerView = FragmentContainerView(mContext).apply {
+                            id = R.id.settings_container
+                            fitsSystemWindows = true
+                        }.also { settings ->
+                            mSettingsView = settings
+                        }
+                    )
 
+                    orientation = ViewPager2.ORIENTATION_HORIZONTAL
+                    isUserInputEnabled = true
+                    setPageTransformer(
+                        ZoomOutPageTransformer()
+                    )
+                    adapter = viewAdapter
+                    offscreenPageLimit = viewAdapter.itemCount
+                }
 
-
-
-//        val mFragmentManager: FragmentManager = childFragmentManager
-//        settingsFragment = mFragmentManager.findFragmentByTag(tagSettingsFragment) as SettingsFragment?
-//        if (settingsFragment == null) {
-//            val newSettingsFragment = SettingsFragment()
-//            mFragmentManager.commit(
-//                allowStateLoss = false,
-//                body = {
-//                    settingsFragment = newSettingsFragment
-//                    add(
-//                        mSettingsView.id,
-//                        newSettingsFragment,
-//                        tagSettingsFragment
-//                    )
-//                }
-//            )
-//        }
-
-
-
-
-        mSplashLogo = AppCompatImageView(mContext).apply {
-            scaleType = ImageView.ScaleType.CENTER
-            setImageDrawable(
-                ContextCompat.getDrawable(
-                    requireActivity(),
-                    R.drawable.custom_termplux_24
+                mSplashLogo = AppCompatImageView(mContext).apply {
+                    scaleType = ImageView.ScaleType.CENTER
+                    setImageDrawable(
+                        ContextCompat.getDrawable(
+                            requireActivity(),
+                            R.drawable.custom_termplux_24
+                        )
+                    )
+                }
+            }
+        }.apply {
+            return FrameLayout(mContext).apply {
+                background = ContextCompat.getDrawable(
+                    mContext,
+                    R.drawable.custom_wallpaper_24
                 )
-            )
-        }
-        val a = ViewPager2Adapter(
-            flutterView = mFlutterView,
-            composeView = mComposeView,
-            recyclerView = mRecyclerView,
-            fragmentContainerView = mSettingsView
-        )
-        mViewPager = ViewPager2(mContext).apply {
-            visibility = View.INVISIBLE
-            post(this@MainFragment)
-            orientation = ViewPager2.ORIENTATION_HORIZONTAL
-            isUserInputEnabled = true
-            setPageTransformer(
-                ZoomOutPageTransformer()
-            )
-            adapter = a
-            offscreenPageLimit = a.itemCount
-        }
-
-
-
-        return FrameLayout(mContext).apply {
-            background = ContextCompat.getDrawable(
-                mContext,
-                R.drawable.custom_wallpaper_24
-            )
-            addView(
-                mViewPager,
-                FrameLayout.LayoutParams(
-                    FrameLayout.LayoutParams.MATCH_PARENT,
-                    FrameLayout.LayoutParams.MATCH_PARENT
+                addView(
+                    mViewPager,
+                    FrameLayout.LayoutParams(
+                        FrameLayout.LayoutParams.MATCH_PARENT,
+                        FrameLayout.LayoutParams.MATCH_PARENT
+                    )
                 )
-            )
-            addView(
-                mSplashLogo,
-                FrameLayout.LayoutParams(
-                    FrameLayout.LayoutParams.WRAP_CONTENT,
-                    FrameLayout.LayoutParams.WRAP_CONTENT,
-                    Gravity.CENTER
+                addView(
+                    mSplashLogo,
+                    FrameLayout.LayoutParams(
+                        FrameLayout.LayoutParams.WRAP_CONTENT,
+                        FrameLayout.LayoutParams.WRAP_CONTENT,
+                        Gravity.CENTER
+                    )
                 )
-            )
+            }
         }
     }
 
@@ -212,12 +200,12 @@ class MainFragment : FlutterBoostFragment(), Runnable {
             y = mSplashLogo.height.toFloat()
         )
         val endRadius = hypot(
-            x = mViewPager.width.toFloat(),
-            y = mViewPager.height.toFloat()
+            x = mRootView.width.toFloat(),
+            y = mRootView.height.toFloat()
         )
         val circularAnim = ViewAnimationUtils
             .createCircularReveal(
-                mViewPager,
+                mRootView,
                 cx.toInt(),
                 cy.toInt(),
                 startRadius,
@@ -237,24 +225,14 @@ class MainFragment : FlutterBoostFragment(), Runnable {
                 mSplashLogo.visibility = View.GONE
             }
             .withStartAction {
-                mViewPager.visibility = View.VISIBLE
+                mRootView.visibility = View.VISIBLE
                 circularAnim.start()
             }
             .start()
     }
 
-    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
-
-
-
-
-
-
-
 
 
         // 加载应用列表
@@ -275,206 +253,32 @@ class MainFragment : FlutterBoostFragment(), Runnable {
         // 注册广播接收器
         mContext.registerReceiver(appReceiver, intentFilter)
 
+        setContent()
 
 
-
-
-
-
-
-
-
-
-
-
-        setContent {
-            channel.setMethodCallHandler { call, res ->
-                when (call.method) {
-                    "pager" -> {
-                        //mViewPager2.currentItem = mViewPager2.currentItem + 1
-                        PopTip.show("6")
-                        res.success("success")
-                    }
-
-                    else -> {
-                        res.error("error", "error_message", null)
-                    }
-                }
-            }
-
-            // 获取根View
-            val hostView = LocalView.current
-            val window = (hostView.context as Activity).window
-
-            val scope = rememberCoroutineScope()
-            val drawerState = rememberDrawerState(
-                initialValue = DrawerValue.Closed
-            )
-
-            // 导航控制器实例
-            val navController = rememberNavController()
-
-
-            val windowSize = calculateWindowSizeClass(
-                activity = requireActivity()
-            )
-            val displayFeatures = calculateDisplayFeatures(
-                activity = requireActivity()
-            )
-
-            val navigationType: NavigationType
-            val contentType: ContentType
-
-            val foldingFeature = displayFeatures.filterIsInstance<FoldingFeature>().firstOrNull()
-
-            val foldingDevicePosture = when {
-                isBookPosture(
-                    foldFeature = foldingFeature
-                ) -> DevicePosture.BookPosture(
-                    hingePosition = foldingFeature.bounds
-                )
-
-                isSeparating(
-                    foldFeature = foldingFeature
-                ) -> DevicePosture.Separating(
-                    hingePosition = foldingFeature.bounds,
-                    orientation = foldingFeature.orientation
-                )
-
-                else -> DevicePosture.NormalPosture
-            }
-
-            when (windowSize.widthSizeClass) {
-                WindowWidthSizeClass.Compact -> {
-                    navigationType = NavigationType.BottomNavigation
-                    contentType = ContentType.Single
-                }
-
-                WindowWidthSizeClass.Medium -> {
-                    navigationType = NavigationType.NavigationRail
-                    contentType = if (foldingDevicePosture != DevicePosture.NormalPosture) {
-                        ContentType.Dual
-                    } else {
-                        ContentType.Single
-                    }
-                }
-
-                WindowWidthSizeClass.Expanded -> {
-                    navigationType = if (foldingDevicePosture is DevicePosture.BookPosture) {
-                        NavigationType.NavigationRail
-                    } else {
-                        NavigationType.PermanentNavigationDrawer
-                    }
-                    contentType = ContentType.Dual
-                }
-
-                else -> {
-                    navigationType = NavigationType.BottomNavigation
-                    contentType = ContentType.Single
-                }
-            }
-
-            // 系统界面控制器实例
-            val systemUiController = rememberSystemUiController()
-            // 判断系统是否处于深色模式
-            val darkTheme = isSystemInDarkTheme()
-            // 配色方案
-            val colorScheme = when {
-                true && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-                    if (darkTheme) dynamicDarkColorScheme(
-                        context = mContext
-                    ) else dynamicLightColorScheme(
-                        context = mContext
-                    )
-                }
-
-                darkTheme -> DarkColorScheme
-                else -> LightColorScheme
-            }
-//                adapter(navController = navController)
-//                mediator(navigationType = navigationType) {
-//
-//                }
-            // 主机控件触摸事件
-            //touch(hostView = hostView)
-            // 绑定操作栏与导航抽屉
-//            bindingDrawer(
-//                navigationType = navigationType,
-//                open = {
-//                    scope.launch {
-//                        drawerState.open()
-//                    }
+//        val fragmentManager: FragmentManager = childFragmentManager
+//        settingsFragment = fragmentManager.findFragmentByTag(tagSettingsFragment) as SettingsFragment?
+//        val newSettingsFragment = SettingsFragment()
+//        if (settingsFragment == null) {
+//            fragmentManager.commit(
+//                allowStateLoss = false,
+//                body = {
+//                    settingsFragment = newSettingsFragment
+//                    add(
+//                        mSettingsView.id,
+//                        newSettingsFragment,
+//                        tagSettingsFragment
+//                    )
 //                }
 //            )
-
-            // 设置系统界面样式
-            if (!hostView.isInEditMode) {
-                SideEffect {
-                    systemUiController.setSystemBarsColor(
-                        color = Color.Transparent,
-                        darkIcons = !darkTheme
-                    )
-                    WindowCompat.getInsetsController(
-                        window,
-                        hostView
-                    )
-                }
-            }
-            // 设置页面样式和内容
-            MaterialTheme(
-                colorScheme = colorScheme,
-                typography = Typography,
-            ) {
-                ActivityMain(
-                    navController = navController,
-                    drawerState = drawerState,
-                    navigationType = navigationType,
-                    contentType = contentType,
-                    topBar = {
-
-                    },
-                    pager = {
-//                            AndroidView(
-//                                factory = {
-//                                    mViewPager2
-//                                },
-//                                modifier = it
-//                            )
-                    },
-                    navBar = {
-
-                    },
-                    tabRow = {
-//                        AndroidView(
-//                            factory = {
-//                                mTabLayout
-//                            },
-//                            modifier = it
-//                        )
-                    },
-                    optionsMenu = {
-                        // optionsMenu()
-                    },
-                    androidVersion = "13",
-                    shizukuVersion = "13",
-                    current = { item ->
-
-                    },
-                    toggle = {
-                        //toggle()
-                    }
-                )
-            }
-        }
-
-
+//        }
     }
 
 
     override fun onDestroyView() {
         super.onDestroyView()
         mContext.unregisterReceiver(appReceiver)
-        mViewPager.removeCallbacks(this@MainFragment)
+        mRootView.removeCallbacks(this@MainFragment)
     }
 
     override fun onDestroy() {
@@ -516,10 +320,188 @@ class MainFragment : FlutterBoostFragment(), Runnable {
         }
     }
 
-    private fun setContent(content: @Composable () -> Unit) {
+    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
+    private fun setContent() {
         mComposeView.apply {
             setContent {
-                content()
+                channel.setMethodCallHandler { call, res ->
+                    when (call.method) {
+                        "pager" -> {
+                            //mViewPager2.currentItem = mViewPager2.currentItem + 1
+                            PopTip.show("6")
+                            res.success("success")
+                        }
+
+                        else -> {
+                            res.error("error", "error_message", null)
+                        }
+                    }
+                }
+
+                // 获取根View
+                val hostView = LocalView.current
+                val window = (hostView.context as Activity).window
+
+                val scope = rememberCoroutineScope()
+                val drawerState = rememberDrawerState(
+                    initialValue = DrawerValue.Closed
+                )
+
+                // 导航控制器实例
+                val navController = rememberNavController()
+
+
+                val windowSize = calculateWindowSizeClass(
+                    activity = requireActivity()
+                )
+                val displayFeatures = calculateDisplayFeatures(
+                    activity = requireActivity()
+                )
+
+                val navigationType: NavigationType
+                val contentType: ContentType
+
+                val foldingFeature =
+                    displayFeatures.filterIsInstance<FoldingFeature>().firstOrNull()
+
+                val foldingDevicePosture = when {
+                    isBookPosture(
+                        foldFeature = foldingFeature
+                    ) -> DevicePosture.BookPosture(
+                        hingePosition = foldingFeature.bounds
+                    )
+
+                    isSeparating(
+                        foldFeature = foldingFeature
+                    ) -> DevicePosture.Separating(
+                        hingePosition = foldingFeature.bounds,
+                        orientation = foldingFeature.orientation
+                    )
+
+                    else -> DevicePosture.NormalPosture
+                }
+
+                when (windowSize.widthSizeClass) {
+                    WindowWidthSizeClass.Compact -> {
+                        navigationType = NavigationType.BottomNavigation
+                        contentType = ContentType.Single
+                    }
+
+                    WindowWidthSizeClass.Medium -> {
+                        navigationType = NavigationType.NavigationRail
+                        contentType = if (foldingDevicePosture != DevicePosture.NormalPosture) {
+                            ContentType.Dual
+                        } else {
+                            ContentType.Single
+                        }
+                    }
+
+                    WindowWidthSizeClass.Expanded -> {
+                        navigationType = if (foldingDevicePosture is DevicePosture.BookPosture) {
+                            NavigationType.NavigationRail
+                        } else {
+                            NavigationType.PermanentNavigationDrawer
+                        }
+                        contentType = ContentType.Dual
+                    }
+
+                    else -> {
+                        navigationType = NavigationType.BottomNavigation
+                        contentType = ContentType.Single
+                    }
+                }
+
+                // 系统界面控制器实例
+                val systemUiController = rememberSystemUiController()
+                // 判断系统是否处于深色模式
+                val darkTheme = isSystemInDarkTheme()
+                // 配色方案
+                val colorScheme = when {
+                    true && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+                        if (darkTheme) dynamicDarkColorScheme(
+                            context = mContext
+                        ) else dynamicLightColorScheme(
+                            context = mContext
+                        )
+                    }
+
+                    darkTheme -> DarkColorScheme
+                    else -> LightColorScheme
+                }
+//                adapter(navController = navController)
+//                mediator(navigationType = navigationType) {
+//
+//                }
+                // 主机控件触摸事件
+                //touch(hostView = hostView)
+                // 绑定操作栏与导航抽屉
+//            bindingDrawer(
+//                navigationType = navigationType,
+//                open = {
+//                    scope.launch {
+//                        drawerState.open()
+//                    }
+//                }
+//            )
+
+                // 设置系统界面样式
+                if (!hostView.isInEditMode) {
+                    SideEffect {
+                        systemUiController.setSystemBarsColor(
+                            color = Color.Transparent,
+                            darkIcons = !darkTheme
+                        )
+                        WindowCompat.getInsetsController(
+                            window,
+                            hostView
+                        )
+                    }
+                }
+                // 设置页面样式和内容
+                MaterialTheme(
+                    colorScheme = colorScheme,
+                    typography = Typography,
+                ) {
+                    ActivityMain(
+                        navController = navController,
+                        drawerState = drawerState,
+                        navigationType = navigationType,
+                        contentType = contentType,
+                        topBar = {
+
+                        },
+                        pager = {
+//                            AndroidView(
+//                                factory = {
+//                                    mViewPager2
+//                                },
+//                                modifier = it
+//                            )
+                        },
+                        navBar = {
+
+                        },
+                        tabRow = {
+//                        AndroidView(
+//                            factory = {
+//                                mTabLayout
+//                            },
+//                            modifier = it
+//                        )
+                        },
+                        optionsMenu = {
+                            // optionsMenu()
+                        },
+                        androidVersion = "13",
+                        shizukuVersion = "13",
+                        current = { item ->
+
+                        },
+                        toggle = {
+                            //toggle()
+                        }
+                    )
+                }
             }
         }
     }

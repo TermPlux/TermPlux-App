@@ -7,22 +7,11 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import io.termplux.R
-import io.termplux.ui.navigation.Screen
 
 class SettingsFragment : PreferenceFragmentCompat() {
 
-    private var mNavigation: () -> Unit
-
     private lateinit var mContext: Context
     private lateinit var mSharedPreferences: SharedPreferences
-
-    init {
-        mNavigation = {
-//            navigation(
-//                Screen.Settings.route
-//            )
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,18 +23,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
         val settings: Preference? = findPreference("navigation_settings")
         settings?.setOnPreferenceClickListener {
-            mNavigation()
             true
         }
     }
-
-//    companion object{
-//        fun newInstance(
-//            navigation: (String) -> Unit
-//        ): SettingsFragment {
-//            return SettingsFragment(
-//                navigation = navigation
-//            )
-//        }
-//    }
 }
