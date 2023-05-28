@@ -51,6 +51,7 @@ import io.termplux.BuildConfig
 import io.termplux.IUserService
 import io.termplux.R
 import io.termplux.custom.DisableSwipeViewPager
+import io.termplux.fragment.ContainerFragment
 import io.termplux.fragment.MainFragment
 import io.termplux.services.MainService
 import io.termplux.services.UserService
@@ -110,7 +111,7 @@ class TermPluxActivity : BaseActivity() {
     private lateinit var mBottomNavigationView: BottomNavigationView
     private lateinit var mTabLayout: TabLayout
 
-    private lateinit var mFlutterBoostFragment: MainFragment
+    private val container: ContainerFragment = ContainerFragment.newInstance()
 
 
     private val showPart2Runnable = Runnable {
@@ -229,62 +230,12 @@ class TermPluxActivity : BaseActivity() {
 
     }
 
+
+
     override fun initFragment(fragmentChangeUtil: FragmentChangeUtil?) {
         super.initFragment(fragmentChangeUtil)
-
-        var flutterBoostFragment: MainFragment? = null
-        val mFragmentManager: FragmentManager = supportFragmentManager
-
-        // 初始化FlutterBoostFragment
-        mFlutterBoostFragment = FlutterBoostFragment.CachedEngineFragmentBuilder(
-            MainFragment::class.java
-        )
-            .destroyEngineWithFragment(false)
-            .renderMode(RenderMode.surface)
-            .transparencyMode(TransparencyMode.opaque)
-            .shouldAttachEngineToActivity(true)
-            .build()
-
-        fragmentChangeUtil?.addFragment(
-            BaseFragmentUtils.newInstance<TermPluxActivity>(
-                resetContentView = FragmentContainerView(
-                    mContext
-                ).apply {
-                    id = R.id.flutter_container
-                },
-                initView = {
-                    flutterBoostFragment = mFragmentManager.findFragmentByTag(
-                        tagFlutterBoostFragment
-                    ) as MainFragment?
-                },
-                initData = {
-                    if (flutterBoostFragment == null) {
-                        mFragmentManager.commit(
-                            allowStateLoss = false,
-                            body = {
-                                flutterBoostFragment = mFlutterBoostFragment
-                                add(
-                                    R.id.flutter_container,
-                                    mFlutterBoostFragment,
-                                    tagFlutterBoostFragment
-                                )
-                            }
-                        )
-                    }
-                },
-                setEvent = {
-                    setLifeCircleListener(
-                        object : LifeCircleListener() {
-                            override fun onDestroy() {
-                                super.onDestroy()
-                                flutterBoostFragment = null
-                            }
-                        }
-                    )
-                }
-            ), true
-        )
-
+        // 添加Fragment
+        fragmentChangeUtil?.addFragment(container, true)
         // 默认切换到主页
         changeFragment(0)
     }
@@ -355,19 +306,6 @@ class TermPluxActivity : BaseActivity() {
         )
     }
 
-
-    /**
-     * 如果是默认桌面就拦截返回指令
-     * 通过调用FlutterFragment提供的返回代码进行返回操作，需要flutterFragment初始化一次后生效，当Flutter退回到首页后才执行安卓原有的返回操作
-     */
-    override fun onBack(): Boolean {
-        super.onBack()
-        if (!isHome) {
-            mFlutterBoostFragment.onBackPressed()
-        }
-        return isHome
-    }
-
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         super.onCreateOptionsMenu(menu)
         menuInflater.inflate(R.menu.menu_main, menu)
@@ -383,41 +321,6 @@ class TermPluxActivity : BaseActivity() {
             }
         }
         return true
-    }
-
-    override fun onPostResume() {
-        super.onPostResume()
-        mFlutterBoostFragment.onPostResume()
-    }
-
-    @SuppressLint("MissingSuperCall")
-    override fun onNewIntent(intent: Intent) {
-        super.onNewIntent(intent)
-        mFlutterBoostFragment.onNewIntent(intent)
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String?>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        mFlutterBoostFragment.onRequestPermissionsResult(
-            requestCode,
-            permissions,
-            grantResults
-        )
-    }
-
-    override fun onUserLeaveHint() {
-        super.onUserLeaveHint()
-        mFlutterBoostFragment.onUserLeaveHint()
-    }
-
-    @SuppressLint("MissingSuperCall")
-    override fun onTrimMemory(level: Int) {
-        super.onTrimMemory(level)
-        mFlutterBoostFragment.onTrimMemory(level)
     }
 
     private fun onRequestPermissionsResults(requestCode: Int, grantResult: Int) {
