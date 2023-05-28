@@ -59,6 +59,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.viewpager2.widget.ViewPager2
 import androidx.window.layout.FoldingFeature
 import com.farmerbb.taskbar.lib.Taskbar
@@ -205,32 +206,43 @@ class MainFragment : FlutterBoostFragment(), Runnable {
                     }.also { compose ->
                         mComposeView = compose
                     },
-                    recyclerView = LinearLayoutCompat(mContext).apply {
-                        fitsSystemWindows = true
-                        orientation = LinearLayoutCompat.VERTICAL
+                    recyclerView = SwipeRefreshLayout(mContext).apply {
                         addView(
-                            ClockView(mContext),
-                            LinearLayoutCompat.LayoutParams(
-                                LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-                                LinearLayoutCompat.LayoutParams.WRAP_CONTENT
-                            )
-                        )
-                        addView(
-                            RecyclerView(mContext).apply {
-                                layoutManager = GridLayoutManager(
-                                    mContext,
-                                    4,
-                                    RecyclerView.VERTICAL,
-                                    false
+                            LinearLayoutCompat(mContext).apply {
+                                fitsSystemWindows = true
+                                orientation = LinearLayoutCompat.VERTICAL
+                                addView(
+                                    ClockView(mContext),
+                                    LinearLayoutCompat.LayoutParams(
+                                        LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                                        LinearLayoutCompat.LayoutParams.WRAP_CONTENT
+                                    )
                                 )
-                            }.also { apps ->
-                                mRecyclerView = apps
+                                addView(
+                                    RecyclerView(mContext).apply {
+                                        layoutManager = GridLayoutManager(
+                                            mContext,
+                                            4,
+                                            RecyclerView.VERTICAL,
+                                            false
+                                        )
+                                    }.also { apps ->
+                                        mRecyclerView = apps
+                                    },
+                                    LinearLayoutCompat.LayoutParams(
+                                        LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+                                        LinearLayoutCompat.LayoutParams.MATCH_PARENT
+                                    )
+                                )
                             },
-                            LinearLayoutCompat.LayoutParams(
-                                LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-                                LinearLayoutCompat.LayoutParams.MATCH_PARENT
+                            ViewGroup.LayoutParams(
+                                ViewGroup.LayoutParams.MATCH_PARENT,
+                                ViewGroup.LayoutParams.MATCH_PARENT
                             )
                         )
+                        setOnRefreshListener {
+                            isRefreshing = false
+                        }
                     }
                 )
 
@@ -255,7 +267,7 @@ class MainFragment : FlutterBoostFragment(), Runnable {
                     )
                 }
             }
-        }.apply {
+
             return FrameLayout(mContext).apply {
                 addView(
                     mViewPager,
@@ -569,6 +581,7 @@ class MainFragment : FlutterBoostFragment(), Runnable {
                         }
 
                         "dynamic_colors" -> res.success(isDynamicColor)
+                        "toggle" -> toggle()
 
                         else -> {
                             res.error("error", "error_message", null)

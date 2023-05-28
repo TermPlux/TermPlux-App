@@ -37,6 +37,14 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  void toggle() {
+    if (!kIsWeb) {
+      if (Platform.isAndroid) {
+        channel.invokeMethod("toggle");
+      }
+    }
+  }
+
   // void navigation(String route) {
   //   if (isUseBoost){
   //     BoostNavigator.instance.push(route, withContainer: false);
@@ -54,6 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        flexibleSpace: WindowTitleBar(enable: kIsDesktop),
         actions: [
           IconButton(
               onPressed: navToPager, icon: const Icon(Icons.arrow_forward)),
@@ -65,12 +74,12 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            WindowTitleBar(enable: kIsDesktop),
             const Text(
               '你这个BYD的点击数:',
             ),
             TextButton(onPressed: navToPager, child: const Text("PAGE")),
             TextButton(onPressed: aaa, child: const Text("PUSH")),
+            TextButton(onPressed: toggle, child: const Text("TOGGLE")),
             // const Text(
             //   '请选择目标平台:',
             // ),

@@ -8,7 +8,7 @@ class WindowTitleBar extends StatelessWidget {
 
   Widget? titleBar() {
     if (enable) {
-      return WindowTitleBarBox(child: MoveWindow());
+      return MoveWindow();
     } else {
       return null;
     }

@@ -25,9 +25,13 @@ void main() async {
         .addGlobalObserver(AppGlobalPageVisibilityObserver());
     CustomFlutterBinding();
   }
-
+  if (kIsWeb) {
+    // 在Web中隐藏井号
+    setPathUrlStrategy();
+  }
+  // 启动应用
+  runApp(const TermPluxApp());
   if (kIsDesktop) {
-    WidgetsFlutterBinding.ensureInitialized();
     doWhenWindowReady(() {
       appWindow.minSize = minSize;
       appWindow.size = initialSize;
@@ -36,11 +40,4 @@ void main() async {
       appWindow.show();
     });
   }
-
-  if (kIsWeb) {
-    // 在Web中隐藏井号
-    setPathUrlStrategy();
-  }
-  // 启动应用
-  runApp(const TermPluxApp());
 }

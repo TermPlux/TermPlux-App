@@ -88,10 +88,6 @@ class MainActivity : BaseActivity() {
                     mContext
                 ).apply {
                     id = R.id.fragment_container
-                    background = ContextCompat.getDrawable(
-                        mContext,
-                        R.drawable.custom_wallpaper_24
-                    )
                 },
                 LinearLayoutCompat.LayoutParams(
                     LinearLayoutCompat.LayoutParams.MATCH_PARENT,

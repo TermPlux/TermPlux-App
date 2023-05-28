@@ -4,7 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.MotionEvent
+import androidx.core.content.ContextCompat
 import androidx.viewpager.widget.ViewPager
+import io.termplux.R
 
 class DisableSwipeViewPager : ViewPager {
 
@@ -23,6 +25,13 @@ class DisableSwipeViewPager : ViewPager {
     )
 
     private var canSwipe = false
+
+    init {
+        background = ContextCompat.getDrawable(
+            context,
+            R.drawable.custom_wallpaper_24
+        )
+    }
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(ev: MotionEvent): Boolean {
