@@ -7,7 +7,6 @@
         android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" /> <!-- 获取所有软件包 -->
     <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" /> <!-- 删除软件包 -->
-    <!-- <uses-permission android:name="android.permission.POST_NOTIFICATIONS" /> &lt;!&ndash; 通知 &ndash;&gt; -->
     <uses-permission android:name="android.permission.FAKE_PACKAGE_SIGNATURE" />
 
     <application
@@ -35,7 +34,7 @@
             android:value="@string/fake_signature" />
 
         <activity
-            android:name=".activity.TermPluxActivity"
+            android:name=".activity.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true"
             android:hardwareAccelerated="true"
@@ -60,7 +59,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.TermPluxFlutter"
+            android:name=".activity.MainFlutter"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density"
             android:exported="false"
             android:hardwareAccelerated="true"

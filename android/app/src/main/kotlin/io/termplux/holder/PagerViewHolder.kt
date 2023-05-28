@@ -1,9 +1,9 @@
-package io.termplux.adapter
+package io.termplux.holder
 
 import android.widget.FrameLayout
 import androidx.recyclerview.widget.RecyclerView
 
-class ViewPagerViewHolder constructor(
+class PagerViewHolder constructor(
     itemView: FrameLayout
 ) : RecyclerView.ViewHolder(
     itemView

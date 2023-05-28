@@ -5,7 +5,7 @@ import com.idlefish.flutterboost.FlutterBoostDelegate
 import com.idlefish.flutterboost.FlutterBoostRouteOptions
 import com.idlefish.flutterboost.containers.FlutterBoostActivity
 import io.flutter.embedding.android.FlutterActivityLaunchConfigs
-import io.termplux.activity.TermPluxFlutter
+import io.termplux.activity.MainFlutter
 
 class BoostDelegate constructor(
     native: (FlutterBoostRouteOptions) -> Unit
@@ -21,7 +21,7 @@ class BoostDelegate constructor(
 
     override fun pushFlutterRoute(options: FlutterBoostRouteOptions) {
         val intent = FlutterBoostActivity.CachedEngineIntentBuilder(
-            TermPluxFlutter().javaClass
+            MainFlutter().javaClass
         )
             .backgroundMode(FlutterActivityLaunchConfigs.BackgroundMode.transparent)
             .destroyEngineWithActivity(false)

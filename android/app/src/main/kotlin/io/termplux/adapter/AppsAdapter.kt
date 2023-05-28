@@ -16,6 +16,7 @@ import com.kongzue.dialogx.dialogs.PopTip
 import com.kongzue.dialogx.interfaces.OnIconChangeCallBack
 import io.termplux.BuildConfig
 import io.termplux.R
+import io.termplux.holder.AppsViewHolder
 import io.termplux.model.AppsModel
 
 class AppsAdapter constructor(

@@ -10,9 +10,9 @@ import com.kongzue.baseframework.interfaces.LifeCircleListener
 import io.flutter.embedding.android.RenderMode
 import io.flutter.embedding.android.TransparencyMode
 import io.termplux.R
-import io.termplux.activity.TermPluxActivity
+import io.termplux.activity.MainActivity
 
-class ContainerFragment : BaseFragment<TermPluxActivity>() {
+class ContainerFragment : BaseFragment<MainActivity>() {
 
     private var mainFragment: MainFragment? = null
     private lateinit var mFragmentManager: FragmentManager
@@ -27,7 +27,7 @@ class ContainerFragment : BaseFragment<TermPluxActivity>() {
     override fun initViews() {
         mFragmentManager = childFragmentManager
         mainFragment = mFragmentManager.findFragmentByTag(
-            TermPluxActivity.tagFlutterBoostFragment
+            tagFlutterBoostFragment
         ) as MainFragment?
     }
 

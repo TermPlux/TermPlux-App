@@ -11,13 +11,14 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentContainerView
 import androidx.recyclerview.widget.RecyclerView
 import io.termplux.R
+import io.termplux.holder.PagerViewHolder
 
-class ViewPager2Adapter constructor(
+class PagerAdapter constructor(
     flutterView: View,
     composeView: ComposeView,
     recyclerView: RecyclerView,
     fragmentContainerView: FragmentContainerView
-) : RecyclerView.Adapter<ViewPagerViewHolder>() {
+) : RecyclerView.Adapter<PagerViewHolder>() {
 
     private val mFlutterView: View
     private val mComposeView: ComposeView
@@ -32,8 +33,8 @@ class ViewPager2Adapter constructor(
         mFragmentContainerView = fragmentContainerView
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewPagerViewHolder {
-        return ViewPagerViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PagerViewHolder {
+        return PagerViewHolder(
             itemView = FrameLayout(
                 parent.context
             ).apply {
@@ -56,7 +57,7 @@ class ViewPager2Adapter constructor(
         return 4
     }
 
-    override fun onBindViewHolder(holder: ViewPagerViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: PagerViewHolder, position: Int) {
         (holder.itemView as FrameLayout).apply {
             background = ContextCompat.getDrawable(
                 holder.itemView.context,

@@ -1,4 +1,4 @@
-package io.termplux.adapter
+package io.termplux.holder
 
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView

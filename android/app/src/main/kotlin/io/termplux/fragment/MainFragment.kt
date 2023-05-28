@@ -1,19 +1,28 @@
 package io.termplux.fragment
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.BroadcastReceiver
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.ServiceConnection
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.IBinder
+import android.os.Looper
 import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewAnimationUtils
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.DrawerValue
@@ -39,12 +48,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentContainerView
 import androidx.navigation.compose.rememberNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import androidx.window.layout.FoldingFeature
+import com.farmerbb.taskbar.lib.Taskbar
 import com.google.accompanist.adaptive.calculateDisplayFeatures
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.idlefish.flutterboost.containers.FlutterBoostFragment
@@ -52,11 +63,14 @@ import com.kongzue.dialogx.dialogs.PopTip
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import io.termplux.BuildConfig
+import io.termplux.IUserService
 import io.termplux.R
 import io.termplux.adapter.AppsAdapter
-import io.termplux.adapter.ViewPager2Adapter
+import io.termplux.adapter.PagerAdapter
 import io.termplux.model.AppsModel
 import io.termplux.receiver.AppsReceiver
+import io.termplux.services.MainService
+import io.termplux.services.UserService
 import io.termplux.ui.ActivityMain
 import io.termplux.ui.window.ContentType
 import io.termplux.ui.window.DevicePosture
@@ -65,12 +79,50 @@ import io.termplux.ui.window.isBookPosture
 import io.termplux.ui.window.isSeparating
 import io.termplux.utils.ZoomOutPageTransformer
 import kotlinx.coroutines.Runnable
+import rikka.shizuku.Shizuku
 import kotlin.math.hypot
 
 class MainFragment : FlutterBoostFragment(), Runnable {
 
+    private val binderReceivedListener = Shizuku.OnBinderReceivedListener {
+        // shizuku进程已激活
+
+    }
+
+    private val binderDeadListener = Shizuku.OnBinderDeadListener {
+        // shizuku进程被停止
+    }
+
+    //shizuku监听授权结果
+    private val requestPermissionResultListener =
+        Shizuku.OnRequestPermissionResultListener { requestCode: Int, grantResult: Int ->
+            onRequestPermissionsResults(requestCode, grantResult)
+        }
+
     private lateinit var channel: MethodChannel
-    private lateinit var mContext: Context
+    private lateinit var mContext: FragmentActivity
+
+    private lateinit var userServices: IUserService
+
+    private val hideHandler = Handler(
+        Looper.myLooper()!!
+    )
+
+    private val showPart2Runnable = Runnable {
+        (requireActivity() as? AppCompatActivity)?.supportActionBar?.show()
+    }
+    private var mVisible: Boolean = false
+    private val hideRunnable = Runnable {
+        hide()
+    }
+
+    private val delayHideTouchListener = View.OnTouchListener { view, motionEvent ->
+        when (motionEvent.action) {
+            MotionEvent.ACTION_DOWN -> if (autoHide) delayedHide(autoHideDelayMillis)
+            MotionEvent.ACTION_UP -> view.performClick()
+        }
+        false
+    }
 
 
     private lateinit var mRootView: View
@@ -82,7 +134,6 @@ class MainFragment : FlutterBoostFragment(), Runnable {
     private lateinit var mComposeView: ComposeView
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var mSettingsView: FragmentContainerView
-
 
 
     private var settingsFragment: SettingsFragment? = null
@@ -99,6 +150,12 @@ class MainFragment : FlutterBoostFragment(), Runnable {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mContext = requireActivity()
+        initServices()
+        check()
+        // 注册监听器
+        Shizuku.addBinderReceivedListenerSticky(binderReceivedListener)
+        Shizuku.addBinderDeadListener(binderDeadListener)
+        Shizuku.addRequestPermissionResultListener(requestPermissionResultListener)
     }
 
     override fun onCreateView(
@@ -117,39 +174,39 @@ class MainFragment : FlutterBoostFragment(), Runnable {
             }
         }.also { parent ->
             parent?.let { flutter ->
+                // 适配器
+                val viewAdapter = PagerAdapter(
+                    flutterView = flutter,
+                    composeView = ComposeView(mContext).apply {
+                        setViewCompositionStrategy(
+                            ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
+                        )
+                    }.also { compose ->
+                        mComposeView = compose
+                    },
+                    recyclerView = RecyclerView(mContext).apply {
+                        fitsSystemWindows = true
+                        layoutManager = GridLayoutManager(
+                            mContext,
+                            4,
+                            RecyclerView.VERTICAL,
+                            false
+                        )
+                    }.also { apps ->
+                        mRecyclerView = apps
+                    },
+                    fragmentContainerView = FragmentContainerView(mContext).apply {
+                        id = R.id.settings_container
+                        fitsSystemWindows = true
+                    }.also { settings ->
+                        mSettingsView = settings
+                    }
+                )
+
                 mViewPager = ViewPager2(mContext).apply {
-
-                    // 适配器
-                    val viewAdapter = ViewPager2Adapter(
-                        flutterView = flutter,
-                        composeView = ComposeView(mContext).apply {
-                            setViewCompositionStrategy(
-                                ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
-                            )
-                        }.also { compose ->
-                            mComposeView = compose
-                        },
-                        recyclerView = RecyclerView(mContext).apply {
-                            fitsSystemWindows = true
-                            layoutManager = GridLayoutManager(
-                                mContext,
-                                4,
-                                RecyclerView.VERTICAL,
-                                false
-                            )
-                        }.also { apps ->
-                            mRecyclerView = apps
-                        },
-                        fragmentContainerView = FragmentContainerView(mContext).apply {
-                            id = R.id.settings_container
-                            fitsSystemWindows = true
-                        }.also { settings ->
-                            mSettingsView = settings
-                        }
-                    )
-
+                    isUserInputEnabled = false
+                    setOnTouchListener(delayHideTouchListener)
                     orientation = ViewPager2.ORIENTATION_HORIZONTAL
-                    isUserInputEnabled = true
                     setPageTransformer(
                         ZoomOutPageTransformer()
                     )
@@ -226,6 +283,7 @@ class MainFragment : FlutterBoostFragment(), Runnable {
             }
             .withStartAction {
                 mRootView.visibility = View.VISIBLE
+                mViewPager.isUserInputEnabled = true
                 circularAnim.start()
             }
             .start()
@@ -233,7 +291,7 @@ class MainFragment : FlutterBoostFragment(), Runnable {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        mVisible = true
 
         // 加载应用列表
         loadApp()
@@ -274,6 +332,16 @@ class MainFragment : FlutterBoostFragment(), Runnable {
 //        }
     }
 
+    override fun onResume() {
+        super.onResume()
+        delayedHide(100)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        //show()
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -284,6 +352,150 @@ class MainFragment : FlutterBoostFragment(), Runnable {
     override fun onDestroy() {
         super.onDestroy()
         settingsFragment = null
+        // 注销监听
+        Shizuku.removeBinderReceivedListener(binderReceivedListener)
+        Shizuku.removeBinderDeadListener(binderDeadListener)
+        Shizuku.removeRequestPermissionResultListener(requestPermissionResultListener)
+        // 解绑用户服务
+        Shizuku.unbindUserService(mUserServiceArgs, mUserServiceConnection, true)
+        mContext.unbindService(mConnection)
+    }
+
+    private fun initServices() {
+        val intent = Intent(mContext, MainService().javaClass)
+        mContext.startService(intent)
+        mContext.bindService(intent, mConnection, Context.BIND_AUTO_CREATE)
+    }
+
+    // 服务绑定的监听器
+    private val mConnection: ServiceConnection = object : ServiceConnection {
+        // 后台服务绑定成功后执行
+        override fun onServiceConnected(
+            className: ComponentName,
+            service: IBinder
+        ) {
+            PopTip.show("服务绑定成功")
+        }
+
+
+        override fun onServiceDisconnected(arg0: ComponentName) {
+
+        }
+    }
+
+    private val mUserServiceConnection: ServiceConnection = object : ServiceConnection {
+        override fun onServiceConnected(componentName: ComponentName, binder: IBinder?) {
+            if (binder != null && binder.pingBinder()) {
+                userServices = IUserService.Stub.asInterface(binder)
+            }
+        }
+
+        override fun onServiceDisconnected(componentName: ComponentName) {
+
+        }
+    }
+
+    private val mUserServiceArgs = Shizuku.UserServiceArgs(
+        ComponentName(
+            BuildConfig.APPLICATION_ID,
+            UserService().javaClass.name
+        )
+    )
+        .daemon(false)
+        .processNameSuffix("service")
+        .debuggable(BuildConfig.DEBUG)
+        .version(BuildConfig.VERSION_CODE)
+
+
+    private fun onRequestPermissionsResults(requestCode: Int, grantResult: Int) {
+        if (
+            grantResult == PackageManager.PERMISSION_GRANTED
+        ) {
+
+        }
+    }
+
+    private fun check() {
+        try {
+            if (Shizuku.checkSelfPermission() != PackageManager.PERMISSION_GRANTED) {
+                Shizuku.requestPermission(0)
+            }
+        } catch (e: Exception) {
+            if (e.javaClass == IllegalStateException().javaClass) {
+                PopTip.show("Shizuku未激活")
+            }
+        }
+    }
+
+    private fun toggle() {
+        if (mVisible) {
+            hide()
+        } else {
+            show()
+        }
+    }
+
+    private fun hide() {
+        (requireActivity() as? AppCompatActivity)?.supportActionBar?.hide()
+        mVisible = false
+        hideHandler.removeCallbacks(showPart2Runnable)
+    }
+
+    private fun show() {
+        mVisible = true
+        hideHandler.postDelayed(showPart2Runnable, uiAnimatorDelay.toLong())
+    }
+
+    private fun delayedHide(delayMillis: Int) {
+        hideHandler.removeCallbacks(hideRunnable)
+        hideHandler.postDelayed(hideRunnable, delayMillis.toLong())
+    }
+
+    private fun getAndroidVersion(): String {
+        return when (Build.VERSION.SDK_INT) {
+            Build.VERSION_CODES.N -> "Android Nougat 7.0"
+            Build.VERSION_CODES.N_MR1 -> "Android Nougat 7.1"
+            Build.VERSION_CODES.O -> "Android Oreo 8.0"
+            Build.VERSION_CODES.O_MR1 -> "Android Oreo 8.1"
+            Build.VERSION_CODES.P -> "Android Pie 9.0"
+            Build.VERSION_CODES.Q -> "Android Queen Cake 10.0"
+            Build.VERSION_CODES.R -> "Android Red Velvet Cake 11.0"
+            Build.VERSION_CODES.S -> "Android Snow Cone 12.0"
+            Build.VERSION_CODES.S_V2 -> "Android Snow Cone V2 12.1"
+            Build.VERSION_CODES.TIRAMISU -> "Android Tiramisu 13.0"
+            34 -> "Android Upside Down Cake 14.0"
+            else -> "unknown"
+        }
+    }
+
+    private fun getShizukuVersion(): String {
+        try {
+            val ver: String = Shizuku.getVersion().toString()
+            return "Shizuku $ver"
+        } catch (e: Exception) {
+
+        }
+
+        return ""
+    }
+
+    @SuppressLint("RestrictedApi")
+    private fun optionsMenu() {
+        if (mVisible) {
+            (requireActivity() as? AppCompatActivity)?.supportActionBar?.openOptionsMenu()
+        } else {
+            show()
+            (requireActivity() as? AppCompatActivity)?.supportActionBar?.openOptionsMenu()
+        }
+    }
+
+    // 打开任务栏设置
+    private fun taskbar() {
+        Taskbar.openSettings(
+            mContext,
+            getString(R.string.taskbar_title),
+            R.style.Theme_TermPlux_ActionBar
+        )
     }
 
     @Suppress("DEPRECATION")
@@ -417,7 +629,7 @@ class MainFragment : FlutterBoostFragment(), Runnable {
                 val darkTheme = isSystemInDarkTheme()
                 // 配色方案
                 val colorScheme = when {
-                    true && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+                    Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
                         if (darkTheme) dynamicDarkColorScheme(
                             context = mContext
                         ) else dynamicLightColorScheme(
@@ -492,8 +704,8 @@ class MainFragment : FlutterBoostFragment(), Runnable {
                         optionsMenu = {
                             // optionsMenu()
                         },
-                        androidVersion = "13",
-                        shizukuVersion = "13",
+                        androidVersion = getAndroidVersion(),
+                        shizukuVersion = getShizukuVersion(),
                         current = { item ->
 
                         },

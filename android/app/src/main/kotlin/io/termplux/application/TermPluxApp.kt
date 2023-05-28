@@ -9,7 +9,6 @@ import androidx.preference.PreferenceManager
 import com.farmerbb.taskbar.lib.Taskbar
 import com.google.android.material.color.DynamicColors
 import com.idlefish.flutterboost.FlutterBoost
-import com.kongzue.baseframework.BaseActivity
 import com.kongzue.baseframework.BaseApp
 import com.kongzue.baseframework.BaseFrameworkSettings
 import com.kongzue.baseframework.interfaces.OnBugReportListener
@@ -21,7 +20,6 @@ import com.kongzue.dialogxmaterialyou.style.MaterialYouStyle
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugins.GeneratedPluginRegistrant
 import io.termplux.BuildConfig
-import io.termplux.activity.TermPluxActivity
 import io.termplux.custom.LinkNativeViewFactory
 import io.termplux.delegate.BoostDelegate
 import org.lsposed.hiddenapibypass.HiddenApiBypass
@@ -29,15 +27,10 @@ import java.io.File
 
 class TermPluxApp : BaseApp<TermPluxApp>() {
 
-    /** 首选项 */
-    private lateinit var mSharedPreferences: SharedPreferences
-
     /**
      * 应用启动时执行
      */
     override fun init() {
-        // 加载首选项
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this@TermPluxApp)
 
         // 初始化FlutterBoost
         FlutterBoost.instance().apply {
@@ -122,21 +115,16 @@ class TermPluxApp : BaseApp<TermPluxApp>() {
         DialogX.useHaptic = true
 
         // 初始化动态颜色
-        if (mSharedPreferences.getBoolean(
-                "dynamic_colors",
-                true
-            ) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
-        ) DynamicColors.applyToActivitiesIfAvailable(
-            this@TermPluxApp
-        )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            DynamicColors.applyToActivitiesIfAvailable(
+                this@TermPluxApp
+            )
+        }
 
         // 初始化任务栏
         Taskbar.setEnabled(
             this@TermPluxApp,
-            mSharedPreferences.getBoolean(
-                "desktop",
-                true
-            ) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
         )
     }
 
