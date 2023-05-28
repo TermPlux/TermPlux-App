@@ -11,6 +11,7 @@ class TermPluxApp extends StatelessWidget {
 
   static const String appName = "TermPlux";
 
+  // ”/“为主页，其他为子页面
   static Map<String, FlutterBoostRouteFactory> routerMap = {
     '/': (settings, uniqueId) {
       return PageRouteBuilder<dynamic>(
@@ -21,6 +22,7 @@ class TermPluxApp extends StatelessWidget {
     },
   };
 
+  // 子页面，不能用”/“，主页通过home传入
   static Map<String, Widget Function(BuildContext)> routes = {
     //'home': (context) => const MyHomePage(title: appName),
   };
@@ -33,17 +35,11 @@ class TermPluxApp extends StatelessWidget {
     return func(settings, uniqueId);
   }
 
-  String? initial() {
-    if (!kIsUseBoost) return 'home';
-    return null;
-  }
-
   Widget appBuilder(BuildContext context, Widget home) {
     return DynamicColorBuilder(builder: (lightColorScheme, darkColorScheme) {
       return MaterialApp(
         home: home,
         routes: routes,
-        initialRoute: initial(),
         builder: (context, widget) {
           if (kIsUseBoost) {
             return home;
@@ -67,6 +63,8 @@ class TermPluxApp extends StatelessWidget {
     });
   }
 
+  /// 非boost走home和routes
+  /// boost走专属路由
   @override
   Widget build(BuildContext context) {
     if (kIsUseBoost) {
