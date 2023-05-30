@@ -1,9 +1,7 @@
 import 'package:device_preview/device_preview.dart';
-import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_boost/flutter_boost.dart';
-import 'package:termplux/app/boost_material_app.dart';
-import 'package:termplux/app/preview_material_app.dart';
+import 'package:termplux/app/app_builder.dart';
 
 import '../platform/platform.dart';
 import '../pages/home.dart';
@@ -37,34 +35,16 @@ class TermPluxApp extends StatelessWidget {
     return func(settings, uniqueId);
   }
 
-  Widget appBuilder(BuildContext context, Widget? home) {
-    return DynamicColorBuilder(builder: (lightColorScheme, darkColorScheme) {
-      if (kIsUseBoost) {
-        return BoostMaterialApp(
-            home: home!,
-            appName: appName,
-            lightColorScheme: lightColorScheme,
-            darkColorScheme: darkColorScheme);
-      } else {
-        return PreviewMaterialApp(
-            routes: routes,
-            appName: appName,
-            lightColorScheme: lightColorScheme,
-            darkColorScheme: darkColorScheme);
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     if (kIsUseBoost) {
       return FlutterBoostApp(routeFactory, appBuilder: (home) {
-        return appBuilder(context, home);
+        return AppBuilder(home: home, appName: appName, routes: null);
       });
     } else {
       return DevicePreview(
         builder: (context) {
-          return appBuilder(context, null);
+          return AppBuilder(home: null, appName: appName, routes: routes);
         },
         isToolbarVisible: true,
         availableLocales: const [
