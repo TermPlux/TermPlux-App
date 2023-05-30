@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="pager_background">#FF191C1E</color>
+    <color name="pager_background">@color/m3_sys_color_dark_background</color>
 </resources>

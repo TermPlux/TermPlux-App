@@ -2,6 +2,8 @@ import 'package:device_preview/device_preview.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_boost/flutter_boost.dart';
+import 'package:termplux/app/boost_material_app.dart';
+import 'package:termplux/app/preview_material_app.dart';
 
 import '../platform/platform.dart';
 import '../pages/home.dart';
@@ -22,9 +24,9 @@ class TermPluxApp extends StatelessWidget {
     },
   };
 
-  // 子页面，不能用”/“，主页通过home传入
+  // ”/“为主页，其他为子页面
   static Map<String, Widget Function(BuildContext)> routes = {
-    //'home': (context) => const MyHomePage(title: appName),
+    '/': (context) => const MyHomePage(title: appName),
   };
 
   Route<dynamic>? routeFactory(RouteSettings settings, String? uniqueId) {
@@ -35,36 +37,24 @@ class TermPluxApp extends StatelessWidget {
     return func(settings, uniqueId);
   }
 
-  Widget appBuilder(BuildContext context, Widget home) {
+  Widget appBuilder(BuildContext context, Widget? home) {
     return DynamicColorBuilder(builder: (lightColorScheme, darkColorScheme) {
-      return MaterialApp(
-        home: home,
-        routes: routes,
-        builder: (context, widget) {
-          if (kIsUseBoost) {
-            return home;
-          } else {
-            return DevicePreview.appBuilder(context, widget);
-          }
-        },
-        title: appName,
-        theme: ThemeData(
-            colorScheme: lightColorScheme,
-            brightness: Brightness.light,
-            useMaterial3: true),
-        darkTheme: ThemeData(
-            colorScheme: darkColorScheme,
-            brightness: Brightness.dark,
-            useMaterial3: true),
-        themeMode: ThemeMode.system,
-        locale: DevicePreview.locale(context),
-        debugShowCheckedModeBanner: false,
-      );
+      if (kIsUseBoost) {
+        return BoostMaterialApp(
+            home: home!,
+            appName: appName,
+            lightColorScheme: lightColorScheme,
+            darkColorScheme: darkColorScheme);
+      } else {
+        return PreviewMaterialApp(
+            routes: routes,
+            appName: appName,
+            lightColorScheme: lightColorScheme,
+            darkColorScheme: darkColorScheme);
+      }
     });
   }
 
-  /// 非boost走home和routes
-  /// boost走专属路由
   @override
   Widget build(BuildContext context) {
     if (kIsUseBoost) {
@@ -74,7 +64,7 @@ class TermPluxApp extends StatelessWidget {
     } else {
       return DevicePreview(
         builder: (context) {
-          return appBuilder(context, const MyHomePage(title: appName));
+          return appBuilder(context, null);
         },
         isToolbarVisible: true,
         availableLocales: const [

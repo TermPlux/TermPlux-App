@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../desktop/window_buttons.dart';
-import '../desktop/window_title_bar.dart';
+import '../desktop/window_move.dart';
 import '../platform/platform.dart';
 import '../navigation/navigation.dart';
 

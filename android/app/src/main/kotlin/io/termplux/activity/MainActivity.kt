@@ -44,12 +44,8 @@ class MainActivity : BaseActivity() {
 
     private lateinit var mToolbar: MaterialToolbar
 
-//    private lateinit var mViewPager2: ViewPager2
-//    private lateinit var mBottomNavigationView: BottomNavigationView
-//    private lateinit var mTabLayout: TabLayout
-
     private val container: ContainerFragment = ContainerFragment.newInstance()
-    private val settings: SettingsFragment = SettingsFragment.newInstance()
+
 
     override fun resetContentView(): View {
         super.resetContentView()

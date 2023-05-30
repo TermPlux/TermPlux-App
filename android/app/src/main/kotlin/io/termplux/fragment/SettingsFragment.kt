@@ -8,10 +8,17 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import io.termplux.R
 
-class SettingsFragment : PreferenceFragmentCompat() {
+class SettingsFragment constructor(
+    settings: () -> Unit
+) : PreferenceFragmentCompat() {
 
+    private val mSettings: () -> Unit
     private lateinit var mContext: Context
     private lateinit var mSharedPreferences: SharedPreferences
+
+    init {
+        mSettings = settings
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,14 +30,19 @@ class SettingsFragment : PreferenceFragmentCompat() {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
         val settings: Preference? = findPreference("navigation_settings")
         settings?.setOnPreferenceClickListener {
+            mSettings()
             true
         }
     }
 
     companion object {
 
-        fun newInstance(): SettingsFragment{
-            return SettingsFragment()
+        fun newInstance(
+            settings: () -> Unit
+        ): SettingsFragment{
+            return SettingsFragment(
+                settings = settings
+            )
         }
     }
 }

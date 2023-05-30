@@ -25,7 +25,6 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
-import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.MaterialTheme
@@ -53,8 +52,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentContainerView
 import androidx.navigation.compose.rememberNavController
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
@@ -74,7 +73,7 @@ import io.termplux.IUserService
 import io.termplux.R
 import io.termplux.adapter.AppsAdapter
 import io.termplux.adapter.PagerAdapter
-import io.termplux.custom.ClockView
+import io.termplux.adapter.SettingsAdapter
 import io.termplux.model.AppsModel
 import io.termplux.receiver.AppsReceiver
 import io.termplux.services.MainService
@@ -92,42 +91,42 @@ import kotlin.math.hypot
 
 class MainFragment : FlutterBoostFragment(), Runnable {
 
-
+    // 平台通道
     private lateinit var channel: MethodChannel
-    private lateinit var mContext: FragmentActivity
-
+    // 上下文
+    private lateinit var mActivityContext: FragmentActivity
+    private lateinit var mFragmentContext: FlutterBoostFragment
+    // 首选项
     private lateinit var mSharedPreferences: SharedPreferences
     private var isDynamicColor: Boolean by mutableStateOf(value = true)
-
+    // Shizuku用户服务
     private lateinit var userServices: IUserService
-
-    private val binderReceivedListener = Shizuku.OnBinderReceivedListener {
-        // shizuku进程已激活
-
-    }
-
-    private val binderDeadListener = Shizuku.OnBinderDeadListener {
-        // shizuku进程被停止
-    }
-
+    // shizuku进程已激活
+    private val binderReceivedListener = Shizuku.OnBinderReceivedListener {}
+    // shizuku进程被停止
+    private val binderDeadListener = Shizuku.OnBinderDeadListener {}
     //shizuku监听授权结果
     private val requestPermissionResultListener =
         Shizuku.OnRequestPermissionResultListener { requestCode: Int, grantResult: Int ->
             onRequestPermissionsResults(requestCode, grantResult)
         }
+    // 视图控件
+    private lateinit var mRootView: View
+    private lateinit var mViewPager: ViewPager2
+    private lateinit var mSplashLogo: AppCompatImageView
+    private lateinit var mComposeView: ComposeView
+    private lateinit var mRecyclerView: RecyclerView
 
     private val hideHandler = Handler(
         Looper.myLooper()!!
     )
-
     private val showPart2Runnable = Runnable {
-        (requireActivity() as? AppCompatActivity)?.supportActionBar?.show()
+        (mActivityContext as AppCompatActivity).supportActionBar?.show()
     }
     private var mVisible: Boolean = false
     private val hideRunnable = Runnable {
         hide()
     }
-
     private val delayHideTouchListener = View.OnTouchListener { view, motionEvent ->
         when (motionEvent.action) {
             MotionEvent.ACTION_DOWN -> if (autoHide) delayedHide(autoHideDelayMillis)
@@ -137,42 +136,34 @@ class MainFragment : FlutterBoostFragment(), Runnable {
     }
 
 
-    private lateinit var mRootView: View
-
-    private lateinit var mViewPager: ViewPager2
-    private lateinit var mSplashLogo: AppCompatImageView
-
-    // View
-    private lateinit var mComposeView: ComposeView
-    private lateinit var mRecyclerView: RecyclerView
-    private lateinit var mSettingsView: FragmentContainerView
-
-
-    private var settingsFragment: SettingsFragment? = null
-
     private lateinit var appReceiver: BroadcastReceiver
     private lateinit var intentFilter: IntentFilter
 
+    /**
+     * Flutter引擎配置，该方法有onAttach方法调用
+     */
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+        // 初始化平台通道
         val messenger = flutterEngine.dartExecutor.binaryMessenger
         channel = MethodChannel(messenger, "termplux_channel")
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mContext = requireActivity()
-
+        // 获取上下文
+        mActivityContext = requireActivity()
+        mFragmentContext = this@MainFragment
         // 获取首选项
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext)
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mActivityContext)
         // 获取动态颜色首选项
         isDynamicColor = mSharedPreferences.getBoolean(
             "dynamic_colors",
             true
         ) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
-
-
+        // 初始化用户服务
         initServices()
+        // 检查权限
         check()
         // 注册监听器
         Shizuku.addBinderReceivedListenerSticky(binderReceivedListener)
@@ -185,79 +176,89 @@ class MainFragment : FlutterBoostFragment(), Runnable {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        super.onCreateView(inflater, container, savedInstanceState).also { parent ->
-            parent?.let { root ->
-                root.apply {
-                    visibility = View.INVISIBLE
-                    post(this@MainFragment)
-                }.also { view ->
-                    mRootView = view
-                }
-            }
-        }.also { parent ->
-            parent?.let { flutter ->
-                // 适配器
-                val viewAdapter = PagerAdapter(
-                    flutterView = flutter,
-                    composeView = ComposeView(mContext).apply {
-                        setViewCompositionStrategy(
-                            ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
-                        )
-                    }.also { compose ->
-                        mComposeView = compose
-                    },
-                    recyclerView = SwipeRefreshLayout(mContext).apply {
-                        addView(
-                            LinearLayoutCompat(mContext).apply {
-                                fitsSystemWindows = true
-                                orientation = LinearLayoutCompat.VERTICAL
-                                addView(
-                                    ClockView(mContext),
-                                    LinearLayoutCompat.LayoutParams(
-                                        LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-                                        LinearLayoutCompat.LayoutParams.WRAP_CONTENT
-                                    )
-                                )
-                                addView(
-                                    RecyclerView(mContext).apply {
-                                        layoutManager = GridLayoutManager(
-                                            mContext,
-                                            4,
-                                            RecyclerView.VERTICAL,
-                                            false
-                                        )
-                                    }.also { apps ->
-                                        mRecyclerView = apps
-                                    },
-                                    LinearLayoutCompat.LayoutParams(
-                                        LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-                                        LinearLayoutCompat.LayoutParams.MATCH_PARENT
-                                    )
-                                )
-                            },
-                            ViewGroup.LayoutParams(
-                                ViewGroup.LayoutParams.MATCH_PARENT,
-                                ViewGroup.LayoutParams.MATCH_PARENT
-                            )
-                        )
-                        setOnRefreshListener {
-                            isRefreshing = false
-                        }
-                    }
-                )
-
-                mViewPager = ViewPager2(mContext).apply {
+        // 返回根帧布局
+        return FrameLayout(mActivityContext).apply {
+            // 添加控件
+            addView(
+                ViewPager2(mActivityContext).apply {
+                    // 初始值为否，会在动画结束后恢复是，目的是防止动画加载过程中用户操作导致错误
                     isUserInputEnabled = false
+                    // 设置触摸监听
                     setOnTouchListener(delayHideTouchListener)
+                    // 设置方向为水平
                     orientation = ViewPager2.ORIENTATION_HORIZONTAL
-                    setPageTransformer(
-                        ZoomOutPageTransformer()
+                    // 设置切换动画
+                    setPageTransformer(ZoomOutPageTransformer())
+                    // 设置适配器
+                    adapter = PagerAdapter(
+                        rootView = super.onCreateView(
+                            inflater,
+                            container,
+                            savedInstanceState
+                        )?.let { root ->
+                            root.apply {
+                                visibility = View.INVISIBLE
+                                post(mFragmentContext as Runnable)
+                            }.also { view ->
+                                mRootView = view
+                            }
+                        },
+                        composeView = ComposeView(mActivityContext).apply {
+                            setViewCompositionStrategy(
+                                ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
+                            )
+                        }.also { compose ->
+                            mComposeView = compose
+                        },
+                        swipeRefreshLayout = SwipeRefreshLayout(mActivityContext).apply {
+                            fitsSystemWindows = true
+                            addView(
+                                RecyclerView(mActivityContext).apply {
+                                    layoutManager = GridLayoutManager(
+                                        mActivityContext,
+                                        4,
+                                        RecyclerView.VERTICAL,
+                                        false
+                                    )
+                                }.also { apps ->
+                                    mRecyclerView = apps
+                                },
+                                ViewGroup.LayoutParams(
+                                    ViewGroup.LayoutParams.MATCH_PARENT,
+                                    ViewGroup.LayoutParams.MATCH_PARENT
+                                )
+                            )
+                            setOnRefreshListener {
+                                // 执行下滑刷新事件
+                                isRefreshing = false
+                            }
+                        },
+                        viewPager = ViewPager2(mActivityContext).apply {
+                            fitsSystemWindows = true
+                            // 此页面仅展示设置，禁止用户滑动
+                            isUserInputEnabled = false
+                            // 设置方向为水平
+                            orientation = ViewPager2.ORIENTATION_HORIZONTAL
+                            // 设置适配器
+                            adapter = SettingsAdapter(
+                                mFragmentContext,
+                                settings = {}
+                            )
+                        }
                     )
-                    adapter = viewAdapter
-                    offscreenPageLimit = viewAdapter.itemCount
-                }
-
-                mSplashLogo = AppCompatImageView(mContext).apply {
+                    // 预加载全部页面
+                    offscreenPageLimit = PagerAdapter.count
+                }.also { pager ->
+                    mViewPager = pager
+                },
+                FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT,
+                    FrameLayout.LayoutParams.MATCH_PARENT
+                )
+            )
+            // 添加控件
+            addView(
+                AppCompatImageView(mActivityContext).apply {
                     scaleType = ImageView.ScaleType.CENTER
                     setImageDrawable(
                         ContextCompat.getDrawable(
@@ -265,26 +266,15 @@ class MainFragment : FlutterBoostFragment(), Runnable {
                             R.drawable.custom_termplux_24
                         )
                     )
-                }
-            }
-
-            return FrameLayout(mContext).apply {
-                addView(
-                    mViewPager,
-                    FrameLayout.LayoutParams(
-                        FrameLayout.LayoutParams.MATCH_PARENT,
-                        FrameLayout.LayoutParams.MATCH_PARENT
-                    )
+                }.also { logo ->
+                    mSplashLogo = logo
+                },
+                FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                    Gravity.CENTER
                 )
-                addView(
-                    mSplashLogo,
-                    FrameLayout.LayoutParams(
-                        FrameLayout.LayoutParams.WRAP_CONTENT,
-                        FrameLayout.LayoutParams.WRAP_CONTENT,
-                        Gravity.CENTER
-                    )
-                )
-            }
+            )
         }
     }
 
@@ -333,7 +323,6 @@ class MainFragment : FlutterBoostFragment(), Runnable {
         mVisible = true
 
 
-
         // 加载应用列表
         loadApp()
 
@@ -350,27 +339,11 @@ class MainFragment : FlutterBoostFragment(), Runnable {
         }
 
         // 注册广播接收器
-        mContext.registerReceiver(appReceiver, intentFilter)
+        mActivityContext.registerReceiver(appReceiver, intentFilter)
 
         setContent()
 
 
-//        val fragmentManager: FragmentManager = childFragmentManager
-//        settingsFragment = fragmentManager.findFragmentByTag(tagSettingsFragment) as SettingsFragment?
-//        val newSettingsFragment = SettingsFragment()
-//        if (settingsFragment == null) {
-//            fragmentManager.commit(
-//                allowStateLoss = false,
-//                body = {
-//                    settingsFragment = newSettingsFragment
-//                    add(
-//                        mSettingsView.id,
-//                        newSettingsFragment,
-//                        tagSettingsFragment
-//                    )
-//                }
-//            )
-//        }
     }
 
     override fun onResume() {
@@ -380,26 +353,25 @@ class MainFragment : FlutterBoostFragment(), Runnable {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        mContext.unregisterReceiver(appReceiver)
-        mRootView.removeCallbacks(this@MainFragment)
+        mActivityContext.unregisterReceiver(appReceiver)
+        mRootView.removeCallbacks(mFragmentContext as Runnable)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        settingsFragment = null
         // 注销监听
         Shizuku.removeBinderReceivedListener(binderReceivedListener)
         Shizuku.removeBinderDeadListener(binderDeadListener)
         Shizuku.removeRequestPermissionResultListener(requestPermissionResultListener)
         // 解绑用户服务
         Shizuku.unbindUserService(mUserServiceArgs, mUserServiceConnection, true)
-        mContext.unbindService(mConnection)
+        mActivityContext.unbindService(mConnection)
     }
 
     private fun initServices() {
-        val intent = Intent(mContext, MainService().javaClass)
-        mContext.startService(intent)
-        mContext.bindService(intent, mConnection, Context.BIND_AUTO_CREATE)
+        val intent = Intent(mActivityContext, MainService().javaClass)
+        mActivityContext.startService(intent)
+        mActivityContext.bindService(intent, mConnection, Context.BIND_AUTO_CREATE)
     }
 
     // 服务绑定的监听器
@@ -471,8 +443,8 @@ class MainFragment : FlutterBoostFragment(), Runnable {
     }
 
     private fun hide() {
-        (requireActivity() as? AppCompatActivity)?.supportActionBar?.hide()
         mVisible = false
+        (mActivityContext as AppCompatActivity).supportActionBar?.hide()
         hideHandler.removeCallbacks(showPart2Runnable)
     }
 
@@ -527,7 +499,7 @@ class MainFragment : FlutterBoostFragment(), Runnable {
     // 打开任务栏设置
     private fun taskbar() {
         Taskbar.openSettings(
-            mContext,
+            mActivityContext,
             getString(R.string.taskbar_title),
             R.style.Theme_TermPlux_ActionBar
         )
@@ -544,7 +516,7 @@ class MainFragment : FlutterBoostFragment(), Runnable {
         )
 
         // 获取启动器列表
-        for (resolveInfo in mContext.packageManager.queryIntentActivities(
+        for (resolveInfo in mActivityContext.packageManager.queryIntentActivities(
             Intent().setAction(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER),
             0
         )) {
@@ -670,9 +642,9 @@ class MainFragment : FlutterBoostFragment(), Runnable {
                 val colorScheme = when {
                     isDynamicColor -> {
                         if (darkTheme) dynamicDarkColorScheme(
-                            context = mContext
+                            context = mActivityContext
                         ) else dynamicLightColorScheme(
-                            context = mContext
+                            context = mActivityContext
                         )
                     }
 
