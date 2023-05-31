@@ -77,9 +77,7 @@ class PagerAdapter constructor(
                         }
                     }
                 }
-            } ?: View(
-                holder.itemView.context
-            ),
+            } ?: mTextView,
             FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT,
                 FrameLayout.LayoutParams.MATCH_PARENT

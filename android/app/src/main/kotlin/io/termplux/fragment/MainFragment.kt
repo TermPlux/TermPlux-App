@@ -214,10 +214,8 @@ class MainFragment : FlutterBoostFragment(), Runnable {
                                     } else {
                                         horizontalMargin + verticalMargin / 2
                                     }
-
                                     scaleX = scaleFactor
                                     scaleY = scaleFactor
-
                                     clipToOutline = true
                                     outlineProvider = object : ViewOutlineProvider() {
                                         override fun getOutline(view: View, outline: Outline) {
@@ -230,7 +228,6 @@ class MainFragment : FlutterBoostFragment(), Runnable {
                                             )
                                         }
                                     }
-
                                     alpha =
                                         (minAlpha + (((scaleFactor - minScale) / (1 - minScale)) * (1 - minAlpha)))
                                 }
