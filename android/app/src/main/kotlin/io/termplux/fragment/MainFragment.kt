@@ -10,6 +10,7 @@ import android.content.IntentFilter
 import android.content.ServiceConnection
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.graphics.Outline
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -21,6 +22,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewAnimationUtils
 import android.view.ViewGroup
+import android.view.ViewOutlineProvider
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
@@ -52,7 +54,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.compose.rememberNavController
 import androidx.preference.PreferenceManager
@@ -84,32 +85,40 @@ import io.termplux.ui.window.DevicePosture
 import io.termplux.ui.window.NavigationType
 import io.termplux.ui.window.isBookPosture
 import io.termplux.ui.window.isSeparating
-import io.termplux.utils.ZoomOutPageTransformer
 import kotlinx.coroutines.Runnable
 import rikka.shizuku.Shizuku
+import kotlin.math.abs
 import kotlin.math.hypot
+
 
 class MainFragment : FlutterBoostFragment(), Runnable {
 
     // 平台通道
     private lateinit var channel: MethodChannel
+
     // 上下文
     private lateinit var mActivityContext: FragmentActivity
     private lateinit var mFragmentContext: FlutterBoostFragment
+
     // 首选项
     private lateinit var mSharedPreferences: SharedPreferences
     private var isDynamicColor: Boolean by mutableStateOf(value = true)
+
     // Shizuku用户服务
     private lateinit var userServices: IUserService
+
     // shizuku进程已激活
     private val binderReceivedListener = Shizuku.OnBinderReceivedListener {}
+
     // shizuku进程被停止
     private val binderDeadListener = Shizuku.OnBinderDeadListener {}
+
     //shizuku监听授权结果
     private val requestPermissionResultListener =
         Shizuku.OnRequestPermissionResultListener { requestCode: Int, grantResult: Int ->
             onRequestPermissionsResults(requestCode, grantResult)
         }
+
     // 视图控件
     private lateinit var mRootView: View
     private lateinit var mViewPager: ViewPager2
@@ -188,7 +197,51 @@ class MainFragment : FlutterBoostFragment(), Runnable {
                     // 设置方向为水平
                     orientation = ViewPager2.ORIENTATION_HORIZONTAL
                     // 设置切换动画
-                    setPageTransformer(ZoomOutPageTransformer())
+                    setPageTransformer { page, position ->
+                        page.apply {
+                            when {
+                                position < -1 -> {
+                                    clipToOutline = false
+                                    alpha = 0f
+                                }
+
+                                position <= 1 -> {
+                                    val scaleFactor = minScale.coerceAtLeast(1 - abs(position))
+                                    val verticalMargin = height * (1 - scaleFactor) / 2
+                                    val horizontalMargin = width * (1 - scaleFactor) / 2
+                                    translationX = if (position < 0) {
+                                        horizontalMargin - verticalMargin / 2
+                                    } else {
+                                        horizontalMargin + verticalMargin / 2
+                                    }
+
+                                    scaleX = scaleFactor
+                                    scaleY = scaleFactor
+
+                                    clipToOutline = true
+                                    outlineProvider = object : ViewOutlineProvider() {
+                                        override fun getOutline(view: View, outline: Outline) {
+                                            outline.setRoundRect(
+                                                0,
+                                                0,
+                                                view.width,
+                                                view.height,
+                                                (minRound + (((scaleFactor - minScale) / (1 - minScale)) * (1 - minRound)))
+                                            )
+                                        }
+                                    }
+
+                                    alpha =
+                                        (minAlpha + (((scaleFactor - minScale) / (1 - minScale)) * (1 - minAlpha)))
+                                }
+
+                                else -> {
+                                    clipToOutline = false
+                                    alpha = 0f
+                                }
+                            }
+                        }
+                    }
                     // 设置适配器
                     adapter = PagerAdapter(
                         rootView = super.onCreateView(
@@ -230,6 +283,8 @@ class MainFragment : FlutterBoostFragment(), Runnable {
                             )
                             setOnRefreshListener {
                                 // 执行下滑刷新事件
+                                PopTip.show("下拉刷新")
+
                                 isRefreshing = false
                             }
                         },
@@ -731,8 +786,6 @@ class MainFragment : FlutterBoostFragment(), Runnable {
 
     companion object {
 
-        private const val tagSettingsFragment: String = "settings_fragment"
-
         // 浅色模式配色
         private val Purple80 = Color(0xFFD0BCFF)
         private val PurpleGrey80 = Color(0xFFCCC2DC)
@@ -744,7 +797,7 @@ class MainFragment : FlutterBoostFragment(), Runnable {
         private val Pink40 = Color(0xFF7D5260)
 
         // 样式
-        private val Typography = Typography(
+        val Typography = Typography(
             bodyLarge = TextStyle(
                 fontFamily = FontFamily.Default,
                 fontWeight = FontWeight.Normal,
@@ -755,18 +808,22 @@ class MainFragment : FlutterBoostFragment(), Runnable {
         )
 
         // 深色模式
-        private val DarkColorScheme = darkColorScheme(
+        val DarkColorScheme = darkColorScheme(
             primary = Purple80,
             secondary = PurpleGrey80,
             tertiary = Pink80
         )
 
         // 浅色模式
-        private val LightColorScheme = lightColorScheme(
+        val LightColorScheme = lightColorScheme(
             primary = Purple40,
             secondary = PurpleGrey40,
             tertiary = Pink40
         )
+
+        const val minScale = 0.85f
+        const val minAlpha = 0.8f
+        const val minRound = 50f
 
         /** 开屏图标动画时长 */
         const val splashPart1AnimatorMillis = 600
