@@ -90,7 +90,6 @@ import rikka.shizuku.Shizuku
 import kotlin.math.abs
 import kotlin.math.hypot
 
-
 class MainFragment : FlutterBoostFragment(), Runnable {
 
     // 平台通道
