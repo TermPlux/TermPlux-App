@@ -209,6 +209,7 @@ class MainFragment : FlutterBoostFragment(), Runnable {
                                     val scaleFactor = minScale.coerceAtLeast(1 - abs(position))
                                     val verticalMargin = height * (1 - scaleFactor) / 2
                                     val horizontalMargin = width * (1 - scaleFactor) / 2
+                                    val round = resources.getDimension(R.dimen.pager_round).toInt()
                                     translationX = if (position < 0) {
                                         horizontalMargin - verticalMargin / 2
                                     } else {
@@ -224,7 +225,7 @@ class MainFragment : FlutterBoostFragment(), Runnable {
                                                 0,
                                                 view.width,
                                                 view.height,
-                                                (minRound + (((scaleFactor - minScale) / (1 - minScale)) * (1 - minRound)))
+                                                (round + (((scaleFactor - minScale) / (1 - minScale)) * (1 - round)))
                                             )
                                         }
                                     }
@@ -820,7 +821,6 @@ class MainFragment : FlutterBoostFragment(), Runnable {
 
         const val minScale = 0.85f
         const val minAlpha = 0.8f
-        const val minRound = 50f
 
         /** 开屏图标动画时长 */
         const val splashPart1AnimatorMillis = 600

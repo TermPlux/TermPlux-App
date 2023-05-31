@@ -2,7 +2,7 @@ package io.termplux.activity
 
 import android.annotation.SuppressLint
 import android.content.*
-import android.util.Log
+import android.graphics.Color
 import android.view.*
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatDelegate
@@ -12,40 +12,33 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
+import androidx.fragment.app.FragmentContainerView
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.commit
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.internal.EdgeToEdgeUtils
 import com.google.android.material.shape.MaterialShapeDrawable
+import com.idlefish.flutterboost.containers.FlutterBoostFragment
 import com.kongzue.baseframework.BaseActivity
-import com.kongzue.baseframework.interfaces.DarkNavigationBarTheme
-import com.kongzue.baseframework.interfaces.DarkStatusBarTheme
-import com.kongzue.baseframework.interfaces.FragmentLayout
 import com.kongzue.baseframework.interfaces.LifeCircleListener
-import com.kongzue.baseframework.interfaces.NavigationBarBackgroundColorRes
-import com.kongzue.baseframework.interfaces.SwipeBack
-import com.kongzue.baseframework.util.AppManager
-import com.kongzue.baseframework.util.FragmentChangeUtil
 import com.kongzue.baseframework.util.JumpParameter
+import io.flutter.embedding.android.RenderMode
+import io.flutter.embedding.android.TransparencyMode
 import io.termplux.R
-import io.termplux.custom.DisableSwipeViewPager
-import io.termplux.fragment.ContainerFragment
-import io.termplux.fragment.SettingsFragment
+import io.termplux.fragment.MainFragment
 
-@SuppressLint("NonConstantResourceId")
-@SwipeBack(false)
-@DarkStatusBarTheme(true)
-@DarkNavigationBarTheme(true)
-@NavigationBarBackgroundColorRes(R.color.white)
-@FragmentLayout(R.id.fragment_container)
 class MainActivity : BaseActivity() {
 
     private val mME: BaseActivity = me
     private val mContext: Context = mME
 
+    private var mainFragment: MainFragment? = null
+
+    private lateinit var mFragmentManager: FragmentManager
     private lateinit var mToolbar: MaterialToolbar
 
-    private val container: ContainerFragment = ContainerFragment.newInstance()
-
+    private lateinit var newMainFragment: MainFragment
 
     override fun resetContentView(): View {
         super.resetContentView()
@@ -80,10 +73,12 @@ class MainActivity : BaseActivity() {
                 )
             )
             addView(
-                DisableSwipeViewPager(
-                    mContext
-                ).apply {
-                    id = R.id.fragment_container
+                FragmentContainerView(mContext).apply {
+                    id = R.id.flutter_container
+                    background = ContextCompat.getDrawable(
+                        mContext,
+                        R.drawable.custom_wallpaper_24
+                    )
                 },
                 LinearLayoutCompat.LayoutParams(
                     LinearLayoutCompat.LayoutParams.MATCH_PARENT,
@@ -95,7 +90,11 @@ class MainActivity : BaseActivity() {
 
     @SuppressLint("RestrictedApi")
     override fun initViews() {
-
+        // 片段管理器
+        mFragmentManager = supportFragmentManager
+        mainFragment = mFragmentManager.findFragmentByTag(
+            tagFlutterBoostFragment
+        ) as MainFragment?
         // 启用边到边
         EdgeToEdgeUtils.applyEdgeToEdge(window, true)
         // 深色模式跟随系统
@@ -103,75 +102,48 @@ class MainActivity : BaseActivity() {
         // 设置页面布局边界
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-
-        // 加载TabLayout
-//        mTabLayout = TabLayout(
-//            mContext
-//        ).apply {
-//            setBackgroundColor(android.graphics.Color.TRANSPARENT)
-//            tabMode = TabLayout.MODE_SCROLLABLE
-//        }
-
-
+        setDarkStatusBarTheme(true)
+        setDarkNavigationBarTheme(true)
+        setNavigationBarBackgroundColor(Color.TRANSPARENT)
+        // 操作栏
         val actionBar: ActionBar? = supportActionBar
         actionBar?.setIcon(R.drawable.baseline_terminal_24)
         actionBar?.setDisplayHomeAsUpEnabled(true)
-
-
-    }
-
-    override fun initFragment(fragmentChangeUtil: FragmentChangeUtil?) {
-        super.initFragment(fragmentChangeUtil)
-        // 添加Fragment
-        fragmentChangeUtil?.addFragment(container, true)
-        //  fragmentChangeUtil?.addFragment(settings, true)
-        // 默认切换到主页
-        changeFragment(0)
     }
 
     override fun initDatas(parameter: JumpParameter?) {
-
+        // 初始化FlutterBoostFragment
+        newMainFragment = FlutterBoostFragment.CachedEngineFragmentBuilder(
+            MainFragment::class.java
+        )
+            .destroyEngineWithFragment(false)
+            .renderMode(RenderMode.surface)
+            .transparencyMode(TransparencyMode.opaque)
+            .shouldAttachEngineToActivity(true)
+            .build()
+        // 显示Fragment
+        if (mainFragment == null) {
+            mFragmentManager.commit(
+                allowStateLoss = false,
+                body = {
+                    mainFragment = newMainFragment
+                    add(
+                        R.id.flutter_container,
+                        newMainFragment,
+                        tagFlutterBoostFragment
+                    )
+                }
+            )
+        }
     }
 
     override fun setEvents() {
         // 生命周期监听
         setLifeCircleListener(
             object : LifeCircleListener() {
-
-                override fun onCreate() {
-                    super.onCreate()
-
-                }
-
-                override fun onResume() {
-                    super.onResume()
-                }
-
-                override fun onPause() {
-                    super.onPause()
-                }
-
                 override fun onDestroy() {
                     super.onDestroy()
-
-                }
-            }
-        )
-        // 应用管理器
-        AppManager.setOnActivityStatusChangeListener(
-            object : AppManager.OnActivityStatusChangeListener() {
-                override fun onActivityCreate(activity: BaseActivity) {
-                    super.onActivityCreate(activity)
-                    Log.i(">>>", "Activity: $activity 已创建")
-                }
-
-                override fun onActivityDestroy(activity: BaseActivity) {
-                    super.onActivityDestroy(activity)
-                    Log.i(">>>", "Activity: $activity 已销毁")
-                }
-
-                override fun onAllActivityClose() {
-                    Log.i(">>>", "所有Activity已经关闭")
+                    mainFragment = null
                 }
             }
         )
@@ -186,12 +158,56 @@ class MainActivity : BaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         super.onOptionsItemSelected(item)
         when (item.itemId) {
-            android.R.id.home -> changeFragment(0, R.anim.fade, R.anim.hold)
+            android.R.id.home -> onBack()
             R.id.action_settings -> {
                 //current(item = ContentAdapter.settings)
             }
         }
         return true
+    }
+
+    override fun onPostResume() {
+        super.onPostResume()
+        newMainFragment.onPostResume()
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        newMainFragment.onNewIntent(intent)
+    }
+
+    override fun onBack(): Boolean {
+        super.onBack()
+        newMainFragment.onBackPressed()
+        return true
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String?>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        newMainFragment.onRequestPermissionsResult(
+            requestCode,
+            permissions,
+            grantResults
+        )
+    }
+
+    override fun onUserLeaveHint() {
+        super.onUserLeaveHint()
+        newMainFragment.onUserLeaveHint()
+    }
+
+    @SuppressLint("MissingSuperCall")
+    override fun onTrimMemory(level: Int) {
+        super.onTrimMemory(level)
+        newMainFragment.onTrimMemory(level)
+    }
+
+    companion object {
+        const val tagFlutterBoostFragment: String = "flutter_boost_fragment"
     }
 
 

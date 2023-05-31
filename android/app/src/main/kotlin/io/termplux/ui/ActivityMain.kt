@@ -588,7 +588,7 @@ fun ActivityMain(
 
     }
 
-    when (navigationType){
+    when (navigationType) {
         NavigationType.PermanentNavigationDrawer -> PermanentNavigationDrawer(
             drawerContent = {
                 PermanentDrawerSheet {
@@ -599,6 +599,7 @@ fun ActivityMain(
         ) {
             content()
         }
+
         NavigationType.NavigationRail -> ModalNavigationDrawer(
             drawerContent = {
                 ModalDrawerSheet {
@@ -611,6 +612,7 @@ fun ActivityMain(
         ) {
             content()
         }
+
         NavigationType.BottomNavigation -> content()
     }
 }
