@@ -3,11 +3,14 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:termplux/widget/android_logo.dart';
 
 import '../desktop/window_buttons.dart';
 import '../desktop/window_move.dart';
 import '../platform/platform.dart';
 import '../navigation/navigation.dart';
+import '../widget/linux_logo.dart';
+import '../widget/windows_logo.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -70,45 +73,72 @@ class _MyHomePageState extends State<MyHomePage> {
           WindowButtons(enable: kIsDesktop)
         ],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              '你这个BYD的点击数:',
+      body: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints viewportConstraints) {
+          return SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                  minHeight: viewportConstraints.maxHeight, minWidth: 50),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  const Text(
+                    '请选择目标平台:',
+                    textAlign: TextAlign.center,
+                  ),
+
+
+                  GestureDetector(
+                    onTap: aaa,
+                    child: const Card(
+                      child: Column(
+                        children: [
+                          Text("Android"),
+                          AndroidSystemLogo()
+                        ],
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: aaa,
+                    child: const Card(
+                      child: Column(
+                        children: [
+                          Text("Windows"),
+                          WindowsSystemLogo()
+                        ],
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: aaa,
+                    child: const Card(
+                      child: Column(
+                        children: [
+                          Text("Linux"),
+                          LinuxSystemLogo()
+                        ],
+                      ),
+                    ),
+                  ),
+
+
+
+
+
+                  const FlutterLogo(),
+                  TextButton(onPressed: aaa, child: const Text("PUSH")),
+                  TextButton(onPressed: toggle, child: const Text("TOGGLE")),
+                  Text(
+                    '$_counter',
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
+                ],
+              ),
             ),
-            TextButton(onPressed: navToPager, child: const Text("PAGE")),
-            TextButton(onPressed: aaa, child: const Text("PUSH")),
-            TextButton(onPressed: toggle, child: const Text("TOGGLE")),
-            // const Text(
-            //   '请选择目标平台:',
-            // ),
-            // MaterialButton(
-            //   onPressed: _incrementCounter,
-            //   child: const Text("Android")
-            // ),
-            // MaterialButton(
-            //     onPressed: _incrementCounter,
-            //     child: const Text("iOS")
-            // ),
-            // MaterialButton(
-            //     onPressed: _incrementCounter,
-            //     child: const Text("Windows")
-            // ),
-            // MaterialButton(
-            //     onPressed: _incrementCounter,
-            //     child: const Text("macOS")
-            // ),
-            // MaterialButton(
-            //     onPressed: _incrementCounter,
-            //     child: const Text("Linux")
-            // ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
+          );
+        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,

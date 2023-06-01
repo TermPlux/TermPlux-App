@@ -606,8 +606,7 @@ class MainFragment : FlutterBoostFragment(), Runnable {
                 channel.setMethodCallHandler { call, res ->
                     when (call.method) {
                         "pager" -> {
-                            //mViewPager2.currentItem = mViewPager2.currentItem + 1
-                            PopTip.show("6")
+                            mViewPager.currentItem = PagerAdapter.compose
                             res.success("success")
 
                         }
