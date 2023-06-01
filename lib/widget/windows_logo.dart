@@ -8,7 +8,7 @@ class WindowsSystemLogo extends StatelessWidget {
     final IconThemeData iconTheme = IconTheme.of(context);
     return SizedBox(
       width: iconTheme.size,
-      child: const Image(image: AssetImage("assets/logo/windows.png")),
+      child: const Image(image: AssetImage("assets/windows.png")),
     );
   }
 }

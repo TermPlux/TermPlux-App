@@ -8,7 +8,7 @@ class LinuxSystemLogo extends StatelessWidget {
     final IconThemeData iconTheme = IconTheme.of(context);
     return SizedBox(
       width: iconTheme.size,
-      child: const Image(image: AssetImage("assets/logo/linux.png")),
+      child: const Image(image: AssetImage("assets/linux.png")),
     );
   }
 }

@@ -4,6 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:termplux/widget/android_logo.dart';
+import 'package:termplux/widget/apple_logo.dart';
+import 'package:termplux/widget/chrome_logo.dart';
 
 import '../desktop/window_buttons.dart';
 import '../desktop/window_move.dart';
@@ -100,6 +102,19 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ),
                   ),
+
+                  GestureDetector(
+                    onTap: aaa,
+                    child: const Card(
+                      child: Column(
+                        children: [
+                          Text("iOS"),
+                          AppleSystemLogo()
+                        ],
+                      ),
+                    ),
+                  ),
+
                   GestureDetector(
                     onTap: aaa,
                     child: const Card(
@@ -111,6 +126,19 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ),
                   ),
+
+                  GestureDetector(
+                    onTap: aaa,
+                    child: const Card(
+                      child: Column(
+                        children: [
+                          Text("macOS"),
+                          AppleSystemLogo()
+                        ],
+                      ),
+                    ),
+                  ),
+
                   GestureDetector(
                     onTap: aaa,
                     child: const Card(
@@ -118,6 +146,18 @@ class _MyHomePageState extends State<MyHomePage> {
                         children: [
                           Text("Linux"),
                           LinuxSystemLogo()
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  GestureDetector(
+                    onTap: aaa,
+                    child: const Card(
+                      child: Column(
+                        children: [
+                          Text("Web"),
+                          ChromeBrowserLogo()
                         ],
                       ),
                     ),
