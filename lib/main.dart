@@ -5,7 +5,7 @@ import 'package:flutter_boost/flutter_boost.dart';
 import 'package:termplux/platform/platform.dart';
 import 'package:url_strategy/url_strategy.dart';
 
-import 'app/termplux_app.dart';
+import 'app/app.dart';
 import 'boost/binding.dart';
 import 'boost/observer.dart';
 

@@ -1,7 +1,7 @@
 import 'package:device_preview/device_preview.dart';
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_boost/flutter_boost.dart';
-import 'package:termplux/app/app_builder.dart';
 
 import '../platform/platform.dart';
 import '../pages/home.dart';
@@ -24,7 +24,7 @@ class TermPluxApp extends StatelessWidget {
 
   // ”/“为主页，其他为子页面
   static Map<String, Widget Function(BuildContext)> routes = {
-    '/': (context) => const MyHomePage(title: appName),
+    // 'home': (context) => const MyHomePage(title: appName),
   };
 
   Route<dynamic>? routeFactory(RouteSettings settings, String? uniqueId) {
@@ -35,16 +35,43 @@ class TermPluxApp extends StatelessWidget {
     return func(settings, uniqueId);
   }
 
+  Widget appBuilder(BuildContext context, Widget home) {
+    return DynamicColorBuilder(builder: (lightColorScheme, darkColorScheme) {
+      return MaterialApp(
+          routes: routes,
+          home: home,
+          builder: (context, child) {
+            if (kIsUseBoost){
+              return home;
+            } else {
+              return DevicePreview.appBuilder(context, child);
+            }
+          },
+          title: appName,
+          theme: ThemeData(
+              colorScheme: lightColorScheme,
+              brightness: Brightness.light,
+              useMaterial3: true),
+          darkTheme: ThemeData(
+              colorScheme: darkColorScheme,
+              brightness: Brightness.dark,
+              useMaterial3: true),
+          themeMode: ThemeMode.system,
+          locale: DevicePreview.locale(context)
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     if (kIsUseBoost) {
       return FlutterBoostApp(routeFactory, appBuilder: (home) {
-        return AppBuilder(home: home, appName: appName, routes: null);
+        return appBuilder(context, home);
       });
     } else {
       return DevicePreview(
         builder: (context) {
-          return AppBuilder(home: null, appName: appName, routes: routes);
+          return appBuilder(context, const MyHomePage(title: appName));
         },
         isToolbarVisible: true,
         availableLocales: const [

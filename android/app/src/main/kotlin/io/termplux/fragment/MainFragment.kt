@@ -200,7 +200,9 @@ class MainFragment : FlutterBoostFragment(), Runnable {
                         page.apply {
                             when {
                                 position < -1 -> {
+                                    // 禁用圆角动画
                                     clipToOutline = false
+                                    // 不透明
                                     alpha = 0f
                                 }
 
@@ -208,14 +210,18 @@ class MainFragment : FlutterBoostFragment(), Runnable {
                                     val scaleFactor = minScale.coerceAtLeast(1 - abs(position))
                                     val verticalMargin = height * (1 - scaleFactor) / 2
                                     val horizontalMargin = width * (1 - scaleFactor) / 2
+                                    // 获取圆角大小
                                     val round = resources.getDimension(R.dimen.pager_round).toInt()
+                                    // 深景缩放动画
                                     translationX = if (position < 0) {
                                         horizontalMargin - verticalMargin / 2
                                     } else {
                                         horizontalMargin + verticalMargin / 2
                                     }
+                                    // 滑动监听
                                     scaleX = scaleFactor
                                     scaleY = scaleFactor
+                                    // 启用圆角动画
                                     clipToOutline = true
                                     outlineProvider = object : ViewOutlineProvider() {
                                         override fun getOutline(view: View, outline: Outline) {
@@ -228,12 +234,15 @@ class MainFragment : FlutterBoostFragment(), Runnable {
                                             )
                                         }
                                     }
+                                    // 透明度
                                     alpha =
                                         (minAlpha + (((scaleFactor - minScale) / (1 - minScale)) * (1 - minAlpha)))
                                 }
 
                                 else -> {
+                                    // 禁用圆角动画
                                     clipToOutline = false
+                                    // 不透明
                                     alpha = 0f
                                 }
                             }
@@ -311,7 +320,7 @@ class MainFragment : FlutterBoostFragment(), Runnable {
             // 添加控件
             addView(
                 AppCompatImageView(mActivityContext).apply {
-                    scaleType = ImageView.ScaleType.CENTER
+                    // 设置图片资源
                     setImageDrawable(
                         ContextCompat.getDrawable(
                             requireActivity(),
@@ -364,6 +373,7 @@ class MainFragment : FlutterBoostFragment(), Runnable {
             }
             .withStartAction {
                 mRootView.visibility = View.VISIBLE
+                // 动画结束时启用ViewPager2的用户操作
                 mViewPager.isUserInputEnabled = true
                 circularAnim.start()
             }
@@ -372,12 +382,10 @@ class MainFragment : FlutterBoostFragment(), Runnable {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // 初始化系统界面状态
         mVisible = true
-
-
         // 加载应用列表
         loadApp()
-
         // 意图过滤器
         intentFilter = IntentFilter().apply {
             addAction(Intent.ACTION_PACKAGE_ADDED)
