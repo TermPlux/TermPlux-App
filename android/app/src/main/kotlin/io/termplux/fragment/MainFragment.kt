@@ -24,7 +24,7 @@ import android.view.ViewAnimationUtils
 import android.view.ViewGroup
 import android.view.ViewOutlineProvider
 import android.widget.FrameLayout
-import android.widget.ImageView
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -54,7 +54,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
-import androidx.fragment.app.FragmentActivity
 import androidx.navigation.compose.rememberNavController
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
@@ -65,6 +64,9 @@ import androidx.window.layout.FoldingFeature
 import com.farmerbb.taskbar.lib.Taskbar
 import com.google.accompanist.adaptive.calculateDisplayFeatures
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.shape.MaterialShapeDrawable
 import com.idlefish.flutterboost.containers.FlutterBoostFragment
 import com.kongzue.dialogx.dialogs.PopTip
 import io.flutter.embedding.engine.FlutterEngine
@@ -96,7 +98,7 @@ class MainFragment : FlutterBoostFragment(), Runnable {
     private lateinit var channel: MethodChannel
 
     // 上下文
-    private lateinit var mActivityContext: FragmentActivity
+    private lateinit var mActivityContext: AppCompatActivity
     private lateinit var mFragmentContext: FlutterBoostFragment
 
     // 首选项
@@ -120,18 +122,22 @@ class MainFragment : FlutterBoostFragment(), Runnable {
 
     // 视图控件
     private lateinit var mRootView: View
-    private lateinit var mViewPager: ViewPager2
+    private lateinit var mAppBarLayout: AppBarLayout
+    private lateinit var mMaterialToolbar: MaterialToolbar
+    private lateinit var mViewPager2: ViewPager2
     private lateinit var mSplashLogo: AppCompatImageView
     private lateinit var mComposeView: ComposeView
     private lateinit var mRecyclerView: RecyclerView
+
+    private var action: Boolean by mutableStateOf(true)
 
     private val hideHandler = Handler(
         Looper.myLooper()!!
     )
     private val showPart2Runnable = Runnable {
-        (mActivityContext as AppCompatActivity).supportActionBar?.show()
+        mActivityContext.supportActionBar?.show()
     }
-    private var mVisible: Boolean = false
+    private var mVisible: Boolean by mutableStateOf(false)
     private val hideRunnable = Runnable {
         hide()
     }
@@ -154,13 +160,13 @@ class MainFragment : FlutterBoostFragment(), Runnable {
         super.configureFlutterEngine(flutterEngine)
         // 初始化平台通道
         val messenger = flutterEngine.dartExecutor.binaryMessenger
-        channel = MethodChannel(messenger, "termplux_channel")
+        channel = MethodChannel(messenger, channelName)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // 获取上下文
-        mActivityContext = requireActivity()
+        mActivityContext = requireActivity() as AppCompatActivity
         mFragmentContext = this@MainFragment
         // 获取首选项
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mActivityContext)
@@ -184,6 +190,36 @@ class MainFragment : FlutterBoostFragment(), Runnable {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        super.onCreateView(inflater, container, savedInstanceState)?.let { root ->
+            root.apply {
+                visibility = View.INVISIBLE
+                post(mFragmentContext as Runnable)
+            }.also { view ->
+                mRootView = view
+            }
+        }
+        mAppBarLayout = AppBarLayout(
+            mActivityContext
+        ).apply {
+            fitsSystemWindows = true
+            addView(
+                MaterialToolbar(
+                    mActivityContext
+                ).also { toolbar ->
+                    mActivityContext.setSupportActionBar(toolbar)
+                    mMaterialToolbar = toolbar
+                },
+                AppBarLayout.LayoutParams(
+                    AppBarLayout.LayoutParams.MATCH_PARENT,
+                    AppBarLayout.LayoutParams.WRAP_CONTENT
+                )
+            )
+        }.also { appBar ->
+            appBar.isLiftOnScroll = true
+            appBar.statusBarForeground = MaterialShapeDrawable.createWithElevationOverlay(
+                mActivityContext
+            )
+        }
         // 返回根帧布局
         return FrameLayout(mActivityContext).apply {
             // 添加控件
@@ -310,7 +346,7 @@ class MainFragment : FlutterBoostFragment(), Runnable {
                     // 预加载全部页面
                     offscreenPageLimit = PagerAdapter.count
                 }.also { pager ->
-                    mViewPager = pager
+                    mViewPager2 = pager
                 },
                 FrameLayout.LayoutParams(
                     FrameLayout.LayoutParams.MATCH_PARENT,
@@ -374,7 +410,7 @@ class MainFragment : FlutterBoostFragment(), Runnable {
             .withStartAction {
                 mRootView.visibility = View.VISIBLE
                 // 动画结束时启用ViewPager2的用户操作
-                mViewPager.isUserInputEnabled = true
+                mViewPager2.isUserInputEnabled = true
                 circularAnim.start()
             }
             .start()
@@ -384,6 +420,13 @@ class MainFragment : FlutterBoostFragment(), Runnable {
         super.onViewCreated(view, savedInstanceState)
         // 初始化系统界面状态
         mVisible = true
+
+        // 操作栏
+        val actionBar: ActionBar? = mActivityContext.supportActionBar
+        actionBar?.setIcon(R.drawable.baseline_terminal_24)
+        actionBar?.setDisplayHomeAsUpEnabled(true)
+
+
         // 加载应用列表
         loadApp()
         // 意图过滤器
@@ -504,7 +547,7 @@ class MainFragment : FlutterBoostFragment(), Runnable {
 
     private fun hide() {
         mVisible = false
-        (mActivityContext as AppCompatActivity).supportActionBar?.hide()
+        mActivityContext.supportActionBar?.hide()
         hideHandler.removeCallbacks(showPart2Runnable)
     }
 
@@ -549,10 +592,10 @@ class MainFragment : FlutterBoostFragment(), Runnable {
     @SuppressLint("RestrictedApi")
     private fun optionsMenu() {
         if (mVisible) {
-            (requireActivity() as? AppCompatActivity)?.supportActionBar?.openOptionsMenu()
+            mActivityContext.supportActionBar?.openOptionsMenu()
         } else {
             show()
-            (requireActivity() as? AppCompatActivity)?.supportActionBar?.openOptionsMenu()
+                mActivityContext.supportActionBar?.openOptionsMenu()
         }
     }
 
@@ -606,7 +649,7 @@ class MainFragment : FlutterBoostFragment(), Runnable {
                 channel.setMethodCallHandler { call, res ->
                     when (call.method) {
                         "pager" -> {
-                            mViewPager.currentItem = PagerAdapter.compose
+                            mViewPager2.currentItem = PagerAdapter.compose
                             res.success("success")
 
                         }
@@ -790,6 +833,8 @@ class MainFragment : FlutterBoostFragment(), Runnable {
 
     companion object {
 
+        const val channelName: String = "termplux_channel"
+
         // 浅色模式配色
         private val Purple80 = Color(0xFFD0BCFF)
         private val PurpleGrey80 = Color(0xFFCCC2DC)
@@ -840,5 +885,9 @@ class MainFragment : FlutterBoostFragment(), Runnable {
 
         /** 一些较老的设备需要在小部件更新和状态和导航栏更改之间有一个小的延迟。*/
         const val uiAnimatorDelay = 300
+
+        class Main : AppCompatActivity() {
+
+        }
     }
 }

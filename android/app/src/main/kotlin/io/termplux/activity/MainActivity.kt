@@ -3,10 +3,11 @@ package io.termplux.activity
 import android.annotation.SuppressLint
 import android.content.*
 import android.graphics.Color
+import android.os.Build
 import android.view.*
-import androidx.appcompat.app.ActionBar
+import android.window.OnBackInvokedCallback
+import android.window.OnBackInvokedDispatcher
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -15,10 +16,7 @@ import androidx.core.view.WindowCompat
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
-import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.internal.EdgeToEdgeUtils
-import com.google.android.material.shape.MaterialShapeDrawable
 import com.idlefish.flutterboost.containers.FlutterBoostFragment
 import com.kongzue.baseframework.BaseActivity
 import com.kongzue.baseframework.interfaces.LifeCircleListener
@@ -27,6 +25,7 @@ import io.flutter.embedding.android.RenderMode
 import io.flutter.embedding.android.TransparencyMode
 import io.termplux.R
 import io.termplux.fragment.MainFragment
+import io.termplux.utils.BackInvokedCallbackUtils
 
 class MainActivity : BaseActivity() {
 
@@ -36,54 +35,17 @@ class MainActivity : BaseActivity() {
     private var mainFragment: MainFragment? = null
 
     private lateinit var mFragmentManager: FragmentManager
-    private lateinit var mToolbar: MaterialToolbar
-
     private lateinit var newMainFragment: MainFragment
+
+    private lateinit var onBackInvokedCallback: OnBackInvokedCallback
 
     override fun resetContentView(): View {
         super.resetContentView()
-        return LinearLayoutCompat(mContext).apply {
-            orientation = LinearLayoutCompat.VERTICAL
-            addView(
-                AppBarLayout(
-                    mContext
-                ).apply {
-                    fitsSystemWindows = true
-                    addView(
-                        MaterialToolbar(
-                            mContext
-                        ).also { toolbar ->
-                            setSupportActionBar(toolbar)
-                            mToolbar = toolbar
-                        },
-                        AppBarLayout.LayoutParams(
-                            AppBarLayout.LayoutParams.MATCH_PARENT,
-                            AppBarLayout.LayoutParams.WRAP_CONTENT
-                        )
-                    )
-                }.also { appBar ->
-                    appBar.isLiftOnScroll = true
-                    appBar.statusBarForeground = MaterialShapeDrawable.createWithElevationOverlay(
-                        mContext
-                    )
-                },
-                LinearLayoutCompat.LayoutParams(
-                    LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-                    LinearLayoutCompat.LayoutParams.WRAP_CONTENT
-                )
-            )
-            addView(
-                FragmentContainerView(mContext).apply {
-                    id = R.id.flutter_container
-                    background = ContextCompat.getDrawable(
-                        mContext,
-                        R.drawable.custom_wallpaper_24
-                    )
-                },
-                LinearLayoutCompat.LayoutParams(
-                    LinearLayoutCompat.LayoutParams.MATCH_PARENT,
-                    LinearLayoutCompat.LayoutParams.MATCH_PARENT
-                )
+        return FragmentContainerView(mContext).apply {
+            id = R.id.flutter_container
+            background = ContextCompat.getDrawable(
+                mContext,
+                R.drawable.custom_wallpaper_24
             )
         }
     }
@@ -92,6 +54,7 @@ class MainActivity : BaseActivity() {
     override fun initViews() {
         // 片段管理器
         mFragmentManager = supportFragmentManager
+        // 初始化片段
         mainFragment = mFragmentManager.findFragmentByTag(
             tagFlutterBoostFragment
         ) as MainFragment?
@@ -101,14 +64,9 @@ class MainActivity : BaseActivity() {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         // 设置页面布局边界
         WindowCompat.setDecorFitsSystemWindows(window, false)
-
         setDarkStatusBarTheme(true)
         setDarkNavigationBarTheme(true)
         setNavigationBarBackgroundColor(Color.TRANSPARENT)
-        // 操作栏
-        val actionBar: ActionBar? = supportActionBar
-        actionBar?.setIcon(R.drawable.baseline_terminal_24)
-        actionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     override fun initDatas(parameter: JumpParameter?) {
@@ -141,8 +99,30 @@ class MainActivity : BaseActivity() {
         // 生命周期监听
         setLifeCircleListener(
             object : LifeCircleListener() {
+                override fun onCreate() {
+                    super.onCreate()
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        onBackInvokedCallback = BackInvokedCallbackUtils(
+                            baseActivity = mME,
+                            backEvent = {
+                                onBack()
+                            }
+                        ).also {
+                            onBackInvokedDispatcher.registerOnBackInvokedCallback(
+                                OnBackInvokedDispatcher.PRIORITY_DEFAULT,
+                                it
+                            )
+                        }
+                    }
+                }
+
                 override fun onDestroy() {
                     super.onDestroy()
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        onBackInvokedCallback.let {
+                            onBackInvokedDispatcher.unregisterOnBackInvokedCallback(it)
+                        }
+                    }
                     mainFragment = null
                 }
             }
@@ -160,7 +140,7 @@ class MainActivity : BaseActivity() {
         when (item.itemId) {
             android.R.id.home -> onBack()
             R.id.action_settings -> {
-                //current(item = ContentAdapter.settings)
+
             }
         }
         return true
