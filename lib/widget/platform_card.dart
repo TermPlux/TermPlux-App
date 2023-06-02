@@ -5,13 +5,11 @@ class PlatformCard extends StatelessWidget {
       {super.key,
       required this.cover,
       required this.title,
-      required this.subtitle,
       required this.icons,
       required this.pressed});
 
   final Widget cover;
   final String title;
-  final String subtitle;
   final List<Widget> icons;
   final VoidCallback pressed;
 
@@ -33,7 +31,7 @@ class PlatformCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-              height: 184,
+              height: 160,
               child: Stack(
                 children: [
                   Positioned.fill(child: cover),
@@ -65,20 +63,7 @@ class PlatformCard extends StatelessWidget {
                   softWrap: false,
                   overflow: TextOverflow.ellipsis,
                   style: descriptionStyle,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: Text(
-                          subtitle,
-                          style:
-                              descriptionStyle.copyWith(color: Colors.black54)
-                        ),
-                      ),
-                      Row(children: icons)
-                    ],
-                  ),
+                  child: Row(children: icons)
                 ),
               ),
             ),

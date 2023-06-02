@@ -63,7 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: const Text('请选择目标平台'),
         flexibleSpace: WindowTitleBar(enable: kIsDesktop),
         actions: [
           IconButton(
@@ -77,44 +77,38 @@ class _MyHomePageState extends State<MyHomePage> {
           child: ListView(
             padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
             children: [
-              const Text(
-                '请选择目标平台:',
-                textAlign: TextAlign.center,
-              ),
               PlatformCard(
                 cover: const Image(
-                  image: AssetImage("assets/cover.jpg"),
+                  image: AssetImage("cover/android.png"),
                   fit: BoxFit.cover,
                 ),
                 title: "Android",
-                subtitle: "支持平台：AidLux Termux UserLAnd LinuxDeploy",
                 icons: const [
                   Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
-                      child: ImageLogo(assets: 'assets/android.png')),
+                      child: ImageLogo(assets: 'icon/android.png')),
                   Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
                       child: FlutterLogo()),
                   Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
-                      child: ImageLogo(assets: 'assets/compose.png')),
+                      child: ImageLogo(assets: 'icon/compose.png')),
                   Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
-                      child: ImageLogo(assets: 'assets/unity.png')),
+                      child: ImageLogo(assets: 'icon/unity.png')),
                 ],
                 pressed: aaa,
               ),
               PlatformCard(
                 cover: const Image(
-                  image: AssetImage("assets/cover.jpg"),
+                  image: AssetImage("cover/ios.png"),
                   fit: BoxFit.cover,
                 ),
                 title: "iOS (实验性)",
-                subtitle: "支持平台：iSH",
                 icons: const [
                   Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
-                      child: ImageLogo(assets: 'assets/apple.png')),
+                      child: ImageLogo(assets: 'icon/apple.png')),
                   Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
                       child: FlutterLogo()),
@@ -123,15 +117,14 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               PlatformCard(
                 cover: const Image(
-                  image: AssetImage("assets/cover.jpg"),
+                  image: AssetImage("cover/windows.png"),
                   fit: BoxFit.cover,
                 ),
-                title: "Windows",
-                subtitle: "支持平台：WSL",
+                title: "Windows (实验性)",
                 icons: const [
                   Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
-                      child: ImageLogo(assets: 'assets/windows.png')),
+                      child: ImageLogo(assets: 'icon/windows.png')),
                   Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
                       child: FlutterLogo()),
@@ -140,15 +133,14 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               PlatformCard(
                 cover: const Image(
-                  image: AssetImage("assets/cover.jpg"),
+                  image: AssetImage("cover/macos.png"),
                   fit: BoxFit.cover,
                 ),
                 title: "macOS (实验性)",
-                subtitle: "暂无支持平台。",
                 icons: const [
                   Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
-                      child: ImageLogo(assets: 'assets/apple.png')),
+                      child: ImageLogo(assets: 'icon/apple.png')),
                   Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
                       child: FlutterLogo()),
@@ -157,15 +149,14 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               PlatformCard(
                 cover: const Image(
-                  image: AssetImage("assets/cover.jpg"),
+                  image: AssetImage("cover/termplux.jpg"),
                   fit: BoxFit.cover,
                 ),
-                title: "Linux",
-                subtitle: "支持平台：自己本身。",
+                title: "Linux (实验性)",
                 icons: const [
                   Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
-                      child: ImageLogo(assets: 'assets/linux.png')),
+                      child: ImageLogo(assets: 'icon/linux.png')),
                   Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
                       child: FlutterLogo()),
@@ -182,7 +173,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 onTap: aaa,
                 child: const Card(
                   child: Column(
-                    children: [Text("Web"), ImageLogo(assets: 'assets/chrome.png')],
+                    children: [Text("Web"), ImageLogo(assets: 'icon/chrome.png')],
                   ),
                 ),
               ),
