@@ -28,6 +28,7 @@ import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
@@ -44,6 +45,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalView
@@ -52,6 +54,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
@@ -87,6 +90,7 @@ import io.termplux.ui.window.DevicePosture
 import io.termplux.ui.window.NavigationType
 import io.termplux.ui.window.isBookPosture
 import io.termplux.ui.window.isSeparating
+import io.termplux.utils.PageTransformerUtils
 import kotlinx.coroutines.Runnable
 import rikka.shizuku.Shizuku
 import kotlin.math.abs
@@ -121,6 +125,7 @@ class MainFragment : FlutterBoostFragment(), Runnable {
         }
 
     // 视图控件
+    private lateinit var mRootLayout: FrameLayout
     private lateinit var mRootView: View
     private lateinit var mAppBarLayout: AppBarLayout
     private lateinit var mMaterialToolbar: MaterialToolbar
@@ -192,12 +197,44 @@ class MainFragment : FlutterBoostFragment(), Runnable {
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)?.let { root ->
             root.apply {
+                setOnTouchListener(delayHideTouchListener)
                 visibility = View.INVISIBLE
                 post(mFragmentContext as Runnable)
             }.also { view ->
                 mRootView = view
+            }.also { view ->
+                FrameLayout(mActivityContext).apply {
+                    addView(
+                        view,
+                        FrameLayout.LayoutParams(
+                            FrameLayout.LayoutParams.MATCH_PARENT,
+                            FrameLayout.LayoutParams.MATCH_PARENT
+                        )
+                    )
+                    addView(
+                        AppCompatImageView(mActivityContext).apply {
+                            setImageDrawable(
+                                ContextCompat.getDrawable(
+                                    requireActivity(),
+                                    R.drawable.custom_termplux_24
+                                )
+                            )
+                        }.also { logo ->
+                            mSplashLogo = logo
+                        },
+                        FrameLayout.LayoutParams(
+                            FrameLayout.LayoutParams.WRAP_CONTENT,
+                            FrameLayout.LayoutParams.WRAP_CONTENT,
+                            Gravity.CENTER
+                        )
+                    )
+                }.also {
+                    mRootLayout = it
+                }
             }
         }
+
+
         mAppBarLayout = AppBarLayout(
             mActivityContext
         ).apply {
@@ -220,159 +257,88 @@ class MainFragment : FlutterBoostFragment(), Runnable {
                 mActivityContext
             )
         }
-        // 返回根帧布局
-        return FrameLayout(mActivityContext).apply {
-            // 添加控件
-            addView(
-                ViewPager2(mActivityContext).apply {
-                    // 初始值为否，会在动画结束后恢复是，目的是防止动画加载过程中用户操作导致错误
-                    isUserInputEnabled = false
-                    // 设置触摸监听
-                    setOnTouchListener(delayHideTouchListener)
-                    // 设置方向为水平
-                    orientation = ViewPager2.ORIENTATION_HORIZONTAL
-                    // 设置切换动画
-                    setPageTransformer { page, position ->
-                        page.apply {
-                            when {
-                                position < -1 -> {
-                                    // 禁用圆角动画
-                                    clipToOutline = false
-                                    // 不透明
-                                    alpha = 0f
-                                }
-
-                                position <= 1 -> {
-                                    val scaleFactor = minScale.coerceAtLeast(1 - abs(position))
-                                    val verticalMargin = height * (1 - scaleFactor) / 2
-                                    val horizontalMargin = width * (1 - scaleFactor) / 2
-                                    // 获取圆角大小
-                                    val round = resources.getDimension(R.dimen.pager_round).toInt()
-                                    // 深景缩放动画
-                                    translationX = if (position < 0) {
-                                        horizontalMargin - verticalMargin / 2
-                                    } else {
-                                        horizontalMargin + verticalMargin / 2
-                                    }
-                                    // 滑动监听
-                                    scaleX = scaleFactor
-                                    scaleY = scaleFactor
-                                    // 启用圆角动画
-                                    clipToOutline = true
-                                    outlineProvider = object : ViewOutlineProvider() {
-                                        override fun getOutline(view: View, outline: Outline) {
-                                            outline.setRoundRect(
-                                                0,
-                                                0,
-                                                view.width,
-                                                view.height,
-                                                (round + (((scaleFactor - minScale) / (1 - minScale)) * (1 - round)))
-                                            )
-                                        }
-                                    }
-                                    // 透明度
-                                    alpha =
-                                        (minAlpha + (((scaleFactor - minScale) / (1 - minScale)) * (1 - minAlpha)))
-                                }
-
-                                else -> {
-                                    // 禁用圆角动画
-                                    clipToOutline = false
-                                    // 不透明
-                                    alpha = 0f
-                                }
-                            }
-                        }
-                    }
-                    // 设置适配器
-                    adapter = PagerAdapter(
-                        rootView = super.onCreateView(
-                            inflater,
-                            container,
-                            savedInstanceState
-                        )?.let { root ->
-                            root.apply {
-                                visibility = View.INVISIBLE
-                                post(mFragmentContext as Runnable)
-                            }.also { view ->
-                                mRootView = view
-                            }
-                        },
-                        composeView = ComposeView(mActivityContext).apply {
-                            setViewCompositionStrategy(
-                                ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
-                            )
-                        }.also { compose ->
-                            mComposeView = compose
-                        },
-                        swipeRefreshLayout = SwipeRefreshLayout(mActivityContext).apply {
-                            fitsSystemWindows = true
-                            addView(
-                                RecyclerView(mActivityContext).apply {
-                                    layoutManager = GridLayoutManager(
-                                        mActivityContext,
-                                        4,
-                                        RecyclerView.VERTICAL,
-                                        false
-                                    )
-                                }.also { apps ->
-                                    mRecyclerView = apps
-                                },
-                                ViewGroup.LayoutParams(
-                                    ViewGroup.LayoutParams.MATCH_PARENT,
-                                    ViewGroup.LayoutParams.MATCH_PARENT
-                                )
-                            )
-                            setOnRefreshListener {
-                                // 执行下滑刷新事件
-                                PopTip.show("下拉刷新")
-
-                                isRefreshing = false
-                            }
-                        },
-                        viewPager = ViewPager2(mActivityContext).apply {
-                            fitsSystemWindows = true
-                            // 此页面仅展示设置，禁止用户滑动
-                            isUserInputEnabled = false
-                            // 设置方向为水平
-                            orientation = ViewPager2.ORIENTATION_HORIZONTAL
-                            // 设置适配器
-                            adapter = SettingsAdapter(
-                                mFragmentContext,
-                                settings = {}
-                            )
-                        }
-                    )
-                    // 预加载全部页面
-                    offscreenPageLimit = PagerAdapter.count
-                }.also { pager ->
-                    mViewPager2 = pager
-                },
-                FrameLayout.LayoutParams(
-                    FrameLayout.LayoutParams.MATCH_PARENT,
-                    FrameLayout.LayoutParams.MATCH_PARENT
-                )
+        ComposeView(mActivityContext).apply {
+            setViewCompositionStrategy(
+                ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
             )
-            // 添加控件
-            addView(
-                AppCompatImageView(mActivityContext).apply {
-                    // 设置图片资源
-                    setImageDrawable(
-                        ContextCompat.getDrawable(
-                            requireActivity(),
-                            R.drawable.custom_termplux_24
-                        )
-                    )
-                }.also { logo ->
-                    mSplashLogo = logo
-                },
-                FrameLayout.LayoutParams(
-                    FrameLayout.LayoutParams.WRAP_CONTENT,
-                    FrameLayout.LayoutParams.WRAP_CONTENT,
-                    Gravity.CENTER
-                )
-            )
+        }.also { compose ->
+            mComposeView = compose
         }
+
+        val pagerAdapter = PagerAdapter(
+            rootView = mRootLayout,
+            composeView = ComposeView(mActivityContext),
+            swipeRefreshLayout = SwipeRefreshLayout(mActivityContext).apply {
+                addView(
+                    RecyclerView(mActivityContext).apply {
+                        layoutManager = GridLayoutManager(
+                            mActivityContext,
+                            4,
+                            RecyclerView.VERTICAL,
+                            false
+                        )
+                    }.also { apps ->
+                        mRecyclerView = apps
+                    },
+                    ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT
+                    )
+                )
+                setOnRefreshListener {
+                    // 执行下滑刷新事件
+                    PopTip.show("下拉刷新")
+
+                    isRefreshing = false
+                }
+            },
+            viewPager = ViewPager2(mActivityContext).apply {
+                // 此页面仅展示设置，禁止用户滑动
+                isUserInputEnabled = false
+                // 设置方向为水平
+                orientation = ViewPager2.ORIENTATION_HORIZONTAL
+                // 设置适配器
+                adapter = SettingsAdapter(
+                    mFragmentContext,
+                    settings = {}
+                )
+            }
+        )
+        ViewPager2(mActivityContext).apply {
+            // 初始值为否，会在动画结束后恢复是，目的是防止动画加载过程中用户操作导致错误
+            isUserInputEnabled = false
+            // 设置方向为水平
+            orientation = ViewPager2.ORIENTATION_HORIZONTAL
+            // 设置切换动画
+            setPageTransformer(PageTransformerUtils())
+            // 设置适配器
+            adapter = pagerAdapter
+            // 预加载全部页面
+            offscreenPageLimit = PagerAdapter.count
+        }.also { pager ->
+            mViewPager2 = pager
+        }
+        return mComposeView
+//        // 返回根帧布局
+//        return FrameLayout(mActivityContext).apply {
+//            // 添加控件
+//            addView(
+//                mComposeView,
+//                FrameLayout.LayoutParams(
+//                    FrameLayout.LayoutParams.MATCH_PARENT,
+//                    FrameLayout.LayoutParams.MATCH_PARENT
+//                )
+//            )
+//            // 添加控件
+//            addView(
+//                mSplashLogo,
+//                FrameLayout.LayoutParams(
+//                    FrameLayout.LayoutParams.WRAP_CONTENT,
+//                    FrameLayout.LayoutParams.WRAP_CONTENT,
+//                    Gravity.CENTER
+//                )
+//            )
+//        }
     }
 
     override fun run() {
@@ -595,7 +561,7 @@ class MainFragment : FlutterBoostFragment(), Runnable {
             mActivityContext.supportActionBar?.openOptionsMenu()
         } else {
             show()
-                mActivityContext.supportActionBar?.openOptionsMenu()
+            mActivityContext.supportActionBar?.openOptionsMenu()
         }
     }
 
@@ -683,58 +649,6 @@ class MainFragment : FlutterBoostFragment(), Runnable {
                     activity = requireActivity()
                 )
 
-                val navigationType: NavigationType
-                val contentType: ContentType
-
-                val foldingFeature =
-                    displayFeatures.filterIsInstance<FoldingFeature>().firstOrNull()
-
-                val foldingDevicePosture = when {
-                    isBookPosture(
-                        foldFeature = foldingFeature
-                    ) -> DevicePosture.BookPosture(
-                        hingePosition = foldingFeature.bounds
-                    )
-
-                    isSeparating(
-                        foldFeature = foldingFeature
-                    ) -> DevicePosture.Separating(
-                        hingePosition = foldingFeature.bounds,
-                        orientation = foldingFeature.orientation
-                    )
-
-                    else -> DevicePosture.NormalPosture
-                }
-
-                when (windowSize.widthSizeClass) {
-                    WindowWidthSizeClass.Compact -> {
-                        navigationType = NavigationType.BottomNavigation
-                        contentType = ContentType.Single
-                    }
-
-                    WindowWidthSizeClass.Medium -> {
-                        navigationType = NavigationType.NavigationRail
-                        contentType = if (foldingDevicePosture != DevicePosture.NormalPosture) {
-                            ContentType.Dual
-                        } else {
-                            ContentType.Single
-                        }
-                    }
-
-                    WindowWidthSizeClass.Expanded -> {
-                        navigationType = if (foldingDevicePosture is DevicePosture.BookPosture) {
-                            NavigationType.NavigationRail
-                        } else {
-                            NavigationType.PermanentNavigationDrawer
-                        }
-                        contentType = ContentType.Dual
-                    }
-
-                    else -> {
-                        navigationType = NavigationType.BottomNavigation
-                        contentType = ContentType.Single
-                    }
-                }
 
                 // 系统界面控制器实例
                 val systemUiController = rememberSystemUiController()
@@ -790,18 +704,23 @@ class MainFragment : FlutterBoostFragment(), Runnable {
                     ActivityMain(
                         navController = navController,
                         drawerState = drawerState,
-                        navigationType = navigationType,
-                        contentType = contentType,
+                        windowSize = windowSize,
+                        displayFeatures = displayFeatures,
                         topBar = {
-
+                            AndroidView(
+                                factory = {
+                                    mAppBarLayout
+                                },
+                                modifier = it
+                            )
                         },
                         pager = {
-//                            AndroidView(
-//                                factory = {
-//                                    mViewPager2
-//                                },
-//                                modifier = it
-//                            )
+                            AndroidView(
+                                factory = {
+                                    mViewPager2
+                                },
+                                modifier = it
+                            )
                         },
                         navBar = {
 
@@ -870,8 +789,6 @@ class MainFragment : FlutterBoostFragment(), Runnable {
             tertiary = Pink40
         )
 
-        const val minScale = 0.85f
-        const val minAlpha = 0.8f
 
         /** 开屏图标动画时长 */
         const val splashPart1AnimatorMillis = 600

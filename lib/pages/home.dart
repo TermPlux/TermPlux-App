@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:termplux/widget/android_logo.dart';
 import 'package:termplux/widget/apple_logo.dart';
 import 'package:termplux/widget/chrome_logo.dart';
+import 'package:termplux/widget/platform_card.dart';
 
 import '../desktop/window_buttons.dart';
 import '../desktop/window_move.dart';
@@ -75,111 +76,148 @@ class _MyHomePageState extends State<MyHomePage> {
           WindowButtons(enable: kIsDesktop)
         ],
       ),
-      body: LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints viewportConstraints) {
-          return SingleChildScrollView(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                  minHeight: viewportConstraints.maxHeight, minWidth: 50),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  const Text(
-                    '请选择目标平台:',
-                    textAlign: TextAlign.center,
-                  ),
-
-
-                  GestureDetector(
-                    onTap: aaa,
-                    child: const Card(
-                      child: Column(
-                        children: [
-                          Text("Android"),
-                          AndroidSystemLogo()
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  GestureDetector(
-                    onTap: aaa,
-                    child: const Card(
-                      child: Column(
-                        children: [
-                          Text("iOS"),
-                          AppleSystemLogo()
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  GestureDetector(
-                    onTap: aaa,
-                    child: const Card(
-                      child: Column(
-                        children: [
-                          Text("Windows"),
-                          WindowsSystemLogo()
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  GestureDetector(
-                    onTap: aaa,
-                    child: const Card(
-                      child: Column(
-                        children: [
-                          Text("macOS"),
-                          AppleSystemLogo()
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  GestureDetector(
-                    onTap: aaa,
-                    child: const Card(
-                      child: Column(
-                        children: [
-                          Text("Linux"),
-                          LinuxSystemLogo()
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  GestureDetector(
-                    onTap: aaa,
-                    child: const Card(
-                      child: Column(
-                        children: [
-                          Text("Web"),
-                          ChromeBrowserLogo()
-                        ],
-                      ),
-                    ),
-                  ),
-
-
-
-
-
-                  const FlutterLogo(),
-                  TextButton(onPressed: aaa, child: const Text("PUSH")),
-                  TextButton(onPressed: toggle, child: const Text("TOGGLE")),
-                  Text(
-                    '$_counter',
-                    style: Theme.of(context).textTheme.headlineMedium,
-                  ),
-                ],
+      body: Center(
+        child: Scrollbar(
+          child: ListView(
+            padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
+            children: [
+              const Text(
+                '请选择目标平台:',
+                textAlign: TextAlign.center,
               ),
-            ),
-          );
-        },
+              PlatformCard(
+                cover: const Image(
+                  image: AssetImage("assets/cover.jpg"),
+                  fit: BoxFit.cover,
+                ),
+                title: "Android",
+                icons: const [
+                  Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
+                      child: AndroidSystemLogo()),
+                  Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
+                      child: FlutterLogo()),
+                ],
+                pressed: aaa,
+              ),
+              PlatformCard(
+                cover: const Image(
+                  image: AssetImage("assets/cover.jpg"),
+                  fit: BoxFit.cover,
+                ),
+                title: "iOS",
+                icons: const [
+                  Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
+                      child: AppleSystemLogo()),
+                  Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
+                      child: FlutterLogo()),
+                ],
+                pressed: aaa,
+              ),
+              PlatformCard(
+                cover: const Image(
+                  image: AssetImage("assets/cover.jpg"),
+                  fit: BoxFit.cover,
+                ),
+                title: "Windows",
+                icons: const [
+                  Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
+                      child: WindowsSystemLogo()),
+                  Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
+                      child: FlutterLogo()),
+                ],
+                pressed: aaa,
+              ),
+              PlatformCard(
+                cover: const Image(
+                  image: AssetImage("assets/cover.jpg"),
+                  fit: BoxFit.cover,
+                ),
+                title: "macOS",
+                icons: const [
+                  Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
+                      child: AppleSystemLogo()),
+                  Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
+                      child: FlutterLogo()),
+                ],
+                pressed: aaa,
+              ),
+              PlatformCard(
+                cover: const Image(
+                  image: AssetImage("assets/cover.jpg"),
+                  fit: BoxFit.cover,
+                ),
+                title: "Linux",
+                icons: const [
+                  Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
+                      child: LinuxSystemLogo()),
+                  Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
+                      child: FlutterLogo()),
+                ],
+                pressed: aaa,
+              ),
+
+
+
+
+
+
+              GestureDetector(
+                onTap: aaa,
+                child: const Card(
+                  child: Column(
+                    children: [Text("Web"), ChromeBrowserLogo()],
+                  ),
+                ),
+              ),
+              const FlutterLogo(),
+              TextButton(onPressed: aaa, child: const Text("PUSH")),
+              TextButton(onPressed: toggle, child: const Text("TOGGLE")),
+              Text(
+                '$_counter',
+                style: Theme
+                    .of(context)
+                    .textTheme
+                    .headlineMedium,
+              ),
+            ],
+          ),
+        ),
       ),
+      // body: Scrollbar(
+      //   child: ListView(
+      //     padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
+      //     children: [
+      //
+      //     ],
+      //   ),
+      // ),
+      // body: LayoutBuilder(
+      //   builder: (BuildContext context, BoxConstraints viewportConstraints) {
+      //     return SingleChildScrollView(
+      //       child: ConstrainedBox(
+      //         constraints: BoxConstraints(
+      //             minHeight: viewportConstraints.maxHeight, minWidth: 50),
+      //         child: Column(
+      //           mainAxisSize: MainAxisSize.min,
+      //           crossAxisAlignment: CrossAxisAlignment.stretch,
+      //           children: <Widget>[
+      //
+      //           ],
+      //         ),
+      //       ),
+      //     );
+      //   },
+      // ),
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: '增加',

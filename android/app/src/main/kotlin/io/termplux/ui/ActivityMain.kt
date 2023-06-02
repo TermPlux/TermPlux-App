@@ -8,6 +8,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.Terminal
 import androidx.compose.material3.*
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,6 +23,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.window.layout.DisplayFeature
+import androidx.window.layout.FoldingFeature
 import io.termplux.BuildConfig
 import io.termplux.R
 import io.termplux.ui.navigation.ItemType
@@ -35,6 +39,9 @@ import io.termplux.ui.screen.ScreenDashboard
 import io.termplux.ui.screen.ScreenHome
 import io.termplux.ui.screen.ScreenManager
 import io.termplux.ui.screen.ScreenSettings
+import io.termplux.ui.window.DevicePosture
+import io.termplux.ui.window.isBookPosture
+import io.termplux.ui.window.isSeparating
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,8 +49,8 @@ import kotlinx.coroutines.launch
 fun ActivityMain(
     navController: NavHostController,
     drawerState: DrawerState,
-    navigationType: NavigationType,
-    contentType: ContentType,
+    windowSize: WindowSizeClass,
+    displayFeatures: List<DisplayFeature>,
     topBar: @Composable (modifier: Modifier) -> Unit,
     pager: @Composable (modifier: Modifier) -> Unit,
     navBar: @Composable (modifier: Modifier) -> Unit,
@@ -82,6 +89,59 @@ fun ActivityMain(
     val currentDestination = navBackStackEntry?.destination
     val snackBarHostState = remember {
         SnackbarHostState()
+    }
+
+    val navigationType: NavigationType
+    val contentType: ContentType
+
+    val foldingFeature =
+        displayFeatures.filterIsInstance<FoldingFeature>().firstOrNull()
+
+    val foldingDevicePosture = when {
+        isBookPosture(
+            foldFeature = foldingFeature
+        ) -> DevicePosture.BookPosture(
+            hingePosition = foldingFeature.bounds
+        )
+
+        isSeparating(
+            foldFeature = foldingFeature
+        ) -> DevicePosture.Separating(
+            hingePosition = foldingFeature.bounds,
+            orientation = foldingFeature.orientation
+        )
+
+        else -> DevicePosture.NormalPosture
+    }
+
+    when (windowSize.widthSizeClass) {
+        WindowWidthSizeClass.Compact -> {
+            navigationType = NavigationType.BottomNavigation
+            contentType = ContentType.Single
+        }
+
+        WindowWidthSizeClass.Medium -> {
+            navigationType = NavigationType.NavigationRail
+            contentType = if (foldingDevicePosture != DevicePosture.NormalPosture) {
+                ContentType.Dual
+            } else {
+                ContentType.Single
+            }
+        }
+
+        WindowWidthSizeClass.Expanded -> {
+            navigationType = if (foldingDevicePosture is DevicePosture.BookPosture) {
+                NavigationType.NavigationRail
+            } else {
+                NavigationType.PermanentNavigationDrawer
+            }
+            contentType = ContentType.Dual
+        }
+
+        else -> {
+            navigationType = NavigationType.BottomNavigation
+            contentType = ContentType.Single
+        }
     }
 
     @Composable
