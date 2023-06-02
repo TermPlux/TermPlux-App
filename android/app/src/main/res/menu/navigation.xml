@@ -5,6 +5,10 @@
         android:icon="@drawable/outline_home_24"
         android:title="@string/menu_home" />
     <item
+        android:id="@+id/nav_compose"
+        android:icon="@drawable/outline_home_24"
+        android:title="@string/menu_home" />
+    <item
         android:id="@+id/nav_apps"
         android:icon="@drawable/outline_apps_24"
         android:title="@string/menu_apps" />

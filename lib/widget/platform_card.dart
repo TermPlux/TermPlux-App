@@ -5,18 +5,23 @@ class PlatformCard extends StatelessWidget {
       {super.key,
       required this.cover,
       required this.title,
+      required this.subtitle,
       required this.icons,
       required this.pressed});
 
   final Widget cover;
   final String title;
+  final String subtitle;
   final List<Widget> icons;
   final VoidCallback pressed;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final titleStyle = theme.textTheme.titleMedium!;
+    final titleStyle = theme.textTheme.headlineSmall!.copyWith(
+      color: Colors.white,
+    );
+    final descriptionStyle = theme.textTheme.titleMedium!;
 
     return Card(
       clipBehavior: Clip.antiAlias,
@@ -31,7 +36,24 @@ class PlatformCard extends StatelessWidget {
               height: 184,
               child: Stack(
                 children: [
-                  Positioned.fill(child: cover)
+                  Positioned.fill(child: cover),
+                  Positioned(
+                    bottom: 16,
+                    left: 16,
+                    right: 16,
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerLeft,
+                      child: Semantics(
+                        container: true,
+                        header: true,
+                        child: Text(
+                          title,
+                          style: titleStyle,
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -42,15 +64,16 @@ class PlatformCard extends StatelessWidget {
                 child: DefaultTextStyle(
                   softWrap: false,
                   overflow: TextOverflow.ellipsis,
-                  style: titleStyle,
+                  style: descriptionStyle,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(bottom: 8),
                         child: Text(
-                          title,
-                          style: titleStyle.copyWith(color: Colors.black54),
+                          subtitle,
+                          style:
+                              descriptionStyle.copyWith(color: Colors.black54)
                         ),
                       ),
                       Row(children: icons)

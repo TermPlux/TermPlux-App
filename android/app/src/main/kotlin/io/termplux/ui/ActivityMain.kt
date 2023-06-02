@@ -381,52 +381,63 @@ fun ActivityMain(
                 AnimatedVisibility(
                     visible = true
                 ) {
-                    TopAppBar(
-                        title = {
-                            Text(
-                                text = stringResource(
-                                    id = R.string.app_name
-                                )
-                            )
-                        },
-                        modifier = Modifier.fillMaxWidth(),
-                        navigationIcon = {
-                            AnimatedVisibility(
-                                visible = navigationType == NavigationType.NavigationRail
-                            ) {
-                                IconButton(
-                                    onClick = {
-                                        if (
-                                            navigationType != NavigationType.PermanentNavigationDrawer
-                                        ) {
-                                            scope.launch {
-                                                drawerState.open()
-                                            }
-                                        }
-                                    }
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Filled.Menu,
-                                        contentDescription = null
-                                    )
-                                }
-                            }
-                        },
-                        actions = {
-                            IconButton(
-                                onClick = {
+                    Column(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Spacer(
+                            modifier = Modifier.statusBarsPadding()
+                        )
+                        topBar(
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
 
-                                }
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.MoreVert,
-                                    contentDescription = null
-                                )
-                            }
-                        },
-                        colors = TopAppBarDefaults.topAppBarColors(),
-                        scrollBehavior = scrollBehavior
-                    )
+//                    TopAppBar(
+//                        title = {
+//                            Text(
+//                                text = stringResource(
+//                                    id = R.string.app_name
+//                                )
+//                            )
+//                        },
+//                        modifier = Modifier.fillMaxWidth(),
+//                        navigationIcon = {
+//                            AnimatedVisibility(
+//                                visible = navigationType == NavigationType.NavigationRail
+//                            ) {
+//                                IconButton(
+//                                    onClick = {
+//                                        if (
+//                                            navigationType != NavigationType.PermanentNavigationDrawer
+//                                        ) {
+//                                            scope.launch {
+//                                                drawerState.open()
+//                                            }
+//                                        }
+//                                    }
+//                                ) {
+//                                    Icon(
+//                                        imageVector = Icons.Filled.Menu,
+//                                        contentDescription = null
+//                                    )
+//                                }
+//                            }
+//                        },
+//                        actions = {
+//                            IconButton(
+//                                onClick = {
+//
+//                                }
+//                            ) {
+//                                Icon(
+//                                    imageVector = Icons.Filled.MoreVert,
+//                                    contentDescription = null
+//                                )
+//                            }
+//                        },
+//                        colors = TopAppBarDefaults.topAppBarColors(),
+//                        scrollBehavior = scrollBehavior
+//                    )
                 }
             },
             bottomBar = {
@@ -436,44 +447,44 @@ fun ActivityMain(
                     NavigationBar(
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        items.forEach { item ->
-                            NavigationBarItem(
-                                selected = currentDestination?.hierarchy?.any {
-                                    it.route == item.route
-                                } == true,
-                                onClick = {
-                                    if (item.type == ScreenType.Compose) navController.navigate(
-                                        route = item.route
-                                    ) {
-                                        popUpTo(
-                                            id = navController.graph.findStartDestination().id
-                                        ) {
-                                            saveState = true
-                                        }
-                                        launchSingleTop = true
-                                        restoreState = true
-                                    }
-                                },
-                                icon = {
-                                    Icon(
-                                        imageVector = item.imageVector,
-                                        contentDescription = null
-                                    )
-                                },
-                                enabled = true,
-                                label = {
-                                    Text(
-                                        stringResource(
-                                            id = item.title
-                                        )
-                                    )
-                                },
-                                alwaysShowLabel = false
-                            )
-                        }
-//                        navBar(
-//                            modifier = Modifier.fillMaxWidth()
-//                        )
+//                        items.forEach { item ->
+//                            NavigationBarItem(
+//                                selected = currentDestination?.hierarchy?.any {
+//                                    it.route == item.route
+//                                } == true,
+//                                onClick = {
+//                                    if (item.type == ScreenType.Compose) navController.navigate(
+//                                        route = item.route
+//                                    ) {
+//                                        popUpTo(
+//                                            id = navController.graph.findStartDestination().id
+//                                        ) {
+//                                            saveState = true
+//                                        }
+//                                        launchSingleTop = true
+//                                        restoreState = true
+//                                    }
+//                                },
+//                                icon = {
+//                                    Icon(
+//                                        imageVector = item.imageVector,
+//                                        contentDescription = null
+//                                    )
+//                                },
+//                                enabled = true,
+//                                label = {
+//                                    Text(
+//                                        stringResource(
+//                                            id = item.title
+//                                        )
+//                                    )
+//                                },
+//                                alwaysShowLabel = false
+//                            )
+//                        }
+                        navBar(
+                            modifier = Modifier.fillMaxWidth()
+                        )
                     }
                 }
             },
@@ -648,8 +659,8 @@ fun ActivityMain(
 
     }
 
-    when (navigationType) {
-        NavigationType.PermanentNavigationDrawer -> PermanentNavigationDrawer(
+    if (navigationType == NavigationType.PermanentNavigationDrawer) {
+        PermanentNavigationDrawer(
             drawerContent = {
                 PermanentDrawerSheet {
                     nav()
@@ -659,8 +670,8 @@ fun ActivityMain(
         ) {
             content()
         }
-
-        NavigationType.NavigationRail -> ModalNavigationDrawer(
+    } else {
+        ModalNavigationDrawer(
             drawerContent = {
                 ModalDrawerSheet {
                     nav()
@@ -668,11 +679,9 @@ fun ActivityMain(
             },
             modifier = Modifier.fillMaxSize(),
             drawerState = drawerState,
-            gesturesEnabled = true
+            gesturesEnabled = false
         ) {
             content()
         }
-
-        NavigationType.BottomNavigation -> content()
     }
 }

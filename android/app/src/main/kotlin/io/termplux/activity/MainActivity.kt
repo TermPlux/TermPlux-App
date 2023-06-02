@@ -131,18 +131,13 @@ class MainActivity : BaseActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         super.onCreateOptionsMenu(menu)
-        menuInflater.inflate(R.menu.menu_main, menu)
+        newMainFragment.onCreateOptionsMenu(menu, menuInflater)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         super.onOptionsItemSelected(item)
-        when (item.itemId) {
-            android.R.id.home -> onBack()
-            R.id.action_settings -> {
-
-            }
-        }
+        newMainFragment.onOptionsItemSelected(item)
         return true
     }
 
@@ -202,32 +197,7 @@ class MainActivity : BaseActivity() {
 //    }
 
 
-//    private fun mediator(navigationType: NavigationType, home: () -> Unit) {
-//        MediatorUtils(
-//            bottomNavigation = mBottomNavigationView,
-//            tabLayout = mTabLayout,
-//            viewPager = mViewPager2,
-//            home = {
-//                home()
-//            }
-//        ) { page, tab, position ->
-//            page.apply {
-//                orientation = when (navigationType) {
-//                    NavigationType.BottomNavigation -> ViewPager2.ORIENTATION_HORIZONTAL
-//                    NavigationType.NavigationRail -> ViewPager2.ORIENTATION_VERTICAL
-//                    NavigationType.PermanentNavigationDrawer -> ViewPager2.ORIENTATION_VERTICAL
-//                }
-//                isUserInputEnabled = navigationType != NavigationType.NavigationRail
-//            }
-//            tab.apply {
-//                text = arrayOf(
-//                    getString(R.string.menu_launcher),
-//                    getString(R.string.menu_apps),
-//                    getString(R.string.menu_settings)
-//                )[position]
-//            }
-//        }.attach()
-//    }
+
 //
 //
 //    /**

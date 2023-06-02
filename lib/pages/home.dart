@@ -3,17 +3,13 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:termplux/widget/android_logo.dart';
-import 'package:termplux/widget/apple_logo.dart';
-import 'package:termplux/widget/chrome_logo.dart';
-import 'package:termplux/widget/platform_card.dart';
 
 import '../desktop/window_buttons.dart';
 import '../desktop/window_move.dart';
 import '../platform/platform.dart';
 import '../navigation/navigation.dart';
-import '../widget/linux_logo.dart';
-import '../widget/windows_logo.dart';
+import '../widget/image_logo.dart';
+import '../widget/platform_card.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -91,13 +87,20 @@ class _MyHomePageState extends State<MyHomePage> {
                   fit: BoxFit.cover,
                 ),
                 title: "Android",
+                subtitle: "支持平台：AidLux Termux UserLAnd LinuxDeploy",
                 icons: const [
                   Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
-                      child: AndroidSystemLogo()),
+                      child: ImageLogo(assets: 'assets/android.png')),
                   Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
                       child: FlutterLogo()),
+                  Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
+                      child: ImageLogo(assets: 'assets/compose.png')),
+                  Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
+                      child: ImageLogo(assets: 'assets/unity.png')),
                 ],
                 pressed: aaa,
               ),
@@ -106,11 +109,12 @@ class _MyHomePageState extends State<MyHomePage> {
                   image: AssetImage("assets/cover.jpg"),
                   fit: BoxFit.cover,
                 ),
-                title: "iOS",
+                title: "iOS (实验性)",
+                subtitle: "支持平台：iSH",
                 icons: const [
                   Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
-                      child: AppleSystemLogo()),
+                      child: ImageLogo(assets: 'assets/apple.png')),
                   Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
                       child: FlutterLogo()),
@@ -123,10 +127,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   fit: BoxFit.cover,
                 ),
                 title: "Windows",
+                subtitle: "支持平台：WSL",
                 icons: const [
                   Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
-                      child: WindowsSystemLogo()),
+                      child: ImageLogo(assets: 'assets/windows.png')),
                   Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
                       child: FlutterLogo()),
@@ -138,11 +143,12 @@ class _MyHomePageState extends State<MyHomePage> {
                   image: AssetImage("assets/cover.jpg"),
                   fit: BoxFit.cover,
                 ),
-                title: "macOS",
+                title: "macOS (实验性)",
+                subtitle: "暂无支持平台。",
                 icons: const [
                   Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
-                      child: AppleSystemLogo()),
+                      child: ImageLogo(assets: 'assets/apple.png')),
                   Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
                       child: FlutterLogo()),
@@ -155,10 +161,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   fit: BoxFit.cover,
                 ),
                 title: "Linux",
+                subtitle: "支持平台：自己本身。",
                 icons: const [
                   Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
-                      child: LinuxSystemLogo()),
+                      child: ImageLogo(assets: 'assets/linux.png')),
                   Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
                       child: FlutterLogo()),
@@ -175,11 +182,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 onTap: aaa,
                 child: const Card(
                   child: Column(
-                    children: [Text("Web"), ChromeBrowserLogo()],
+                    children: [Text("Web"), ImageLogo(assets: 'assets/chrome.png')],
                   ),
                 ),
               ),
-              const FlutterLogo(),
               TextButton(onPressed: aaa, child: const Text("PUSH")),
               TextButton(onPressed: toggle, child: const Text("TOGGLE")),
               Text(

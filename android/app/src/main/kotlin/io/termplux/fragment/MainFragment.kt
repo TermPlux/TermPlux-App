@@ -18,6 +18,9 @@ import android.os.IBinder
 import android.os.Looper
 import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewAnimationUtils
@@ -57,6 +60,9 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
+import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
@@ -69,7 +75,9 @@ import com.google.accompanist.adaptive.calculateDisplayFeatures
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.shape.MaterialShapeDrawable
+import com.google.android.material.tabs.TabLayout
 import com.idlefish.flutterboost.containers.FlutterBoostFragment
 import com.kongzue.dialogx.dialogs.PopTip
 import io.flutter.embedding.engine.FlutterEngine
@@ -85,11 +93,13 @@ import io.termplux.receiver.AppsReceiver
 import io.termplux.services.MainService
 import io.termplux.services.UserService
 import io.termplux.ui.ActivityMain
+import io.termplux.ui.navigation.Screen
 import io.termplux.ui.window.ContentType
 import io.termplux.ui.window.DevicePosture
 import io.termplux.ui.window.NavigationType
 import io.termplux.ui.window.isBookPosture
 import io.termplux.ui.window.isSeparating
+import io.termplux.utils.MediatorUtils
 import io.termplux.utils.PageTransformerUtils
 import kotlinx.coroutines.Runnable
 import rikka.shizuku.Shizuku
@@ -129,12 +139,14 @@ class MainFragment : FlutterBoostFragment(), Runnable {
     private lateinit var mRootView: View
     private lateinit var mAppBarLayout: AppBarLayout
     private lateinit var mMaterialToolbar: MaterialToolbar
+    private lateinit var mBottomNavigationView: BottomNavigationView
+    private lateinit var mTabLayout: TabLayout
     private lateinit var mViewPager2: ViewPager2
     private lateinit var mSplashLogo: AppCompatImageView
     private lateinit var mComposeView: ComposeView
     private lateinit var mRecyclerView: RecyclerView
 
-    private var action: Boolean by mutableStateOf(true)
+    private var mSystemUiVisible: Boolean by mutableStateOf(true)
 
     private val hideHandler = Handler(
         Looper.myLooper()!!
@@ -257,6 +269,13 @@ class MainFragment : FlutterBoostFragment(), Runnable {
                 mActivityContext
             )
         }
+
+        mBottomNavigationView = BottomNavigationView(mActivityContext).apply {
+            inflateMenu(R.menu.navigation)
+        }
+        mTabLayout = TabLayout(mActivityContext)
+
+
         ComposeView(mActivityContext).apply {
             setViewCompositionStrategy(
                 ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
@@ -390,7 +409,7 @@ class MainFragment : FlutterBoostFragment(), Runnable {
         // 操作栏
         val actionBar: ActionBar? = mActivityContext.supportActionBar
         actionBar?.setIcon(R.drawable.baseline_terminal_24)
-        actionBar?.setDisplayHomeAsUpEnabled(true)
+        //  actionBar?.setDisplayHomeAsUpEnabled(true)
 
 
         // 加载应用列表
@@ -417,7 +436,7 @@ class MainFragment : FlutterBoostFragment(), Runnable {
 
     override fun onResume() {
         super.onResume()
-        if (mVisible) delayedHide(100)
+        //if (mVisible) delayedHide(100)
     }
 
     override fun onDestroyView() {
@@ -435,6 +454,22 @@ class MainFragment : FlutterBoostFragment(), Runnable {
         // 解绑用户服务
         Shizuku.unbindUserService(mUserServiceArgs, mUserServiceConnection, true)
         mActivityContext.unbindService(mConnection)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.menu_main, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        super.onOptionsItemSelected(item)
+        when (item.itemId) {
+            android.R.id.home -> onBackPressed()
+            R.id.action_settings -> {
+                PopTip.show("666")
+            }
+        }
+        return true
     }
 
     private fun initServices() {
@@ -608,6 +643,44 @@ class MainFragment : FlutterBoostFragment(), Runnable {
         }
     }
 
+    private fun mediator(navController: NavHostController) {
+        MediatorUtils(
+            bottomNavigation = mBottomNavigationView,
+            tabLayout = mTabLayout,
+            viewPager = mViewPager2,
+            home = {
+                navController.navigate(
+                    route = Screen.Home.route
+                ) {
+                    popUpTo(
+                        id = navController.graph.findStartDestination().id
+                    ) {
+                        saveState = true
+                    }
+                    launchSingleTop = true
+                    restoreState = true
+                }
+            }
+        ) { page, tab, position ->
+            page.apply {
+//                orientation = when (navigationType) {
+//                    NavigationType.BottomNavigation -> ViewPager2.ORIENTATION_HORIZONTAL
+//                    NavigationType.NavigationRail -> ViewPager2.ORIENTATION_VERTICAL
+//                    NavigationType.PermanentNavigationDrawer -> ViewPager2.ORIENTATION_VERTICAL
+//                }
+//                isUserInputEnabled = navigationType != NavigationType.NavigationRail
+            }
+            tab.apply {
+                text = arrayOf(
+                    getString(R.string.menu_launcher),
+                    getString(R.string.menu_launcher),
+                    getString(R.string.menu_apps),
+                    getString(R.string.menu_settings)
+                )[position]
+            }
+        }.attach()
+    }
+
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     private fun setContent() {
         mComposeView.apply {
@@ -668,9 +741,7 @@ class MainFragment : FlutterBoostFragment(), Runnable {
                     else -> LightColorScheme
                 }
 //                adapter(navController = navController)
-//                mediator(navigationType = navigationType) {
-//
-//                }
+                mediator(navController = navController)
                 // 主机控件触摸事件
                 //touch(hostView = hostView)
                 // 绑定操作栏与导航抽屉
@@ -723,7 +794,12 @@ class MainFragment : FlutterBoostFragment(), Runnable {
                             )
                         },
                         navBar = {
-
+                            AndroidView(
+                                factory = {
+                                    mBottomNavigationView
+                                },
+                                modifier = it
+                            )
                         },
                         tabRow = {
 //                        AndroidView(

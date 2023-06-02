@@ -44,7 +44,7 @@ class MediatorUtils constructor(
             mNavToHome().apply {
                 if (mViewPager.currentItem != map[item]) {
                     mViewPager.currentItem = map[item]
-                        ?: error("没有${item.title}对应的Fragment")
+                        ?: error("没有${item.title}对应的View")
                 }
             }
             true
