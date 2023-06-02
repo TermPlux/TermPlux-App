@@ -2,10 +2,10 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_boost/flutter_boost.dart';
-import 'package:termplux/platform/platform.dart';
 import 'package:url_strategy/url_strategy.dart';
 
 import 'app/app.dart';
+import 'platform/platform.dart';
 import 'boost/binding.dart';
 import 'boost/observer.dart';
 
