@@ -21,15 +21,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
 
   static const channel = MethodChannel('termplux_channel');
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
 
   void navToPager() {
     if (!kIsWeb) {
@@ -46,14 +39,6 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     }
   }
-
-  // void navigation(String route) {
-  //   if (isUseBoost){
-  //     BoostNavigator.instance.push(route, withContainer: false);
-  //   } else {
-  //     Navigator.pushNamed(context, route);
-  //   }
-  // }
 
   void aaa() {
     navigation(context, '/');
@@ -162,63 +147,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: FlutterLogo()),
                 ],
                 pressed: aaa,
-              ),
-
-
-
-
-
-
-              GestureDetector(
-                onTap: aaa,
-                child: const Card(
-                  child: Column(
-                    children: [Text("Web"), ImageLogo(assets: 'icon/chrome.png')],
-                  ),
-                ),
-              ),
-              TextButton(onPressed: aaa, child: const Text("PUSH")),
-              TextButton(onPressed: toggle, child: const Text("TOGGLE")),
-              Text(
-                '$_counter',
-                style: Theme
-                    .of(context)
-                    .textTheme
-                    .headlineMedium,
-              ),
+              )
             ],
           ),
         ),
-      ),
-      // body: Scrollbar(
-      //   child: ListView(
-      //     padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
-      //     children: [
-      //
-      //     ],
-      //   ),
-      // ),
-      // body: LayoutBuilder(
-      //   builder: (BuildContext context, BoxConstraints viewportConstraints) {
-      //     return SingleChildScrollView(
-      //       child: ConstrainedBox(
-      //         constraints: BoxConstraints(
-      //             minHeight: viewportConstraints.maxHeight, minWidth: 50),
-      //         child: Column(
-      //           mainAxisSize: MainAxisSize.min,
-      //           crossAxisAlignment: CrossAxisAlignment.stretch,
-      //           children: <Widget>[
-      //
-      //           ],
-      //         ),
-      //       ),
-      //     );
-      //   },
-      // ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: '增加',
-        child: const Icon(Icons.add),
       ),
     );
   }
