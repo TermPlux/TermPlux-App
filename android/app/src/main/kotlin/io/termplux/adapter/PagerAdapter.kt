@@ -2,7 +2,6 @@ package io.termplux.adapter
 
 import android.graphics.Color
 import android.view.Gravity
-import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatTextView
@@ -15,22 +14,22 @@ import io.termplux.R
 import io.termplux.holder.PagerViewHolder
 
 class PagerAdapter constructor(
-    rootView: View?,
+    rootLayout: FrameLayout,
     composeView: ComposeView,
-    swipeRefreshLayout: SwipeRefreshLayout,
+    refreshLayout: SwipeRefreshLayout,
     viewPager: ViewPager2
 ) : RecyclerView.Adapter<PagerViewHolder>() {
 
-    private val mRootView: View?
+    private val mRootLayout: FrameLayout
     private val mComposeView: ComposeView
-    private val mSwipeRefreshLayout: SwipeRefreshLayout
+    private val mRefreshLayout: SwipeRefreshLayout
     private val mViewPager: ViewPager2
     private lateinit var mTextView: AppCompatTextView
 
     init {
-        mRootView = rootView
+        mRootLayout = rootLayout
         mComposeView = composeView
-        mSwipeRefreshLayout = swipeRefreshLayout
+        mRefreshLayout = refreshLayout
         mViewPager = viewPager
     }
 
@@ -60,24 +59,20 @@ class PagerAdapter constructor(
 
     override fun onBindViewHolder(holder: PagerViewHolder, position: Int) {
         (holder.itemView as FrameLayout).addView(
-            mRootView?.let { view ->
-                when (position) {
-                    root -> view
-                    compose -> mComposeView
-                    refresh -> mSwipeRefreshLayout
-                    settings -> mViewPager
-                    else -> mTextView
-                }.also {
-                    if (position != refresh) {
-                        holder.itemView.apply {
-                            background = ContextCompat.getDrawable(
-                                holder.itemView.context,
-                                R.color.pager_background
-                            )
-                        }
-                    }
+            when (position) {
+                root -> mRootLayout
+                compose -> mComposeView
+                refresh -> mRefreshLayout
+                settings -> mViewPager
+                else -> mTextView
+            }.also {
+                if (position != refresh) it.apply {
+                    background = ContextCompat.getDrawable(
+                        holder.itemView.context,
+                        R.color.pager_background
+                    )
                 }
-            } ?: mTextView,
+            },
             FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT,
                 FrameLayout.LayoutParams.MATCH_PARENT

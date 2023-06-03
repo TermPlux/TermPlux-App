@@ -285,9 +285,9 @@ class MainFragment : FlutterBoostFragment(), Runnable {
         }
 
         val pagerAdapter = PagerAdapter(
-            rootView = mRootLayout,
+            rootLayout = mRootLayout,
             composeView = ComposeView(mActivityContext),
-            swipeRefreshLayout = SwipeRefreshLayout(mActivityContext).apply {
+            refreshLayout = SwipeRefreshLayout(mActivityContext).apply {
                 addView(
                     RecyclerView(mActivityContext).apply {
                         layoutManager = GridLayoutManager(
@@ -454,22 +454,6 @@ class MainFragment : FlutterBoostFragment(), Runnable {
         // 解绑用户服务
         Shizuku.unbindUserService(mUserServiceArgs, mUserServiceConnection, true)
         mActivityContext.unbindService(mConnection)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.menu_main, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        super.onOptionsItemSelected(item)
-        when (item.itemId) {
-            android.R.id.home -> onBackPressed()
-            R.id.action_settings -> {
-                PopTip.show("666")
-            }
-        }
-        return true
     }
 
     private fun initServices() {

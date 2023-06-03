@@ -3,15 +3,11 @@ package io.termplux.activity
 import android.annotation.SuppressLint
 import android.content.*
 import android.graphics.Color
-import android.os.Build
 import android.view.*
-import android.window.OnBackInvokedCallback
-import android.window.OnBackInvokedDispatcher
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.FragmentManager
@@ -19,13 +15,13 @@ import androidx.fragment.app.commit
 import com.google.android.material.internal.EdgeToEdgeUtils
 import com.idlefish.flutterboost.containers.FlutterBoostFragment
 import com.kongzue.baseframework.BaseActivity
-import com.kongzue.baseframework.interfaces.LifeCircleListener
 import com.kongzue.baseframework.util.JumpParameter
+import com.kongzue.dialogx.dialogs.PopTip
 import io.flutter.embedding.android.RenderMode
 import io.flutter.embedding.android.TransparencyMode
 import io.termplux.R
 import io.termplux.fragment.MainFragment
-import io.termplux.utils.BackInvokedCallbackUtils
+import io.termplux.utils.LifeCircleUtils
 
 class MainActivity : BaseActivity() {
 
@@ -37,16 +33,10 @@ class MainActivity : BaseActivity() {
     private lateinit var mFragmentManager: FragmentManager
     private lateinit var newMainFragment: MainFragment
 
-    private lateinit var onBackInvokedCallback: OnBackInvokedCallback
-
     override fun resetContentView(): View {
         super.resetContentView()
         return FragmentContainerView(mContext).apply {
             id = R.id.flutter_container
-            background = ContextCompat.getDrawable(
-                mContext,
-                R.drawable.custom_wallpaper_24
-            )
         }
     }
 
@@ -98,46 +88,28 @@ class MainActivity : BaseActivity() {
     override fun setEvents() {
         // 生命周期监听
         setLifeCircleListener(
-            object : LifeCircleListener() {
-                override fun onCreate() {
-                    super.onCreate()
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        onBackInvokedCallback = BackInvokedCallbackUtils(
-                            baseActivity = mME,
-                            backEvent = {
-                                onBack()
-                            }
-                        ).also {
-                            onBackInvokedDispatcher.registerOnBackInvokedCallback(
-                                OnBackInvokedDispatcher.PRIORITY_DEFAULT,
-                                it
-                            )
-                        }
-                    }
-                }
-
-                override fun onDestroy() {
-                    super.onDestroy()
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        onBackInvokedCallback.let {
-                            onBackInvokedDispatcher.unregisterOnBackInvokedCallback(it)
-                        }
-                    }
-                    mainFragment = null
-                }
+            LifeCircleUtils(
+                baseActivity = mME
+            ) {
+                mainFragment = null
             }
         )
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         super.onCreateOptionsMenu(menu)
-        newMainFragment.onCreateOptionsMenu(menu, menuInflater)
+        menuInflater.inflate(R.menu.menu_main, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         super.onOptionsItemSelected(item)
-        newMainFragment.onOptionsItemSelected(item)
+        when (item.itemId) {
+            android.R.id.home -> onBack()
+            R.id.action_settings -> {
+                PopTip.show("666")
+            }
+        }
         return true
     }
 
@@ -184,28 +156,4 @@ class MainActivity : BaseActivity() {
     companion object {
         const val tagFlutterBoostFragment: String = "flutter_boost_fragment"
     }
-
-
-//    private fun fullScreenWebView(url: String) {
-//        FullScreenDialog.show(
-//            object : OnBindView<FullScreenDialog>(mWebView) {
-//                override fun onBind(dialog: FullScreenDialog?, v: View?) {
-//                    mWebView.loadUrl(url)
-//                }
-//            }
-//        )
-//    }
-
-
-
-//
-//
-//    /**
-//     * ViewPager2切换页面
-//     */
-//    private fun current(item: Int) {
-//        if (mViewPager2.currentItem != item) {
-//            mViewPager2.currentItem = item
-//        }
-//    }
 }

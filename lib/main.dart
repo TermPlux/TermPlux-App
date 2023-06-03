@@ -19,18 +19,21 @@ const Size initialSize = Size(1280, 720);
 const Size minSize = Size(600, 450);
 
 /// 应用入口函数
-void main() async {
+Future main() async {
+  // FlutterBoost
   if (kIsUseBoost) {
     PageVisibilityBinding.instance
         .addGlobalObserver(AppGlobalPageVisibilityObserver());
     CustomFlutterBinding();
   }
-  if (kIsWeb) {
-    // 在Web中隐藏井号
-    setPathUrlStrategy();
-  }
+
+  // 在Web中隐藏井号
+  if (kIsWeb) setPathUrlStrategy();
+
   // 启动应用
   runApp(const TermPluxApp());
+
+  // 窗口管理
   if (kIsDesktop) {
     doWhenWindowReady(() {
       appWindow.minSize = minSize;
