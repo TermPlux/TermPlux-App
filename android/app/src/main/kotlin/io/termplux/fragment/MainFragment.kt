@@ -191,7 +191,7 @@ class MainFragment : FlutterBoostFragment(), Runnable {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View = ComposeView(
+    ): ComposeView = ComposeView(
         context = context
     ).apply {
         setViewCompositionStrategy(
