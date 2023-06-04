@@ -195,7 +195,7 @@ class MainFragment : FlutterBoostFragment(), Runnable {
         context = context
     ).apply {
         setViewCompositionStrategy(
-            ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
+            strategy = ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
         )
     }.also { compose ->
         mComposeView = compose
