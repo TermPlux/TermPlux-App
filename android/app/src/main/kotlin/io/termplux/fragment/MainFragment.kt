@@ -10,7 +10,6 @@ import android.content.IntentFilter
 import android.content.ServiceConnection
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
-import android.graphics.Outline
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -18,20 +17,15 @@ import android.os.IBinder
 import android.os.Looper
 import android.view.Gravity
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewAnimationUtils
 import android.view.ViewGroup
-import android.view.ViewOutlineProvider
 import android.widget.FrameLayout
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
@@ -41,14 +35,12 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalView
@@ -60,7 +52,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
-import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -69,7 +60,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.viewpager2.widget.ViewPager2
-import androidx.window.layout.FoldingFeature
 import com.farmerbb.taskbar.lib.Taskbar
 import com.google.accompanist.adaptive.calculateDisplayFeatures
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -80,6 +70,7 @@ import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.tabs.TabLayout
 import com.idlefish.flutterboost.containers.FlutterBoostFragment
 import com.kongzue.dialogx.dialogs.PopTip
+import io.flutter.embedding.android.FlutterView
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import io.termplux.BuildConfig
@@ -94,16 +85,10 @@ import io.termplux.services.MainService
 import io.termplux.services.UserService
 import io.termplux.ui.ActivityMain
 import io.termplux.ui.navigation.Screen
-import io.termplux.ui.window.ContentType
-import io.termplux.ui.window.DevicePosture
-import io.termplux.ui.window.NavigationType
-import io.termplux.ui.window.isBookPosture
-import io.termplux.ui.window.isSeparating
 import io.termplux.utils.MediatorUtils
 import io.termplux.utils.PageTransformerUtils
 import kotlinx.coroutines.Runnable
 import rikka.shizuku.Shizuku
-import kotlin.math.abs
 import kotlin.math.hypot
 
 class MainFragment : FlutterBoostFragment(), Runnable {
@@ -112,7 +97,7 @@ class MainFragment : FlutterBoostFragment(), Runnable {
     private lateinit var channel: MethodChannel
 
     // 上下文
-    private lateinit var mActivityContext: AppCompatActivity
+    private lateinit var mActivity: AppCompatActivity
     private lateinit var mFragmentContext: FlutterBoostFragment
 
     // 首选项
@@ -135,8 +120,8 @@ class MainFragment : FlutterBoostFragment(), Runnable {
         }
 
     // 视图控件
-    private lateinit var mRootLayout: FrameLayout
-    private lateinit var mRootView: View
+   // private lateinit var mRootLayout: FrameLayout
+    private lateinit var mFlutterView: FlutterView
     private lateinit var mAppBarLayout: AppBarLayout
     private lateinit var mMaterialToolbar: MaterialToolbar
     private lateinit var mBottomNavigationView: BottomNavigationView
@@ -152,7 +137,7 @@ class MainFragment : FlutterBoostFragment(), Runnable {
         Looper.myLooper()!!
     )
     private val showPart2Runnable = Runnable {
-        mActivityContext.supportActionBar?.show()
+        mActivity.supportActionBar?.show()
     }
     private var mVisible: Boolean by mutableStateOf(false)
     private val hideRunnable = Runnable {
@@ -183,10 +168,10 @@ class MainFragment : FlutterBoostFragment(), Runnable {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // 获取上下文
-        mActivityContext = requireActivity() as AppCompatActivity
+        mActivity = activity as AppCompatActivity
         mFragmentContext = this@MainFragment
         // 获取首选项
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mActivityContext)
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
         // 获取动态颜色首选项
         isDynamicColor = mSharedPreferences.getBoolean(
             "dynamic_colors",
@@ -206,25 +191,78 @@ class MainFragment : FlutterBoostFragment(), Runnable {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        super.onCreateView(inflater, container, savedInstanceState)?.let { root ->
-            root.apply {
-                setOnTouchListener(delayHideTouchListener)
-                visibility = View.INVISIBLE
-                post(mFragmentContext as Runnable)
-            }.also { view ->
-                mRootView = view
-            }.also { view ->
-                FrameLayout(mActivityContext).apply {
+    ): View = ComposeView(
+        context = context
+    ).apply {
+        setViewCompositionStrategy(
+            ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
+        )
+    }.also { compose ->
+        mComposeView = compose
+    }.apply{
+
+
+        mAppBarLayout = AppBarLayout(
+            context
+        ).apply {
+            fitsSystemWindows = true
+            addView(
+                MaterialToolbar(
+                    context
+                ).also { toolbar ->
+                    mActivity.setSupportActionBar(toolbar)
+                    mMaterialToolbar = toolbar
+                },
+                AppBarLayout.LayoutParams(
+                    AppBarLayout.LayoutParams.MATCH_PARENT,
+                    AppBarLayout.LayoutParams.WRAP_CONTENT
+                )
+            )
+        }.also { appBar ->
+            appBar.isLiftOnScroll = true
+            appBar.statusBarForeground = MaterialShapeDrawable.createWithElevationOverlay(
+                context
+            )
+        }
+
+        mBottomNavigationView = BottomNavigationView(context).apply {
+            inflateMenu(R.menu.navigation)
+        }
+        mTabLayout = TabLayout(context)
+
+        ViewPager2(context).apply {
+            // 初始值为否，会在动画结束后恢复是，目的是防止动画加载过程中用户操作导致错误
+            isUserInputEnabled = false
+            // 设置方向为水平
+            orientation = ViewPager2.ORIENTATION_HORIZONTAL
+            // 设置切换动画
+            setPageTransformer(PageTransformerUtils())
+            // 设置适配器
+            adapter = PagerAdapter(
+                rootLayout = FrameLayout(context).apply {
                     addView(
-                        view,
+                        findFlutterView(
+                            view = super.onCreateView(
+                                inflater,
+                                container,
+                                savedInstanceState
+                            )
+                        )?.also {
+                            mFlutterView = it
+                            (it.parent as ViewGroup).removeView(it)
+                            it.apply {
+                                setOnTouchListener(delayHideTouchListener)
+                                visibility = View.INVISIBLE
+                                post(mFragmentContext as Runnable)
+                            }
+                        },
                         FrameLayout.LayoutParams(
                             FrameLayout.LayoutParams.MATCH_PARENT,
                             FrameLayout.LayoutParams.MATCH_PARENT
                         )
                     )
                     addView(
-                        AppCompatImageView(mActivityContext).apply {
+                        AppCompatImageView(context).apply {
                             setImageDrawable(
                                 ContextCompat.getDrawable(
                                     requireActivity(),
@@ -240,124 +278,49 @@ class MainFragment : FlutterBoostFragment(), Runnable {
                             Gravity.CENTER
                         )
                     )
-                }.also {
-                    mRootLayout = it
-                }
-            }
-        }
-
-
-        mAppBarLayout = AppBarLayout(
-            mActivityContext
-        ).apply {
-            fitsSystemWindows = true
-            addView(
-                MaterialToolbar(
-                    mActivityContext
-                ).also { toolbar ->
-                    mActivityContext.setSupportActionBar(toolbar)
-                    mMaterialToolbar = toolbar
                 },
-                AppBarLayout.LayoutParams(
-                    AppBarLayout.LayoutParams.MATCH_PARENT,
-                    AppBarLayout.LayoutParams.WRAP_CONTENT
-                )
-            )
-        }.also { appBar ->
-            appBar.isLiftOnScroll = true
-            appBar.statusBarForeground = MaterialShapeDrawable.createWithElevationOverlay(
-                mActivityContext
-            )
-        }
-
-        mBottomNavigationView = BottomNavigationView(mActivityContext).apply {
-            inflateMenu(R.menu.navigation)
-        }
-        mTabLayout = TabLayout(mActivityContext)
-
-
-        ComposeView(mActivityContext).apply {
-            setViewCompositionStrategy(
-                ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
-            )
-        }.also { compose ->
-            mComposeView = compose
-        }
-
-        val pagerAdapter = PagerAdapter(
-            rootLayout = mRootLayout,
-            composeView = ComposeView(mActivityContext),
-            refreshLayout = SwipeRefreshLayout(mActivityContext).apply {
-                addView(
-                    RecyclerView(mActivityContext).apply {
-                        layoutManager = GridLayoutManager(
-                            mActivityContext,
-                            4,
-                            RecyclerView.VERTICAL,
-                            false
+                composeView = ComposeView(context),
+                refreshLayout = SwipeRefreshLayout(context).apply {
+                    addView(
+                        RecyclerView(context).apply {
+                            layoutManager = GridLayoutManager(
+                                context,
+                                4,
+                                RecyclerView.VERTICAL,
+                                false
+                            )
+                        }.also { apps ->
+                            mRecyclerView = apps
+                        },
+                        ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT
                         )
-                    }.also { apps ->
-                        mRecyclerView = apps
-                    },
-                    ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT
                     )
-                )
-                setOnRefreshListener {
-                    // 执行下滑刷新事件
-                    PopTip.show("下拉刷新")
+                    setOnRefreshListener {
+                        // 执行下滑刷新事件
+                        PopTip.show("下拉刷新")
 
-                    isRefreshing = false
+                        isRefreshing = false
+                    }
+                },
+                viewPager = ViewPager2(context).apply {
+                    // 此页面仅展示设置，禁止用户滑动
+                    isUserInputEnabled = false
+                    // 设置方向为水平
+                    orientation = ViewPager2.ORIENTATION_HORIZONTAL
+                    // 设置适配器
+                    adapter = SettingsAdapter(
+                        mFragmentContext,
+                        settings = {}
+                    )
                 }
-            },
-            viewPager = ViewPager2(mActivityContext).apply {
-                // 此页面仅展示设置，禁止用户滑动
-                isUserInputEnabled = false
-                // 设置方向为水平
-                orientation = ViewPager2.ORIENTATION_HORIZONTAL
-                // 设置适配器
-                adapter = SettingsAdapter(
-                    mFragmentContext,
-                    settings = {}
-                )
-            }
-        )
-        ViewPager2(mActivityContext).apply {
-            // 初始值为否，会在动画结束后恢复是，目的是防止动画加载过程中用户操作导致错误
-            isUserInputEnabled = false
-            // 设置方向为水平
-            orientation = ViewPager2.ORIENTATION_HORIZONTAL
-            // 设置切换动画
-            setPageTransformer(PageTransformerUtils())
-            // 设置适配器
-            adapter = pagerAdapter
+            )
             // 预加载全部页面
             offscreenPageLimit = PagerAdapter.count
         }.also { pager ->
             mViewPager2 = pager
         }
-        return mComposeView
-//        // 返回根帧布局
-//        return FrameLayout(mActivityContext).apply {
-//            // 添加控件
-//            addView(
-//                mComposeView,
-//                FrameLayout.LayoutParams(
-//                    FrameLayout.LayoutParams.MATCH_PARENT,
-//                    FrameLayout.LayoutParams.MATCH_PARENT
-//                )
-//            )
-//            // 添加控件
-//            addView(
-//                mSplashLogo,
-//                FrameLayout.LayoutParams(
-//                    FrameLayout.LayoutParams.WRAP_CONTENT,
-//                    FrameLayout.LayoutParams.WRAP_CONTENT,
-//                    Gravity.CENTER
-//                )
-//            )
-//        }
     }
 
     override fun run() {
@@ -368,12 +331,12 @@ class MainFragment : FlutterBoostFragment(), Runnable {
             y = mSplashLogo.height.toFloat()
         )
         val endRadius = hypot(
-            x = mRootView.width.toFloat(),
-            y = mRootView.height.toFloat()
+            x = mFlutterView.width.toFloat(),
+            y = mFlutterView.height.toFloat()
         )
         val circularAnim = ViewAnimationUtils
             .createCircularReveal(
-                mRootView,
+                mFlutterView,
                 cx.toInt(),
                 cy.toInt(),
                 startRadius,
@@ -393,7 +356,7 @@ class MainFragment : FlutterBoostFragment(), Runnable {
                 mSplashLogo.visibility = View.GONE
             }
             .withStartAction {
-                mRootView.visibility = View.VISIBLE
+                mFlutterView.visibility = View.VISIBLE
                 // 动画结束时启用ViewPager2的用户操作
                 mViewPager2.isUserInputEnabled = true
                 circularAnim.start()
@@ -407,7 +370,7 @@ class MainFragment : FlutterBoostFragment(), Runnable {
         mVisible = true
 
         // 操作栏
-        val actionBar: ActionBar? = mActivityContext.supportActionBar
+        val actionBar: ActionBar? = mActivity.supportActionBar
         actionBar?.setIcon(R.drawable.baseline_terminal_24)
         //  actionBar?.setDisplayHomeAsUpEnabled(true)
 
@@ -427,7 +390,7 @@ class MainFragment : FlutterBoostFragment(), Runnable {
         }
 
         // 注册广播接收器
-        mActivityContext.registerReceiver(appReceiver, intentFilter)
+        mActivity.registerReceiver(appReceiver, intentFilter)
 
         setContent()
 
@@ -441,8 +404,8 @@ class MainFragment : FlutterBoostFragment(), Runnable {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        mActivityContext.unregisterReceiver(appReceiver)
-        mRootView.removeCallbacks(mFragmentContext as Runnable)
+        mActivity.unregisterReceiver(appReceiver)
+        mFlutterView.removeCallbacks(mFragmentContext as Runnable)
     }
 
     override fun onDestroy() {
@@ -453,13 +416,25 @@ class MainFragment : FlutterBoostFragment(), Runnable {
         Shizuku.removeRequestPermissionResultListener(requestPermissionResultListener)
         // 解绑用户服务
         Shizuku.unbindUserService(mUserServiceArgs, mUserServiceConnection, true)
-        mActivityContext.unbindService(mConnection)
+        mActivity.unbindService(mConnection)
+    }
+
+    private fun findFlutterView(view: View?): FlutterView? {
+        if (view is FlutterView) return view
+        if (view is ViewGroup) {
+            for (i in 0 until view.childCount) {
+                findFlutterView(view.getChildAt(i))?.let {
+                    return it
+                }
+            }
+        }
+        return null
     }
 
     private fun initServices() {
-        val intent = Intent(mActivityContext, MainService().javaClass)
-        mActivityContext.startService(intent)
-        mActivityContext.bindService(intent, mConnection, Context.BIND_AUTO_CREATE)
+        val intent = Intent(mActivity, MainService().javaClass)
+        mActivity.startService(intent)
+        mActivity.bindService(intent, mConnection, Context.BIND_AUTO_CREATE)
     }
 
     // 服务绑定的监听器
@@ -532,7 +507,7 @@ class MainFragment : FlutterBoostFragment(), Runnable {
 
     private fun hide() {
         mVisible = false
-        mActivityContext.supportActionBar?.hide()
+        mActivity.supportActionBar?.hide()
         hideHandler.removeCallbacks(showPart2Runnable)
     }
 
@@ -577,17 +552,17 @@ class MainFragment : FlutterBoostFragment(), Runnable {
     @SuppressLint("RestrictedApi")
     private fun optionsMenu() {
         if (mVisible) {
-            mActivityContext.supportActionBar?.openOptionsMenu()
+            mActivity.supportActionBar?.openOptionsMenu()
         } else {
             show()
-            mActivityContext.supportActionBar?.openOptionsMenu()
+            mActivity.supportActionBar?.openOptionsMenu()
         }
     }
 
     // 打开任务栏设置
     private fun taskbar() {
         Taskbar.openSettings(
-            mActivityContext,
+            context,
             getString(R.string.taskbar_title),
             R.style.Theme_TermPlux_ActionBar
         )
@@ -604,7 +579,7 @@ class MainFragment : FlutterBoostFragment(), Runnable {
         )
 
         // 获取启动器列表
-        for (resolveInfo in mActivityContext.packageManager.queryIntentActivities(
+        for (resolveInfo in context.packageManager.queryIntentActivities(
             Intent().setAction(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER),
             0
         )) {
@@ -715,9 +690,9 @@ class MainFragment : FlutterBoostFragment(), Runnable {
                 val colorScheme = when {
                     isDynamicColor -> {
                         if (darkTheme) dynamicDarkColorScheme(
-                            context = mActivityContext
+                            context = context
                         ) else dynamicLightColorScheme(
-                            context = mActivityContext
+                            context = context
                         )
                     }
 
