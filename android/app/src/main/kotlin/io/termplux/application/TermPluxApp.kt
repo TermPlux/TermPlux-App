@@ -22,6 +22,7 @@ import io.flutter.plugins.GeneratedPluginRegistrant
 import io.termplux.BuildConfig
 import io.termplux.custom.LinkNativeViewFactory
 import io.termplux.delegate.BoostDelegate
+import io.termplux.plugin.FlutterTermPluxPlugin
 import org.lsposed.hiddenapibypass.HiddenApiBypass
 import java.io.File
 
@@ -29,6 +30,8 @@ class TermPluxApp : BaseApp<TermPluxApp>() {
 
     /** 首选项 */
     private lateinit var mSharedPreferences: SharedPreferences
+
+    private val termplux = FlutterTermPluxPlugin()
 
     /**
      * 应用启动时执行
@@ -41,17 +44,16 @@ class TermPluxApp : BaseApp<TermPluxApp>() {
         FlutterBoost.instance().apply {
             setup(
                 me,
-                BoostDelegate {
-
-
-                }
-            ) { engine: FlutterEngine? ->
+                BoostDelegate(plugin = termplux)
+            ) { flutterEngine: FlutterEngine? ->
                 // 引擎操作
-                engine?.let {
-                    // 初始化插件
-                    GeneratedPluginRegistrant.registerWith(it)
+                flutterEngine?.let { engine ->
+                    engine.plugins.add(termplux).also {
+                        GeneratedPluginRegistrant.registerWith(engine)
+                    }
+
                     // 绑定原生控件
-                    val registry = it.platformViewsController.registry
+                    val registry = engine.platformViewsController.registry
                     registry.registerViewFactory("android_view", LinkNativeViewFactory())
                 }
             }
@@ -106,6 +108,8 @@ class TermPluxApp : BaseApp<TermPluxApp>() {
         // 初始化BaseFramework
         BaseFrameworkSettings.DEBUGMODE = BuildConfig.DEBUG
         BaseFrameworkSettings.BETA_PLAN = true
+
+        termplux.init(this@TermPluxApp)
 
         // 初始化DialogX
         DialogX.init(this@TermPluxApp)
