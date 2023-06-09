@@ -70,16 +70,19 @@ import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.tabs.TabLayout
 import com.idlefish.flutterboost.containers.FlutterBoostFragment
 import com.kongzue.dialogx.dialogs.PopTip
+import io.flutter.embedding.android.FlutterEngineConfigurator
 import io.flutter.embedding.android.FlutterView
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import io.termplux.BuildConfig
 import io.termplux.IUserService
 import io.termplux.R
+import io.termplux.activity.MainActivity
 import io.termplux.adapter.AppsAdapter
 import io.termplux.adapter.PagerAdapter
 import io.termplux.adapter.SettingsAdapter
 import io.termplux.model.AppsModel
+import io.termplux.plugin.TermPlux
 import io.termplux.receiver.AppsReceiver
 import io.termplux.services.MainService
 import io.termplux.services.UserService
@@ -89,6 +92,7 @@ import io.termplux.utils.MediatorUtils
 import io.termplux.utils.PageTransformerUtils
 import kotlinx.coroutines.Runnable
 import rikka.shizuku.Shizuku
+import java.lang.ref.WeakReference
 import kotlin.math.hypot
 
 class MainFragment : FlutterBoostFragment(), Runnable {
@@ -120,7 +124,7 @@ class MainFragment : FlutterBoostFragment(), Runnable {
         }
 
     // 视图控件
-   // private lateinit var mRootLayout: FrameLayout
+    // private lateinit var mRootLayout: FrameLayout
     private lateinit var mFlutterView: FlutterView
     private lateinit var mAppBarLayout: AppBarLayout
     private lateinit var mMaterialToolbar: MaterialToolbar
@@ -185,6 +189,8 @@ class MainFragment : FlutterBoostFragment(), Runnable {
         Shizuku.addBinderReceivedListenerSticky(binderReceivedListener)
         Shizuku.addBinderDeadListener(binderDeadListener)
         Shizuku.addRequestPermissionResultListener(requestPermissionResultListener)
+
+
     }
 
     override fun onCreateView(
@@ -199,7 +205,7 @@ class MainFragment : FlutterBoostFragment(), Runnable {
         )
     }.also { compose ->
         mComposeView = compose
-    }.apply{
+    }.apply {
 
 
         mAppBarLayout = AppBarLayout(
@@ -321,6 +327,24 @@ class MainFragment : FlutterBoostFragment(), Runnable {
         }.also { pager ->
             mViewPager2 = pager
         }
+
+
+        // 将Flutter回传到Activity
+        if (requireActivity() is TermPlux) {
+            (requireActivity() as TermPlux).apply {
+                inflateFlutterView(
+                    flutterView = findFlutterView(
+                        view = super.onCreateView(
+                            inflater,
+                            container,
+                            savedInstanceState
+                        )
+                    )
+                )
+            }
+        }
+
+
     }
 
     override fun run() {

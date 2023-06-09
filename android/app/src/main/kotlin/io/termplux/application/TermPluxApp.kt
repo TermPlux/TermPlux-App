@@ -8,7 +8,6 @@ import android.util.Log
 import androidx.preference.PreferenceManager
 import com.farmerbb.taskbar.lib.Taskbar
 import com.google.android.material.color.DynamicColors
-import com.idlefish.flutterboost.FlutterBoost
 import com.kongzue.baseframework.BaseApp
 import com.kongzue.baseframework.BaseFrameworkSettings
 import com.kongzue.baseframework.interfaces.OnBugReportListener
@@ -17,12 +16,7 @@ import com.kongzue.dialogx.DialogX
 import com.kongzue.dialogx.dialogs.MessageDialog
 import com.kongzue.dialogx.dialogs.PopTip
 import com.kongzue.dialogxmaterialyou.style.MaterialYouStyle
-import io.flutter.embedding.engine.FlutterEngine
-import io.flutter.plugins.GeneratedPluginRegistrant
 import io.termplux.BuildConfig
-import io.termplux.custom.LinkNativeViewFactory
-import io.termplux.delegate.BoostDelegate
-import io.termplux.plugin.FlutterTermPluxPlugin
 import org.lsposed.hiddenapibypass.HiddenApiBypass
 import java.io.File
 
@@ -30,8 +24,6 @@ class TermPluxApp : BaseApp<TermPluxApp>() {
 
     /** 首选项 */
     private lateinit var mSharedPreferences: SharedPreferences
-
-    private val termplux = FlutterTermPluxPlugin()
 
     /**
      * 应用启动时执行
@@ -41,24 +33,24 @@ class TermPluxApp : BaseApp<TermPluxApp>() {
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this@TermPluxApp)
 
         // 初始化FlutterBoost
-        FlutterBoost.instance().apply {
-            setup(
-                me,
-                BoostDelegate(plugin = termplux)
-            ) { flutterEngine: FlutterEngine? ->
-                // 引擎操作
-                flutterEngine?.let { engine ->
-                    engine.plugins.add(termplux).also {
-                        GeneratedPluginRegistrant.registerWith(engine)
-                    }
-
-                    // 绑定原生控件
-                    val registry = engine.platformViewsController.registry
-                    registry.registerViewFactory("android_view", LinkNativeViewFactory())
-                }
-            }
-
-        }
+//        FlutterBoost.instance().apply {
+//            setup(
+//                me,
+//                BoostDelegate(plugin = termplux)
+//            ) { flutterEngine: FlutterEngine? ->
+//                // 引擎操作
+//                flutterEngine?.let { engine ->
+//                    engine.plugins.add(termplux).also {
+//                        GeneratedPluginRegistrant.registerWith(engine)
+//                    }
+//
+//                    // 绑定原生控件
+//                    val registry = engine.platformViewsController.registry
+//                    registry.registerViewFactory("android_view", LinkNativeViewFactory())
+//                }
+//            }
+//
+//        }
 
         // 触发错误时调用
         setOnCrashListener(
@@ -108,8 +100,6 @@ class TermPluxApp : BaseApp<TermPluxApp>() {
         // 初始化BaseFramework
         BaseFrameworkSettings.DEBUGMODE = BuildConfig.DEBUG
         BaseFrameworkSettings.BETA_PLAN = true
-
-        termplux.init(this@TermPluxApp)
 
         // 初始化DialogX
         DialogX.init(this@TermPluxApp)

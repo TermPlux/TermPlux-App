@@ -5,23 +5,34 @@ import com.idlefish.flutterboost.FlutterBoostDelegate
 import com.idlefish.flutterboost.FlutterBoostRouteOptions
 import com.idlefish.flutterboost.containers.FlutterBoostActivity
 import io.flutter.embedding.android.FlutterActivityLaunchConfigs
+import io.flutter.embedding.engine.plugins.FlutterPlugin
+import io.termplux.activity.MainActivity
 import io.termplux.activity.MainFlutter
-import io.termplux.plugin.FlutterTermPluxPlugin
 import java.lang.ref.WeakReference
 
 class BoostDelegate constructor(
-    plugin: FlutterTermPluxPlugin
+    plugin: FlutterPlugin
 ) : FlutterBoostDelegate {
 
-    private val mPlugin: FlutterTermPluxPlugin
+    private val mNative: (FlutterBoostRouteOptions) -> Unit
 
     init {
-        mPlugin = plugin
+        when {
+            (plugin is MainActivity) -> {
+                mNative = {
+                    WeakReference(plugin).get()?.apply {
+                        pushNativeRoute(
+                            options = it
+                        )
+                    }
+                }
+            }
+
+            else -> notPlugin()
+        }
     }
 
-    override fun pushNativeRoute(options: FlutterBoostRouteOptions) {
-        WeakReference(mPlugin).get()?.pushNativeRoute(options = options)
-    }
+    override fun pushNativeRoute(options: FlutterBoostRouteOptions) = mNative(options)
 
     override fun pushFlutterRoute(options: FlutterBoostRouteOptions?) {
         val intent = FlutterBoostActivity.CachedEngineIntentBuilder(
@@ -34,5 +45,9 @@ class BoostDelegate constructor(
             .urlParams(options?.arguments())
             .build(FlutterBoost.instance().currentActivity())
         FlutterBoost.instance().currentActivity().startActivity(intent)
+    }
+
+    private fun notPlugin(): Nothing {
+        error("这tm不是MainActivity")
     }
 }

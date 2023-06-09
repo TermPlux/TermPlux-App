@@ -5,6 +5,7 @@ import android.view.View
 import androidx.compose.ui.platform.ComposeView
 import com.idlefish.flutterboost.FlutterBoostRouteOptions
 import io.flutter.embedding.android.FlutterFragment
+import io.flutter.embedding.android.FlutterView
 import io.flutter.embedding.engine.FlutterEngine
 
 interface TermPlux {
@@ -21,10 +22,12 @@ interface TermPlux {
      */
     fun configure(flutterEngine: FlutterEngine)
 
+    fun inflateFlutterView(flutterView: FlutterView?)
+
     /**
      * 程序加载并返回View
      */
-    fun attach(view: View?, flutterFragment: FlutterFragment): ComposeView
+   // fun attach(view: View?, flutterFragment: FlutterFragment): ComposeView
 
     /**
      * Flutter清理
