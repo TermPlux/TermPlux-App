@@ -4,7 +4,6 @@ import android.view.View
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
-import com.idlefish.flutterboost.containers.FlutterBoostFragment
 import com.kongzue.baseframework.BaseFragment
 import com.kongzue.baseframework.interfaces.LifeCircleListener
 import io.termplux.R

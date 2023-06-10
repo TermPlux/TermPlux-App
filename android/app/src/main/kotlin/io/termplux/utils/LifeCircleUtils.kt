@@ -10,17 +10,20 @@ import java.lang.ref.WeakReference
 
 class LifeCircleUtils constructor(
     baseActivity: BaseActivity,
-    observer: LifecycleObserver
+    create: () -> Unit,
+    destroy: () -> Unit
 ) : LifeCircleListener() {
 
     private val mActivity: WeakReference<BaseActivity>
-    private val mObserver: LifecycleObserver
+    private val mCreate: () -> Unit
+    private val mDestroy: () -> Unit
 
     private lateinit var onBackInvokedCallback: OnBackInvokedCallback
 
     init {
         mActivity = WeakReference(baseActivity)
-        mObserver = observer
+        mCreate = create
+        mDestroy = destroy
     }
 
     override fun onCreate() {
@@ -36,6 +39,7 @@ class LifeCircleUtils constructor(
                     )
                 }
             }
+            mCreate()
         }
     }
 
@@ -47,7 +51,7 @@ class LifeCircleUtils constructor(
                     onBackInvokedDispatcher.unregisterOnBackInvokedCallback(it)
                 }
             }
-            lifecycle.removeObserver(mObserver)
+            mDestroy()
         }
     }
 }
