@@ -30,7 +30,7 @@ class TermPluxApp : BaseApp<TermPluxApp>() {
      */
     override fun init() {
         // 加载首选项
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this@TermPluxApp)
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(me)
 
         // 触发错误时调用
         setOnCrashListener(
@@ -82,7 +82,7 @@ class TermPluxApp : BaseApp<TermPluxApp>() {
         BaseFrameworkSettings.BETA_PLAN = true
 
         // 初始化DialogX
-        DialogX.init(this@TermPluxApp)
+        DialogX.init(me)
         DialogX.globalStyle = MaterialYouStyle()
         DialogX.globalTheme = DialogX.THEME.AUTO
         DialogX.autoShowInputKeyboard = true
@@ -98,14 +98,11 @@ class TermPluxApp : BaseApp<TermPluxApp>() {
                 "dynamic_colors",
                 true
             ) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
-        ) DynamicColors.applyToActivitiesIfAvailable(
-            this@TermPluxApp
-        )
+        ) DynamicColors.applyToActivitiesIfAvailable(me)
 
         // 初始化任务栏
         Taskbar.setEnabled(
-            this@TermPluxApp,
-            mSharedPreferences.getBoolean(
+            me,mSharedPreferences.getBoolean(
                 "desktop",
                 true
             ) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q

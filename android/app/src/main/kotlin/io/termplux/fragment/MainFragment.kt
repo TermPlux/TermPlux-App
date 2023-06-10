@@ -47,9 +47,6 @@ import io.termplux.utils.MediatorUtils
 class MainFragment : FlutterBoostFragment() {
 
 
-
-
-
     private lateinit var mBottomNavigationView: BottomNavigationView
     private lateinit var mTabLayout: TabLayout
     private lateinit var mViewPager2: ViewPager2
