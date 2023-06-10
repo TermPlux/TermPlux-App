@@ -359,6 +359,7 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
 
         // 检查权限
         check()
+        mVisible = true
 
 
 
