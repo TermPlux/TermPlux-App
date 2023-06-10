@@ -3,23 +3,24 @@ package io.termplux.utils
 import android.os.Build
 import android.window.OnBackInvokedCallback
 import android.window.OnBackInvokedDispatcher
+import androidx.lifecycle.LifecycleObserver
 import com.kongzue.baseframework.BaseActivity
 import com.kongzue.baseframework.interfaces.LifeCircleListener
 import java.lang.ref.WeakReference
 
 class LifeCircleUtils constructor(
     baseActivity: BaseActivity,
-    destroy: () -> Unit
+    observer: LifecycleObserver
 ) : LifeCircleListener() {
 
     private val mActivity: WeakReference<BaseActivity>
-    private val mDestroy: () -> Unit
+    private val mObserver: LifecycleObserver
 
     private lateinit var onBackInvokedCallback: OnBackInvokedCallback
 
     init {
         mActivity = WeakReference(baseActivity)
-        mDestroy = destroy
+        mObserver = observer
     }
 
     override fun onCreate() {
@@ -46,7 +47,7 @@ class LifeCircleUtils constructor(
                     onBackInvokedDispatcher.unregisterOnBackInvokedCallback(it)
                 }
             }
+            lifecycle.removeObserver(mObserver)
         }
-        mDestroy()
     }
 }

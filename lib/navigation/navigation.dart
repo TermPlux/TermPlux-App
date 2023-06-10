@@ -5,7 +5,7 @@ import '../platform/platform.dart';
 
 void navigation(BuildContext context, String route) {
   if (kIsUseBoost) {
-    BoostNavigator.instance.push(route);
+    BoostNavigator.instance.push(route, withContainer: true);
   } else {
     Navigator.pushNamed(context, route);
   }

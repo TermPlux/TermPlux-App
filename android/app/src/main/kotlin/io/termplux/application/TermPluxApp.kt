@@ -32,26 +32,6 @@ class TermPluxApp : BaseApp<TermPluxApp>() {
         // 加载首选项
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this@TermPluxApp)
 
-        // 初始化FlutterBoost
-//        FlutterBoost.instance().apply {
-//            setup(
-//                me,
-//                BoostDelegate(plugin = termplux)
-//            ) { flutterEngine: FlutterEngine? ->
-//                // 引擎操作
-//                flutterEngine?.let { engine ->
-//                    engine.plugins.add(termplux).also {
-//                        GeneratedPluginRegistrant.registerWith(engine)
-//                    }
-//
-//                    // 绑定原生控件
-//                    val registry = engine.platformViewsController.registry
-//                    registry.registerViewFactory("android_view", LinkNativeViewFactory())
-//                }
-//            }
-//
-//        }
-
         // 触发错误时调用
         setOnCrashListener(
             object : OnBugReportListener() {

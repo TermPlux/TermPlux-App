@@ -1,27 +1,44 @@
 package io.termplux.activity
 
 import android.annotation.SuppressLint
-import android.app.Application
+import android.app.Activity
 import android.content.*
-import android.graphics.Color
+import android.os.Build
 import android.view.*
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
-import androidx.fragment.app.FragmentContainerView
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.commit
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import androidx.preference.PreferenceManager
 import com.google.android.material.internal.EdgeToEdgeUtils
 import com.idlefish.flutterboost.FlutterBoost
+import com.idlefish.flutterboost.FlutterBoostDelegate
 import com.idlefish.flutterboost.FlutterBoostRouteOptions
+import com.idlefish.flutterboost.containers.FlutterBoostActivity
 import com.idlefish.flutterboost.containers.FlutterBoostFragment
 import com.kongzue.baseframework.BaseActivity
+import com.kongzue.baseframework.interfaces.DarkNavigationBarTheme
+import com.kongzue.baseframework.interfaces.DarkStatusBarTheme
+import com.kongzue.baseframework.interfaces.FragmentLayout
+import com.kongzue.baseframework.interfaces.NavigationBarBackgroundColorRes
+import com.kongzue.baseframework.util.FragmentChangeUtil
 import com.kongzue.baseframework.util.JumpParameter
 import com.kongzue.dialogx.dialogs.PopTip
+import com.kongzue.dialogx.dialogs.WaitDialog
+import io.flutter.embedding.android.FlutterActivityLaunchConfigs
+import io.flutter.embedding.android.FlutterEngineConfigurator
 import io.flutter.embedding.android.FlutterView
 import io.flutter.embedding.android.RenderMode
 import io.flutter.embedding.android.TransparencyMode
@@ -33,114 +50,95 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugins.GeneratedPluginRegistrant
 import io.termplux.R
+import io.termplux.custom.DisableSwipeViewPager
 import io.termplux.custom.LinkNativeViewFactory
-import io.termplux.delegate.BoostDelegate
+import io.termplux.fragment.ContainerFragment
 import io.termplux.fragment.MainFragment
-import io.termplux.plugin.TermPlux
+import io.termplux.utils.FlutterViewReturn
 import io.termplux.utils.LifeCircleUtils
 import java.lang.ref.WeakReference
 
-class MainActivity : BaseActivity(), FlutterPlugin, MethodCallHandler, TermPlux,
-    DefaultLifecycleObserver, Runnable {
+@SuppressLint(value = ["NonConstantResourceId"])
+@DarkStatusBarTheme(value = true)
+@DarkNavigationBarTheme(value = true)
+@NavigationBarBackgroundColorRes(value = R.color.transparent)
+@FragmentLayout(value = R.id.fragment_container)
+class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, FlutterViewReturn,
+    MethodCallHandler, FlutterEngineConfigurator, DefaultLifecycleObserver, Runnable {
 
     private val mME: BaseActivity = me
     private val mContext: Context = mME
 
-    private var mainFragment: MainFragment? = null
+    private lateinit var mSharedPreferences: SharedPreferences
 
-    private lateinit var mFragmentManager: FragmentManager
-    private lateinit var newMainFragment: MainFragment
+    private lateinit var mMainFragment: MainFragment
 
     private lateinit var mFlutterView: FlutterView
 
-    override fun resetContentView(): View {
-        super.resetContentView()
-        return FragmentContainerView(mContext).apply {
-            id = R.id.flutter_container
-        }
+    override fun resetContentView(): DisableSwipeViewPager = DisableSwipeViewPager(
+        context = mContext
+    ).apply {
+        id = R.id.fragment_container
     }
 
     @SuppressLint("RestrictedApi")
     override fun initViews() {
-        WeakReference(application).get()?.let { application ->
+        WaitDialog.show("正在加载...")
+        WeakReference(application).get()?.let { context ->
             // 初始化FlutterBoost
             FlutterBoost.instance().setup(
-                application,
-                BoostDelegate(plugin = this@MainActivity)
+                context,
+                this@MainActivity
             ) { engine: FlutterEngine? ->
-                engine?.plugins?.add(this@MainActivity)?.also {
+                engine?.plugins?.add(this@MainActivity)?.let {
                     GeneratedPluginRegistrant.registerWith(engine)
+                    val registry = engine.platformViewsController.registry
+                    registry.registerViewFactory("android_view", LinkNativeViewFactory())
                 }.also {
                     FlutterBoostFragment.CachedEngineFragmentBuilder(
                         MainFragment::class.java
-                    ).destroyEngineWithFragment(false)
+                    )
+                        .destroyEngineWithFragment(false)
                         .renderMode(RenderMode.surface)
                         .transparencyMode(TransparencyMode.opaque)
                         .shouldAttachEngineToActivity(true)
                         .build<MainFragment>()?.also {
-                            newMainFragment = it
+                            mMainFragment = it
                         }
-                }
-
-
-                // 引擎操作
-                engine?.let {
-                    val registry = it.platformViewsController.registry
-                    registry.registerViewFactory("android_view", LinkNativeViewFactory())
                 }
             }
         }
-
-
-
-
-
-        lifecycle.addObserver(this@MainActivity)
-
-
-        // 片段管理器
-        mFragmentManager = supportFragmentManager
-        // 初始化片段
-        mainFragment = mFragmentManager.findFragmentByTag(
-            tagFlutterBoostFragment
-        ) as MainFragment?
+        // 首选项
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext)
         // 启用边到边
         EdgeToEdgeUtils.applyEdgeToEdge(window, true)
         // 深色模式跟随系统
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         // 设置页面布局边界
         WindowCompat.setDecorFitsSystemWindows(window, false)
-        setDarkStatusBarTheme(true)
-        setDarkNavigationBarTheme(true)
-        setNavigationBarBackgroundColor(Color.TRANSPARENT)
+    }
+
+    override fun initFragment(fragmentChangeUtil: FragmentChangeUtil?) {
+        super.initFragment(fragmentChangeUtil)
+        fragmentChangeUtil?.addFragment(
+            ContainerFragment.newInstance(
+                mainFragment = mMainFragment
+            ),
+            true
+        )
     }
 
     override fun initDatas(parameter: JumpParameter?) {
 
-        // 显示Fragment
-        if (mainFragment == null) {
-            mFragmentManager.commit(
-                allowStateLoss = false,
-                body = {
-                    mainFragment = newMainFragment
-                    add(
-                        R.id.flutter_container,
-                        newMainFragment,
-                        tagFlutterBoostFragment
-                    )
-                }
-            )
-        }
     }
 
     override fun setEvents() {
         // 生命周期监听
         setLifeCircleListener(
             LifeCircleUtils(
-                baseActivity = mME
-            ) {
-                mainFragment = null
-            }
+                baseActivity = mME,
+                observer = this@MainActivity
+            )
         )
     }
 
@@ -163,17 +161,17 @@ class MainActivity : BaseActivity(), FlutterPlugin, MethodCallHandler, TermPlux,
 
     override fun onPostResume() {
         super.onPostResume()
-        newMainFragment.onPostResume()
+        mMainFragment.onPostResume()
     }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        newMainFragment.onNewIntent(intent)
+        mMainFragment.onNewIntent(intent)
     }
 
     override fun onBack(): Boolean {
         super.onBack()
-        newMainFragment.onBackPressed()
+        mMainFragment.onBackPressed()
         return true
     }
 
@@ -183,7 +181,7 @@ class MainActivity : BaseActivity(), FlutterPlugin, MethodCallHandler, TermPlux,
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        newMainFragment.onRequestPermissionsResult(
+        mMainFragment.onRequestPermissionsResult(
             requestCode,
             permissions,
             grantResults
@@ -192,17 +190,30 @@ class MainActivity : BaseActivity(), FlutterPlugin, MethodCallHandler, TermPlux,
 
     override fun onUserLeaveHint() {
         super.onUserLeaveHint()
-        newMainFragment.onUserLeaveHint()
+        mMainFragment.onUserLeaveHint()
     }
 
     @SuppressLint("MissingSuperCall")
     override fun onTrimMemory(level: Int) {
         super.onTrimMemory(level)
-        newMainFragment.onTrimMemory(level)
+        mMainFragment.onTrimMemory(level)
     }
 
-    companion object {
-        const val tagFlutterBoostFragment: String = "flutter_boost_fragment"
+    override fun pushNativeRoute(options: FlutterBoostRouteOptions?) {
+
+    }
+
+    override fun pushFlutterRoute(options: FlutterBoostRouteOptions?) {
+        val intent = FlutterBoostActivity.CachedEngineIntentBuilder(
+            MainFlutter::class.java
+        )
+            .backgroundMode(FlutterActivityLaunchConfigs.BackgroundMode.transparent)
+            .destroyEngineWithActivity(false)
+            .uniqueId(options?.uniqueId())
+            .url(options?.pageName())
+            .urlParams(options?.arguments())
+            .build(FlutterBoost.instance().currentActivity())
+        FlutterBoost.instance().currentActivity().startActivity(intent)
     }
 
     override fun onAttachedToEngine(binding: FlutterPluginBinding) {
@@ -213,46 +224,55 @@ class MainActivity : BaseActivity(), FlutterPlugin, MethodCallHandler, TermPlux,
 
     }
 
+    override fun returnFlutterView(flutterView: FlutterView?) {
+        // 获取FlutterView
+        mFlutterView = flutterView ?: errorFlutterViewIsNull()
+        // 移除FlutterView
+        (mFlutterView.parent as ViewGroup).removeView(mFlutterView)
+        // 执行生命周期函数
+        lifecycle.addObserver(this@MainActivity)
+    }
+
     override fun onMethodCall(call: MethodCall, result: Result) {
 
     }
 
-    override fun init(application: Application) {
+    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
 
     }
 
-    override fun pushNativeRoute(options: FlutterBoostRouteOptions) {
-
-    }
-
-    override fun configure(flutterEngine: FlutterEngine) {
-
-    }
-
-    override fun inflateFlutterView(flutterView: FlutterView?) {
-        mFlutterView = flutterView ?: errorFlutterViewIsNull()
-        (mFlutterView.parent as ViewGroup).removeView(mFlutterView)
-        setContentView(mFlutterView)
-    }
-
-//    override fun attach(view: View?, flutterFragment: FlutterFragment): ComposeView {
-//        TODO("Not yet implemented")
-//    }
-
-    override fun clean(flutterEngine: FlutterEngine) {
-
-    }
-
-    override fun run() {
+    override fun cleanUpFlutterEngine(flutterEngine: FlutterEngine) {
 
     }
 
     override fun onCreate(owner: LifecycleOwner) {
         super<DefaultLifecycleObserver>.onCreate(owner)
+//        setContent {
+//            TermPluxTheme {
+//                Scaffold(
+//                    modifier = Modifier.fillMaxSize(),
+//                    topBar = {}
+//                ) { innerPadding: PaddingValues ->
+//                    Surface(
+//                        modifier = Modifier
+//                            .fillMaxSize()
+//                            .padding(paddingValues = innerPadding),
+//                        color = MaterialTheme.colorScheme.background
+//                    ) {
+//                        AndroidView(
+//                            factory = { mFlutterView },
+//                            modifier = Modifier.fillMaxSize()
+//                        )
+//                    }
+//                }
+//            }
+//        }
     }
 
     override fun onStart(owner: LifecycleOwner) {
         super<DefaultLifecycleObserver>.onStart(owner)
+
+        WaitDialog.dismiss()
     }
 
     override fun onResume(owner: LifecycleOwner) {
@@ -272,9 +292,79 @@ class MainActivity : BaseActivity(), FlutterPlugin, MethodCallHandler, TermPlux,
     }
 
 
+    override fun run() {
+
+    }
+
+
     private fun errorFlutterViewIsNull(): Nothing {
         error("操你妈的这逼FlutterView是空的啊啊啊啊啊")
     }
 
+    companion object {
 
+        private val Purple80 = Color(0xFFD0BCFF)
+        private val PurpleGrey80 = Color(0xFFCCC2DC)
+        private val Pink80 = Color(0xFFEFB8C8)
+
+        private val Purple40 = Color(0xFF6650a4)
+        private val PurpleGrey40 = Color(0xFF625b71)
+        private val Pink40 = Color(0xFF7D5260)
+
+        private val Typography = Typography(
+            bodyLarge = TextStyle(
+                fontFamily = FontFamily.Default,
+                fontWeight = FontWeight.Normal,
+                fontSize = 16.sp,
+                lineHeight = 24.sp,
+                letterSpacing = 0.5.sp
+            )
+        )
+
+        private val DarkColorScheme = darkColorScheme(
+            primary = Purple80,
+            secondary = PurpleGrey80,
+            tertiary = Pink80
+        )
+
+        private val LightColorScheme = lightColorScheme(
+            primary = Purple40,
+            secondary = PurpleGrey40,
+            tertiary = Pink40
+        )
+
+        @Composable
+        fun TermPluxTheme(
+            darkTheme: Boolean = isSystemInDarkTheme(),
+            dynamicColor: Boolean = true,
+            content: @Composable () -> Unit
+        ) {
+            val colorScheme = when {
+                dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+                    val context = LocalContext.current
+                    if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(
+                        context
+                    )
+                }
+
+                darkTheme -> DarkColorScheme
+                else -> LightColorScheme
+            }
+            val view = LocalView.current
+            if (!view.isInEditMode) {
+                SideEffect {
+                    val window = (view.context as Activity).window
+                    window.statusBarColor = colorScheme.primary.toArgb()
+                    WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars =
+                        darkTheme
+                }
+            }
+
+            MaterialTheme(
+                colorScheme = colorScheme,
+                typography = Typography,
+                content = content
+            )
+        }
+    }
 }

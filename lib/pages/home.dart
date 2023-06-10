@@ -134,7 +134,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               PlatformCard(
                 cover: const Image(
-                  image: AssetImage("cover/termplux.jpg"),
+                  image: AssetImage("assets/cover.jpg"),
                   fit: BoxFit.cover,
                 ),
                 title: "Linux (实验性)",

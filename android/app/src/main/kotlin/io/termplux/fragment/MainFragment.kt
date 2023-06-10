@@ -70,19 +70,17 @@ import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.tabs.TabLayout
 import com.idlefish.flutterboost.containers.FlutterBoostFragment
 import com.kongzue.dialogx.dialogs.PopTip
-import io.flutter.embedding.android.FlutterEngineConfigurator
 import io.flutter.embedding.android.FlutterView
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import io.termplux.BuildConfig
 import io.termplux.IUserService
 import io.termplux.R
-import io.termplux.activity.MainActivity
 import io.termplux.adapter.AppsAdapter
 import io.termplux.adapter.PagerAdapter
 import io.termplux.adapter.SettingsAdapter
 import io.termplux.model.AppsModel
-import io.termplux.plugin.TermPlux
+import io.termplux.utils.FlutterViewReturn
 import io.termplux.receiver.AppsReceiver
 import io.termplux.services.MainService
 import io.termplux.services.UserService
@@ -92,7 +90,6 @@ import io.termplux.utils.MediatorUtils
 import io.termplux.utils.PageTransformerUtils
 import kotlinx.coroutines.Runnable
 import rikka.shizuku.Shizuku
-import java.lang.ref.WeakReference
 import kotlin.math.hypot
 
 class MainFragment : FlutterBoostFragment(), Runnable {
@@ -328,11 +325,10 @@ class MainFragment : FlutterBoostFragment(), Runnable {
             mViewPager2 = pager
         }
 
-
         // 将Flutter回传到Activity
-        if (requireActivity() is TermPlux) {
-            (requireActivity() as TermPlux).apply {
-                inflateFlutterView(
+        if (requireActivity() is FlutterViewReturn) {
+            (requireActivity() as FlutterViewReturn).apply {
+                returnFlutterView(
                     flutterView = findFlutterView(
                         view = super.onCreateView(
                             inflater,
@@ -516,7 +512,7 @@ class MainFragment : FlutterBoostFragment(), Runnable {
             }
         } catch (e: Exception) {
             if (e.javaClass == IllegalStateException().javaClass) {
-                PopTip.show("Shizuku未激活")
+//                PopTip.show("Shizuku未激活")
             }
         }
     }
