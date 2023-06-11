@@ -1,5 +1,6 @@
 package io.termplux.ui
 
+import android.view.View
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -17,10 +18,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -55,7 +58,6 @@ fun ActivityMain(
     drawerState: DrawerState,
     windowSize: WindowSizeClass,
     displayFeatures: List<DisplayFeature>,
-    visible: Boolean,
     topBar: @Composable (modifier: Modifier) -> Unit,
     pager: @Composable (modifier: Modifier) -> Unit,
     navBar: @Composable (modifier: Modifier) -> Unit,
@@ -384,59 +386,71 @@ fun ActivityMain(
             modifier = Modifier.fillMaxSize(),
             topBar = {
                 AnimatedVisibility(
-                    visible = visible
+                    visible = true
                 ) {
-                    TopAppBar(
-                        title = {
-                            Text(
-                                text = stringResource(
-                                    id = R.string.app_name
-                                )
-                            )
-                        },
-                        modifier = Modifier.fillMaxWidth(),
-                        navigationIcon = {
-                            AnimatedVisibility(
-                                visible = navigationType != NavigationType.PermanentNavigationDrawer
-                            ) {
-                                IconButton(
-                                    onClick = {
-                                        if (
-                                            navigationType != NavigationType.PermanentNavigationDrawer
-                                        ) {
-                                            scope.launch {
-                                                drawerState.open()
-                                            }
-                                        }
-                                    }
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Filled.Menu,
-                                        contentDescription = null
-                                    )
-                                }
-                            }
-                        },
-                        actions = {
-                            IconButton(
-                                onClick = {
-
-                                }
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.MoreVert,
-                                    contentDescription = null
-                                )
-                            }
-                        },
-                        colors = TopAppBarDefaults.topAppBarColors(),
-                        scrollBehavior = scrollBehavior
-                    )
+                    Column(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Spacer(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .statusBarsPadding()
+                        )
+                        topBar(
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+//                    TopAppBar(
+//                        title = {
+//                            Text(
+//                                text = stringResource(
+//                                    id = R.string.app_name
+//                                )
+//                            )
+//                        },
+//                        modifier = Modifier.fillMaxWidth(),
+//                        navigationIcon = {
+//                            AnimatedVisibility(
+//                                visible = navigationType != NavigationType.PermanentNavigationDrawer
+//                            ) {
+//                                IconButton(
+//                                    onClick = {
+//                                        if (
+//                                            navigationType != NavigationType.PermanentNavigationDrawer
+//                                        ) {
+//                                            scope.launch {
+//                                                drawerState.open()
+//                                            }
+//                                        }
+//                                    }
+//                                ) {
+//                                    Icon(
+//                                        imageVector = Icons.Filled.Menu,
+//                                        contentDescription = null
+//                                    )
+//                                }
+//                            }
+//                        },
+//                        actions = {
+//                            IconButton(
+//                                onClick = {
+//
+//                                }
+//                            ) {
+//                                Icon(
+//                                    imageVector = Icons.Filled.MoreVert,
+//                                    contentDescription = null
+//                                )
+//                            }
+//                        },
+//                        colors = TopAppBarDefaults.topAppBarColors(),
+//                        scrollBehavior = scrollBehavior
+//                    )
                 }
             },
             bottomBar = {
                 AnimatedVisibility(
-                    visible = (navigationType == NavigationType.BottomNavigation) && visible
+                    visible = (navigationType == NavigationType.BottomNavigation)
                 ) {
                     NavigationBar(
                         modifier = Modifier.fillMaxWidth()
@@ -655,32 +669,28 @@ fun ActivityMain(
 
 
     when (navigationType) {
-        NavigationType.PermanentNavigationDrawer -> {
-            PermanentNavigationDrawer(
-                drawerContent = {
-                    PermanentDrawerSheet {
-                        nav()
-                    }
-                },
-                modifier = Modifier.fillMaxSize()
-            ) {
-                content()
-            }
+        NavigationType.PermanentNavigationDrawer -> PermanentNavigationDrawer(
+            drawerContent = {
+                PermanentDrawerSheet {
+                    nav()
+                }
+            },
+            modifier = Modifier.fillMaxSize()
+        ) {
+            content()
         }
 
-        NavigationType.BottomNavigation, NavigationType.NavigationRail -> {
-            ModalNavigationDrawer(
-                drawerContent = {
-                    ModalDrawerSheet {
-                        nav()
-                    }
-                },
-                modifier = Modifier.fillMaxSize(),
-                drawerState = drawerState,
-                gesturesEnabled = visible
-            ) {
-                content()
-            }
+        else -> ModalNavigationDrawer(
+            drawerContent = {
+                ModalDrawerSheet {
+                    nav()
+                }
+            },
+            modifier = Modifier.fillMaxSize(),
+            drawerState = drawerState,
+            gesturesEnabled = true
+        ) {
+            content()
         }
     }
 

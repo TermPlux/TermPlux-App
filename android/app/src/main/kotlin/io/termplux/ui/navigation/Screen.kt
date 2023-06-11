@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.RocketLaunch
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.twotone.AppSettingsAlt
 import androidx.compose.material.icons.twotone.Dashboard
+import androidx.compose.material.icons.twotone.FlutterDash
 import androidx.compose.material.icons.twotone.Home
 import androidx.compose.material.icons.twotone.Info
 import androidx.compose.material.icons.twotone.Settings
@@ -36,7 +37,7 @@ sealed class Screen constructor(
         type = ScreenType.Compose,
         item = ItemType.Default,
         route = ScreenRoute.routeHome,
-        imageVector = Icons.TwoTone.Home,
+        imageVector = Icons.TwoTone.FlutterDash,
         title = R.string.menu_home
     )
 

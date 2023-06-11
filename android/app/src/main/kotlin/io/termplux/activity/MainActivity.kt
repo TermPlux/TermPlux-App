@@ -10,6 +10,7 @@ import android.os.Looper
 import android.view.*
 import android.widget.FrameLayout
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.AppCompatImageView
@@ -119,7 +120,7 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
     private lateinit var appReceiver: AppsReceiver
 
     // true is show, false is hide
-    private var systemUiVisible: Boolean by mutableStateOf(value = true)
+    //  private var systemUiVisible: Boolean by mutableStateOf(value = true)
 
     private var isDynamicColor: Boolean by mutableStateOf(value = true)
 
@@ -128,8 +129,8 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
     }
 
     private val showPart2Runnable = Runnable {
-        //supportActionBar?.show()
-        systemUiVisible = true
+        supportActionBar?.show()
+        //systemUiVisible = true
     }
     private var mVisible: Boolean = false
 
@@ -344,7 +345,11 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
     }
 
     override fun onRequestPermissionResult(requestCode: Int, grantResult: Int) {
-        onRequestPermissionsResults(requestCode, grantResult)
+        if (
+            grantResult == PackageManager.PERMISSION_GRANTED
+        ) {
+
+        }
     }
 
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
@@ -387,9 +392,8 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
 
         val actionBar: ActionBar? = supportActionBar
         actionBar?.setIcon(R.drawable.baseline_terminal_24)
-//        actionBar?.setSubtitle(R.string.app_description)
 
-        setContent {
+        if (false) setContentView(mRootLayout) else setContent {
             channel.setMethodCallHandler { call, res ->
                 when (call.method) {
                     "pager" -> {
@@ -424,7 +428,6 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
                     drawerState = drawerState,
                     windowSize = windowSize,
                     displayFeatures = displayFeatures,
-                    visible = systemUiVisible,
                     topBar = {
                         AndroidView(
                             factory = {
@@ -601,8 +604,8 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
     }
 
     private fun hide() {
-       // supportActionBar?.hide()
-        systemUiVisible = false
+        supportActionBar?.hide()
+        // systemUiVisible = false
         mVisible = false
         mHandler?.removeCallbacks(showPart2Runnable)
     }
@@ -644,15 +647,6 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
         .processNameSuffix("service")
         .debuggable(BuildConfig.DEBUG)
         .version(BuildConfig.VERSION_CODE)
-
-
-    private fun onRequestPermissionsResults(requestCode: Int, grantResult: Int) {
-        if (
-            grantResult == PackageManager.PERMISSION_GRANTED
-        ) {
-
-        }
-    }
 
     private fun check() {
         try {
@@ -716,7 +710,6 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
         return ""
     }
 
-    @SuppressLint("RestrictedApi")
     private fun optionsMenu() {
         if (mVisible) mMaterialToolbar.showOverflowMenu() else {
             show()
@@ -744,9 +737,14 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
         )
 
         // 获取启动器列表
-        for (resolveInfo in packageManager.queryIntentActivities(
+        for (resolveInfo in if (
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+        ) packageManager.queryIntentActivities(
             Intent().setAction(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER),
-            0
+            PackageManager.ResolveInfoFlags.of(PackageManager.MATCH_ALL.toLong())
+        ) else packageManager.queryIntentActivities(
+            Intent().setAction(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER),
+            PackageManager.MATCH_ALL
         )) {
             val pkg = resolveInfo.activityInfo.packageName
             if (pkg != BuildConfig.APPLICATION_ID) {
