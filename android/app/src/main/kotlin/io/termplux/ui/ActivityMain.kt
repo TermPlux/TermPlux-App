@@ -1,6 +1,7 @@
 package io.termplux.ui
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -13,7 +14,10 @@ import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -51,6 +55,7 @@ fun ActivityMain(
     drawerState: DrawerState,
     windowSize: WindowSizeClass,
     displayFeatures: List<DisplayFeature>,
+    visible: Boolean,
     topBar: @Composable (modifier: Modifier) -> Unit,
     pager: @Composable (modifier: Modifier) -> Unit,
     navBar: @Composable (modifier: Modifier) -> Unit,
@@ -379,112 +384,101 @@ fun ActivityMain(
             modifier = Modifier.fillMaxSize(),
             topBar = {
                 AnimatedVisibility(
-                    visible = true
+                    visible = visible
                 ) {
-                    Column(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Spacer(
-                            modifier = Modifier.statusBarsPadding()
-                        )
-                        topBar(
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    }
+                    TopAppBar(
+                        title = {
+                            Text(
+                                text = stringResource(
+                                    id = R.string.app_name
+                                )
+                            )
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        navigationIcon = {
+                            AnimatedVisibility(
+                                visible = navigationType != NavigationType.PermanentNavigationDrawer
+                            ) {
+                                IconButton(
+                                    onClick = {
+                                        if (
+                                            navigationType != NavigationType.PermanentNavigationDrawer
+                                        ) {
+                                            scope.launch {
+                                                drawerState.open()
+                                            }
+                                        }
+                                    }
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Menu,
+                                        contentDescription = null
+                                    )
+                                }
+                            }
+                        },
+                        actions = {
+                            IconButton(
+                                onClick = {
 
-//                    TopAppBar(
-//                        title = {
-//                            Text(
-//                                text = stringResource(
-//                                    id = R.string.app_name
-//                                )
-//                            )
-//                        },
-//                        modifier = Modifier.fillMaxWidth(),
-//                        navigationIcon = {
-//                            AnimatedVisibility(
-//                                visible = navigationType == NavigationType.NavigationRail
-//                            ) {
-//                                IconButton(
-//                                    onClick = {
-//                                        if (
-//                                            navigationType != NavigationType.PermanentNavigationDrawer
-//                                        ) {
-//                                            scope.launch {
-//                                                drawerState.open()
-//                                            }
-//                                        }
-//                                    }
-//                                ) {
-//                                    Icon(
-//                                        imageVector = Icons.Filled.Menu,
-//                                        contentDescription = null
-//                                    )
-//                                }
-//                            }
-//                        },
-//                        actions = {
-//                            IconButton(
-//                                onClick = {
-//
-//                                }
-//                            ) {
-//                                Icon(
-//                                    imageVector = Icons.Filled.MoreVert,
-//                                    contentDescription = null
-//                                )
-//                            }
-//                        },
-//                        colors = TopAppBarDefaults.topAppBarColors(),
-//                        scrollBehavior = scrollBehavior
-//                    )
+                                }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.MoreVert,
+                                    contentDescription = null
+                                )
+                            }
+                        },
+                        colors = TopAppBarDefaults.topAppBarColors(),
+                        scrollBehavior = scrollBehavior
+                    )
                 }
             },
             bottomBar = {
                 AnimatedVisibility(
-                    visible = navigationType == NavigationType.BottomNavigation
+                    visible = (navigationType == NavigationType.BottomNavigation) && visible
                 ) {
                     NavigationBar(
                         modifier = Modifier.fillMaxWidth()
                     ) {
-//                        items.forEach { item ->
-//                            NavigationBarItem(
-//                                selected = currentDestination?.hierarchy?.any {
-//                                    it.route == item.route
-//                                } == true,
-//                                onClick = {
-//                                    if (item.type == ScreenType.Compose) navController.navigate(
-//                                        route = item.route
-//                                    ) {
-//                                        popUpTo(
-//                                            id = navController.graph.findStartDestination().id
-//                                        ) {
-//                                            saveState = true
-//                                        }
-//                                        launchSingleTop = true
-//                                        restoreState = true
-//                                    }
-//                                },
-//                                icon = {
-//                                    Icon(
-//                                        imageVector = item.imageVector,
-//                                        contentDescription = null
-//                                    )
-//                                },
-//                                enabled = true,
-//                                label = {
-//                                    Text(
-//                                        stringResource(
-//                                            id = item.title
-//                                        )
-//                                    )
-//                                },
-//                                alwaysShowLabel = false
-//                            )
-//                        }
-                        navBar(
-                            modifier = Modifier.fillMaxWidth()
-                        )
+                        items.forEach { item ->
+                            NavigationBarItem(
+                                selected = currentDestination?.hierarchy?.any {
+                                    it.route == item.route
+                                } == true,
+                                onClick = {
+                                    if (item.type == ScreenType.Compose) navController.navigate(
+                                        route = item.route
+                                    ) {
+                                        popUpTo(
+                                            id = navController.graph.findStartDestination().id
+                                        ) {
+                                            saveState = true
+                                        }
+                                        launchSingleTop = true
+                                        restoreState = true
+                                    }
+                                },
+                                icon = {
+                                    Icon(
+                                        imageVector = item.imageVector,
+                                        contentDescription = null
+                                    )
+                                },
+                                enabled = true,
+                                label = {
+                                    Text(
+                                        stringResource(
+                                            id = item.title
+                                        )
+                                    )
+                                },
+                                alwaysShowLabel = false
+                            )
+                        }
+//                        navBar(
+//                            modifier = Modifier.fillMaxWidth()
+//                        )
                     }
                 }
             },
@@ -592,7 +586,7 @@ fun ActivityMain(
                         route = Screen.Home.route
                     ) {
                         ScreenHome(
-                            pager = pager
+                            rootLayout = pager
                         )
                     }
                     composable(
@@ -659,29 +653,61 @@ fun ActivityMain(
 
     }
 
-    if (navigationType == NavigationType.PermanentNavigationDrawer) {
-        PermanentNavigationDrawer(
-            drawerContent = {
-                PermanentDrawerSheet {
-                    nav()
-                }
-            },
-            modifier = Modifier.fillMaxSize()
-        ) {
-            content()
+
+    when (navigationType) {
+        NavigationType.PermanentNavigationDrawer -> {
+            PermanentNavigationDrawer(
+                drawerContent = {
+                    PermanentDrawerSheet {
+                        nav()
+                    }
+                },
+                modifier = Modifier.fillMaxSize()
+            ) {
+                content()
+            }
         }
-    } else {
-        ModalNavigationDrawer(
-            drawerContent = {
-                ModalDrawerSheet {
-                    nav()
-                }
-            },
-            modifier = Modifier.fillMaxSize(),
-            drawerState = drawerState,
-            gesturesEnabled = false
-        ) {
-            content()
+
+        NavigationType.BottomNavigation, NavigationType.NavigationRail -> {
+            ModalNavigationDrawer(
+                drawerContent = {
+                    ModalDrawerSheet {
+                        nav()
+                    }
+                },
+                modifier = Modifier.fillMaxSize(),
+                drawerState = drawerState,
+                gesturesEnabled = visible
+            ) {
+                content()
+            }
         }
     }
+
+//
+//    if (navigationType == NavigationType.PermanentNavigationDrawer) {
+//        PermanentNavigationDrawer(
+//            drawerContent = {
+//                PermanentDrawerSheet {
+//                    nav()
+//                }
+//            },
+//            modifier = Modifier.fillMaxSize()
+//        ) {
+//            content()
+//        }
+//    } else {
+//        ModalNavigationDrawer(
+//            drawerContent = {
+//                ModalDrawerSheet {
+//                    nav()
+//                }
+//            },
+//            modifier = Modifier.fillMaxSize(),
+//            drawerState = drawerState,
+//            gesturesEnabled = visible
+//        ) {
+//            content()
+//        }
+//    }
 }

@@ -1,7 +1,6 @@
 package io.termplux.activity
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.*
 import android.content.pm.PackageManager
 import android.os.Build
@@ -9,16 +8,19 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.view.*
+import android.widget.FrameLayout
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.TextStyle
@@ -26,13 +28,17 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import androidx.navigation.compose.rememberNavController
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.farmerbb.taskbar.lib.Taskbar
+import com.google.accompanist.adaptive.calculateDisplayFeatures
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.internal.EdgeToEdgeUtils
@@ -50,7 +56,6 @@ import com.kongzue.baseframework.interfaces.NavigationBarBackgroundColorRes
 import com.kongzue.baseframework.util.FragmentChangeUtil
 import com.kongzue.baseframework.util.JumpParameter
 import com.kongzue.dialogx.dialogs.PopTip
-import com.kongzue.dialogx.dialogs.WaitDialog
 import io.flutter.embedding.android.FlutterActivityLaunchConfigs
 import io.flutter.embedding.android.FlutterEngineConfigurator
 import io.flutter.embedding.android.FlutterView
@@ -65,15 +70,15 @@ import io.termplux.BuildConfig
 import io.termplux.IUserService
 import io.termplux.R
 import io.termplux.adapter.AppsAdapter
-import io.termplux.adapter.PagerAdapter
 import io.termplux.custom.DisableSwipeViewPager
 import io.termplux.custom.LinkNativeViewFactory
 import io.termplux.fragment.ContainerFragment
-import io.termplux.fragment.MainFragment
+import io.termplux.fragment.FlutterFragment
 import io.termplux.model.AppsModel
 import io.termplux.receiver.AppsReceiver
 import io.termplux.services.MainService
 import io.termplux.services.UserService
+import io.termplux.ui.ActivityMain
 import io.termplux.utils.FlutterViewReturn
 import io.termplux.utils.LifeCircleUtils
 import rikka.shizuku.Shizuku
@@ -102,17 +107,19 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
     private lateinit var userServices: IUserService
 
 
+    private lateinit var mMainFragment: FlutterFragment
 
-    private lateinit var mMainFragment: MainFragment
-
+    private lateinit var mRootLayout: FrameLayout
     private lateinit var mSplashLogo: AppCompatImageView
     private lateinit var mFlutterView: FlutterView
     private lateinit var mAppBarLayout: AppBarLayout
     private lateinit var mMaterialToolbar: MaterialToolbar
     private lateinit var mRecyclerView: RecyclerView
 
-    private lateinit var appReceiver: BroadcastReceiver
-    private lateinit var intentFilter: IntentFilter
+    private lateinit var appReceiver: AppsReceiver
+
+    // true is show, false is hide
+    private var systemUiVisible: Boolean by mutableStateOf(value = true)
 
     private var isDynamicColor: Boolean by mutableStateOf(value = true)
 
@@ -121,7 +128,8 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
     }
 
     private val showPart2Runnable = Runnable {
-        supportActionBar?.show()
+        //supportActionBar?.show()
+        systemUiVisible = true
     }
     private var mVisible: Boolean = false
 
@@ -138,7 +146,6 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
     }
 
 
-
     override fun resetContentView(): DisableSwipeViewPager = DisableSwipeViewPager(
         context = mContext
     ).apply {
@@ -147,7 +154,6 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
 
     @SuppressLint("RestrictedApi")
     override fun initViews() {
-        WaitDialog.show("正在加载...")
         WeakReference(application).get()?.let { context ->
             // 初始化FlutterBoost
             FlutterBoost.instance().setup(
@@ -160,20 +166,19 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
                     registry.registerViewFactory("android_view", LinkNativeViewFactory())
                 }.also {
                     FlutterBoostFragment.CachedEngineFragmentBuilder(
-                        MainFragment::class.java
+                        FlutterFragment::class.java
                     )
                         .destroyEngineWithFragment(false)
                         .renderMode(RenderMode.surface)
                         .transparencyMode(TransparencyMode.opaque)
                         .shouldAttachEngineToActivity(true)
-                        .build<MainFragment>()?.also {
+                        .build<FlutterFragment>()?.also {
                             mMainFragment = it
                         }
                 }
             }
         }
-        // 首选项
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext)
+
         // 启用边到边
         EdgeToEdgeUtils.applyEdgeToEdge(window, true)
         // 深色模式跟随系统
@@ -181,14 +186,6 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
         // 设置页面布局边界
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        // 获取动态颜色首选项
-        isDynamicColor = mSharedPreferences.getBoolean(
-            "dynamic_colors",
-            true
-        ) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
-
-        // 初始化用户服务
-        initServices()
     }
 
     override fun initFragment(fragmentChangeUtil: FragmentChangeUtil?) {
@@ -215,6 +212,8 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
                     Shizuku.addBinderReceivedListenerSticky(this@MainActivity)
                     Shizuku.addBinderDeadListener(this@MainActivity)
                     Shizuku.addRequestPermissionResultListener(this@MainActivity)
+                    // 初始化用户服务
+                    initServices()
                 },
                 destroy = {
                     // 注销监听
@@ -348,73 +347,47 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
         onRequestPermissionsResults(requestCode, grantResult)
     }
 
+    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(owner: LifecycleOwner) {
         super<DefaultLifecycleObserver>.onCreate(owner)
+        // 更新操作栏状态
+        mVisible = true
+        // 首选项
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext)
+        // 获取动态颜色首选项
+        isDynamicColor = mSharedPreferences.getBoolean(
+            "dynamic_colors",
+            true
+        ) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
 
-        mFlutterView.apply {
-            setOnTouchListener(delayHideTouchListener)
-          //  visibility = View.INVISIBLE
-          //  post(this@MainActivity)
-        }
 
         // 检查权限
         check()
-        mVisible = true
+        // 初始化UI控件
+        initUiView()
 
-
-
-        AppBarLayout(
-            mContext
-        ).apply {
-            fitsSystemWindows = true
-            addView(
-                MaterialToolbar(
-                    context
-                ).also { toolbar ->
-                    setSupportActionBar(toolbar)
-                    mMaterialToolbar = toolbar
-                },
-                AppBarLayout.LayoutParams(
-                    AppBarLayout.LayoutParams.MATCH_PARENT,
-                    AppBarLayout.LayoutParams.WRAP_CONTENT
-                )
-            )
-        }.also { appBar ->
-            mAppBarLayout = appBar
-            appBar.isLiftOnScroll = true
-            appBar.statusBarForeground = MaterialShapeDrawable.createWithElevationOverlay(
-                mContext
-            )
-        }
-
-        RecyclerView(mContext).apply {
-            layoutManager = GridLayoutManager(
-                context,
-                4,
-                RecyclerView.VERTICAL,
-                false
-            )
-        }.also { apps ->
-            mRecyclerView = apps
-        }
 
         // 加载应用列表
         loadApp()
-        // 意图过滤器
-        intentFilter = IntentFilter().apply {
-            addAction(Intent.ACTION_PACKAGE_ADDED)
-            addAction(Intent.ACTION_PACKAGE_REMOVED)
-            addDataScheme("package")
-        }
-
         // 用于刷新应用列表的广播接收器
-        appReceiver = AppsReceiver {
+        AppsReceiver {
             loadApp()
+        }.also {
+            // 注册广播接收器
+            registerReceiver(
+                it,
+                IntentFilter().apply {
+                    addAction(Intent.ACTION_PACKAGE_ADDED)
+                    addAction(Intent.ACTION_PACKAGE_REMOVED)
+                    addDataScheme("package")
+                }
+            )
+            appReceiver = it
         }
 
-        // 注册广播接收器
-        registerReceiver(appReceiver, intentFilter)
-
+        val actionBar: ActionBar? = supportActionBar
+        actionBar?.setIcon(R.drawable.baseline_terminal_24)
+//        actionBar?.setSubtitle(R.string.app_description)
 
         setContent {
             channel.setMethodCallHandler { call, res ->
@@ -425,44 +398,68 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
 
                     }
 
-                    //  "dynamic_colors" -> res.success(isDynamicColor)
-                    // "toggle" -> toggle()
+                    "dynamic_colors" -> res.success(isDynamicColor)
+                    "toggle" -> toggle()
 
                     else -> {
                         res.error("error", "error_message", null)
                     }
                 }
             }
+            val navController = rememberNavController()
+            val scope = rememberCoroutineScope()
+            val drawerState = rememberDrawerState(
+                initialValue = DrawerValue.Closed
+            )
+            val windowSize = calculateWindowSizeClass(
+                activity = mME
+            )
+            val displayFeatures = calculateDisplayFeatures(
+                activity = mME
+            )
 
             TermPluxTheme(dynamicColor = isDynamicColor) {
-                Scaffold(
-                    modifier = Modifier.fillMaxSize(),
+                ActivityMain(
+                    navController = navController,
+                    drawerState = drawerState,
+                    windowSize = windowSize,
+                    displayFeatures = displayFeatures,
+                    visible = systemUiVisible,
                     topBar = {
-                        AndroidView(factory = {
-                            mAppBarLayout
-                        },
-                        modifier = Modifier.fillMaxWidth())
-                    }
-                ) { innerPadding: PaddingValues ->
-                    Surface(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(paddingValues = innerPadding),
-                        color = MaterialTheme.colorScheme.background
-                    ) {
                         AndroidView(
-                            factory = { mFlutterView },
+                            factory = {
+                                mAppBarLayout
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    },
+                    pager = {
+                        AndroidView(
+                            factory = {
+                                mRootLayout
+                            },
                             modifier = Modifier.fillMaxSize()
                         )
+                    },
+                    navBar = {},
+                    tabRow = {},
+                    optionsMenu = {
+                        optionsMenu()
+                    },
+                    androidVersion = getAndroidVersion(),
+                    shizukuVersion = getShizukuVersion(),
+                    current = {},
+                    toggle = {
+                        toggle()
                     }
-                }
+                )
+
             }
         }
     }
 
     override fun onStart(owner: LifecycleOwner) {
         super<DefaultLifecycleObserver>.onStart(owner)
-        WaitDialog.dismiss()
     }
 
     override fun onResume(owner: LifecycleOwner) {
@@ -523,6 +520,78 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
             .start()
     }
 
+    private fun initUiView() {
+        AppBarLayout(
+            mContext
+        ).apply {
+            fitsSystemWindows = true
+            addView(
+                MaterialToolbar(
+                    context
+                ).also { toolbar ->
+                    setSupportActionBar(toolbar)
+                    mMaterialToolbar = toolbar
+                },
+                AppBarLayout.LayoutParams(
+                    AppBarLayout.LayoutParams.MATCH_PARENT,
+                    AppBarLayout.LayoutParams.WRAP_CONTENT
+                )
+            )
+        }.also { appBar ->
+            mAppBarLayout = appBar
+            appBar.isLiftOnScroll = true
+            appBar.statusBarForeground = MaterialShapeDrawable.createWithElevationOverlay(
+                mContext
+            )
+        }
+
+        FrameLayout(
+            mContext
+        ).apply {
+            addView(
+                mFlutterView.apply {
+                    setOnTouchListener(delayHideTouchListener)
+                    visibility = View.INVISIBLE
+                    post(this@MainActivity)
+                },
+                FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT,
+                    FrameLayout.LayoutParams.MATCH_PARENT
+                )
+            )
+            addView(
+                AppCompatImageView(context).apply {
+                    setImageDrawable(
+                        ContextCompat.getDrawable(
+                            mContext,
+                            R.drawable.custom_termplux_24
+                        )
+                    )
+                }.also { logo ->
+                    mSplashLogo = logo
+                },
+                FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                    Gravity.CENTER
+                )
+            )
+        }.also { root ->
+            mRootLayout = root
+        }
+
+        RecyclerView(mContext).apply {
+            layoutManager = GridLayoutManager(
+                context,
+                4,
+                RecyclerView.VERTICAL,
+                false
+            )
+        }.also { apps ->
+            mRecyclerView = apps
+        }
+    }
+
     private fun toggle() {
         if (mVisible) {
             hide()
@@ -532,7 +601,8 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
     }
 
     private fun hide() {
-        supportActionBar?.hide()
+       // supportActionBar?.hide()
+        systemUiVisible = false
         mVisible = false
         mHandler?.removeCallbacks(showPart2Runnable)
     }
@@ -648,11 +718,9 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
 
     @SuppressLint("RestrictedApi")
     private fun optionsMenu() {
-        if (mVisible) {
-            supportActionBar?.openOptionsMenu()
-        } else {
+        if (mVisible) mMaterialToolbar.showOverflowMenu() else {
             show()
-            supportActionBar?.openOptionsMenu()
+            mMaterialToolbar.hideOverflowMenu()
         }
     }
 
@@ -703,12 +771,13 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
     companion object {
 
         const val channelName: String = "termplux_channel"
+
         /** 开屏图标动画时长 */
         const val splashPart1AnimatorMillis = 600
         const val splashPart2AnimatorMillis = 800
 
         /** 操作栏是否应该在[autoHideDelayMillis]毫秒后自动隐藏。*/
-        const val autoHide = true
+        const val autoHide = false
 
         /** 如果设置了[autoHide]，则在用户交互后隐藏操作栏之前等待的毫秒数。*/
         const val autoHideDelayMillis = 3000
@@ -752,8 +821,13 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
             dynamicColor: Boolean,
             content: @Composable () -> Unit
         ) {
+            val view = LocalView.current
+            val window = (view.context as BaseActivity).window
+            val systemUiController = rememberSystemUiController()
+
+
             val colorScheme = when {
-                dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+                dynamicColor -> {
                     val context = LocalContext.current
                     if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(
                         context
@@ -763,13 +837,17 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
                 darkTheme -> DarkColorScheme
                 else -> LightColorScheme
             }
-            val view = LocalView.current
+
             if (!view.isInEditMode) {
                 SideEffect {
-                    val window = (view.context as Activity).window
-                    window.statusBarColor = colorScheme.primary.toArgb()
-                    WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars =
-                        darkTheme
+                    systemUiController.setSystemBarsColor(
+                        color = Color.Transparent,
+                        darkIcons = !darkTheme
+                    )
+                    WindowCompat.getInsetsController(
+                        window,
+                        view
+                    ).isAppearanceLightStatusBars = !darkTheme
                 }
             }
 

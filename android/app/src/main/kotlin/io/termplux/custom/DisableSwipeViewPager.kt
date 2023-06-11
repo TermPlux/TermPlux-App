@@ -26,13 +26,6 @@ class DisableSwipeViewPager : ViewPager {
 
     private var canSwipe = false
 
-    init {
-        background = ContextCompat.getDrawable(
-            context,
-            R.drawable.custom_wallpaper_24
-        )
-    }
-
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(ev: MotionEvent): Boolean {
         return canSwipe && super.onTouchEvent(ev)

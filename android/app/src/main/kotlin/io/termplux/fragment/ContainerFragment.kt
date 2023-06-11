@@ -10,12 +10,12 @@ import io.termplux.R
 import io.termplux.activity.MainActivity
 
 class ContainerFragment constructor(
-    mainFragment: MainFragment
+    mainFragment: FlutterFragment
 ) : BaseFragment<MainActivity>() {
 
     private lateinit var mFragmentManager: FragmentManager
-    private var flutterFragment: MainFragment? = null
-    private val mMainFragment: MainFragment
+    private var flutterFragment: FlutterFragment? = null
+    private val mMainFragment: FlutterFragment
 
     init {
         mMainFragment = mainFragment
@@ -32,7 +32,7 @@ class ContainerFragment constructor(
         mFragmentManager = childFragmentManager
         flutterFragment = mFragmentManager.findFragmentByTag(
             tagFlutterFragment
-        ) as MainFragment?
+        ) as FlutterFragment?
     }
 
     override fun initDatas() {
@@ -66,7 +66,7 @@ class ContainerFragment constructor(
         private const val tagFlutterFragment = "flutter_boost_fragment"
 
         fun newInstance(
-            mainFragment: MainFragment
+            mainFragment: FlutterFragment
         ): ContainerFragment {
             return ContainerFragment(
                 mainFragment = mainFragment

@@ -51,8 +51,8 @@ class _MyHomePageState extends State<MyHomePage> {
         title: const Text('请选择目标平台'),
         flexibleSpace: WindowTitleBar(enable: kIsDesktop),
         actions: [
-          IconButton(
-              onPressed: navToPager, icon: const Icon(Icons.arrow_forward)),
+          IconButton(onPressed: toggle, icon: const Icon(Icons.fullscreen)),
+          IconButton(onPressed: navToPager, icon: const Icon(Icons.arrow_forward)),
           IconButton(onPressed: navToPager, icon: const Icon(Icons.more_vert)),
           WindowButtons(enable: kIsDesktop)
         ],
@@ -147,7 +147,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: FlutterLogo()),
                 ],
                 pressed: aaa,
-              )
+              ),
             ],
           ),
         ),

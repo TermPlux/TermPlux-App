@@ -40,6 +40,14 @@ sealed class Screen constructor(
         title = R.string.menu_home
     )
 
+    object Overview: Screen(
+        type = ScreenType.Compose,
+        item = ItemType.Default,
+        route = "",
+        imageVector = Icons.TwoTone.Home,
+        title = R.string.app_name
+    )
+
     object Dashboard : Screen(
         type = ScreenType.Compose,
         item = ItemType.Default,
