@@ -119,9 +119,6 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
 
     private lateinit var appReceiver: AppsReceiver
 
-    // true is show, false is hide
-    //  private var systemUiVisible: Boolean by mutableStateOf(value = true)
-
     private var isDynamicColor: Boolean by mutableStateOf(value = true)
 
     private val mHandler = Looper.myLooper()?.let {

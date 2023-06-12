@@ -180,7 +180,7 @@
         <entry key="flutter_boost">
           <value>
             <list>
-              <option value="$USER_HOME$/AppData/Local/Pub/Cache/git/flutter_boost-2e65cd6ebccd727c89d1a134175d724e5005a414//lib" />
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/git/flutter_boost-b4bb39f6a09c1cbd1f4e46dd6c1504555866b9ba//lib" />
             </list>
           </value>
         </entry>
@@ -584,7 +584,7 @@
       <root url="file://$USER_HOME$/AppData/Local/Flutter/flutter/packages/flutter_localizations/lib" />
       <root url="file://$USER_HOME$/AppData/Local/Flutter/flutter/packages/flutter_test/lib" />
       <root url="file://$USER_HOME$/AppData/Local/Flutter/flutter/packages/flutter_web_plugins/lib" />
-      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/git/flutter_boost-2e65cd6ebccd727c89d1a134175d724e5005a414//lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/git/flutter_boost-b4bb39f6a09c1cbd1f4e46dd6c1504555866b9ba//lib" />
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/asn1lib-1.4.0/lib" />
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/async-2.11.0/lib" />
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/binary-3.0.1/lib" />

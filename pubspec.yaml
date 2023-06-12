@@ -14,7 +14,7 @@ dependencies:
   flutter_boost:
     git:
       url: 'https://github.com/alibaba/flutter_boost.git'
-      ref: '4.2.2'
+      ref: '4.2.3'
   url_strategy: ^0.2.0
   bitsdojo_window: ^0.1.5
   cupertino_icons: ^1.0.2
