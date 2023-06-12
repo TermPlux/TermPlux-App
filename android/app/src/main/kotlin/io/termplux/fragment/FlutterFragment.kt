@@ -23,8 +23,6 @@ class FlutterFragment : FlutterBoostFragment() {
 //    private lateinit var mComposeView: ComposeView
 
 
-
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -39,11 +37,15 @@ class FlutterFragment : FlutterBoostFragment() {
             )
         )
     }.also {
-        if (requireActivity() is FlutterViewReturn) {
-            (requireActivity() as FlutterViewReturn).apply {
+        when (activity) {
+            is FlutterViewReturn -> (activity as FlutterViewReturn).apply {
                 returnFlutterView(
                     flutterView = findFlutterView(
-                        view = super.onCreateView(inflater, container, savedInstanceState)
+                        view = super.onCreateView(
+                            inflater,
+                            container,
+                            savedInstanceState
+                        )
                     )
                 )
             }
@@ -51,11 +53,13 @@ class FlutterFragment : FlutterBoostFragment() {
     }
 
     private fun findFlutterView(view: View?): FlutterView? {
-        if (view is FlutterView) return view
-        if (view is ViewGroup) {
-            for (i in 0 until view.childCount) {
-                findFlutterView(view.getChildAt(i))?.let {
-                    return it
+        when {
+            (view is FlutterView) -> return view
+            (view is ViewGroup) -> {
+                for (i in 0 until view.childCount) {
+                    findFlutterView(view.getChildAt(i))?.let {
+                        return it
+                    }
                 }
             }
         }
@@ -202,20 +206,6 @@ class FlutterFragment : FlutterBoostFragment() {
 //
 //
 //    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 //    private fun mediator(navController: NavHostController) {
