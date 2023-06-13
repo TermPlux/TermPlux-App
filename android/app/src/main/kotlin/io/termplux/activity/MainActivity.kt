@@ -10,7 +10,6 @@ import android.os.Looper
 import android.view.*
 import android.widget.FrameLayout
 import androidx.activity.compose.setContent
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.AppCompatImageView
@@ -73,6 +72,7 @@ import io.termplux.R
 import io.termplux.adapter.AppsAdapter
 import io.termplux.custom.DisableSwipeViewPager
 import io.termplux.custom.LinkNativeViewFactory
+import io.termplux.custom.RootLayout
 import io.termplux.fragment.ContainerFragment
 import io.termplux.fragment.FlutterFragment
 import io.termplux.model.AppsModel
@@ -110,7 +110,6 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
 
     private lateinit var mMainFragment: FlutterFragment
 
-    private lateinit var mRootLayout: FrameLayout
     private lateinit var mSplashLogo: AppCompatImageView
     private lateinit var mFlutterView: FlutterView
     private lateinit var mAppBarLayout: AppBarLayout
@@ -183,7 +182,15 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         // 设置页面布局边界
         WindowCompat.setDecorFitsSystemWindows(window, false)
-
+        // 更新操作栏状态
+        mVisible = true
+        // 首选项
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext)
+        // 获取动态颜色首选项
+        isDynamicColor = mSharedPreferences.getBoolean(
+            "dynamic_colors",
+            true
+        ) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
     }
 
     override fun initFragment(fragmentChangeUtil: FragmentChangeUtil?) {
@@ -352,45 +359,26 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(owner: LifecycleOwner) {
         super<DefaultLifecycleObserver>.onCreate(owner)
-        // 更新操作栏状态
-        mVisible = true
-        // 首选项
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext)
-        // 获取动态颜色首选项
-        isDynamicColor = mSharedPreferences.getBoolean(
-            "dynamic_colors",
-            true
-        ) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
-
-
-        // 检查权限
-        check()
-        // 初始化UI控件
-        initUiView()
-
-
-        // 加载应用列表
-        loadApp()
-        // 用于刷新应用列表的广播接收器
-        AppsReceiver {
-            loadApp()
-        }.also {
-            // 注册广播接收器
-            registerReceiver(
-                it,
-                IntentFilter().apply {
-                    addAction(Intent.ACTION_PACKAGE_ADDED)
-                    addAction(Intent.ACTION_PACKAGE_REMOVED)
-                    addDataScheme("package")
-                }
-            )
-            appReceiver = it
-        }
-
-        val actionBar: ActionBar? = supportActionBar
-        actionBar?.setIcon(R.drawable.baseline_terminal_24)
-
-        if (false) setContentView(mRootLayout) else setContent {
+        RootLayout(
+            context = mContext,
+            flutter = mFlutterView.apply {
+                setOnTouchListener(delayHideTouchListener)
+                visibility = View.INVISIBLE
+                post(this@MainActivity)
+            },
+            splash = AppCompatImageView(mContext).apply {
+                setImageDrawable(
+                    ContextCompat.getDrawable(
+                        mContext,
+                        R.drawable.custom_termplux_24
+                    )
+                )
+            }.also { logo ->
+                mSplashLogo = logo
+            }
+        ).setContent { root ->
+            // 检查权限
+            check()
             channel.setMethodCallHandler { call, res ->
                 when (call.method) {
                     "pager" -> {
@@ -427,18 +415,79 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
                     displayFeatures = displayFeatures,
                     topBar = {
                         AndroidView(
-                            factory = {
-                                mAppBarLayout
+                            factory = { context ->
+                                AppBarLayout(
+                                    context
+                                ).apply {
+                                    addView(
+                                        MaterialToolbar(
+                                            context
+                                        ).also { toolbar ->
+                                            setSupportActionBar(toolbar)
+                                            supportActionBar?.setIcon(
+                                                ContextCompat.getDrawable(
+                                                    context,
+                                                    R.drawable.baseline_terminal_24
+                                                )
+                                            )
+                                            mMaterialToolbar = toolbar
+                                        },
+                                        AppBarLayout.LayoutParams(
+                                            AppBarLayout.LayoutParams.MATCH_PARENT,
+                                            AppBarLayout.LayoutParams.WRAP_CONTENT
+                                        )
+                                    )
+                                }
                             },
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
+                            update = { appBar ->
+                                appBar.isLiftOnScroll = true
+                                appBar.statusBarForeground =
+                                    MaterialShapeDrawable.createWithElevationOverlay(
+                                        mContext
+                                    )
+                            }
                         )
                     },
-                    pager = {
+                    appsGrid = {
                         AndroidView(
-                            factory = {
-                                mRootLayout
+                            factory = { context ->
+                                RecyclerView(context).apply {
+                                    layoutManager = GridLayoutManager(
+                                        context,
+                                        4,
+                                        RecyclerView.VERTICAL,
+                                        false
+                                    )
+                                }
                             },
-                            modifier = Modifier.fillMaxSize()
+                            modifier = Modifier.fillMaxSize(),
+                            update = { apps ->
+                                // 加载应用列表
+                                loadApp(recyclerView = apps).run {
+                                    // 用于刷新应用列表的广播接收器
+                                    AppsReceiver {
+                                        loadApp(recyclerView = apps)
+                                    }.also {
+                                        // 注册广播接收器
+                                        registerReceiver(
+                                            it,
+                                            IntentFilter().apply {
+                                                addAction(Intent.ACTION_PACKAGE_ADDED)
+                                                addAction(Intent.ACTION_PACKAGE_REMOVED)
+                                                addDataScheme("package")
+                                            }
+                                        )
+                                        appReceiver = it
+                                    }
+                                }
+                            }
+                        )
+                    },
+                    rootLayout = {
+                        AndroidView(
+                            factory = { root },
+                            modifier = it
                         )
                     },
                     navBar = {},
@@ -448,12 +497,10 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
                     },
                     androidVersion = getAndroidVersion(),
                     shizukuVersion = getShizukuVersion(),
-                    current = {},
-                    toggle = {
-                        toggle()
-                    }
-                )
-
+                    current = {}
+                ) {
+                    toggle()
+                }
             }
         }
     }
@@ -518,78 +565,6 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
                 circularAnim.start()
             }
             .start()
-    }
-
-    private fun initUiView() {
-        AppBarLayout(
-            mContext
-        ).apply {
-            fitsSystemWindows = true
-            addView(
-                MaterialToolbar(
-                    context
-                ).also { toolbar ->
-                    setSupportActionBar(toolbar)
-                    mMaterialToolbar = toolbar
-                },
-                AppBarLayout.LayoutParams(
-                    AppBarLayout.LayoutParams.MATCH_PARENT,
-                    AppBarLayout.LayoutParams.WRAP_CONTENT
-                )
-            )
-        }.also { appBar ->
-            mAppBarLayout = appBar
-            appBar.isLiftOnScroll = true
-            appBar.statusBarForeground = MaterialShapeDrawable.createWithElevationOverlay(
-                mContext
-            )
-        }
-
-        FrameLayout(
-            mContext
-        ).apply {
-            addView(
-                mFlutterView.apply {
-                    setOnTouchListener(delayHideTouchListener)
-                    visibility = View.INVISIBLE
-                    post(this@MainActivity)
-                },
-                FrameLayout.LayoutParams(
-                    FrameLayout.LayoutParams.MATCH_PARENT,
-                    FrameLayout.LayoutParams.MATCH_PARENT
-                )
-            )
-            addView(
-                AppCompatImageView(context).apply {
-                    setImageDrawable(
-                        ContextCompat.getDrawable(
-                            mContext,
-                            R.drawable.custom_termplux_24
-                        )
-                    )
-                }.also { logo ->
-                    mSplashLogo = logo
-                },
-                FrameLayout.LayoutParams(
-                    FrameLayout.LayoutParams.WRAP_CONTENT,
-                    FrameLayout.LayoutParams.WRAP_CONTENT,
-                    Gravity.CENTER
-                )
-            )
-        }.also { root ->
-            mRootLayout = root
-        }
-
-        RecyclerView(mContext).apply {
-            layoutManager = GridLayoutManager(
-                context,
-                4,
-                RecyclerView.VERTICAL,
-                false
-            )
-        }.also { apps ->
-            mRecyclerView = apps
-        }
     }
 
     private fun toggle() {
@@ -724,7 +699,7 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
     }
 
     @Suppress("DEPRECATION")
-    private fun loadApp() {
+    private fun loadApp(recyclerView: RecyclerView) {
         // 应用列表
         val applicationList: MutableList<AppsModel> = ArrayList()
 
@@ -752,7 +727,7 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
         }
 
         // 设置适配器
-        mRecyclerView.apply {
+        recyclerView.apply {
             adapter = AppsAdapter.newInstance(
                 applicationList = applicationList,
                 current = {

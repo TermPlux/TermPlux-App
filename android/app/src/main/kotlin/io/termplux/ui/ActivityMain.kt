@@ -1,8 +1,6 @@
 package io.termplux.ui
 
-import android.view.View
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -15,10 +13,7 @@ import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -59,7 +54,8 @@ fun ActivityMain(
     windowSize: WindowSizeClass,
     displayFeatures: List<DisplayFeature>,
     topBar: @Composable (modifier: Modifier) -> Unit,
-    pager: @Composable (modifier: Modifier) -> Unit,
+    rootLayout: @Composable (modifier: Modifier) -> Unit,
+    appsGrid: @Composable (modifier: Modifier) -> Unit,
     navBar: @Composable (modifier: Modifier) -> Unit,
     tabRow: @Composable (modifier: Modifier) -> Unit,
     optionsMenu: () -> Unit,
@@ -600,7 +596,7 @@ fun ActivityMain(
                         route = Screen.Home.route
                     ) {
                         ScreenHome(
-                            rootLayout = pager
+                            rootLayout = rootLayout
                         )
                     }
                     composable(

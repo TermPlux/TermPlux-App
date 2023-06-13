@@ -8,6 +8,7 @@ import io.termplux.R
 import kotlin.math.abs
 
 class PageTransformerUtils : PageTransformer {
+
     override fun transformPage(page: View, position: Float) {
         page.apply {
             when {
