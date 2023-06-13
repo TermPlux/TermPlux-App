@@ -151,31 +151,30 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
 
     @SuppressLint("RestrictedApi")
     override fun initViews() {
-        WeakReference(application).get()?.let { context ->
-            // 初始化FlutterBoost
+        // 初始化FlutterBoost
+        WeakReference(application).get()?.apply {
             FlutterBoost.instance().setup(
-                context,
+                this@apply,
                 this@MainActivity
             ) { engine: FlutterEngine? ->
                 engine?.plugins?.add(this@MainActivity)?.let {
                     GeneratedPluginRegistrant.registerWith(engine)
                     val registry = engine.platformViewsController.registry
                     registry.registerViewFactory("android_view", LinkNativeViewFactory())
-                }.also {
-                    FlutterBoostFragment.CachedEngineFragmentBuilder(
-                        FlutterFragment::class.java
-                    )
-                        .destroyEngineWithFragment(false)
-                        .renderMode(RenderMode.surface)
-                        .transparencyMode(TransparencyMode.opaque)
-                        .shouldAttachEngineToActivity(true)
-                        .build<FlutterFragment>()?.also {
-                            mMainFragment = it
-                        }
                 }
             }
         }
-
+        // 初始化Flutter Boost Fragment
+        FlutterBoostFragment.CachedEngineFragmentBuilder(
+            FlutterFragment::class.java
+        )
+            .destroyEngineWithFragment(false)
+            .renderMode(RenderMode.surface)
+            .transparencyMode(TransparencyMode.opaque)
+            .shouldAttachEngineToActivity(true)
+            .build<FlutterFragment>()?.also { fragment ->
+                mMainFragment = fragment
+            }
         // 启用边到边
         EdgeToEdgeUtils.applyEdgeToEdge(window, true)
         // 深色模式跟随系统
