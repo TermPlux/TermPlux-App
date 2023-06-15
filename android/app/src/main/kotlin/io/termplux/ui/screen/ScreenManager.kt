@@ -27,6 +27,7 @@ import io.termplux.ui.preview.TermPluxPreviews
 @Composable
 fun ScreenManager(
     navController: NavHostController,
+    topBar: @Composable (modifier: Modifier) -> Unit,
     tabRow: @Composable (modifier: Modifier) -> Unit,
     toggle: () -> Unit,
     current: (item: Int) -> Unit,
@@ -68,9 +69,12 @@ fun ScreenManager(
                     bottom = 8.dp
                 )
             ) {
-                Box(
+                Column(
                     modifier = Modifier.fillMaxWidth()
                 ) {
+                    topBar(
+                        modifier = Modifier.fillMaxWidth()
+                    )
                     tabRow(
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -578,6 +582,7 @@ fun ScreenManager(
 private fun ScreenManagerPreview() {
     ScreenManager(
         navController = rememberNavController(),
+        topBar = {},
         tabRow = { modifier ->
             Text(
                 text = stringResource(

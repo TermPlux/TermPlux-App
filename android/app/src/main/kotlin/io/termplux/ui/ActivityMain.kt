@@ -53,10 +53,9 @@ fun ActivityMain(
     drawerState: DrawerState,
     windowSize: WindowSizeClass,
     displayFeatures: List<DisplayFeature>,
-    topBar: @Composable (modifier: Modifier) -> Unit,
     rootLayout: @Composable (modifier: Modifier) -> Unit,
     appsGrid: @Composable (modifier: Modifier) -> Unit,
-    navBar: @Composable (modifier: Modifier) -> Unit,
+    topBar: @Composable (modifier: Modifier) -> Unit,
     tabRow: @Composable (modifier: Modifier) -> Unit,
     optionsMenu: () -> Unit,
     androidVersion: String,
@@ -67,21 +66,23 @@ fun ActivityMain(
 
     val pages = listOf(
         Screen.ComposeTitle,
-        Screen.Home,
         Screen.Dashboard,
+        Screen.Apps,
+        Screen.Home,
         Screen.Manager,
         Screen.Settings,
         Screen.About,
         Screen.Divider,
         Screen.FragmentTitle,
-        //   Screen.LauncherFragment,
+
         Screen.HomeFragment,
         Screen.AppsFragment,
         Screen.SettingsFragment
     )
     val items = listOf(
-        Screen.Home,
         Screen.Dashboard,
+        Screen.Apps,
+        Screen.Home,
         Screen.Manager,
         Screen.Settings
     )
@@ -384,64 +385,64 @@ fun ActivityMain(
                 AnimatedVisibility(
                     visible = true
                 ) {
-                    Column(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Spacer(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .statusBarsPadding()
-                        )
-                        topBar(
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    }
-//                    TopAppBar(
-//                        title = {
-//                            Text(
-//                                text = stringResource(
-//                                    id = R.string.app_name
-//                                )
-//                            )
-//                        },
-//                        modifier = Modifier.fillMaxWidth(),
-//                        navigationIcon = {
-//                            AnimatedVisibility(
-//                                visible = navigationType != NavigationType.PermanentNavigationDrawer
-//                            ) {
-//                                IconButton(
-//                                    onClick = {
-//                                        if (
-//                                            navigationType != NavigationType.PermanentNavigationDrawer
-//                                        ) {
-//                                            scope.launch {
-//                                                drawerState.open()
-//                                            }
-//                                        }
-//                                    }
-//                                ) {
-//                                    Icon(
-//                                        imageVector = Icons.Filled.Menu,
-//                                        contentDescription = null
-//                                    )
-//                                }
-//                            }
-//                        },
-//                        actions = {
-//                            IconButton(
-//                                onClick = {
-//
-//                                }
-//                            ) {
-//                                Icon(
-//                                    imageVector = Icons.Filled.MoreVert,
-//                                    contentDescription = null
-//                                )
-//                            }
-//                        },
-//                        colors = TopAppBarDefaults.topAppBarColors(),
-//                        scrollBehavior = scrollBehavior
-//                    )
+//                    Column(
+//                        modifier = Modifier.fillMaxWidth()
+//                    ) {
+//                        Spacer(
+//                            modifier = Modifier
+//                                .fillMaxWidth()
+//                                .statusBarsPadding()
+//                        )
+//                        topBar(
+//                            modifier = Modifier.fillMaxWidth()
+//                        )
+//                    }
+                    CenterAlignedTopAppBar(
+                        title = {
+                            Text(
+                                text = stringResource(
+                                    id = R.string.app_name
+                                )
+                            )
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        navigationIcon = {
+                            AnimatedVisibility(
+                                visible = navigationType != NavigationType.PermanentNavigationDrawer
+                            ) {
+                                IconButton(
+                                    onClick = {
+                                        if (
+                                            navigationType != NavigationType.PermanentNavigationDrawer
+                                        ) {
+                                            scope.launch {
+                                                drawerState.open()
+                                            }
+                                        }
+                                    }
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Menu,
+                                        contentDescription = null
+                                    )
+                                }
+                            }
+                        },
+                        actions = {
+                            IconButton(
+                                onClick = {
+
+                                }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.MoreVert,
+                                    contentDescription = null
+                                )
+                            }
+                        },
+                        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(),
+                        scrollBehavior = scrollBehavior
+                    )
                 }
             },
             bottomBar = {
@@ -593,6 +594,11 @@ fun ActivityMain(
                         )
                 ) {
                     composable(
+                        route = Screen.Apps.route
+                    ) {
+                        ScreenApps(appsGrid = appsGrid)
+                    }
+                    composable(
                         route = Screen.Home.route
                     ) {
                         ScreenHome(
@@ -612,6 +618,7 @@ fun ActivityMain(
                     ) {
                         ScreenManager(
                             navController = navController,
+                            topBar = topBar,
                             tabRow = tabRow,
                             toggle = toggle,
                             current = current,

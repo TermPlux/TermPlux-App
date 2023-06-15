@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- 菜单 -->
+    <string name="menu_overview">概览</string>
     <string name="menu_home">主页</string>
     <string name="menu_launcher">桌面</string>
     <string name="menu_apps">应用</string>

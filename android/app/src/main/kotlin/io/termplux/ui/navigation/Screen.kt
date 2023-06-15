@@ -8,12 +8,17 @@ import androidx.compose.material.icons.filled.FlutterDash
 import androidx.compose.material.icons.filled.RocketLaunch
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.twotone.AppSettingsAlt
+import androidx.compose.material.icons.twotone.Apps
 import androidx.compose.material.icons.twotone.Dashboard
+import androidx.compose.material.icons.twotone.FilterList
 import androidx.compose.material.icons.twotone.FlutterDash
 import androidx.compose.material.icons.twotone.Home
 import androidx.compose.material.icons.twotone.Info
+import androidx.compose.material.icons.twotone.ListAlt
+import androidx.compose.material.icons.twotone.Preview
 import androidx.compose.material.icons.twotone.Settings
 import androidx.compose.material.icons.twotone.Terminal
+import androidx.compose.material.icons.twotone.ViewList
 import androidx.compose.ui.graphics.vector.ImageVector
 import io.termplux.R
 
@@ -33,6 +38,14 @@ sealed class Screen constructor(
         title = R.string.menu_apps
     )
 
+    object Apps: Screen(
+        type = ScreenType.Compose,
+        item = ItemType.Default,
+        route = "apps",
+        imageVector = Icons.TwoTone.Apps,
+        title = R.string.menu_apps
+    )
+
     object Home : Screen(
         type = ScreenType.Compose,
         item = ItemType.Default,
@@ -46,15 +59,15 @@ sealed class Screen constructor(
         item = ItemType.Default,
         route = "",
         imageVector = Icons.TwoTone.Home,
-        title = R.string.app_name
+        title = R.string.menu_overview
     )
 
     object Dashboard : Screen(
         type = ScreenType.Compose,
         item = ItemType.Default,
         route = ScreenRoute.routeDashboard,
-        imageVector = Icons.TwoTone.Dashboard,
-        title = R.string.menu_dashboard
+        imageVector = Icons.TwoTone.ListAlt,
+        title = R.string.menu_overview
     )
 
     object Manager : Screen(

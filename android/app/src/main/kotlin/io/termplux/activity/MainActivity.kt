@@ -17,8 +17,10 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.*
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -32,10 +34,12 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.window.layout.DisplayFeature
 import com.farmerbb.taskbar.lib.Taskbar
 import com.google.accompanist.adaptive.calculateDisplayFeatures
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -355,7 +359,7 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
         }
     }
 
-    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
+    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class, ExperimentalComposeUiApi::class)
     override fun onCreate(owner: LifecycleOwner) {
         super<DefaultLifecycleObserver>.onCreate(owner)
         RootLayout(
@@ -394,17 +398,38 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
                     }
                 }
             }
-            val navController = rememberNavController()
+            val navController: NavHostController = rememberNavController()
             val scope = rememberCoroutineScope()
-            val drawerState = rememberDrawerState(
+            val drawerState: DrawerState = rememberDrawerState(
                 initialValue = DrawerValue.Closed
             )
-            val windowSize = calculateWindowSizeClass(
+            val windowSize: WindowSizeClass = calculateWindowSizeClass(
                 activity = mME
             )
-            val displayFeatures = calculateDisplayFeatures(
+            val displayFeatures: List<DisplayFeature> = calculateDisplayFeatures(
                 activity = mME
             )
+
+            val toolbar: MaterialToolbar = MaterialToolbar(
+                mContext
+            ).apply {
+                setBackgroundColor(android.graphics.Color.TRANSPARENT)
+            }.also { toolbar ->
+                setSupportActionBar(toolbar)
+                mMaterialToolbar = toolbar
+            }
+
+            val params: AppBarLayout.LayoutParams = AppBarLayout.LayoutParams(
+                AppBarLayout.LayoutParams.MATCH_PARENT,
+                AppBarLayout.LayoutParams.WRAP_CONTENT
+            )
+
+            val actionBar: ActionBar? = supportActionBar
+            actionBar?.setDisplayShowTitleEnabled(true)
+            actionBar?.setDisplayUseLogoEnabled(true)
+            actionBar?.setDisplayHomeAsUpEnabled(true)
+            actionBar?.setIcon(R.drawable.baseline_terminal_24)
+
 
             TermPluxTheme(dynamicColor = isDynamicColor) {
                 ActivityMain(
@@ -412,43 +437,15 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
                     drawerState = drawerState,
                     windowSize = windowSize,
                     displayFeatures = displayFeatures,
-                    topBar = {
+                    rootLayout = { modifier ->
                         AndroidView(
-                            factory = { context ->
-                                AppBarLayout(
-                                    context
-                                ).apply {
-                                    addView(
-                                        MaterialToolbar(
-                                            context
-                                        ).also { toolbar ->
-                                            setSupportActionBar(toolbar)
-                                            supportActionBar?.setIcon(
-                                                ContextCompat.getDrawable(
-                                                    context,
-                                                    R.drawable.baseline_terminal_24
-                                                )
-                                            )
-                                            mMaterialToolbar = toolbar
-                                        },
-                                        AppBarLayout.LayoutParams(
-                                            AppBarLayout.LayoutParams.MATCH_PARENT,
-                                            AppBarLayout.LayoutParams.WRAP_CONTENT
-                                        )
-                                    )
-                                }
+                            factory = {
+                                return@AndroidView root
                             },
-                            modifier = Modifier.fillMaxWidth(),
-                            update = { appBar ->
-                                appBar.isLiftOnScroll = true
-                                appBar.statusBarForeground =
-                                    MaterialShapeDrawable.createWithElevationOverlay(
-                                        mContext
-                                    )
-                            }
+                            modifier = modifier
                         )
                     },
-                    appsGrid = {
+                    appsGrid = { modifier ->
                         AndroidView(
                             factory = { context ->
                                 RecyclerView(context).apply {
@@ -460,7 +457,7 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
                                     )
                                 }
                             },
-                            modifier = Modifier.fillMaxSize(),
+                            modifier = modifier,
                             update = { apps ->
                                 // 加载应用列表
                                 loadApp(recyclerView = apps).run {
@@ -483,23 +480,42 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
                             }
                         )
                     },
-                    rootLayout = {
+                    topBar = { modifier ->
                         AndroidView(
-                            factory = { root },
-                            modifier = it
+                            factory = { context ->
+                                AppBarLayout(context).apply {
+                                    setBackgroundColor(android.graphics.Color.TRANSPARENT)
+                                    addView(toolbar, params)
+                                }
+                            },
+                            onReset = { appBar ->
+                                appBar.removeAllViews()
+                                appBar.addView(toolbar, params)
+                            },
+                            modifier = modifier,
+                            update = { appBar ->
+                                appBar.isLiftOnScroll = true
+                                appBar.statusBarForeground =
+                                    MaterialShapeDrawable.createWithElevationOverlay(
+                                        mContext
+                                    )
+                            },
+                            onRelease = { appBar ->
+                                appBar.removeAllViews()
+                            }
                         )
                     },
-                    navBar = {},
                     tabRow = {},
                     optionsMenu = {
                         optionsMenu()
                     },
                     androidVersion = getAndroidVersion(),
                     shizukuVersion = getShizukuVersion(),
-                    current = {}
-                ) {
-                    toggle()
-                }
+                    current = {},
+                    toggle = {
+                        toggle()
+                    }
+                )
             }
         }
     }
