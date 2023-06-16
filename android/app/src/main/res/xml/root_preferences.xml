@@ -1,6 +1,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="@string/app_name">
+    <PreferenceCategory>
 
         <SwitchPreference
             android:defaultValue="true"
@@ -24,9 +24,9 @@
             android:title="@string/desktop_title" />
 
         <Preference
-            android:icon="@drawable/baseline_open_in_new_24"
+            android:icon="@drawable/baseline_settings_24"
             android:key="navigation_settings"
-            android:title="其他设置" />
+            android:title="@string/menu_settings" />
 
     </PreferenceCategory>
 

@@ -14,11 +14,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -35,13 +33,8 @@ import io.termplux.ui.navigation.ScreenRoute
 import io.termplux.ui.navigation.ScreenType
 import io.termplux.ui.screen.*
 import io.termplux.ui.window.ContentType
-import io.termplux.ui.window.NavigationType
-import io.termplux.ui.screen.ScreenAbout
-import io.termplux.ui.screen.ScreenDashboard
-import io.termplux.ui.screen.ScreenHome
-import io.termplux.ui.screen.ScreenManager
-import io.termplux.ui.screen.ScreenSettings
 import io.termplux.ui.window.DevicePosture
+import io.termplux.ui.window.NavigationType
 import io.termplux.ui.window.isBookPosture
 import io.termplux.ui.window.isSeparating
 import kotlinx.coroutines.launch
@@ -57,6 +50,7 @@ fun ActivityMain(
     appsGrid: @Composable (modifier: Modifier) -> Unit,
     topBar: @Composable (modifier: Modifier) -> Unit,
     tabRow: @Composable (modifier: Modifier) -> Unit,
+    preference: @Composable (modifier: Modifier) -> Unit,
     optionsMenu: () -> Unit,
     androidVersion: String,
     shizukuVersion: String,
@@ -66,11 +60,12 @@ fun ActivityMain(
 
     val pages = listOf(
         Screen.ComposeTitle,
-        Screen.Dashboard,
+        Screen.Overview,
         Screen.Apps,
-        Screen.Home,
+        Screen.Flutter,
         Screen.Manager,
         Screen.Settings,
+        Screen.Preference,
         Screen.About,
         Screen.Divider,
         Screen.FragmentTitle,
@@ -80,9 +75,9 @@ fun ActivityMain(
         Screen.SettingsFragment
     )
     val items = listOf(
-        Screen.Dashboard,
+        Screen.Overview,
         Screen.Apps,
-        Screen.Home,
+        Screen.Flutter,
         Screen.Manager,
         Screen.Settings
     )
@@ -212,7 +207,7 @@ fun ActivityMain(
                             ScreenRoute.routeAppsFragment.toInt()
                         ).also {
                             navController.navigate(
-                                route = Screen.Home.route
+                                route = Screen.Flutter.route
                             ) {
                                 popUpTo(
                                     id = navController.graph.findStartDestination().id
@@ -297,7 +292,7 @@ fun ActivityMain(
                                         item.route.toInt()
                                     ).also {
                                         navController.navigate(
-                                            route = Screen.Home.route
+                                            route = Screen.Flutter.route
                                         ) {
                                             popUpTo(
                                                 id = navController.graph.findStartDestination().id
@@ -385,18 +380,6 @@ fun ActivityMain(
                 AnimatedVisibility(
                     visible = true
                 ) {
-//                    Column(
-//                        modifier = Modifier.fillMaxWidth()
-//                    ) {
-//                        Spacer(
-//                            modifier = Modifier
-//                                .fillMaxWidth()
-//                                .statusBarsPadding()
-//                        )
-//                        topBar(
-//                            modifier = Modifier.fillMaxWidth()
-//                        )
-//                    }
                     CenterAlignedTopAppBar(
                         title = {
                             Text(
@@ -431,7 +414,19 @@ fun ActivityMain(
                         actions = {
                             IconButton(
                                 onClick = {
-
+                                    navController.navigate(
+                                        route = Screen.Manager.route
+                                    ) {
+                                        popUpTo(
+                                            id = navController.graph.findStartDestination().id
+                                        ) {
+                                            saveState = true
+                                        }
+                                        launchSingleTop = true
+                                        restoreState = true
+                                    }.run {
+                                        optionsMenu()
+                                    }
                                 }
                             ) {
                                 Icon(
@@ -519,7 +514,7 @@ fun ActivityMain(
                                         ScreenRoute.routeAppsFragment.toInt()
                                     ).also {
                                         navController.navigate(
-                                            route = Screen.Home.route
+                                            route = Screen.Flutter.route
                                         ) {
                                             popUpTo(
                                                 id = navController.graph.findStartDestination().id
@@ -584,34 +579,33 @@ fun ActivityMain(
                 }
                 NavHost(
                     navController = navController,
-                    startDestination = Screen.Home.route,
-                    modifier = if (
-                        navigationType == NavigationType.PermanentNavigationDrawer
-                    ) Modifier.fillMaxSize() else Modifier
-                        .fillMaxSize()
-                        .nestedScroll(
-                            connection = scrollBehavior.nestedScrollConnection
-                        )
+                    startDestination = Screen.Flutter.route,
+                    modifier = when (navigationType) {
+                        NavigationType.PermanentNavigationDrawer -> Modifier.fillMaxSize()
+                        else -> Modifier
+                            .fillMaxSize()
+                            .nestedScroll(
+                                connection = scrollBehavior.nestedScrollConnection
+                            )
+                    }
                 ) {
+                    composable(
+                        route = Screen.Overview.route
+                    ) {
+                        ScreenOverview(
+                            navController = navController,
+                            shizukuVersion = shizukuVersion
+                        )
+                    }
                     composable(
                         route = Screen.Apps.route
                     ) {
                         ScreenApps(appsGrid = appsGrid)
                     }
                     composable(
-                        route = Screen.Home.route
+                        route = Screen.Flutter.route
                     ) {
-                        ScreenHome(
-                            rootLayout = rootLayout
-                        )
-                    }
-                    composable(
-                        route = Screen.Dashboard.route
-                    ) {
-                        ScreenDashboard(
-                            navController = navController,
-                            shizukuVersion = shizukuVersion
-                        )
+                        ScreenHome(rootLayout = rootLayout)
                     }
                     composable(
                         route = Screen.Manager.route
@@ -646,6 +640,13 @@ fun ActivityMain(
                             onTaskBarSettings = {},
                             onSystemSettings = {},
                             onDefaultLauncherSettings = {}
+                        )
+                    }
+                    composable(
+                        route = Screen.Preference.route
+                    ) {
+                        ScreenPreference(
+                            preference = preference
                         )
                     }
                     composable(
@@ -696,31 +697,4 @@ fun ActivityMain(
             content()
         }
     }
-
-//
-//    if (navigationType == NavigationType.PermanentNavigationDrawer) {
-//        PermanentNavigationDrawer(
-//            drawerContent = {
-//                PermanentDrawerSheet {
-//                    nav()
-//                }
-//            },
-//            modifier = Modifier.fillMaxSize()
-//        ) {
-//            content()
-//        }
-//    } else {
-//        ModalNavigationDrawer(
-//            drawerContent = {
-//                ModalDrawerSheet {
-//                    nav()
-//                }
-//            },
-//            modifier = Modifier.fillMaxSize(),
-//            drawerState = drawerState,
-//            gesturesEnabled = visible
-//        ) {
-//            content()
-//        }
-//    }
 }

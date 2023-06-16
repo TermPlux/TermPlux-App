@@ -124,8 +124,8 @@ class AppsAdapter constructor(
                     view.context.getString(R.string.menu_info),
                     view.context.getString(R.string.menu_delete)
                 ) else arrayOf(
-                    view.context.getString(R.string.menu_launcher),
-                    view.context.getString(R.string.menu_home),
+                    view.context.getString(R.string.menu_apps),
+                    view.context.getString(R.string.menu_flutter),
                     view.context.getString(R.string.menu_settings)
                 )
             )

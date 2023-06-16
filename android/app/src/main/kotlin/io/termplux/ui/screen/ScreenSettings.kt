@@ -13,6 +13,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.OpenInNew
+import androidx.compose.material.icons.filled.RoomPreferences
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ElevatedCard
@@ -78,24 +79,20 @@ fun ScreenSettings(
                     color = MaterialTheme.colorScheme.primary
                 )
                 SettingsItem(
-                    icon = Icons.Filled.OpenInNew,
-                    title = "其他设置",
-                    summary = "跳转其他设置界面"
+                    icon = Icons.Filled.RoomPreferences,
+                    title = "首选项",
+                    summary = "配置 TermPlux"
                 ) {
-                    current(
-                        ScreenRoute.routeSettingsFragment.toInt()
-                    ).also {
-                        navController.navigate(
-                            route = Screen.Home.route
+                    navController.navigate(
+                        route = Screen.Preference.route
+                    ) {
+                        popUpTo(
+                            id = navController.graph.findStartDestination().id
                         ) {
-                            popUpTo(
-                                id = navController.graph.findStartDestination().id
-                            ) {
-                                saveState = true
-                            }
-                            launchSingleTop = true
-                            restoreState = true
+                            saveState = true
                         }
+                        launchSingleTop = true
+                        restoreState = true
                     }
                 }
                 // 关于

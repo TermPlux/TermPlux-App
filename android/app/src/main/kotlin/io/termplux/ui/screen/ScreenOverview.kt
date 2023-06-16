@@ -36,7 +36,7 @@ import io.termplux.ui.navigation.Screen
 import io.termplux.ui.preview.TermPluxPreviews
 
 @Composable
-fun ScreenDashboard(
+fun ScreenOverview(
     navController: NavHostController,
     shizukuVersion: String
 ) {
@@ -338,8 +338,8 @@ fun ScreenDashboard(
 
 @TermPluxPreviews
 @Composable
-private fun ScreenDashboardPreview() {
-    ScreenDashboard(
+private fun ScreenOverviewPreview() {
+    ScreenOverview(
         navController = rememberNavController(),
         shizukuVersion = "13"
     )

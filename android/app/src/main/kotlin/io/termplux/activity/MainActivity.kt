@@ -9,7 +9,6 @@ import android.os.IBinder
 import android.os.Looper
 import android.view.*
 import android.widget.FrameLayout
-import androidx.activity.compose.setContent
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.AppCompatImageView
@@ -21,7 +20,6 @@ import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -34,11 +32,13 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
 import androidx.window.layout.DisplayFeature
 import com.farmerbb.taskbar.lib.Taskbar
 import com.google.accompanist.adaptive.calculateDisplayFeatures
@@ -74,6 +74,7 @@ import io.termplux.BuildConfig
 import io.termplux.IUserService
 import io.termplux.R
 import io.termplux.adapter.AppsAdapter
+import io.termplux.adapter.PreferenceAdapter
 import io.termplux.custom.DisableSwipeViewPager
 import io.termplux.custom.LinkNativeViewFactory
 import io.termplux.custom.RootLayout
@@ -84,6 +85,7 @@ import io.termplux.receiver.AppsReceiver
 import io.termplux.services.MainService
 import io.termplux.services.UserService
 import io.termplux.ui.ActivityMain
+import io.termplux.ui.navigation.Screen
 import io.termplux.utils.FlutterViewReturn
 import io.termplux.utils.LifeCircleUtils
 import rikka.shizuku.Shizuku
@@ -419,10 +421,39 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
                 mMaterialToolbar = toolbar
             }
 
-            val params: AppBarLayout.LayoutParams = AppBarLayout.LayoutParams(
+            val toolbarParams: AppBarLayout.LayoutParams = AppBarLayout.LayoutParams(
                 AppBarLayout.LayoutParams.MATCH_PARENT,
                 AppBarLayout.LayoutParams.WRAP_CONTENT
             )
+
+            val preferenceAdapter = PreferenceAdapter(
+                activity = this@MainActivity
+            ) {
+                navController.navigate(
+                    route = Screen.Settings.route
+                ) {
+                    popUpTo(
+                        id = navController.graph.findStartDestination().id
+                    ) {
+                        saveState = true
+                    }
+                    launchSingleTop = true
+                    restoreState = true
+                }
+            }
+
+            val preference = ViewPager2(this@MainActivity).apply {
+                isUserInputEnabled = true
+                adapter = preferenceAdapter
+                offscreenPageLimit = preferenceAdapter.itemCount
+            }
+
+            val preferenceParams: FrameLayout.LayoutParams = FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT
+            )
+
+
 
             val actionBar: ActionBar? = supportActionBar
             actionBar?.setDisplayShowTitleEnabled(true)
@@ -448,7 +479,11 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
                     appsGrid = { modifier ->
                         AndroidView(
                             factory = { context ->
-                                RecyclerView(context).apply {
+                                RecyclerView(context)
+                            },
+                            modifier = modifier,
+                            update = { apps ->
+                                apps.apply {
                                     layoutManager = GridLayoutManager(
                                         context,
                                         4,
@@ -456,9 +491,6 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
                                         false
                                     )
                                 }
-                            },
-                            modifier = modifier,
-                            update = { apps ->
                                 // 加载应用列表
                                 loadApp(recyclerView = apps).run {
                                     // 用于刷新应用列表的广播接收器
@@ -485,27 +517,46 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
                             factory = { context ->
                                 AppBarLayout(context).apply {
                                     setBackgroundColor(android.graphics.Color.TRANSPARENT)
-                                    addView(toolbar, params)
+                                    addView(toolbar, toolbarParams)
                                 }
                             },
                             onReset = { appBar ->
-                                appBar.removeAllViews()
-                                appBar.addView(toolbar, params)
+                                appBar.removeView(toolbar)
+                                appBar.addView(toolbar, toolbarParams)
                             },
                             modifier = modifier,
                             update = { appBar ->
-                                appBar.isLiftOnScroll = true
-                                appBar.statusBarForeground =
-                                    MaterialShapeDrawable.createWithElevationOverlay(
-                                        mContext
-                                    )
+                                appBar.apply {
+                                    isLiftOnScroll = true
+                                    statusBarForeground =
+                                        MaterialShapeDrawable.createWithElevationOverlay(
+                                            context
+                                        )
+                                }
                             },
                             onRelease = { appBar ->
-                                appBar.removeAllViews()
+                                appBar.removeView(toolbar)
                             }
                         )
                     },
                     tabRow = {},
+                    preference = { modifier ->
+                        AndroidView(
+                            factory = { context ->
+                                FrameLayout(context).apply {
+                                    addView(preference, preferenceParams)
+                                }
+                            },
+                            onReset = { frame ->
+                                frame.removeView(preference)
+                                frame.addView(preference, preferenceParams)
+                            },
+                            modifier = modifier,
+                            onRelease = { frame ->
+                                frame.removeView(preference)
+                            }
+                        )
+                    },
                     optionsMenu = {
                         optionsMenu()
                     },

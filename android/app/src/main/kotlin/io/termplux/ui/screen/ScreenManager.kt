@@ -78,6 +78,71 @@ fun ScreenManager(
                     tabRow(
                         modifier = Modifier.fillMaxWidth()
                     )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        FilledIconButton(
+                            onClick = { /*TODO*/ }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Menu,
+                                contentDescription = null
+                            )
+                        }
+                        Spacer(
+                            modifier = Modifier.size(
+                                size = ButtonDefaults.IconSpacing
+                            )
+                        )
+                        FilledIconButton(
+                            onClick = { /*TODO*/ }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.MoreVert,
+                                contentDescription = null
+                            )
+                        }
+                        Spacer(
+                            modifier = Modifier.size(
+                                size = ButtonDefaults.IconSpacing
+                            )
+                        )
+                        FilledIconButton(
+                            onClick = { /*TODO*/ }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Apps,
+                                contentDescription = null
+                            )
+                        }
+                        Spacer(
+                            modifier = Modifier.size(
+                                size = ButtonDefaults.IconSpacing
+                            )
+                        )
+                        FilledIconButton(
+                            onClick = { /*TODO*/ }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Search,
+                                contentDescription = null
+                            )
+                        }
+                        Spacer(
+                            modifier = Modifier.size(
+                                size = ButtonDefaults.IconSpacing
+                            )
+                        )
+                        FilledIconButton(
+                            onClick = { /*TODO*/ }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.SelectAll,
+                                contentDescription = null
+                            )
+                        }
+                    }
                 }
                 Row(
                     modifier = Modifier
@@ -291,75 +356,7 @@ fun ScreenManager(
             }
 
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        vertical = 8.dp
-                    ),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                FilledIconButton(
-                    onClick = { /*TODO*/ }
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Menu,
-                        contentDescription = null
-                    )
-                }
-                Spacer(
-                    modifier = Modifier.size(
-                        size = ButtonDefaults.IconSpacing
-                    )
-                )
-                FilledIconButton(
-                    onClick = { /*TODO*/ }
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.MoreVert,
-                        contentDescription = null
-                    )
-                }
-                Spacer(
-                    modifier = Modifier.size(
-                        size = ButtonDefaults.IconSpacing
-                    )
-                )
-                FilledIconButton(
-                    onClick = { /*TODO*/ }
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Apps,
-                        contentDescription = null
-                    )
-                }
-                Spacer(
-                    modifier = Modifier.size(
-                        size = ButtonDefaults.IconSpacing
-                    )
-                )
-                FilledIconButton(
-                    onClick = { /*TODO*/ }
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Search,
-                        contentDescription = null
-                    )
-                }
-                Spacer(
-                    modifier = Modifier.size(
-                        size = ButtonDefaults.IconSpacing
-                    )
-                )
-                FilledIconButton(
-                    onClick = { /*TODO*/ }
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.SelectAll,
-                        contentDescription = null
-                    )
-                }
-            }
+
 
 //            Divider()
 //

@@ -8,7 +8,7 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import io.termplux.R
 
-class SettingsFragment constructor(
+class PreferenceFragment constructor(
     settings: () -> Unit
 ) : PreferenceFragmentCompat() {
 
@@ -39,8 +39,8 @@ class SettingsFragment constructor(
 
         fun newInstance(
             settings: () -> Unit
-        ): SettingsFragment{
-            return SettingsFragment(
+        ): PreferenceFragment{
+            return PreferenceFragment(
                 settings = settings
             )
         }

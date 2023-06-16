@@ -14,8 +14,11 @@ import androidx.compose.material.icons.twotone.FilterList
 import androidx.compose.material.icons.twotone.FlutterDash
 import androidx.compose.material.icons.twotone.Home
 import androidx.compose.material.icons.twotone.Info
+import androidx.compose.material.icons.twotone.List
 import androidx.compose.material.icons.twotone.ListAlt
+import androidx.compose.material.icons.twotone.PlaylistPlay
 import androidx.compose.material.icons.twotone.Preview
+import androidx.compose.material.icons.twotone.RoomPreferences
 import androidx.compose.material.icons.twotone.Settings
 import androidx.compose.material.icons.twotone.Terminal
 import androidx.compose.material.icons.twotone.ViewList
@@ -46,29 +49,29 @@ sealed class Screen constructor(
         title = R.string.menu_apps
     )
 
-    object Home : Screen(
+    object Flutter : Screen(
         type = ScreenType.Compose,
         item = ItemType.Default,
         route = ScreenRoute.routeHome,
         imageVector = Icons.TwoTone.FlutterDash,
-        title = R.string.menu_home
+        title = R.string.menu_flutter
     )
 
     object Overview: Screen(
-        type = ScreenType.Compose,
-        item = ItemType.Default,
-        route = "",
-        imageVector = Icons.TwoTone.Home,
-        title = R.string.menu_overview
-    )
-
-    object Dashboard : Screen(
         type = ScreenType.Compose,
         item = ItemType.Default,
         route = ScreenRoute.routeDashboard,
         imageVector = Icons.TwoTone.ListAlt,
         title = R.string.menu_overview
     )
+
+//    object Dashboard : Screen(
+//        type = ScreenType.Compose,
+//        item = ItemType.Default,
+//        route = ScreenRoute.routeDashboard,
+//        imageVector = Icons.TwoTone.List,
+//        title = R.string.menu_overview
+//    )
 
     object Manager : Screen(
         type = ScreenType.Compose,
@@ -84,6 +87,14 @@ sealed class Screen constructor(
         route = ScreenRoute.routeSettings,
         imageVector = Icons.TwoTone.Settings,
         title = R.string.menu_settings
+    )
+
+    object Preference : Screen(
+        type = ScreenType.Compose,
+        item = ItemType.Default,
+        route = "preference",
+        imageVector = Icons.TwoTone.RoomPreferences,
+        title = R.string.menu_preference
     )
 
     object About : Screen(
@@ -107,7 +118,7 @@ sealed class Screen constructor(
         item = ItemType.Title,
         route = ScreenRoute.Title,
         imageVector = Icons.Filled.Android,
-        title = R.string.menu_home
+        title = R.string.app_name
     )
 
     object LauncherFragment : Screen(
@@ -115,7 +126,7 @@ sealed class Screen constructor(
         item = ItemType.Default,
         route = ScreenRoute.routeLauncherFragment,
         imageVector = Icons.Filled.RocketLaunch,
-        title = R.string.menu_launcher
+        title = R.string.app_name
     )
 
     object HomeFragment : Screen(
@@ -123,7 +134,7 @@ sealed class Screen constructor(
         item = ItemType.Default,
         route = ScreenRoute.routeHomeFragment,
         imageVector = Icons.Filled.FlutterDash,
-        title = R.string.menu_home
+        title = R.string.app_name
     )
 
     object AppsFragment : Screen(
