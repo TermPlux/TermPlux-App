@@ -1,5 +1,7 @@
 package io.termplux.ui
 
+import android.content.Intent
+import android.provider.Settings
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -14,6 +16,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -55,7 +58,8 @@ fun ActivityMain(
     androidVersion: String,
     shizukuVersion: String,
     current: (item: Int) -> Unit,
-    toggle: () -> Unit
+    toggle: () -> Unit,
+    taskbar: () -> Unit
 ) {
 
     val pages = listOf(
@@ -637,7 +641,7 @@ fun ActivityMain(
                             scope = scope,
                             snackBarHostState = snackBarHostState,
                             current = current,
-                            onTaskBarSettings = {},
+                            onTaskBarSettings = taskbar,
                             onSystemSettings = {},
                             onDefaultLauncherSettings = {}
                         )

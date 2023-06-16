@@ -565,6 +565,9 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
                     current = {},
                     toggle = {
                         toggle()
+                    },
+                    taskbar = {
+                        taskbar()
                     }
                 )
             }

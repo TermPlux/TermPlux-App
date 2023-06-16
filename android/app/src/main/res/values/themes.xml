@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.TermPlux" parent="Theme.Material3.DayNight.NoActionBar" />
-    <style name="Theme.TermPlux.ActionBar" parent="Theme.Material3.DayNight" />
+    <style name="Theme.TermPlux" parent="Theme.Material3.Light.NoActionBar" />
+    <style name="Theme.TermPlux.ActionBar" parent="Theme.TermPlux" >
+        <item name="windowActionBar">true</item>
+        <item name="windowNoTitle">false</item>
+    </style>
 </resources>
