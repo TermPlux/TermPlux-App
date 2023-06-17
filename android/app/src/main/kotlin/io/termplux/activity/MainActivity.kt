@@ -454,7 +454,6 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
             )
 
 
-
             val actionBar: ActionBar? = supportActionBar
             actionBar?.setDisplayShowTitleEnabled(true)
             actionBar?.setDisplayUseLogoEnabled(true)
@@ -483,14 +482,12 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
                             },
                             modifier = modifier,
                             update = { apps ->
-                                apps.apply {
-                                    layoutManager = GridLayoutManager(
-                                        context,
-                                        4,
-                                        RecyclerView.VERTICAL,
-                                        false
-                                    )
-                                }
+                                apps.layoutManager = GridLayoutManager(
+                                    apps.context,
+                                    4,
+                                    RecyclerView.VERTICAL,
+                                    false
+                                )
                                 // 加载应用列表
                                 loadApp(recyclerView = apps).run {
                                     // 用于刷新应用列表的广播接收器
@@ -515,10 +512,7 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
                     topBar = { modifier ->
                         AndroidView(
                             factory = { context ->
-                                AppBarLayout(context).apply {
-                                    setBackgroundColor(android.graphics.Color.TRANSPARENT)
-                                    addView(toolbar, toolbarParams)
-                                }
+                                AppBarLayout(context)
                             },
                             onReset = { appBar ->
                                 appBar.removeView(toolbar)
@@ -526,13 +520,13 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
                             },
                             modifier = modifier,
                             update = { appBar ->
-                                appBar.apply {
-                                    isLiftOnScroll = true
-                                    statusBarForeground =
-                                        MaterialShapeDrawable.createWithElevationOverlay(
-                                            context
-                                        )
-                                }
+                                appBar.addView(toolbar, toolbarParams)
+                                appBar.setBackgroundColor(android.graphics.Color.TRANSPARENT)
+                                appBar.isLiftOnScroll = true
+                                appBar.statusBarForeground =
+                                    MaterialShapeDrawable.createWithElevationOverlay(
+                                        appBar.context
+                                    )
                             },
                             onRelease = { appBar ->
                                 appBar.removeView(toolbar)
@@ -543,15 +537,16 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
                     preference = { modifier ->
                         AndroidView(
                             factory = { context ->
-                                FrameLayout(context).apply {
-                                    addView(preference, preferenceParams)
-                                }
+                                FrameLayout(context)
                             },
                             onReset = { frame ->
                                 frame.removeView(preference)
                                 frame.addView(preference, preferenceParams)
                             },
                             modifier = modifier,
+                            update = { frame ->
+                                frame.addView(preference, preferenceParams)
+                            },
                             onRelease = { frame ->
                                 frame.removeView(preference)
                             }
