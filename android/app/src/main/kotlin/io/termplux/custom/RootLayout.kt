@@ -14,7 +14,8 @@ import io.flutter.embedding.android.FlutterView
 class RootLayout constructor(
     context: Context,
     flutter: FlutterView,
-    splash: AppCompatImageView
+    splash: AppCompatImageView,
+    fullMode: Boolean
 ) : FrameLayout(
     context
 ) {
@@ -22,11 +23,13 @@ class RootLayout constructor(
     private val mContext: Context
     private val mFlutterView: FlutterView
     private val mSplashLogo: AppCompatImageView
+    private val mFullMode: Boolean
 
     init {
         mContext = context
         mFlutterView = flutter
         mSplashLogo = splash
+        mFullMode = fullMode
         addView(
             mFlutterView,
             LayoutParams(
@@ -46,8 +49,11 @@ class RootLayout constructor(
 
     fun setContent(content: @Composable (root: FrameLayout) -> Unit) {
         this@RootLayout.also { view ->
-            if (mContext is AppCompatActivity) mContext.setContent {
-                content(root = view)
+            when (mFullMode) {
+                true -> if (mContext is AppCompatActivity) mContext.setContent {
+                    content(root = view)
+                }
+                false -> if (mContext is AppCompatActivity) mContext.setContentView(view)
             }
         }
     }

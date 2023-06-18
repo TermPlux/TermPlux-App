@@ -380,7 +380,8 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
                 )
             }.also { logo ->
                 mSplashLogo = logo
-            }
+            },
+            fullMode = true
         ).setContent { root ->
             // 检查权限
             check()
@@ -878,10 +879,10 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
                         color = Color.Transparent,
                         darkIcons = !darkTheme
                     )
-                    WindowCompat.getInsetsController(
-                        window,
-                        view
-                    ).isAppearanceLightStatusBars = !darkTheme
+//                    WindowCompat.getInsetsController(
+//                        window,
+//                        view
+//                    ).isAppearanceLightStatusBars = !darkTheme
                 }
             }
 
