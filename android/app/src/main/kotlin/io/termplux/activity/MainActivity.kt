@@ -48,8 +48,10 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.internal.EdgeToEdgeUtils
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.idlefish.flutterboost.FlutterBoost
+import com.idlefish.flutterboost.FlutterBoost.Callback
 import com.idlefish.flutterboost.FlutterBoostDelegate
 import com.idlefish.flutterboost.FlutterBoostRouteOptions
+import com.idlefish.flutterboost.FlutterBoostSetupOptions
 import com.idlefish.flutterboost.containers.FlutterBoostActivity
 import com.idlefish.flutterboost.containers.FlutterBoostFragment
 import com.kongzue.baseframework.BaseActivity
@@ -60,6 +62,7 @@ import com.kongzue.baseframework.interfaces.NavigationBarBackgroundColorRes
 import com.kongzue.baseframework.util.FragmentChangeUtil
 import com.kongzue.baseframework.util.JumpParameter
 import com.kongzue.dialogx.dialogs.PopTip
+import io.flutter.Log
 import io.flutter.embedding.android.FlutterActivityLaunchConfigs
 import io.flutter.embedding.android.FlutterEngineConfigurator
 import io.flutter.embedding.android.FlutterView
@@ -92,15 +95,16 @@ import rikka.shizuku.Shizuku
 import java.lang.ref.WeakReference
 import kotlin.math.hypot
 
+
 @SuppressLint(value = ["NonConstantResourceId"])
 @DarkStatusBarTheme(value = true)
 @DarkNavigationBarTheme(value = true)
 @NavigationBarBackgroundColorRes(value = R.color.transparent)
 @FragmentLayout(value = R.id.fragment_container)
-class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, FlutterViewReturn,
-    MethodChannel.MethodCallHandler, FlutterEngineConfigurator, Shizuku.OnBinderReceivedListener,
-    Shizuku.OnBinderDeadListener, Shizuku.OnRequestPermissionResultListener,
-    DefaultLifecycleObserver, Runnable {
+class MainActivity : BaseActivity(), FlutterBoostDelegate, Callback, FlutterPlugin,
+    MethodChannel.MethodCallHandler, FlutterViewReturn, FlutterEngineConfigurator,
+    Shizuku.OnBinderReceivedListener, Shizuku.OnBinderDeadListener,
+    Shizuku.OnRequestPermissionResultListener, DefaultLifecycleObserver, Runnable {
 
     private val mME: BaseActivity = me
     private val mContext: Context = mME
@@ -118,9 +122,7 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
 
     private lateinit var mSplashLogo: AppCompatImageView
     private lateinit var mFlutterView: FlutterView
-    private lateinit var mAppBarLayout: AppBarLayout
     private lateinit var mMaterialToolbar: MaterialToolbar
-    private lateinit var mRecyclerView: RecyclerView
 
     private lateinit var appReceiver: AppsReceiver
 
@@ -152,6 +154,7 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
     override fun resetContentView(): DisableSwipeViewPager = DisableSwipeViewPager(
         context = mContext
     ).apply {
+        super.resetContentView()
         id = R.id.fragment_container
     }
 
@@ -161,26 +164,10 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
         WeakReference(application).get()?.apply {
             FlutterBoost.instance().setup(
                 this@apply,
+                this@MainActivity,
                 this@MainActivity
-            ) { engine: FlutterEngine? ->
-                engine?.plugins?.add(this@MainActivity)?.let {
-                    GeneratedPluginRegistrant.registerWith(engine)
-                    val registry = engine.platformViewsController.registry
-                    registry.registerViewFactory("android_view", LinkNativeViewFactory())
-                }
-            }
+            )
         }
-        // 初始化Flutter Boost Fragment
-        FlutterBoostFragment.CachedEngineFragmentBuilder(
-            FlutterFragment::class.java
-        )
-            .destroyEngineWithFragment(false)
-            .renderMode(RenderMode.surface)
-            .transparencyMode(TransparencyMode.opaque)
-            .shouldAttachEngineToActivity(true)
-            .build<FlutterFragment>()?.also { fragment ->
-                mMainFragment = fragment
-            }
         // 启用边到边
         EdgeToEdgeUtils.applyEdgeToEdge(window, true)
         // 深色模式跟随系统
@@ -198,13 +185,24 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
         ) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
     }
 
+    /**
+     * 初始化Flutter Boost Fragment
+     */
     override fun initFragment(fragmentChangeUtil: FragmentChangeUtil?) {
         super.initFragment(fragmentChangeUtil)
         fragmentChangeUtil?.addFragment(
             ContainerFragment.newInstance(
-                mainFragment = mMainFragment
-            ),
-            true
+                mainFragment = FlutterBoostFragment.CachedEngineFragmentBuilder(
+                    FlutterFragment::class.java
+                )
+                    .destroyEngineWithFragment(false)
+                    .renderMode(RenderMode.surface)
+                    .transparencyMode(TransparencyMode.opaque)
+                    .shouldAttachEngineToActivity(true)
+                    .build<FlutterFragment?>().also {
+                        mMainFragment = it
+                    }
+            ), true
         )
     }
 
@@ -216,7 +214,7 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
         // 生命周期监听
         setLifeCircleListener(
             LifeCircleUtils(
-                baseActivity = mME,
+                baseActivity = this@MainActivity,
                 create = {
                     // 注册监听器
                     Shizuku.addBinderReceivedListenerSticky(this@MainActivity)
@@ -297,12 +295,21 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
         mMainFragment.onTrimMemory(level)
     }
 
+    /**
+     * 调用原生页面
+     */
     override fun pushNativeRoute(options: FlutterBoostRouteOptions?) {
-
+        when (options?.pageName()) {
+            "" -> {}
+        }
     }
 
+    /**
+     * 调用Flutter页面
+     */
     override fun pushFlutterRoute(options: FlutterBoostRouteOptions?) {
-        val intent = FlutterBoostActivity.CachedEngineIntentBuilder(
+        val context = FlutterBoost.instance().currentActivity()
+        FlutterBoostActivity.CachedEngineIntentBuilder(
             MainFlutter::class.java
         )
             .backgroundMode(FlutterActivityLaunchConfigs.BackgroundMode.transparent)
@@ -310,8 +317,36 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
             .uniqueId(options?.uniqueId())
             .url(options?.pageName())
             .urlParams(options?.arguments())
-            .build(FlutterBoost.instance().currentActivity())
-        FlutterBoost.instance().currentActivity().startActivity(intent)
+            .build(
+                when (context) {
+                    is MainActivity -> this@MainActivity
+                    else -> context
+                }
+            ).run {
+                when (context) {
+                    is MainActivity -> startActivity(this@run)
+                    else -> context.startActivity(this@run)
+                }
+            }
+    }
+
+    /**
+     * FlutterBoost Callback
+     * Flutter引擎相关操作
+     */
+    override fun onStart(engine: FlutterEngine?) {
+        try {
+            engine?.let {
+                it.plugins.add(this@MainActivity).run {
+                    GeneratedPluginRegistrant.registerWith(it)
+                }
+            }
+        } catch (e: Exception) {
+
+        }
+
+        val registry = engine?.platformViewsController?.registry
+        registry?.registerViewFactory("android_view", LinkNativeViewFactory())
     }
 
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
@@ -893,4 +928,6 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterPlugin, Flutte
             )
         }
     }
+
+
 }
