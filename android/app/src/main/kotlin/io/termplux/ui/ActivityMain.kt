@@ -2,6 +2,7 @@ package io.termplux.ui
 
 import android.content.Intent
 import android.provider.Settings
+import android.widget.FrameLayout
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -26,8 +27,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.recyclerview.widget.RecyclerView
 import androidx.window.layout.DisplayFeature
 import androidx.window.layout.FoldingFeature
+import com.google.android.material.appbar.MaterialToolbar
 import io.termplux.BuildConfig
 import io.termplux.R
 import io.termplux.ui.navigation.ItemType
@@ -35,6 +38,7 @@ import io.termplux.ui.navigation.Screen
 import io.termplux.ui.navigation.ScreenRoute
 import io.termplux.ui.navigation.ScreenType
 import io.termplux.ui.screen.*
+import io.termplux.ui.widget.TopActionBar
 import io.termplux.ui.window.ContentType
 import io.termplux.ui.window.DevicePosture
 import io.termplux.ui.window.NavigationType
@@ -49,12 +53,14 @@ fun ActivityMain(
     drawerState: DrawerState,
     windowSize: WindowSizeClass,
     displayFeatures: List<DisplayFeature>,
-    rootLayout: @Composable (modifier: Modifier) -> Unit,
+    rootLayout: FrameLayout,
     appsGrid: @Composable (modifier: Modifier) -> Unit,
+    appsUpdate: (RecyclerView) -> Unit,
     topBar: @Composable (modifier: Modifier) -> Unit,
+    topBarUpdate: (MaterialToolbar) -> Unit,
     tabRow: @Composable (modifier: Modifier) -> Unit,
     preference: @Composable (modifier: Modifier) -> Unit,
-    optionsMenu: () -> Unit,
+    optionsMenu: (toolbar: MaterialToolbar) -> Unit,
     androidVersion: String,
     shizukuVersion: String,
     current: (item: Int) -> Unit,
@@ -93,6 +99,8 @@ fun ActivityMain(
     val snackBarHostState = remember {
         SnackbarHostState()
     }
+
+    lateinit var toolbar: MaterialToolbar
 
     val navigationType: NavigationType
     val contentType: ContentType
@@ -429,7 +437,7 @@ fun ActivityMain(
                                         launchSingleTop = true
                                         restoreState = true
                                     }.run {
-                                        optionsMenu()
+                                        optionsMenu(toolbar)
                                     }
                                 }
                             ) {
@@ -616,8 +624,7 @@ fun ActivityMain(
                     ) {
                         ScreenManager(
                             navController = navController,
-                            topBar = topBar,
-                            tabRow = tabRow,
+                            topBarUpdate = topBarUpdate,
                             toggle = toggle,
                             current = current,
                             targetAppName = stringResource(id = R.string.app_name),

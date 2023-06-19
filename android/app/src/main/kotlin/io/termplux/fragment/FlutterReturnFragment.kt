@@ -9,7 +9,7 @@ import com.idlefish.flutterboost.containers.FlutterBoostFragment
 import io.flutter.embedding.android.FlutterView
 import io.termplux.utils.FlutterViewReturn
 
-class FlutterFragment : FlutterBoostFragment() {
+class FlutterReturnFragment : FlutterBoostFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -20,7 +20,7 @@ class FlutterFragment : FlutterBoostFragment() {
             when (val activity = requireActivity()) {
                 is FlutterViewReturn -> {
                     (activity as FlutterViewReturn).apply {
-                        returnFlutterView(
+                        onFlutterViewReturned(
                             flutterView = findFlutterView(
                                 view = parent
                             )

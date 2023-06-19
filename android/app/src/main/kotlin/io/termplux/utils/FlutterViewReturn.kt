@@ -4,6 +4,6 @@ import io.flutter.embedding.android.FlutterView
 
 interface FlutterViewReturn {
 
-    fun returnFlutterView(flutterView: FlutterView?)
+    fun onFlutterViewReturned(flutterView: FlutterView?)
 
 }

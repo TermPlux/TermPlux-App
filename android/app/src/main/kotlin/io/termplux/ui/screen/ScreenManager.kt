@@ -20,17 +20,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.google.android.material.appbar.MaterialToolbar
 import io.termplux.BuildConfig
 import io.termplux.R
 import io.termplux.ui.preview.TermPluxPreviews
+import io.termplux.ui.widget.TopActionBar
 
 @Composable
 fun ScreenManager(
     navController: NavHostController,
-    topBar: @Composable (modifier: Modifier) -> Unit,
-    tabRow: @Composable (modifier: Modifier) -> Unit,
     toggle: () -> Unit,
     current: (item: Int) -> Unit,
+    topBarUpdate: (MaterialToolbar) -> Unit,
     targetAppName: String,
     targetAppPackageName: String,
     targetAppDescription: String,
@@ -72,11 +73,9 @@ fun ScreenManager(
                 Column(
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    topBar(
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    tabRow(
-                        modifier = Modifier.fillMaxWidth()
+                    TopActionBar(
+                        modifier = Modifier.fillMaxWidth(),
+                        update = topBarUpdate
                     )
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -579,19 +578,9 @@ fun ScreenManager(
 private fun ScreenManagerPreview() {
     ScreenManager(
         navController = rememberNavController(),
-        topBar = {},
-        tabRow = { modifier ->
-            Text(
-                text = stringResource(
-                    id = R.string.tab_layout_preview
-                ),
-                modifier = modifier,
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.titleLarge
-            )
-        },
         toggle = {},
         current = {},
+        topBarUpdate = {},
         targetAppName = stringResource(
             id = R.string.app_name
         ),

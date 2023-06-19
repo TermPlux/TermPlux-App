@@ -48,10 +48,8 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.internal.EdgeToEdgeUtils
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.idlefish.flutterboost.FlutterBoost
-import com.idlefish.flutterboost.FlutterBoost.Callback
 import com.idlefish.flutterboost.FlutterBoostDelegate
 import com.idlefish.flutterboost.FlutterBoostRouteOptions
-import com.idlefish.flutterboost.FlutterBoostSetupOptions
 import com.idlefish.flutterboost.containers.FlutterBoostActivity
 import com.idlefish.flutterboost.containers.FlutterBoostFragment
 import com.kongzue.baseframework.BaseActivity
@@ -82,7 +80,7 @@ import io.termplux.custom.DisableSwipeViewPager
 import io.termplux.custom.LinkNativeViewFactory
 import io.termplux.custom.RootLayout
 import io.termplux.fragment.ContainerFragment
-import io.termplux.fragment.FlutterFragment
+import io.termplux.fragment.FlutterReturnFragment
 import io.termplux.model.AppsModel
 import io.termplux.receiver.AppsReceiver
 import io.termplux.services.MainService
@@ -95,13 +93,12 @@ import rikka.shizuku.Shizuku
 import java.lang.ref.WeakReference
 import kotlin.math.hypot
 
-
 @SuppressLint(value = ["NonConstantResourceId"])
 @DarkStatusBarTheme(value = true)
 @DarkNavigationBarTheme(value = true)
 @NavigationBarBackgroundColorRes(value = R.color.transparent)
 @FragmentLayout(value = R.id.fragment_container)
-class MainActivity : BaseActivity(), FlutterBoostDelegate, Callback, FlutterPlugin,
+class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback, FlutterPlugin,
     MethodChannel.MethodCallHandler, FlutterViewReturn, FlutterEngineConfigurator,
     Shizuku.OnBinderReceivedListener, Shizuku.OnBinderDeadListener,
     Shizuku.OnRequestPermissionResultListener, DefaultLifecycleObserver, Runnable {
@@ -118,11 +115,10 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, Callback, FlutterPlug
     private lateinit var userServices: IUserService
 
 
-    private lateinit var mMainFragment: FlutterFragment
+    private lateinit var mMainFragment: FlutterReturnFragment
 
     private lateinit var mSplashLogo: AppCompatImageView
     private lateinit var mFlutterView: FlutterView
-    private lateinit var mMaterialToolbar: MaterialToolbar
 
     private lateinit var appReceiver: AppsReceiver
 
@@ -134,9 +130,10 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, Callback, FlutterPlug
 
     private val showPart2Runnable = Runnable {
         supportActionBar?.show()
-        //systemUiVisible = true
+        actionBarVisible = true
     }
-    private var mVisible: Boolean = false
+    private var mVisible: Boolean by mutableStateOf(value = false)
+    private var actionBarVisible: Boolean by mutableStateOf(value = true)
 
     private val hideRunnable = Runnable {
         hide()
@@ -175,7 +172,7 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, Callback, FlutterPlug
         // 设置页面布局边界
         WindowCompat.setDecorFitsSystemWindows(window, false)
         // 更新操作栏状态
-        mVisible = true
+        mVisible = false
         // 首选项
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext)
         // 获取动态颜色首选项
@@ -193,13 +190,13 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, Callback, FlutterPlug
         fragmentChangeUtil?.addFragment(
             ContainerFragment.newInstance(
                 mainFragment = FlutterBoostFragment.CachedEngineFragmentBuilder(
-                    FlutterFragment::class.java
+                    FlutterReturnFragment::class.java
                 )
                     .destroyEngineWithFragment(false)
                     .renderMode(RenderMode.surface)
                     .transparencyMode(TransparencyMode.opaque)
                     .shouldAttachEngineToActivity(true)
-                    .build<FlutterFragment?>().also {
+                    .build<FlutterReturnFragment?>().also {
                         mMainFragment = it
                     }
             ), true
@@ -342,11 +339,8 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, Callback, FlutterPlug
                 }
             }
         } catch (e: Exception) {
-
+            log(Log.getStackTraceString(e))
         }
-
-        val registry = engine?.platformViewsController?.registry
-        registry?.registerViewFactory("android_view", LinkNativeViewFactory())
     }
 
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
@@ -357,7 +351,7 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, Callback, FlutterPlug
 
     }
 
-    override fun returnFlutterView(flutterView: FlutterView?) {
+    override fun onFlutterViewReturned(flutterView: FlutterView?) {
         // 获取FlutterView
         mFlutterView = flutterView ?: errorFlutterViewIsNull()
         // 移除FlutterView
@@ -374,6 +368,9 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, Callback, FlutterPlug
         // 初始化平台通道
         val messenger = flutterEngine.dartExecutor.binaryMessenger
         channel = MethodChannel(messenger, channelName)
+
+        val registry = flutterEngine.platformViewsController.registry
+        registry.registerViewFactory("android_view", LinkNativeViewFactory())
     }
 
     override fun cleanUpFlutterEngine(flutterEngine: FlutterEngine) {
@@ -448,19 +445,18 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, Callback, FlutterPlug
                 activity = mME
             )
 
-            val toolbar: MaterialToolbar = MaterialToolbar(
-                mContext
-            ).apply {
-                setBackgroundColor(android.graphics.Color.TRANSPARENT)
-            }.also { toolbar ->
-                setSupportActionBar(toolbar)
-                mMaterialToolbar = toolbar
-            }
-
-            val toolbarParams: AppBarLayout.LayoutParams = AppBarLayout.LayoutParams(
-                AppBarLayout.LayoutParams.MATCH_PARENT,
-                AppBarLayout.LayoutParams.WRAP_CONTENT
-            )
+//            val toolbar: MaterialToolbar = MaterialToolbar(
+//                LocalContext.current
+//            ).apply {
+//                setBackgroundColor(android.graphics.Color.TRANSPARENT)
+//            }.also { toolbar ->
+//                setSupportActionBar(toolbar)
+//            }
+//
+//            val toolbarParams: AppBarLayout.LayoutParams = AppBarLayout.LayoutParams(
+//                AppBarLayout.LayoutParams.MATCH_PARENT,
+//                AppBarLayout.LayoutParams.WRAP_CONTENT
+//            )
 
             val preferenceAdapter = PreferenceAdapter(
                 activity = this@MainActivity
@@ -478,7 +474,9 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, Callback, FlutterPlug
                 }
             }
 
-            val preference = ViewPager2(this@MainActivity).apply {
+            val preference = ViewPager2(
+                LocalContext.current
+            ).apply {
                 isUserInputEnabled = true
                 adapter = preferenceAdapter
                 offscreenPageLimit = preferenceAdapter.itemCount
@@ -490,11 +488,7 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, Callback, FlutterPlug
             )
 
 
-            val actionBar: ActionBar? = supportActionBar
-            actionBar?.setDisplayShowTitleEnabled(true)
-            actionBar?.setDisplayUseLogoEnabled(true)
-            actionBar?.setDisplayHomeAsUpEnabled(true)
-            actionBar?.setIcon(R.drawable.baseline_terminal_24)
+
 
 
             TermPluxTheme(dynamicColor = isDynamicColor) {
@@ -503,14 +497,7 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, Callback, FlutterPlug
                     drawerState = drawerState,
                     windowSize = windowSize,
                     displayFeatures = displayFeatures,
-                    rootLayout = { modifier ->
-                        AndroidView(
-                            factory = {
-                                return@AndroidView root
-                            },
-                            modifier = modifier
-                        )
-                    },
+                    rootLayout = root,
                     appsGrid = { modifier ->
                         AndroidView(
                             factory = { context ->
@@ -545,51 +532,68 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, Callback, FlutterPlug
                             }
                         )
                     },
-                    topBar = { modifier ->
-                        AndroidView(
-                            factory = { context ->
-                                AppBarLayout(context)
-                            },
-                            onReset = { appBar ->
-                                appBar.removeView(toolbar)
-                                appBar.addView(toolbar, toolbarParams)
-                            },
-                            modifier = modifier,
-                            update = { appBar ->
-                                appBar.addView(toolbar, toolbarParams)
-                                appBar.setBackgroundColor(android.graphics.Color.TRANSPARENT)
-                                appBar.isLiftOnScroll = true
-                                appBar.statusBarForeground =
-                                    MaterialShapeDrawable.createWithElevationOverlay(
-                                        appBar.context
-                                    )
-                            },
-                            onRelease = { appBar ->
-                                appBar.removeView(toolbar)
+                    appsUpdate = { apps ->
+                        AppsReceiver {
+                            loadApp(recyclerView = apps)
+                        }.also {
+                            registerReceiver(
+                                it,
+                                IntentFilter().apply {
+                                    addAction(Intent.ACTION_PACKAGE_ADDED)
+                                    addAction(Intent.ACTION_PACKAGE_REMOVED)
+                                    addDataScheme("package")
+                                }
+                            ).run {
+                                appReceiver = it
                             }
-                        )
+                        }.run {
+                            loadApp(recyclerView = apps)
+                        }
+                    },
+                    topBar = { modifier ->
+//                        AnimatedVisibility(
+//                            visible = actionBarVisible,
+//                            modifier = modifier,
+//                            label = stringResource(id = R.string.app_name)
+//                        ) {
+//
+//                        }
+
+                    },
+                    topBarUpdate = { toolbar ->
+                        setSupportActionBar(toolbar)
+                        supportActionBar?.setDisplayShowTitleEnabled(true)
+                        supportActionBar?.setDisplayUseLogoEnabled(true)
+                        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+                        supportActionBar?.setIcon(R.drawable.baseline_terminal_24)
                     },
                     tabRow = {},
                     preference = { modifier ->
                         AndroidView(
                             factory = { context ->
-                                FrameLayout(context)
+                                FrameLayout(context).apply {
+                                    addView(preference, preferenceParams)
+                                }
                             },
                             onReset = { frame ->
                                 frame.removeView(preference)
                                 frame.addView(preference, preferenceParams)
                             },
                             modifier = modifier,
-                            update = { frame ->
-                                frame.addView(preference, preferenceParams)
-                            },
                             onRelease = { frame ->
                                 frame.removeView(preference)
                             }
                         )
                     },
-                    optionsMenu = {
-                        optionsMenu()
+                    optionsMenu = { toolbar ->
+                        toolbar.apply {
+                            when (isOverflowMenuShowing) {
+                                true -> hideOverflowMenu()
+                                false -> showOverflowMenu()
+                            }.run {
+                                if (!mVisible) show()
+                            }
+                        }
                     },
                     androidVersion = getAndroidVersion(),
                     shizukuVersion = getShizukuVersion(),
@@ -677,7 +681,7 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, Callback, FlutterPlug
 
     private fun hide() {
         supportActionBar?.hide()
-        // systemUiVisible = false
+        actionBarVisible = false
         mVisible = false
         mHandler?.removeCallbacks(showPart2Runnable)
     }
@@ -780,13 +784,6 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, Callback, FlutterPlug
         }
 
         return ""
-    }
-
-    private fun optionsMenu() {
-        if (mVisible) mMaterialToolbar.showOverflowMenu() else {
-            show()
-            mMaterialToolbar.hideOverflowMenu()
-        }
     }
 
     // 打开任务栏设置

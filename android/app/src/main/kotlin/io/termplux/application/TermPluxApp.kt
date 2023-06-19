@@ -8,6 +8,7 @@ import android.util.Log
 import androidx.preference.PreferenceManager
 import com.farmerbb.taskbar.lib.Taskbar
 import com.google.android.material.color.DynamicColors
+import com.idlefish.flutterboost.FlutterBoost
 import com.kongzue.baseframework.BaseApp
 import com.kongzue.baseframework.BaseFrameworkSettings
 import com.kongzue.baseframework.interfaces.OnBugReportListener
@@ -17,6 +18,7 @@ import com.kongzue.dialogx.dialogs.MessageDialog
 import com.kongzue.dialogx.dialogs.PopTip
 import com.kongzue.dialogxmaterialyou.style.MaterialYouStyle
 import io.termplux.BuildConfig
+import io.termplux.activity.MainActivity
 import org.lsposed.hiddenapibypass.HiddenApiBypass
 import java.io.File
 
@@ -31,7 +33,6 @@ class TermPluxApp : BaseApp<TermPluxApp>() {
     override fun init() {
         // 加载首选项
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(me)
-
         // 触发错误时调用
         setOnCrashListener(
             object : OnBugReportListener() {
