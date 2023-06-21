@@ -43,7 +43,7 @@ import androidx.compose.ui.unit.dp
 import com.blankj.utilcode.util.AppUtils
 import io.termplux.BuildConfig
 import io.termplux.R
-import io.termplux.ui.preview.TermPluxPreviews
+import io.termplux.ui.preview.ScreenPreviews
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -533,7 +533,7 @@ fun ScreenAbout(
     }
 }
 
-@TermPluxPreviews
+@ScreenPreviews
 @Composable
 fun ScreenAboutPreview() {
     ScreenAbout(

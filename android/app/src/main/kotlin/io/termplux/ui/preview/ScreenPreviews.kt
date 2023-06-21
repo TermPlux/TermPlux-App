@@ -61,4 +61,4 @@ import androidx.compose.ui.tooling.preview.Preview
  * 描述: Compose界面预览类
  * 文档: https://developer.android.google.cn/jetpack/compose/tooling/previews
  */
-annotation class TermPluxPreviews
+annotation class ScreenPreviews

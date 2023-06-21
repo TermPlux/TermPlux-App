@@ -12,16 +12,12 @@ import androidx.compose.material.icons.filled.AppSettingsAlt
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.OpenInNew
 import androidx.compose.material.icons.filled.RoomPreferences
-import androidx.compose.material3.DrawerState
-import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -36,8 +32,7 @@ import com.blankj.utilcode.util.AppUtils
 import io.termplux.BuildConfig
 import io.termplux.R
 import io.termplux.ui.navigation.Screen
-import io.termplux.ui.navigation.ScreenRoute
-import io.termplux.ui.preview.TermPluxPreviews
+import io.termplux.ui.preview.ScreenPreviews
 import io.termplux.ui.widget.SettingsItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -186,7 +181,7 @@ fun ScreenSettings(
     }
 }
 
-@TermPluxPreviews
+@ScreenPreviews
 @Composable
 private fun ScreenSettingsPreview() {
     ScreenSettings(

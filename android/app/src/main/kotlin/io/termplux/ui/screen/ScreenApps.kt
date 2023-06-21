@@ -5,7 +5,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import io.termplux.ui.preview.TermPluxPreviews
+import io.termplux.ui.preview.ScreenPreviews
 
 @Composable
 fun ScreenApps(
@@ -21,7 +21,7 @@ fun ScreenApps(
     }
 }
 
-@TermPluxPreviews
+@ScreenPreviews
 @Composable
 fun ScreenAppsPreview() {
     ScreenApps {

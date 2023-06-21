@@ -23,7 +23,7 @@ import androidx.navigation.compose.rememberNavController
 import com.google.android.material.appbar.MaterialToolbar
 import io.termplux.BuildConfig
 import io.termplux.R
-import io.termplux.ui.preview.TermPluxPreviews
+import io.termplux.ui.preview.ScreenPreviews
 import io.termplux.ui.widget.TopActionBar
 
 @Composable
@@ -574,7 +574,7 @@ fun ScreenManager(
 }
 
 @Composable
-@TermPluxPreviews
+@ScreenPreviews
 private fun ScreenManagerPreview() {
     ScreenManager(
         navController = rememberNavController(),

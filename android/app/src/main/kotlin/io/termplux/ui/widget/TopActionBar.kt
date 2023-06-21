@@ -1,16 +1,16 @@
 package io.termplux.ui.widget
 
-import android.graphics.Color
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.shape.MaterialShapeDrawable
-import io.termplux.ui.preview.TermPluxPreviews
+import io.termplux.ui.preview.WidgetPreview
 
 @Composable
 @OptIn(ExperimentalComposeUiApi::class)
@@ -21,7 +21,7 @@ fun TopActionBar(
     val toolbar: MaterialToolbar = MaterialToolbar(
         LocalContext.current
     ).apply {
-        setBackgroundColor(Color.TRANSPARENT)
+        setBackgroundColor(Color.Transparent.value.toInt())
     }.also { toolbar ->
         update(toolbar)
     }
@@ -43,12 +43,11 @@ fun TopActionBar(
         },
         modifier = modifier,
         update = { appBar ->
-            appBar.setBackgroundColor(Color.TRANSPARENT)
+            appBar.setBackgroundColor(Color.Transparent.value.toInt())
             appBar.isLiftOnScroll = true
-            appBar.statusBarForeground =
-                MaterialShapeDrawable.createWithElevationOverlay(
-                    appBar.context
-                )
+            appBar.statusBarForeground = MaterialShapeDrawable.createWithElevationOverlay(
+                appBar.context
+            )
         },
         onRelease = { appBar ->
             appBar.removeView(toolbar)
@@ -57,11 +56,14 @@ fun TopActionBar(
 }
 
 @Composable
-@TermPluxPreviews
+@WidgetPreview
 fun TopActionBarPreview() {
     TopActionBar(
         modifier = Modifier.fillMaxWidth()
     ) {
+        it.apply {
+            title = "TopActionBar"
 
+        }
     }
 }

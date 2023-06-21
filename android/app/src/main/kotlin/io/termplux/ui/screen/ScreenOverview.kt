@@ -33,7 +33,7 @@ import androidx.navigation.compose.rememberNavController
 import io.termplux.BuildConfig
 import io.termplux.R
 import io.termplux.ui.navigation.Screen
-import io.termplux.ui.preview.TermPluxPreviews
+import io.termplux.ui.preview.ScreenPreviews
 
 @Composable
 fun ScreenOverview(
@@ -336,7 +336,7 @@ fun ScreenOverview(
     }
 }
 
-@TermPluxPreviews
+@ScreenPreviews
 @Composable
 private fun ScreenOverviewPreview() {
     ScreenOverview(

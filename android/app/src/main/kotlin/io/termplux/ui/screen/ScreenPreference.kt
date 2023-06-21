@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import io.termplux.ui.preview.TermPluxPreviews
+import io.termplux.ui.preview.ScreenPreviews
 
 @Composable
 fun ScreenPreference(
@@ -26,7 +26,7 @@ fun ScreenPreference(
 }
 
 @Composable
-@TermPluxPreviews
+@ScreenPreviews
 fun ScreenPreferencePreview() {
     ScreenPreference { modifier ->
         Box(
