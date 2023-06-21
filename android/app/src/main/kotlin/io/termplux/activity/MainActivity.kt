@@ -44,7 +44,6 @@ import com.google.accompanist.adaptive.calculateDisplayFeatures
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.android.material.internal.EdgeToEdgeUtils
 import com.idlefish.flutterboost.FlutterBoost
-import com.idlefish.flutterboost.FlutterBoost.Callback
 import com.idlefish.flutterboost.FlutterBoostDelegate
 import com.idlefish.flutterboost.FlutterBoostRouteOptions
 import com.idlefish.flutterboost.containers.FlutterBoostActivity
@@ -143,7 +142,6 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
         }
         false
     }
-
 
     override fun resetContentView(): DisableSwipeViewPager = DisableSwipeViewPager(
         context = mContext

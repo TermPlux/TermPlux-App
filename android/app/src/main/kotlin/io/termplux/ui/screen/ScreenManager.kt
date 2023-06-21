@@ -75,6 +75,7 @@ fun ScreenManager(
                 ) {
                     TopActionBar(
                         modifier = Modifier.fillMaxWidth(),
+                        visible = true,
                         update = topBarUpdate
                     )
                     Row(

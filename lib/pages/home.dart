@@ -60,7 +60,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: Scrollbar(
           child: ListView(
-            padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
+            padding: const EdgeInsets.all(8),
             children: [
               PlatformCard(
                 cover: const Image(
