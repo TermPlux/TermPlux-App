@@ -440,19 +440,6 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
                 activity = mME
             )
 
-//            val toolbar: MaterialToolbar = MaterialToolbar(
-//                LocalContext.current
-//            ).apply {
-//                setBackgroundColor(android.graphics.Color.TRANSPARENT)
-//            }.also { toolbar ->
-//                setSupportActionBar(toolbar)
-//            }
-//
-//            val toolbarParams: AppBarLayout.LayoutParams = AppBarLayout.LayoutParams(
-//                AppBarLayout.LayoutParams.MATCH_PARENT,
-//                AppBarLayout.LayoutParams.WRAP_CONTENT
-//            )
-
             val preferenceAdapter = PreferenceAdapter(
                 activity = this@MainActivity
             ) {
@@ -491,40 +478,6 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
                     windowSize = windowSize,
                     displayFeatures = displayFeatures,
                     rootLayout = root,
-                    appsGrid = { modifier ->
-                        AndroidView(
-                            factory = { context ->
-                                RecyclerView(context)
-                            },
-                            modifier = modifier,
-                            update = { apps ->
-                                apps.layoutManager = GridLayoutManager(
-                                    apps.context,
-                                    4,
-                                    RecyclerView.VERTICAL,
-                                    false
-                                )
-                                // 加载应用列表
-                                loadApp(recyclerView = apps).run {
-                                    // 用于刷新应用列表的广播接收器
-                                    AppsReceiver {
-                                        loadApp(recyclerView = apps)
-                                    }.also {
-                                        // 注册广播接收器
-                                        registerReceiver(
-                                            it,
-                                            IntentFilter().apply {
-                                                addAction(Intent.ACTION_PACKAGE_ADDED)
-                                                addAction(Intent.ACTION_PACKAGE_REMOVED)
-                                                addDataScheme("package")
-                                            }
-                                        )
-                                        appReceiver = it
-                                    }
-                                }
-                            }
-                        )
-                    },
                     appsUpdate = { apps ->
                         AppsReceiver {
                             loadApp(recyclerView = apps)

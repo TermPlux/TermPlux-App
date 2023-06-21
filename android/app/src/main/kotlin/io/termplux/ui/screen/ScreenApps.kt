@@ -5,19 +5,23 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.recyclerview.widget.RecyclerView
 import io.termplux.ui.preview.ScreenPreviews
+import io.termplux.ui.widget.AppsGrid
 
 @Composable
 fun ScreenApps(
-    appsGrid: @Composable (modifier: Modifier) -> Unit
+    appsUpdate: (RecyclerView) -> Unit,
 ) {
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
-        appsGrid(
+        AppsGrid(
             modifier = Modifier.fillMaxSize()
-        )
+        ) { apps ->
+            appsUpdate(apps)
+        }
     }
 }
 

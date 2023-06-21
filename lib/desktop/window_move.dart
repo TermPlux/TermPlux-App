@@ -1,13 +1,12 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
+import 'package:termplux/platform/platform.dart';
 
 class WindowTitleBar extends StatelessWidget {
-  const WindowTitleBar({super.key, required this.enable});
-
-  final bool enable;
+  const WindowTitleBar({super.key});
 
   Widget? titleBar() {
-    if (enable) {
+    if (kIsDesktop) {
       return MoveWindow();
     } else {
       return null;

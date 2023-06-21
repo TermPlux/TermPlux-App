@@ -21,7 +21,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   static const channel = MethodChannel('termplux_channel');
 
   void navToPager() {
@@ -49,12 +48,13 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('请选择目标平台'),
-        flexibleSpace: WindowTitleBar(enable: kIsDesktop),
+        flexibleSpace: const WindowTitleBar(),
         actions: [
           IconButton(onPressed: toggle, icon: const Icon(Icons.fullscreen)),
-          IconButton(onPressed: navToPager, icon: const Icon(Icons.arrow_forward)),
+          IconButton(
+              onPressed: navToPager, icon: const Icon(Icons.arrow_forward)),
           IconButton(onPressed: navToPager, icon: const Icon(Icons.more_vert)),
-          WindowButtons(enable: kIsDesktop)
+          const WindowButtons()
         ],
       ),
       body: Center(

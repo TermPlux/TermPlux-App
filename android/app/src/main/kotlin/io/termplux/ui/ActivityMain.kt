@@ -55,7 +55,6 @@ fun ActivityMain(
     windowSize: WindowSizeClass,
     displayFeatures: List<DisplayFeature>,
     rootLayout: FrameLayout,
-    appsGrid: @Composable (modifier: Modifier) -> Unit,
     appsUpdate: (RecyclerView) -> Unit,
 
     topBarUpdate: (MaterialToolbar) -> Unit,
@@ -606,7 +605,7 @@ fun ActivityMain(
                     composable(
                         route = Screen.Apps.route
                     ) {
-                        ScreenApps(appsGrid = appsGrid)
+                        ScreenApps(appsUpdate = appsUpdate)
                     }
                     composable(
                         route = Screen.Flutter.route

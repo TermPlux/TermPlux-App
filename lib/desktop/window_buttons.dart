@@ -1,5 +1,6 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
+import 'package:termplux/platform/platform.dart';
 
 final buttonColors = WindowButtonColors(
     mouseOver: const Color(0x33000000),
@@ -16,12 +17,10 @@ final closeButtonColors = WindowButtonColors(
     iconMouseDown: Colors.white);
 
 class WindowButtons extends StatelessWidget {
-  const WindowButtons({super.key, required this.enable});
-
-  final bool enable;
+  const WindowButtons({super.key});
 
   Widget? button() {
-    if (enable) {
+    if (kIsDesktop) {
       return Row(children: <Widget>[
         MinimizeWindowButton(colors: buttonColors),
         MaximizeWindowButton(colors: buttonColors),
