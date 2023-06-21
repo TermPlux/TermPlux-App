@@ -57,9 +57,9 @@ fun ActivityMain(
     rootLayout: FrameLayout,
     appsGrid: @Composable (modifier: Modifier) -> Unit,
     appsUpdate: (RecyclerView) -> Unit,
-    topBar: @Composable (modifier: Modifier) -> Unit,
+
     topBarUpdate: (MaterialToolbar) -> Unit,
-    tabRow: @Composable (modifier: Modifier) -> Unit,
+
     preference: @Composable (modifier: Modifier) -> Unit,
     optionsMenu: (toolbar: MaterialToolbar) -> Unit,
     androidVersion: String,
@@ -100,8 +100,6 @@ fun ActivityMain(
     val snackBarHostState = remember {
         SnackbarHostState()
     }
-
-    lateinit var toolbar: MaterialToolbar
 
     val navigationType: NavigationType
     val contentType: ContentType
@@ -437,8 +435,6 @@ fun ActivityMain(
                                         }
                                         launchSingleTop = true
                                         restoreState = true
-                                    }.run {
-                                        optionsMenu(toolbar)
                                     }
                                 }
                             ) {
@@ -495,9 +491,6 @@ fun ActivityMain(
                                 alwaysShowLabel = false
                             )
                         }
-//                        navBar(
-//                            modifier = Modifier.fillMaxWidth()
-//                        )
                     }
                 }
             },

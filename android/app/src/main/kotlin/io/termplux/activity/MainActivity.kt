@@ -9,7 +9,6 @@ import android.os.IBinder
 import android.os.Looper
 import android.view.*
 import android.widget.FrameLayout
-import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -43,11 +42,9 @@ import androidx.window.layout.DisplayFeature
 import com.farmerbb.taskbar.lib.Taskbar
 import com.google.accompanist.adaptive.calculateDisplayFeatures
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.internal.EdgeToEdgeUtils
-import com.google.android.material.shape.MaterialShapeDrawable
 import com.idlefish.flutterboost.FlutterBoost
+import com.idlefish.flutterboost.FlutterBoost.Callback
 import com.idlefish.flutterboost.FlutterBoostDelegate
 import com.idlefish.flutterboost.FlutterBoostRouteOptions
 import com.idlefish.flutterboost.containers.FlutterBoostActivity
@@ -356,7 +353,7 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
         mFlutterView = flutterView ?: errorFlutterViewIsNull()
         // 移除FlutterView
         (mFlutterView.parent as ViewGroup).removeView(mFlutterView)
-        // 添加生命周期
+        // 继续执行生命周期函数
         lifecycle.addObserver(this@MainActivity)
     }
 
@@ -489,8 +486,6 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
 
 
 
-
-
             TermPluxTheme(dynamicColor = isDynamicColor) {
                 ActivityMain(
                     navController = navController,
@@ -550,16 +545,6 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
                             loadApp(recyclerView = apps)
                         }
                     },
-                    topBar = { modifier ->
-//                        AnimatedVisibility(
-//                            visible = actionBarVisible,
-//                            modifier = modifier,
-//                            label = stringResource(id = R.string.app_name)
-//                        ) {
-//
-//                        }
-
-                    },
                     topBarUpdate = { toolbar ->
                         setSupportActionBar(toolbar)
                         supportActionBar?.setDisplayShowTitleEnabled(true)
@@ -567,7 +552,6 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
                         supportActionBar?.setDisplayHomeAsUpEnabled(true)
                         supportActionBar?.setIcon(R.drawable.baseline_terminal_24)
                     },
-                    tabRow = {},
                     preference = { modifier ->
                         AndroidView(
                             factory = { context ->
@@ -630,7 +614,6 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
         mFlutterView.removeCallbacks(this@MainActivity)
         unregisterReceiver(appReceiver)
     }
-
 
     override fun run() {
         val cx = mSplashLogo.x + mSplashLogo.width / 2f
@@ -892,7 +875,6 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
             val window = (view.context as BaseActivity).window
             val systemUiController = rememberSystemUiController()
 
-
             val colorScheme = when {
                 dynamicColor -> {
                     val context = LocalContext.current
@@ -911,10 +893,10 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
                         color = Color.Transparent,
                         darkIcons = !darkTheme
                     )
-//                    WindowCompat.getInsetsController(
-//                        window,
-//                        view
-//                    ).isAppearanceLightStatusBars = !darkTheme
+                    WindowCompat.getInsetsController(
+                        window,
+                        view
+                    ).isAppearanceLightStatusBars = !darkTheme
                 }
             }
 
