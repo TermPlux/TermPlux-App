@@ -9,6 +9,9 @@ import android.os.IBinder
 import android.os.Looper
 import android.view.*
 import android.widget.FrameLayout
+import androidx.activity.compose.setContent
+import androidx.annotation.ColorRes
+import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -35,7 +38,6 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.preference.PreferenceManager
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import androidx.window.layout.DisplayFeature
@@ -74,9 +76,8 @@ import io.termplux.adapter.AppsAdapter
 import io.termplux.adapter.PreferenceAdapter
 import io.termplux.custom.DisableSwipeViewPager
 import io.termplux.custom.LinkNativeViewFactory
-import io.termplux.custom.RootLayout
 import io.termplux.fragment.ContainerFragment
-import io.termplux.fragment.FlutterReturnFragment
+import io.termplux.fragment.ReturnFragment
 import io.termplux.model.AppsModel
 import io.termplux.receiver.AppsReceiver
 import io.termplux.services.MainService
@@ -92,8 +93,8 @@ import kotlin.math.hypot
 @SuppressLint(value = ["NonConstantResourceId"])
 @DarkStatusBarTheme(value = true)
 @DarkNavigationBarTheme(value = true)
-@NavigationBarBackgroundColorRes(value = R.color.transparent)
-@FragmentLayout(value = R.id.fragment_container)
+@NavigationBarBackgroundColorRes(value = MainActivity.navigationBarBackgroundColor)
+@FragmentLayout(value = MainActivity.fragmentLayout)
 class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback, FlutterPlugin,
     MethodChannel.MethodCallHandler, FlutterViewReturn, FlutterEngineConfigurator,
     Shizuku.OnBinderReceivedListener, Shizuku.OnBinderDeadListener,
@@ -111,10 +112,11 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
     private lateinit var userServices: IUserService
 
 
-    private lateinit var mMainFragment: FlutterReturnFragment
+    private lateinit var mReturnFragment: ReturnFragment
 
     private lateinit var mSplashLogo: AppCompatImageView
     private lateinit var mFlutterView: FlutterView
+    private lateinit var mRootLayout: FrameLayout
 
     private lateinit var appReceiver: AppsReceiver
 
@@ -147,8 +149,9 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
         context = mContext
     ).apply {
         super.resetContentView()
-        id = R.id.fragment_container
+        id = fragmentLayout
     }
+
 
     @SuppressLint("RestrictedApi")
     override fun initViews() {
@@ -175,6 +178,8 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
             "dynamic_colors",
             true
         ) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+
+
     }
 
     /**
@@ -182,24 +187,27 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
      */
     override fun initFragment(fragmentChangeUtil: FragmentChangeUtil?) {
         super.initFragment(fragmentChangeUtil)
+        supportFragmentManager
         fragmentChangeUtil?.addFragment(
             ContainerFragment.newInstance(
                 mainFragment = FlutterBoostFragment.CachedEngineFragmentBuilder(
-                    FlutterReturnFragment::class.java
+                    ReturnFragment::class.java
                 )
                     .destroyEngineWithFragment(false)
                     .renderMode(RenderMode.surface)
                     .transparencyMode(TransparencyMode.opaque)
-                    .shouldAttachEngineToActivity(true)
-                    .build<FlutterReturnFragment?>().also {
-                        mMainFragment = it
+                    .shouldAttachEngineToActivity(false)
+                    .build<ReturnFragment>().apply {
+                        mReturnFragment = this@apply
                     }
             ), true
         )
     }
 
     override fun initDatas(parameter: JumpParameter?) {
-
+//        ContentFragment().show(
+//            supportFragmentManager, "c"
+//        )
     }
 
     override fun setEvents() {
@@ -249,17 +257,17 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
 
     override fun onPostResume() {
         super.onPostResume()
-        mMainFragment.onPostResume()
+        mReturnFragment.onPostResume()
     }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        mMainFragment.onNewIntent(intent)
+        mReturnFragment.onNewIntent(intent)
     }
 
     override fun onBack(): Boolean {
         super.onBack()
-        mMainFragment.onBackPressed()
+        mReturnFragment.onBackPressed()
         return true
     }
 
@@ -269,7 +277,7 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        mMainFragment.onRequestPermissionsResult(
+        mReturnFragment.onRequestPermissionsResult(
             requestCode,
             permissions,
             grantResults
@@ -278,13 +286,13 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
 
     override fun onUserLeaveHint() {
         super.onUserLeaveHint()
-        mMainFragment.onUserLeaveHint()
+        mReturnFragment.onUserLeaveHint()
     }
 
     @SuppressLint("MissingSuperCall")
     override fun onTrimMemory(level: Int) {
         super.onTrimMemory(level)
-        mMainFragment.onTrimMemory(level)
+        mReturnFragment.onTrimMemory(level)
     }
 
     /**
@@ -338,25 +346,62 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
         }
     }
 
-    override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+    private lateinit var mChannel: MethodChannel
 
+    override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+        mChannel = MethodChannel(binding.binaryMessenger, plugin_channel)
+        mChannel.setMethodCallHandler(this)
     }
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-
+        mChannel.setMethodCallHandler(null)
     }
 
     override fun onFlutterViewReturned(flutterView: FlutterView?) {
         // 获取FlutterView
-        mFlutterView = flutterView ?: errorFlutterViewIsNull()
-        // 移除FlutterView
-        (mFlutterView.parent as ViewGroup).removeView(mFlutterView)
+        mFlutterView = (flutterView ?: errorFlutterViewIsNull()).apply {
+            setOnTouchListener(delayHideTouchListener)
+            visibility = View.INVISIBLE
+            post(this@MainActivity)
+            (parent as ViewGroup).removeView(this@apply)
+        }
+        // 初始化屏闪动画
+        mSplashLogo = AppCompatImageView(mContext).apply {
+            setImageDrawable(
+                ContextCompat.getDrawable(
+                    mContext,
+                    R.drawable.custom_termplux_24
+                )
+            )
+        }
+        // 初始化跟布局
+        mRootLayout = FrameLayout(this@MainActivity).apply {
+            addView(
+                mFlutterView,
+                FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT,
+                    FrameLayout.LayoutParams.MATCH_PARENT
+                )
+            )
+            addView(
+                mSplashLogo,
+                FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                    Gravity.CENTER
+                )
+            )
+        }
         // 继续执行生命周期函数
         lifecycle.addObserver(this@MainActivity)
     }
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
-
+        when (call.method) {
+            "getShizukuVersion" -> result.success(getShizukuVersion())
+            "getDynamicColors" -> result.success(isDynamicColor)
+            else -> result.notImplemented()
+        }
     }
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
@@ -388,36 +433,16 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
         }
     }
 
-    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class, ExperimentalComposeUiApi::class)
+    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(owner: LifecycleOwner) {
         super<DefaultLifecycleObserver>.onCreate(owner)
-        RootLayout(
-            context = mContext,
-            flutter = mFlutterView.apply {
-                setOnTouchListener(delayHideTouchListener)
-                visibility = View.INVISIBLE
-                post(this@MainActivity)
-            },
-            splash = AppCompatImageView(mContext).apply {
-                setImageDrawable(
-                    ContextCompat.getDrawable(
-                        mContext,
-                        R.drawable.custom_termplux_24
-                    )
-                )
-            }.also { logo ->
-                mSplashLogo = logo
-            },
-            fullMode = true
-        ).setContent { root ->
+        setContent {
             // 检查权限
             check()
             channel.setMethodCallHandler { call, res ->
                 when (call.method) {
                     "pager" -> {
-                        // mViewPager2.currentItem = PagerAdapter.compose
                         res.success("success")
-
                     }
 
                     "dynamic_colors" -> res.success(isDynamicColor)
@@ -433,67 +458,40 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
             val drawerState: DrawerState = rememberDrawerState(
                 initialValue = DrawerValue.Closed
             )
-            val windowSize: WindowSizeClass = calculateWindowSizeClass(
-                activity = mME
-            )
-            val displayFeatures: List<DisplayFeature> = calculateDisplayFeatures(
-                activity = mME
-            )
+            val windowSize: WindowSizeClass = calculateWindowSizeClass(activity = mME)
+            val displayFeatures: List<DisplayFeature> = calculateDisplayFeatures(activity = mME)
+            val preferenceAdapter = PreferenceAdapter(activity = mME)
 
-            val preferenceAdapter = PreferenceAdapter(
-                activity = this@MainActivity
+            val darkTheme = isSystemInDarkTheme()
+
+            TermPluxTheme(
+                darkTheme = darkTheme,
+                dynamicColor = isDynamicColor
             ) {
-                navController.navigate(
-                    route = Screen.Settings.route
-                ) {
-                    popUpTo(
-                        id = navController.graph.findStartDestination().id
-                    ) {
-                        saveState = true
-                    }
-                    launchSingleTop = true
-                    restoreState = true
-                }
-            }
-
-            val preference = ViewPager2(
-                LocalContext.current
-            ).apply {
-                isUserInputEnabled = true
-                adapter = preferenceAdapter
-                offscreenPageLimit = preferenceAdapter.itemCount
-            }
-
-            val preferenceParams: FrameLayout.LayoutParams = FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.MATCH_PARENT,
-                FrameLayout.LayoutParams.MATCH_PARENT
-            )
-
-
-
-            TermPluxTheme(dynamicColor = isDynamicColor) {
                 ActivityMain(
                     navController = navController,
                     drawerState = drawerState,
                     windowSize = windowSize,
                     displayFeatures = displayFeatures,
-                    rootLayout = root,
+                    rootLayout = mRootLayout,
                     appsUpdate = { apps ->
-                        AppsReceiver {
-                            loadApp(recyclerView = apps)
-                        }.also {
-                            registerReceiver(
-                                it,
-                                IntentFilter().apply {
-                                    addAction(Intent.ACTION_PACKAGE_ADDED)
-                                    addAction(Intent.ACTION_PACKAGE_REMOVED)
-                                    addDataScheme("package")
+                        apps.apply {
+                            AppsReceiver {
+                                loadApp(recyclerView = this@apply)
+                            }.also {
+                                registerReceiver(
+                                    it,
+                                    IntentFilter().apply {
+                                        addAction(Intent.ACTION_PACKAGE_ADDED)
+                                        addAction(Intent.ACTION_PACKAGE_REMOVED)
+                                        addDataScheme("package")
+                                    }
+                                ).run {
+                                    appReceiver = it
                                 }
-                            ).run {
-                                appReceiver = it
+                            }.run {
+                                loadApp(recyclerView = this@apply)
                             }
-                        }.run {
-                            loadApp(recyclerView = apps)
                         }
                     },
                     topBarUpdate = { toolbar ->
@@ -503,22 +501,11 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
                         supportActionBar?.setDisplayHomeAsUpEnabled(true)
                         supportActionBar?.setIcon(R.drawable.baseline_terminal_24)
                     },
-                    preference = { modifier ->
-                        AndroidView(
-                            factory = { context ->
-                                FrameLayout(context).apply {
-                                    addView(preference, preferenceParams)
-                                }
-                            },
-                            onReset = { frame ->
-                                frame.removeView(preference)
-                                frame.addView(preference, preferenceParams)
-                            },
-                            modifier = modifier,
-                            onRelease = { frame ->
-                                frame.removeView(preference)
-                            }
-                        )
+                    preferenceUpdate = { preference ->
+                        preference.apply {
+                            adapter = preferenceAdapter
+                            offscreenPageLimit = preferenceAdapter.itemCount
+                        }
                     },
                     optionsMenu = { toolbar ->
                         toolbar.apply {
@@ -532,7 +519,9 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
                     },
                     androidVersion = getAndroidVersion(),
                     shizukuVersion = getShizukuVersion(),
-                    current = {},
+                    current = {
+
+                    },
                     toggle = {
                         toggle()
                     },
@@ -710,14 +699,11 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
     }
 
     private fun getShizukuVersion(): String {
-        try {
-            val ver: String = Shizuku.getVersion().toString()
-            return "Shizuku $ver"
+        return try {
+            Shizuku.getVersion().toString()
         } catch (e: Exception) {
-
+            Log.getStackTraceString(e)
         }
-
-        return ""
     }
 
     // 打开任务栏设置
@@ -771,6 +757,13 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
 
     companion object {
 
+        @ColorRes
+        const val navigationBarBackgroundColor: Int = R.color.transparent
+
+        @IdRes
+        const val fragmentLayout: Int = R.id.fragment_container
+
+        const val plugin_channel: String = "flutter_termplux"
         const val channelName: String = "termplux_channel"
 
         /** 开屏图标动画时长 */
@@ -818,7 +811,7 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
 
         @Composable
         fun TermPluxTheme(
-            darkTheme: Boolean = isSystemInDarkTheme(),
+            darkTheme: Boolean,
             dynamicColor: Boolean,
             content: @Composable () -> Unit
         ) {

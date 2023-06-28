@@ -72,6 +72,11 @@
             <meta-data
                 android:name="io.flutter.embedding.android.NormalTheme"
                 android:resource="@style/Theme.TermPlux" />
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+<!--                -->
+<!--                <category android:name="android.intent.category.LAUNCHER_APP" />-->
+<!--            </intent-filter>-->
         </activity>
 
         <service

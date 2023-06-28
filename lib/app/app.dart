@@ -41,7 +41,7 @@ class TermPluxApp extends StatelessWidget {
           routes: routes,
           home: home,
           builder: (context, child) {
-            if (kIsUseBoost){
+            if (kIsUseBoost) {
               return home;
             } else {
               return DevicePreview.appBuilder(context, child);
@@ -57,8 +57,7 @@ class TermPluxApp extends StatelessWidget {
               brightness: Brightness.dark,
               useMaterial3: true),
           themeMode: ThemeMode.system,
-          locale: DevicePreview.locale(context)
-      );
+          locale: DevicePreview.locale(context));
     });
   }
 

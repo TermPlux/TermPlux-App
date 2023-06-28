@@ -1,7 +1,5 @@
 package io.termplux.ui
 
-import android.content.Intent
-import android.provider.Settings
 import android.widget.FrameLayout
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
@@ -16,9 +14,7 @@ import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -29,6 +25,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
 import androidx.window.layout.DisplayFeature
 import androidx.window.layout.FoldingFeature
 import com.google.android.material.appbar.MaterialToolbar
@@ -39,7 +36,6 @@ import io.termplux.ui.navigation.Screen
 import io.termplux.ui.navigation.ScreenRoute
 import io.termplux.ui.navigation.ScreenType
 import io.termplux.ui.screen.*
-import io.termplux.ui.widget.TopActionBar
 import io.termplux.ui.window.ContentType
 import io.termplux.ui.window.DevicePosture
 import io.termplux.ui.window.NavigationType
@@ -56,10 +52,8 @@ fun ActivityMain(
     displayFeatures: List<DisplayFeature>,
     rootLayout: FrameLayout,
     appsUpdate: (RecyclerView) -> Unit,
-
     topBarUpdate: (MaterialToolbar) -> Unit,
-
-    preference: @Composable (modifier: Modifier) -> Unit,
+    preferenceUpdate: (ViewPager2) -> Unit,
     optionsMenu: (toolbar: MaterialToolbar) -> Unit,
     androidVersion: String,
     shizukuVersion: String,
@@ -650,7 +644,7 @@ fun ActivityMain(
                         route = Screen.Preference.route
                     ) {
                         ScreenPreference(
-                            preference = preference
+                            preferenceUpdate = preferenceUpdate
                         )
                     }
                     composable(

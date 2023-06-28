@@ -9,13 +9,13 @@ import com.idlefish.flutterboost.containers.FlutterBoostFragment
 import io.flutter.embedding.android.FlutterView
 import io.termplux.utils.FlutterViewReturn
 
-class FlutterReturnFragment : FlutterBoostFragment() {
+class ReturnFragment : FlutterBoostFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View = Space(context).also {
+    ): View = Space(context).apply {
         super.onCreateView(inflater, container, savedInstanceState)?.let { parent ->
             when (val activity = requireActivity()) {
                 is FlutterViewReturn -> {

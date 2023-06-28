@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 
 import '../desktop/window_buttons.dart';
 import '../desktop/window_move.dart';
-import '../platform/platform.dart';
+import '../native/flutter_termplux.dart';
 import '../navigation/navigation.dart';
 import '../widget/image_logo.dart';
 import '../widget/platform_card.dart';
@@ -22,6 +22,32 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   static const channel = MethodChannel('termplux_channel');
+
+  String _platformVersion = 'Unknown';
+  final _flutterTermpluxPlugin = FlutterTermPlux();
+
+  @override
+  void initState() {
+    super.initState();
+    initPlatformState();
+  }
+
+  Future<void> initPlatformState() async {
+    String platformVersion;
+
+    try {
+      platformVersion = await _flutterTermpluxPlugin.getShizukuVersion() ??
+          'Unknown platform version';
+    } on PlatformException {
+      platformVersion = 'Failed to get platform version.';
+    }
+
+    if (!mounted) return;
+
+    setState(() {
+      _platformVersion = platformVersion;
+    });
+  }
 
   void navToPager() {
     if (!kIsWeb) {
@@ -47,7 +73,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('请选择目标平台'),
+        title: Text(widget.title),
         flexibleSpace: const WindowTitleBar(),
         actions: [
           IconButton(onPressed: toggle, icon: const Icon(Icons.fullscreen)),
@@ -62,6 +88,7 @@ class _MyHomePageState extends State<MyHomePage> {
           child: ListView(
             padding: const EdgeInsets.all(8),
             children: [
+              Text(_platformVersion),
               PlatformCard(
                 cover: const Image(
                   image: AssetImage("cover/android.png"),

@@ -23,11 +23,6 @@
             android:summary="@string/desktop_summary"
             android:title="@string/desktop_title" />
 
-        <Preference
-            android:icon="@drawable/baseline_settings_24"
-            android:key="navigation_settings"
-            android:title="@string/menu_settings" />
-
     </PreferenceCategory>
 
 </PreferenceScreen>

@@ -9,18 +9,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import androidx.viewpager2.widget.ViewPager2
 import io.termplux.ui.preview.ScreenPreviews
+import io.termplux.ui.widget.Preference
 
 @Composable
 fun ScreenPreference(
-    preference: @Composable (modifier: Modifier) -> Unit
+    preferenceUpdate: (ViewPager2) -> Unit
 ) {
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
-        preference(
-            modifier = Modifier.fillMaxSize()
+        Preference(
+            modifier = Modifier.fillMaxSize(),
+            update = preferenceUpdate
         )
     }
 }
@@ -28,16 +31,16 @@ fun ScreenPreference(
 @Composable
 @ScreenPreviews
 fun ScreenPreferencePreview() {
-    ScreenPreference { modifier ->
-        Box(
-            modifier = modifier,
-            contentAlignment = Alignment.Center,
-        ) {
-            Text(
-                text = "Preference Preview",
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.titleLarge
-            )
-        }
-    }
+//    ScreenPreference { modifier ->
+//        Box(
+//            modifier = modifier,
+//            contentAlignment = Alignment.Center,
+//        ) {
+//            Text(
+//                text = "Preference Preview",
+//                textAlign = TextAlign.Center,
+//                style = MaterialTheme.typography.titleLarge
+//            )
+//        }
+//    }
 }
