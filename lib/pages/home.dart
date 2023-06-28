@@ -65,20 +65,34 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  void aaa() {
-    navigation(context, '/');
+  void android() {
+    navigation(context, '/android');
+  }
+
+  void ios(){
+
+  }
+
+  void windows() {
+
+  }
+
+  void macos() {
+
+  }
+
+  void linux(){
+
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text("欢迎访问 ${widget.title}"),
         flexibleSpace: const WindowTitleBar(),
         actions: [
-          IconButton(onPressed: toggle, icon: const Icon(Icons.fullscreen)),
-          IconButton(
-              onPressed: navToPager, icon: const Icon(Icons.arrow_forward)),
+
           IconButton(onPressed: navToPager, icon: const Icon(Icons.more_vert)),
           const WindowButtons()
         ],
@@ -109,7 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
                       child: ImageLogo(assets: 'icon/unity.png')),
                 ],
-                pressed: aaa,
+                pressed: android,
               ),
               PlatformCard(
                 cover: const Image(
@@ -125,7 +139,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
                       child: FlutterLogo()),
                 ],
-                pressed: aaa,
+                pressed: ios,
               ),
               PlatformCard(
                 cover: const Image(
@@ -141,7 +155,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
                       child: FlutterLogo()),
                 ],
-                pressed: aaa,
+                pressed: windows,
               ),
               PlatformCard(
                 cover: const Image(
@@ -157,7 +171,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
                       child: FlutterLogo()),
                 ],
-                pressed: aaa,
+                pressed: macos,
               ),
               PlatformCard(
                 cover: const Image(
@@ -173,7 +187,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
                       child: FlutterLogo()),
                 ],
-                pressed: aaa,
+                pressed: linux,
               ),
             ],
           ),

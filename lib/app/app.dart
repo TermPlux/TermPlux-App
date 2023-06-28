@@ -3,6 +3,11 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_boost/flutter_boost.dart';
 
+import '../pages/android.dart';
+import '../pages/ios.dart';
+import '../pages/windows.dart';
+import '../pages/macos.dart';
+import '../pages/linux.dart';
 import '../platform/platform.dart';
 import '../pages/home.dart';
 
@@ -18,6 +23,41 @@ class TermPluxApp extends StatelessWidget {
           settings: settings,
           pageBuilder: (_, __, ___) {
             return const MyHomePage(title: appName);
+          });
+    },
+    '/android': (settings, uniqueId) {
+      return PageRouteBuilder<dynamic>(
+          settings: settings,
+          pageBuilder: (_, __, ___) {
+            return const AndroidPlatformPage();
+          });
+    },
+    '/ios': (settings, uniqueId) {
+      return PageRouteBuilder<dynamic>(
+          settings: settings,
+          pageBuilder: (_, __, ___) {
+            return const IOSPlatformPage();
+          });
+    },
+    '/windows': (settings, uniqueId) {
+      return PageRouteBuilder<dynamic>(
+          settings: settings,
+          pageBuilder: (_, __, ___) {
+            return const WindowsPlatformPage();
+          });
+    },
+    '/macos': (settings, uniqueId) {
+      return PageRouteBuilder<dynamic>(
+          settings: settings,
+          pageBuilder: (_, __, ___) {
+            return const MacOSPlatformPage();
+          });
+    },
+    '/linux': (settings, uniqueId) {
+      return PageRouteBuilder<dynamic>(
+          settings: settings,
+          pageBuilder: (_, __, ___) {
+            return const LinuxPlatformPage();
           });
     },
   };
@@ -57,7 +97,8 @@ class TermPluxApp extends StatelessWidget {
               brightness: Brightness.dark,
               useMaterial3: true),
           themeMode: ThemeMode.system,
-          locale: DevicePreview.locale(context));
+          locale: DevicePreview.locale(context),
+          debugShowCheckedModeBanner: false);
     });
   }
 

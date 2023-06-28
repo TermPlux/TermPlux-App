@@ -48,6 +48,7 @@ import com.google.android.material.internal.EdgeToEdgeUtils
 import com.idlefish.flutterboost.FlutterBoost
 import com.idlefish.flutterboost.FlutterBoostDelegate
 import com.idlefish.flutterboost.FlutterBoostRouteOptions
+import com.idlefish.flutterboost.FlutterBoostSetupOptions
 import com.idlefish.flutterboost.containers.FlutterBoostActivity
 import com.idlefish.flutterboost.containers.FlutterBoostFragment
 import com.kongzue.baseframework.BaseActivity
@@ -103,6 +104,7 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
     private val mME: BaseActivity = me
     private val mContext: Context = mME
 
+    private lateinit var mChannel: MethodChannel
     // 平台通道
     private lateinit var channel: MethodChannel
 
@@ -127,7 +129,7 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
     }
 
     private val showPart2Runnable = Runnable {
-        supportActionBar?.show()
+      //  supportActionBar?.show()
         actionBarVisible = true
     }
     private var mVisible: Boolean by mutableStateOf(value = false)
@@ -145,13 +147,14 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
         false
     }
 
-    override fun resetContentView(): DisableSwipeViewPager = DisableSwipeViewPager(
-        context = mContext
-    ).apply {
-        super.resetContentView()
-        id = fragmentLayout
+    override fun resetContentView(): View {
+        return DisableSwipeViewPager(
+            context = mContext
+        ).apply {
+            super.resetContentView()
+            id = fragmentLayout
+        }
     }
-
 
     @SuppressLint("RestrictedApi")
     override fun initViews() {
@@ -163,23 +166,21 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
                 this@MainActivity
             )
         }
+        // 更新操作栏状态
+        mVisible = false
+        // 初始化首选项
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext)
         // 启用边到边
         EdgeToEdgeUtils.applyEdgeToEdge(window, true)
         // 深色模式跟随系统
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         // 设置页面布局边界
         WindowCompat.setDecorFitsSystemWindows(window, false)
-        // 更新操作栏状态
-        mVisible = false
-        // 首选项
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext)
         // 获取动态颜色首选项
         isDynamicColor = mSharedPreferences.getBoolean(
             "dynamic_colors",
             true
         ) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
-
-
     }
 
     /**
@@ -187,7 +188,6 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
      */
     override fun initFragment(fragmentChangeUtil: FragmentChangeUtil?) {
         super.initFragment(fragmentChangeUtil)
-        supportFragmentManager
         fragmentChangeUtil?.addFragment(
             ContainerFragment.newInstance(
                 mainFragment = FlutterBoostFragment.CachedEngineFragmentBuilder(
@@ -346,11 +346,19 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
         }
     }
 
-    private lateinit var mChannel: MethodChannel
+
 
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         mChannel = MethodChannel(binding.binaryMessenger, plugin_channel)
-        mChannel.setMethodCallHandler(this)
+        mChannel.setMethodCallHandler(this@MainActivity)
+    }
+
+    override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
+        when (call.method) {
+            "getShizukuVersion" -> result.success(getShizukuVersion())
+            "getDynamicColors" -> result.success(isDynamicColor)
+            else -> result.notImplemented()
+        }
     }
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
@@ -396,14 +404,6 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
         lifecycle.addObserver(this@MainActivity)
     }
 
-    override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
-        when (call.method) {
-            "getShizukuVersion" -> result.success(getShizukuVersion())
-            "getDynamicColors" -> result.success(isDynamicColor)
-            else -> result.notImplemented()
-        }
-    }
-
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         // 初始化平台通道
         val messenger = flutterEngine.dartExecutor.binaryMessenger
@@ -441,11 +441,7 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
             check()
             channel.setMethodCallHandler { call, res ->
                 when (call.method) {
-                    "pager" -> {
-                        res.success("success")
-                    }
 
-                    "dynamic_colors" -> res.success(isDynamicColor)
                     "toggle" -> toggle()
 
                     else -> {
@@ -494,6 +490,7 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
                             }
                         }
                     },
+                    topBarVisible = actionBarVisible,
                     topBarUpdate = { toolbar ->
                         setSupportActionBar(toolbar)
                         supportActionBar?.setDisplayShowTitleEnabled(true)
@@ -603,7 +600,7 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
     }
 
     private fun hide() {
-        supportActionBar?.hide()
+    //    supportActionBar?.hide()
         actionBarVisible = false
         mVisible = false
         mHandler?.removeCallbacks(showPart2Runnable)
@@ -757,9 +754,15 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
 
     companion object {
 
+        /**
+         * 导航栏背景色
+         */
         @ColorRes
         const val navigationBarBackgroundColor: Int = R.color.transparent
 
+        /**
+         * Fragment容器的id
+         */
         @IdRes
         const val fragmentLayout: Int = R.id.fragment_container
 

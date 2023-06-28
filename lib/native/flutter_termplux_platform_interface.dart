@@ -1,4 +1,3 @@
-
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'flutter_termplux_method_channel.dart';

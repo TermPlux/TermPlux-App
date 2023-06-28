@@ -15,7 +15,8 @@ class MethodChannelFlutterTermPlux extends FlutterTermPluxPlatform {
 
   @override
   Future<String?> getShizukuVersion() async {
-    final version = await methodChannel.invokeMethod<String>('getShizukuVersion');
+    final version =
+        await methodChannel.invokeMethod<String>('getShizukuVersion');
     return version;
   }
 }

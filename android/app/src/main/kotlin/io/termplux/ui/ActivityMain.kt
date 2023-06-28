@@ -52,6 +52,7 @@ fun ActivityMain(
     displayFeatures: List<DisplayFeature>,
     rootLayout: FrameLayout,
     appsUpdate: (RecyclerView) -> Unit,
+    topBarVisible: Boolean,
     topBarUpdate: (MaterialToolbar) -> Unit,
     preferenceUpdate: (ViewPager2) -> Unit,
     optionsMenu: (toolbar: MaterialToolbar) -> Unit,
