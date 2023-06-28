@@ -24,4 +24,8 @@ abstract class FlutterTermPluxPlatform extends PlatformInterface {
   Future<String?> getShizukuVersion() {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
+
+  void toggle() {
+    throw UnimplementedError('platformVersion() has not been implemented.');
+  }
 }

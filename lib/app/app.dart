@@ -2,6 +2,7 @@ import 'package:device_preview/device_preview.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_boost/flutter_boost.dart';
+import 'package:termplux/pages/browser.dart';
 
 import '../pages/android.dart';
 import '../pages/ios.dart';
@@ -15,6 +16,10 @@ class TermPluxApp extends StatelessWidget {
   const TermPluxApp({super.key});
 
   static const String appName = "TermPlux";
+  static const String github = "GitHub";
+  static const String twitter = "Twitter";
+
+  static const String source = "https://github.com/TermPlux/TermPlux-App";
 
   // ”/“为主页，其他为子页面
   static Map<String, FlutterBoostRouteFactory> routerMap = {
@@ -58,6 +63,13 @@ class TermPluxApp extends StatelessWidget {
           settings: settings,
           pageBuilder: (_, __, ___) {
             return const LinuxPlatformPage();
+          });
+    },
+    '/source': (settings, uniqueId) {
+      return PageRouteBuilder<dynamic>(
+          settings: settings,
+          pageBuilder: (_, __, ___) {
+            return const BrowserPage(title: github, url: source);
           });
     },
   };

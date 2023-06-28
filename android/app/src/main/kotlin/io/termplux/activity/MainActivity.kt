@@ -21,7 +21,6 @@ import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSiz
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.*
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -29,17 +28,14 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager2.widget.ViewPager2
 import androidx.window.layout.DisplayFeature
 import com.farmerbb.taskbar.lib.Taskbar
 import com.google.accompanist.adaptive.calculateDisplayFeatures
@@ -48,7 +44,6 @@ import com.google.android.material.internal.EdgeToEdgeUtils
 import com.idlefish.flutterboost.FlutterBoost
 import com.idlefish.flutterboost.FlutterBoostDelegate
 import com.idlefish.flutterboost.FlutterBoostRouteOptions
-import com.idlefish.flutterboost.FlutterBoostSetupOptions
 import com.idlefish.flutterboost.containers.FlutterBoostActivity
 import com.idlefish.flutterboost.containers.FlutterBoostFragment
 import com.kongzue.baseframework.BaseActivity
@@ -84,7 +79,6 @@ import io.termplux.receiver.AppsReceiver
 import io.termplux.services.MainService
 import io.termplux.services.UserService
 import io.termplux.ui.ActivityMain
-import io.termplux.ui.navigation.Screen
 import io.termplux.utils.FlutterViewReturn
 import io.termplux.utils.LifeCircleUtils
 import rikka.shizuku.Shizuku
@@ -104,9 +98,9 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
     private val mME: BaseActivity = me
     private val mContext: Context = mME
 
-    private lateinit var mChannel: MethodChannel
     // 平台通道
-    private lateinit var channel: MethodChannel
+    private lateinit var mChannel: MethodChannel
+
 
     private lateinit var mSharedPreferences: SharedPreferences
 
@@ -123,17 +117,16 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
     private lateinit var appReceiver: AppsReceiver
 
     private var isDynamicColor: Boolean by mutableStateOf(value = true)
+    private var mVisible: Boolean by mutableStateOf(value = true)
+    private var actionBarVisible: Boolean by mutableStateOf(value = true)
 
     private val mHandler = Looper.myLooper()?.let {
         Handler(it)
     }
 
     private val showPart2Runnable = Runnable {
-      //  supportActionBar?.show()
         actionBarVisible = true
     }
-    private var mVisible: Boolean by mutableStateOf(value = false)
-    private var actionBarVisible: Boolean by mutableStateOf(value = true)
 
     private val hideRunnable = Runnable {
         hide()
@@ -158,6 +151,13 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
 
     @SuppressLint("RestrictedApi")
     override fun initViews() {
+        // 初始化首选项
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext)
+        // 获取动态颜色首选项
+        isDynamicColor = mSharedPreferences.getBoolean(
+            "dynamic_colors",
+            true
+        ) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
         // 初始化FlutterBoost
         WeakReference(application).get()?.apply {
             FlutterBoost.instance().setup(
@@ -167,20 +167,15 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
             )
         }
         // 更新操作栏状态
-        mVisible = false
-        // 初始化首选项
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext)
+        mVisible = true
+
         // 启用边到边
         EdgeToEdgeUtils.applyEdgeToEdge(window, true)
         // 深色模式跟随系统
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         // 设置页面布局边界
         WindowCompat.setDecorFitsSystemWindows(window, false)
-        // 获取动态颜色首选项
-        isDynamicColor = mSharedPreferences.getBoolean(
-            "dynamic_colors",
-            true
-        ) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+
     }
 
     /**
@@ -346,23 +341,22 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
         }
     }
 
-
-
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         mChannel = MethodChannel(binding.binaryMessenger, plugin_channel)
         mChannel.setMethodCallHandler(this@MainActivity)
+    }
+
+    override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+        mChannel.setMethodCallHandler(null)
     }
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {
             "getShizukuVersion" -> result.success(getShizukuVersion())
             "getDynamicColors" -> result.success(isDynamicColor)
+            "toggle" -> toggle()
             else -> result.notImplemented()
         }
-    }
-
-    override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-        mChannel.setMethodCallHandler(null)
     }
 
     override fun onFlutterViewReturned(flutterView: FlutterView?) {
@@ -405,10 +399,6 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
     }
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
-        // 初始化平台通道
-        val messenger = flutterEngine.dartExecutor.binaryMessenger
-        channel = MethodChannel(messenger, channelName)
-
         val registry = flutterEngine.platformViewsController.registry
         registry.registerViewFactory("android_view", LinkNativeViewFactory())
     }
@@ -439,34 +429,15 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
         setContent {
             // 检查权限
             check()
-            channel.setMethodCallHandler { call, res ->
-                when (call.method) {
 
-                    "toggle" -> toggle()
 
-                    else -> {
-                        res.error("error", "error_message", null)
-                    }
-                }
-            }
-            val navController: NavHostController = rememberNavController()
-            val scope = rememberCoroutineScope()
-            val drawerState: DrawerState = rememberDrawerState(
-                initialValue = DrawerValue.Closed
-            )
             val windowSize: WindowSizeClass = calculateWindowSizeClass(activity = mME)
             val displayFeatures: List<DisplayFeature> = calculateDisplayFeatures(activity = mME)
             val preferenceAdapter = PreferenceAdapter(activity = mME)
 
-            val darkTheme = isSystemInDarkTheme()
 
-            TermPluxTheme(
-                darkTheme = darkTheme,
-                dynamicColor = isDynamicColor
-            ) {
+            TermPluxTheme(dynamicColor = isDynamicColor) {
                 ActivityMain(
-                    navController = navController,
-                    drawerState = drawerState,
                     windowSize = windowSize,
                     displayFeatures = displayFeatures,
                     rootLayout = mRootLayout,
@@ -600,7 +571,6 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
     }
 
     private fun hide() {
-    //    supportActionBar?.hide()
         actionBarVisible = false
         mVisible = false
         mHandler?.removeCallbacks(showPart2Runnable)
@@ -814,10 +784,10 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
 
         @Composable
         fun TermPluxTheme(
-            darkTheme: Boolean,
             dynamicColor: Boolean,
             content: @Composable () -> Unit
         ) {
+            val darkTheme: Boolean = isSystemInDarkTheme()
             val view = LocalView.current
             val window = (view.context as BaseActivity).window
             val systemUiController = rememberSystemUiController()

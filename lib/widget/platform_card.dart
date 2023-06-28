@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
 class PlatformCard extends StatelessWidget {
-  const PlatformCard(
-      {super.key,
+  const PlatformCard({super.key,
       required this.cover,
       required this.title,
       required this.icons,

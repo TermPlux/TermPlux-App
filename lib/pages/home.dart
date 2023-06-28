@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:termplux/pages/browser.dart';
 
 import '../desktop/window_buttons.dart';
 import '../desktop/window_move.dart';
@@ -21,7 +22,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  static const channel = MethodChannel('termplux_channel');
 
   String _platformVersion = 'Unknown';
   final _flutterTermpluxPlugin = FlutterTermPlux();
@@ -49,18 +49,10 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  void navToPager() {
-    if (!kIsWeb) {
-      if (Platform.isAndroid) {
-        channel.invokeMethod("pager");
-      }
-    }
-  }
-
   void toggle() {
     if (!kIsWeb) {
       if (Platform.isAndroid) {
-        channel.invokeMethod("toggle");
+        _flutterTermpluxPlugin.toggle();
       }
     }
   }
@@ -89,11 +81,11 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("欢迎访问 ${widget.title}"),
+        title: const Text("欢迎访问 - 选择目标平台"),
         flexibleSpace: const WindowTitleBar(),
         actions: [
 
-          IconButton(onPressed: navToPager, icon: const Icon(Icons.more_vert)),
+          IconButton(onPressed: toggle, icon: const Icon(Icons.more_vert)),
           const WindowButtons()
         ],
       ),
@@ -102,7 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
           child: ListView(
             padding: const EdgeInsets.all(8),
             children: [
-              Text(_platformVersion),
+           //   Text(_platformVersion),
               PlatformCard(
                 cover: const Image(
                   image: AssetImage("cover/android.png"),

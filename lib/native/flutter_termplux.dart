@@ -8,4 +8,9 @@ class FlutterTermPlux {
   Future<bool?> getDynamicColors() {
     return FlutterTermPluxPlatform.instance.getDynamicColors();
   }
+
+  void toggle() {
+    FlutterTermPluxPlatform.instance.toggle();
+  }
+
 }

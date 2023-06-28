@@ -24,6 +24,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import androidx.window.layout.DisplayFeature
@@ -46,8 +47,6 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ActivityMain(
-    navController: NavHostController,
-    drawerState: DrawerState,
     windowSize: WindowSizeClass,
     displayFeatures: List<DisplayFeature>,
     rootLayout: FrameLayout,
@@ -87,6 +86,8 @@ fun ActivityMain(
         Screen.Settings
     )
 
+    val navController: NavHostController = rememberNavController()
+
     val scope = rememberCoroutineScope()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
@@ -94,6 +95,10 @@ fun ActivityMain(
     val snackBarHostState = remember {
         SnackbarHostState()
     }
+
+    val drawerState: DrawerState = rememberDrawerState(
+        initialValue = DrawerValue.Closed
+    )
 
     val navigationType: NavigationType
     val contentType: ContentType
@@ -615,6 +620,7 @@ fun ActivityMain(
                             topBarUpdate = topBarUpdate,
                             toggle = toggle,
                             current = current,
+                            topBarVisible = topBarVisible,
                             targetAppName = stringResource(id = R.string.app_name),
                             targetAppPackageName = BuildConfig.APPLICATION_ID,
                             targetAppDescription = stringResource(id = R.string.app_description),

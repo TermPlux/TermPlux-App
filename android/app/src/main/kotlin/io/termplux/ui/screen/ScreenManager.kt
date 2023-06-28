@@ -31,6 +31,7 @@ fun ScreenManager(
     navController: NavHostController,
     toggle: () -> Unit,
     current: (item: Int) -> Unit,
+    topBarVisible: Boolean,
     topBarUpdate: (MaterialToolbar) -> Unit,
     targetAppName: String,
     targetAppPackageName: String,
@@ -70,14 +71,24 @@ fun ScreenManager(
                     bottom = 8.dp
                 )
             ) {
+                TopActionBar(
+                    modifier = Modifier.fillMaxWidth(),
+                    visible = topBarVisible,
+                    update = topBarUpdate
+                )
+            }
+            ElevatedCard(
+                modifier = Modifier.padding(
+                    start = 16.dp,
+                    end = 16.dp,
+                    top = 8.dp,
+                    bottom = 8.dp
+                )
+            ) {
                 Column(
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    TopActionBar(
-                        modifier = Modifier.fillMaxWidth(),
-                        visible = true,
-                        update = topBarUpdate
-                    )
+
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center
@@ -581,6 +592,7 @@ private fun ScreenManagerPreview() {
         navController = rememberNavController(),
         toggle = {},
         current = {},
+        topBarVisible = true,
         topBarUpdate = {},
         targetAppName = stringResource(
             id = R.string.app_name
