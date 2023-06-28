@@ -12,9 +12,7 @@ import '../widget/image_logo.dart';
 import '../widget/platform_card.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
+  const MyHomePage({super.key});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();

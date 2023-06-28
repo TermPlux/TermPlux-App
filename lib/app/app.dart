@@ -16,10 +16,6 @@ class TermPluxApp extends StatelessWidget {
   const TermPluxApp({super.key});
 
   static const String appName = "TermPlux";
-  static const String github = "GitHub";
-  static const String twitter = "Twitter";
-
-  static const String source = "https://github.com/TermPlux/TermPlux-App";
 
   // ”/“为主页，其他为子页面
   static Map<String, FlutterBoostRouteFactory> routerMap = {
@@ -27,7 +23,7 @@ class TermPluxApp extends StatelessWidget {
       return PageRouteBuilder<dynamic>(
           settings: settings,
           pageBuilder: (_, __, ___) {
-            return const MyHomePage(title: appName);
+            return const MyHomePage();
           });
     },
     '/android': (settings, uniqueId) {
@@ -63,13 +59,6 @@ class TermPluxApp extends StatelessWidget {
           settings: settings,
           pageBuilder: (_, __, ___) {
             return const LinuxPlatformPage();
-          });
-    },
-    '/source': (settings, uniqueId) {
-      return PageRouteBuilder<dynamic>(
-          settings: settings,
-          pageBuilder: (_, __, ___) {
-            return const BrowserPage(title: github, url: source);
           });
     },
   };
@@ -123,7 +112,7 @@ class TermPluxApp extends StatelessWidget {
     } else {
       return DevicePreview(
         builder: (context) {
-          return appBuilder(context, const MyHomePage(title: appName));
+          return appBuilder(context, const MyHomePage());
         },
         isToolbarVisible: true,
         availableLocales: const [
