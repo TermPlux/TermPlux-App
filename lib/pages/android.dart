@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../desktop/window_buttons.dart';
+import '../desktop/window_move.dart';
+
 class AndroidPlatformPage extends StatefulWidget {
   const AndroidPlatformPage({super.key});
 
@@ -12,7 +15,9 @@ class _AndroidPlatformPageState extends State<AndroidPlatformPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Android"),
+        title: const Text("Android"),
+        flexibleSpace: const WindowTitleBar(),
+        actions: [const WindowButtons()],
       ),
       body: Center(
         child: Text("6"),

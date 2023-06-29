@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../desktop/window_buttons.dart';
+import '../desktop/window_move.dart';
+
 class LinuxPlatformPage extends StatefulWidget {
   const LinuxPlatformPage({super.key});
 
@@ -10,6 +13,15 @@ class LinuxPlatformPage extends StatefulWidget {
 class _LinuxPlatformPageState extends State<LinuxPlatformPage> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Linux"),
+        flexibleSpace: const WindowTitleBar(),
+        actions: [const WindowButtons()],
+      ),
+      body: Center(
+        child: Text("6"),
+      ),
+    );
   }
 }

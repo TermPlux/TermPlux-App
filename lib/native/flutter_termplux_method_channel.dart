@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
@@ -9,18 +11,28 @@ class MethodChannelFlutterTermPlux extends FlutterTermPluxPlatform {
 
   @override
   Future<bool?> getDynamicColors() async {
-    final version = await methodChannel.invokeMethod<bool>('getDynamicColors');
-    return version;
+    if (Platform.isAndroid) {
+      final dynamic =
+          await methodChannel.invokeMethod<bool>('getDynamicColors');
+      return dynamic;
+    } else {
+      return true;
+    }
   }
 
   @override
   Future<String?> getShizukuVersion() async {
-    final version = await methodChannel.invokeMethod<String>('getShizukuVersion');
-    return version;
+    if (Platform.isAndroid) {
+      final version =
+          await methodChannel.invokeMethod<String>('getShizukuVersion');
+      return version;
+    } else {
+      return "getShizukuVersion: 此平台不支持此接口";
+    }
   }
 
   @override
   void toggle() {
-    methodChannel.invokeMethod<void>("toggle");
+    if (Platform.isAndroid) methodChannel.invokeMethod<void>("toggle");
   }
 }

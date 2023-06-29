@@ -2,7 +2,6 @@ import 'package:device_preview/device_preview.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_boost/flutter_boost.dart';
-import 'package:termplux/pages/browser.dart';
 
 import '../pages/android.dart';
 import '../pages/ios.dart';
@@ -12,10 +11,20 @@ import '../pages/linux.dart';
 import '../platform/platform.dart';
 import '../pages/home.dart';
 
-class TermPluxApp extends StatelessWidget {
+class TermPluxApp extends StatefulWidget {
   const TermPluxApp({super.key});
 
+  @override
+  State<TermPluxApp> createState() => _TermPluxAppState();
+}
+
+class _TermPluxAppState extends State<TermPluxApp> {
   static const String appName = "TermPlux";
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   // ”/“为主页，其他为子页面
   static Map<String, FlutterBoostRouteFactory> routerMap = {
@@ -65,7 +74,11 @@ class TermPluxApp extends StatelessWidget {
 
   // ”/“为主页，其他为子页面
   static Map<String, Widget Function(BuildContext)> routes = {
-    // 'home': (context) => const MyHomePage(title: appName),
+    '/android': (context) => const AndroidPlatformPage(),
+    '/ios': (context) => const IOSPlatformPage(),
+    '/windows': (context) => const WindowsPlatformPage(),
+    '/macos': (context) => const MacOSPlatformPage(),
+    '/linux': (context) => const LinuxPlatformPage()
   };
 
   Route<dynamic>? routeFactory(RouteSettings settings, String? uniqueId) {
@@ -76,8 +89,35 @@ class TermPluxApp extends StatelessWidget {
     return func(settings, uniqueId);
   }
 
-  Widget appBuilder(BuildContext context, Widget home) {
-    return DynamicColorBuilder(builder: (lightColorScheme, darkColorScheme) {
+  Widget appBuilder(BuildContext context, Widget home, bool dynamicColors) {
+    if (dynamicColors) {
+      return DynamicColorBuilder(builder: (lightColorScheme, darkColorScheme) {
+        return MaterialApp(
+            routes: routes,
+            home: home,
+            builder: (context, child) {
+              if (kIsUseBoost) {
+                return home;
+              } else {
+                return DevicePreview.appBuilder(context, child);
+              }
+            },
+            title: appName,
+            theme: ThemeData(
+                colorScheme: lightColorScheme,
+                brightness: Brightness.light,
+                useMaterial3: true),
+            darkTheme: ThemeData(
+                colorScheme: darkColorScheme,
+                brightness: Brightness.dark,
+                useMaterial3: true),
+            themeMode: ThemeMode.system,
+            locale: DevicePreview.locale(context),
+            debugShowCheckedModeBanner: false,
+            // ignore: deprecated_member_use
+            useInheritedMediaQuery: true);
+      });
+    } else {
       return MaterialApp(
           routes: routes,
           home: home,
@@ -90,29 +130,31 @@ class TermPluxApp extends StatelessWidget {
           },
           title: appName,
           theme: ThemeData(
-              colorScheme: lightColorScheme,
+              primaryColor: Colors.purple,
               brightness: Brightness.light,
               useMaterial3: true),
           darkTheme: ThemeData(
-              colorScheme: darkColorScheme,
+              primaryColor: Colors.purple,
               brightness: Brightness.dark,
               useMaterial3: true),
           themeMode: ThemeMode.system,
           locale: DevicePreview.locale(context),
-          debugShowCheckedModeBanner: false);
-    });
+          debugShowCheckedModeBanner: false,
+          // ignore: deprecated_member_use
+          useInheritedMediaQuery: true);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     if (kIsUseBoost) {
       return FlutterBoostApp(routeFactory, appBuilder: (home) {
-        return appBuilder(context, home);
+        return appBuilder(context, home, true);
       });
     } else {
       return DevicePreview(
         builder: (context) {
-          return appBuilder(context, const MyHomePage());
+          return appBuilder(context, const MyHomePage(), false);
         },
         isToolbarVisible: true,
         availableLocales: const [

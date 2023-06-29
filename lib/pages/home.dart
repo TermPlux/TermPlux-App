@@ -19,32 +19,31 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
-  String _platformVersion = 'Unknown';
+  // String _platformVersion = 'Unknown';
   final _flutterTermpluxPlugin = FlutterTermPlux();
 
   @override
   void initState() {
     super.initState();
-    initPlatformState();
+    //initPlatformState();
   }
 
-  Future<void> initPlatformState() async {
-    String platformVersion;
+  // Future<void> initPlatformState() async {
+  //   String platformVersion;
 
-    try {
-      platformVersion = await _flutterTermpluxPlugin.getShizukuVersion() ??
-          'Unknown platform version';
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
-    }
+  //   try {
+  //     platformVersion = await _flutterTermpluxPlugin.getShizukuVersion() ??
+  //         'Unknown platform version';
+  //   } on PlatformException {
+  //     platformVersion = 'Failed to get platform version.';
+  //   }
 
-    if (!mounted) return;
+  //   if (!mounted) return;
 
-    setState(() {
-      _platformVersion = platformVersion;
-    });
-  }
+  //   setState(() {
+  //     _platformVersion = platformVersion;
+  //   });
+  // }
 
   void toggle() {
     if (!kIsWeb) {
@@ -58,7 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
     navigation(context, '/android');
   }
 
-  void ios(){
+  void ios() {
     navigation(context, '/ios');
   }
 
@@ -70,7 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
     navigation(context, '/macos');
   }
 
-  void linux(){
+  void linux() {
     navigation(context, '/linux');
   }
 
@@ -81,7 +80,6 @@ class _MyHomePageState extends State<MyHomePage> {
         title: const Text("欢迎访问 - 选择目标平台"),
         flexibleSpace: const WindowTitleBar(),
         actions: [
-
           IconButton(onPressed: toggle, icon: const Icon(Icons.more_vert)),
           const WindowButtons()
         ],
@@ -91,13 +89,13 @@ class _MyHomePageState extends State<MyHomePage> {
           child: ListView(
             padding: const EdgeInsets.all(8),
             children: [
-           //   Text(_platformVersion),
+              //   Text(_platformVersion),
               PlatformCard(
                 cover: const Image(
                   image: AssetImage("cover/android.png"),
                   fit: BoxFit.cover,
                 ),
-                title: "Android",
+                title: "Google - Android",
                 icons: const [
                   Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
@@ -119,7 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   image: AssetImage("cover/ios.png"),
                   fit: BoxFit.cover,
                 ),
-                title: "iOS (实验性)",
+                title: "Apple - iOS (实验性)",
                 icons: const [
                   Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
@@ -135,7 +133,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   image: AssetImage("cover/windows.png"),
                   fit: BoxFit.cover,
                 ),
-                title: "Windows (实验性)",
+                title: "Microsoft - Windows (实验性)",
                 icons: const [
                   Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
@@ -151,7 +149,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   image: AssetImage("cover/macos.png"),
                   fit: BoxFit.cover,
                 ),
-                title: "macOS (实验性)",
+                title: "Apple - macOS (实验性)",
                 icons: const [
                   Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
@@ -167,7 +165,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   image: AssetImage("assets/cover.jpg"),
                   fit: BoxFit.cover,
                 ),
-                title: "Linux (实验性)",
+                title: "GNU/Linux (实验性)",
                 icons: const [
                   Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
