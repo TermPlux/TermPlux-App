@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.AppUtils
 import com.google.android.material.snackbar.Snackbar
@@ -18,6 +19,7 @@ import io.termplux.BuildConfig
 import io.termplux.R
 import io.termplux.holder.AppsViewHolder
 import io.termplux.model.AppsModel
+
 
 class AppsAdapter constructor(
     applicationList: List<AppsModel>,
@@ -78,6 +80,82 @@ class AppsAdapter constructor(
                 )
             )
         }
+
+//        val itemView: LinearLayoutCompat = LinearLayoutCompat(
+//            parent.context
+//        ).apply {
+//            layoutParams = LinearLayoutCompat.LayoutParams(
+//                LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+//                LinearLayoutCompat.LayoutParams.WRAP_CONTENT
+//            )
+//            setPadding(
+//                0,
+//                parent.context.resources.getDimension(
+//                    R.dimen.icon_padding
+//                ).toInt(),
+//                0,
+//                parent.context.resources.getDimension(
+//                    R.dimen.icon_padding
+//                ).toInt()
+//            )
+//            orientation = LinearLayoutCompat.HORIZONTAL
+//            addView(
+//                appIcon.apply {
+//                    gravity = Gravity.CENTER
+//                },
+//                LinearLayoutCompat.LayoutParams(
+//                    parent.context.resources.getDimension(
+//                        R.dimen.icon_size
+//                    ).toInt(),
+//                    parent.context.resources.getDimension(
+//                        R.dimen.icon_size
+//                    ).toInt()
+//                )
+//            )
+//            addView(
+//                LinearLayoutCompat(parent.context).apply {
+//                    orientation = LinearLayoutCompat.VERTICAL
+//                    setPadding(
+//                        parent.context.resources.getDimension(
+//                            R.dimen.title_padding
+//                        ).toInt(), 0, 0, 0
+//                    )
+//                    addView(
+//                        appTitle.apply {
+//                            gravity = Gravity.CENTER_VERTICAL
+//                            setTextAppearance(R.style.TextAppearance_Material3_TitleMedium)
+//                        },
+//                        LinearLayoutCompat.LayoutParams(
+//                            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+//                            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+//                            1f
+//                        )
+//                    )
+//                    addView(
+//                        View(parent.context).apply {
+//                            setBackgroundColor(
+//                                ContextCompat.getColor(
+//                                    parent.context,
+//                                    R.color.divider_color
+//                                )
+//                            )
+//                            alpha = 0.5f
+//                        },
+//
+//                        LinearLayoutCompat.LayoutParams(
+//                            LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+//                            parent.context.resources.getDimension(
+//                                R.dimen.divider_height
+//                            ).toInt()
+//                        )
+//                    )
+//                },
+//                LinearLayoutCompat.LayoutParams(
+//                    LinearLayoutCompat.LayoutParams.MATCH_PARENT,
+//                    LinearLayoutCompat.LayoutParams.MATCH_PARENT
+//                )
+//            )
+//        }
 
         return AppsViewHolder(
             item = itemView,

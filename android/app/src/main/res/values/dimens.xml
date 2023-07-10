@@ -1,8 +1,9 @@
 <resources>
 
     <dimen name="icon_padding">5dp</dimen>
-
     <dimen name="icon_size">50dp</dimen>
+<!--    <dimen name="title_padding">12dp</dimen>-->
+<!--    <dimen name="divider_height">1dp</dimen>-->
 
     <dimen name="app_width">90dp</dimen>
     <dimen name="app_height">90dp</dimen>

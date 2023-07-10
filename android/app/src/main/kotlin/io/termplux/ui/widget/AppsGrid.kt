@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.termplux.ui.preview.WidgetPreview
 
@@ -22,7 +23,7 @@ fun AppsGrid(
             apps.layoutManager = GridLayoutManager(
                 apps.context,
                 4,
-                RecyclerView.VERTICAL,
+                LinearLayoutManager.VERTICAL,
                 false
             )
             update(apps)

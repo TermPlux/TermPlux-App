@@ -21,13 +21,6 @@ class ContainerFragment constructor(
         mMainFragment = mainFragment
     }
 
-    override fun resetContentView(): View {
-        super.resetContentView()
-        return FragmentContainerView(me).apply {
-            id = R.id.flutter_container
-        }
-    }
-
     override fun initViews() {
         mFragmentManager = childFragmentManager
         flutterFragment = mFragmentManager.findFragmentByTag(

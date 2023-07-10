@@ -14,14 +14,15 @@ import io.termplux.ui.preview.WidgetPreview
 
 @Composable
 fun RootContent(
-    rootLayout: FrameLayout
+    rootLayout: FrameLayout,
+    modifier: Modifier
 ) {
     rootLayout.apply {
         AndroidView(
             factory = {
                 return@AndroidView this@apply
             },
-            modifier = Modifier.fillMaxSize()
+            modifier = modifier
         )
     }
 }
@@ -45,6 +46,7 @@ fun RootContentPreview() {
                     Gravity.CENTER
                 )
             )
-        }
+        },
+        modifier = Modifier.fillMaxSize()
     )
 }

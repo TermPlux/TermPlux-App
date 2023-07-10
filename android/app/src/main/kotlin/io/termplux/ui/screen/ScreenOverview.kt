@@ -54,7 +54,10 @@ fun ScreenOverview(
         ) {
             ElevatedCard(
                 modifier = Modifier.padding(
-                    start = 16.dp, end = 16.dp, top = 5.dp, bottom = 8.dp
+                    start = 16.dp,
+                    end = 16.dp,
+                    top = 5.dp,
+                    bottom = 8.dp
                 ),
                 colors = CardDefaults.elevatedCardColors(
                     containerColor = MaterialTheme.colorScheme.secondaryContainer

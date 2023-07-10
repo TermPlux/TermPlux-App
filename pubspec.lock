@@ -202,8 +202,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "4.2.3"
-      resolved-ref: b4bb39f6a09c1cbd1f4e46dd6c1504555866b9ba
+      ref: "4.3.0"
+      resolved-ref: "0c3e97f80496fbfca9cf97451bc060a6d7e72578"
       url: "https://github.com/alibaba/flutter_boost.git"
     source: git
     version: "3.0.0"
@@ -644,5 +644,5 @@ packages:
     source: hosted
     version: "3.5.0"
 sdks:
-  dart: ">=3.0.2 <4.0.0"
+  dart: ">=3.0.5 <4.0.0"
   flutter: ">=3.4.0-17.0.pre"

@@ -29,18 +29,28 @@ class _TermPluxAppState extends State<TermPluxApp> {
   // ”/“为主页，其他为子页面
   static Map<String, FlutterBoostRouteFactory> routerMap = {
     '/': (settings, uniqueId) {
-      return PageRouteBuilder<dynamic>(
+      return MaterialPageRoute<dynamic>(
           settings: settings,
-          pageBuilder: (_, __, ___) {
+          builder: (_) {
             return const MyHomePage();
           });
+      // return PageRouteBuilder<dynamic>(
+      //     settings: settings,
+      //     pageBuilder: (_, __, ___) {
+      //       return const MyHomePage();
+      //     });
     },
     '/android': (settings, uniqueId) {
-      return PageRouteBuilder<dynamic>(
+      return MaterialPageRoute<dynamic>(
           settings: settings,
-          pageBuilder: (_, __, ___) {
+          builder: (_) {
             return const AndroidPlatformPage();
           });
+      // return PageRouteBuilder<dynamic>(
+      //     settings: settings,
+      //     pageBuilder: (_, __, ___) {
+      //       return const AndroidPlatformPage();
+      //     });
     },
     '/ios': (settings, uniqueId) {
       return PageRouteBuilder<dynamic>(
@@ -48,6 +58,11 @@ class _TermPluxAppState extends State<TermPluxApp> {
           pageBuilder: (_, __, ___) {
             return const IOSPlatformPage();
           });
+      // return CupertinoPageRoute(
+      //     settings: settings,
+      //     builder: (_) {
+      //       return const IOSPlatformPage();
+      //     });
     },
     '/windows': (settings, uniqueId) {
       return PageRouteBuilder<dynamic>(

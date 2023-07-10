@@ -54,7 +54,6 @@ fun ActivityMain(
     topBarVisible: Boolean,
     topBarUpdate: (MaterialToolbar) -> Unit,
     preferenceUpdate: (ViewPager2) -> Unit,
-    optionsMenu: (toolbar: MaterialToolbar) -> Unit,
     androidVersion: String,
     shizukuVersion: String,
     current: (item: Int) -> Unit,
@@ -63,20 +62,14 @@ fun ActivityMain(
 ) {
 
     val pages = listOf(
-        Screen.ComposeTitle,
         Screen.Overview,
         Screen.Apps,
         Screen.Flutter,
         Screen.Manager,
         Screen.Settings,
+        Screen.Divider,
         Screen.Preference,
         Screen.About,
-        Screen.Divider,
-        Screen.FragmentTitle,
-
-        Screen.HomeFragment,
-        Screen.AppsFragment,
-        Screen.SettingsFragment
     )
     val items = listOf(
         Screen.Overview,
@@ -198,52 +191,6 @@ fun ActivityMain(
                         }
                     }
                 }
-                ExtendedFloatingActionButton(
-                    text = {
-                        Text(
-                            text = stringResource(
-                                id = R.string.app_name
-                            )
-                        )
-                    },
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Outlined.Terminal,
-                            contentDescription = null
-                        )
-                    },
-                    onClick = {
-                        current(
-                            ScreenRoute.routeAppsFragment.toInt()
-                        ).also {
-                            navController.navigate(
-                                route = Screen.Flutter.route
-                            ) {
-                                popUpTo(
-                                    id = navController.graph.findStartDestination().id
-                                ) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
-                            }.also {
-                                if (
-                                    navigationType != NavigationType.PermanentNavigationDrawer
-                                ) {
-                                    scope.launch {
-                                        drawerState.close()
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            horizontal = 16.dp,
-                            vertical = 5.dp
-                        )
-                )
             }
             // 导航列表
             Column(
@@ -610,17 +557,19 @@ fun ActivityMain(
                     composable(
                         route = Screen.Flutter.route
                     ) {
-                        ScreenHome(rootLayout = rootLayout)
+                        ScreenHome(
+                            topBarVisible = topBarVisible,
+                            topBarUpdate = topBarUpdate,
+                            rootLayout = rootLayout
+                        )
                     }
                     composable(
                         route = Screen.Manager.route
                     ) {
                         ScreenManager(
                             navController = navController,
-                            topBarUpdate = topBarUpdate,
                             toggle = toggle,
                             current = current,
-                            topBarVisible = topBarVisible,
                             targetAppName = stringResource(id = R.string.app_name),
                             targetAppPackageName = BuildConfig.APPLICATION_ID,
                             targetAppDescription = stringResource(id = R.string.app_description),
@@ -689,7 +638,7 @@ fun ActivityMain(
             content()
         }
 
-        else -> ModalNavigationDrawer(
+        NavigationType.NavigationRail, NavigationType.BottomNavigation -> ModalNavigationDrawer(
             drawerContent = {
                 ModalDrawerSheet {
                     nav()

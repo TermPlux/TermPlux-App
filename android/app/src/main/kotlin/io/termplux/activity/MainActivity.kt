@@ -2,6 +2,7 @@ package io.termplux.activity
 
 import android.annotation.SuppressLint
 import android.content.*
+import android.content.ClipData.newIntent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Handler
@@ -32,8 +33,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.window.layout.DisplayFeature
@@ -85,11 +84,12 @@ import rikka.shizuku.Shizuku
 import java.lang.ref.WeakReference
 import kotlin.math.hypot
 
+
 @SuppressLint(value = ["NonConstantResourceId"])
 @DarkStatusBarTheme(value = true)
 @DarkNavigationBarTheme(value = true)
-@NavigationBarBackgroundColorRes(value = MainActivity.navigationBarBackgroundColor)
-@FragmentLayout(value = MainActivity.fragmentLayout)
+@NavigationBarBackgroundColorRes(value = R.color.transparent)
+@FragmentLayout(value = R.id.fragment_container)
 class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback, FlutterPlugin,
     MethodChannel.MethodCallHandler, FlutterViewReturn, FlutterEngineConfigurator,
     Shizuku.OnBinderReceivedListener, Shizuku.OnBinderDeadListener,
@@ -140,14 +140,6 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
         false
     }
 
-    override fun resetContentView(): View {
-        return DisableSwipeViewPager(
-            context = mContext
-        ).apply {
-            super.resetContentView()
-            id = fragmentLayout
-        }
-    }
 
     @SuppressLint("RestrictedApi")
     override fun initViews() {
@@ -200,9 +192,11 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
     }
 
     override fun initDatas(parameter: JumpParameter?) {
-//        ContentFragment().show(
-//            supportFragmentManager, "c"
-//        )
+
+
+
+
+
     }
 
     override fun setEvents() {
@@ -426,6 +420,8 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(owner: LifecycleOwner) {
         super<DefaultLifecycleObserver>.onCreate(owner)
+
+
         setContent {
             // 检查权限
             check()
@@ -434,6 +430,7 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
             val windowSize: WindowSizeClass = calculateWindowSizeClass(activity = mME)
             val displayFeatures: List<DisplayFeature> = calculateDisplayFeatures(activity = mME)
             val preferenceAdapter = PreferenceAdapter(activity = mME)
+
 
 
             TermPluxTheme(dynamicColor = isDynamicColor) {
@@ -473,16 +470,6 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
                         preference.apply {
                             adapter = preferenceAdapter
                             offscreenPageLimit = preferenceAdapter.itemCount
-                        }
-                    },
-                    optionsMenu = { toolbar ->
-                        toolbar.apply {
-                            when (isOverflowMenuShowing) {
-                                true -> hideOverflowMenu()
-                                false -> showOverflowMenu()
-                            }.run {
-                                if (!mVisible) show()
-                            }
                         }
                     },
                     androidVersion = getAndroidVersion(),
@@ -723,18 +710,6 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
 
 
     companion object {
-
-        /**
-         * 导航栏背景色
-         */
-        @ColorRes
-        const val navigationBarBackgroundColor: Int = R.color.transparent
-
-        /**
-         * Fragment容器的id
-         */
-        @IdRes
-        const val fragmentLayout: Int = R.id.fragment_container
 
         const val plugin_channel: String = "flutter_termplux"
         const val channelName: String = "termplux_channel"

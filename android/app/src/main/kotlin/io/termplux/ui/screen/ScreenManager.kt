@@ -31,8 +31,6 @@ fun ScreenManager(
     navController: NavHostController,
     toggle: () -> Unit,
     current: (item: Int) -> Unit,
-    topBarVisible: Boolean,
-    topBarUpdate: (MaterialToolbar) -> Unit,
     targetAppName: String,
     targetAppPackageName: String,
     targetAppDescription: String,
@@ -63,20 +61,20 @@ fun ScreenManager(
                     state = scrollState
                 )
         ) {
-            ElevatedCard(
-                modifier = Modifier.padding(
-                    start = 16.dp,
-                    end = 16.dp,
-                    top = 5.dp,
-                    bottom = 8.dp
-                )
-            ) {
-                TopActionBar(
-                    modifier = Modifier.fillMaxWidth(),
-                    visible = topBarVisible,
-                    update = topBarUpdate
-                )
-            }
+//            ElevatedCard(
+//                modifier = Modifier.padding(
+//                    start = 16.dp,
+//                    end = 16.dp,
+//                    top = 5.dp,
+//                    bottom = 8.dp
+//                )
+//            ) {
+//                TopActionBar(
+//                    modifier = Modifier.fillMaxWidth(),
+//                    visible = topBarVisible,
+//                    update = topBarUpdate
+//                )
+//            }
             ElevatedCard(
                 modifier = Modifier.padding(
                     start = 16.dp,
@@ -155,45 +153,7 @@ fun ScreenManager(
                         }
                     }
                 }
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(IntrinsicSize.Min)
-                        .clickable {
 
-                        }
-                ) {
-                    IconButton(
-                        onClick = {
-
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Search,
-                            contentDescription = null
-                        )
-                    }
-                    Column(
-                        modifier = Modifier.fillMaxHeight(),
-                        verticalArrangement = Arrangement.Center,
-                    ) {
-                        Text(
-                            text = "Search...",
-                            textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.titleSmall
-                        )
-                    }
-//                    IconButton(
-//                        onClick = {
-//                            toggle()
-//                        }
-//                    ) {
-//                        Icon(
-//                            imageVector = Icons.Filled.Search,
-//                            contentDescription = null
-//                        )
-//                    }
-                }
 //                AssistChip(
 //                    onClick = {
 //
@@ -592,8 +552,6 @@ private fun ScreenManagerPreview() {
         navController = rememberNavController(),
         toggle = {},
         current = {},
-        topBarVisible = true,
-        topBarUpdate = {},
         targetAppName = stringResource(
             id = R.string.app_name
         ),
