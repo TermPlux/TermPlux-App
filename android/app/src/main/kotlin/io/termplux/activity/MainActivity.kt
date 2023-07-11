@@ -422,7 +422,7 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
         super<DefaultLifecycleObserver>.onCreate(owner)
 
 
-        setContent {
+        if (true) setContent {
             // 检查权限
             check()
 
@@ -485,7 +485,7 @@ class MainActivity : BaseActivity(), FlutterBoostDelegate, FlutterBoost.Callback
                     }
                 )
             }
-        }
+        } else setContentView(mRootLayout)
     }
 
     override fun onStart(owner: LifecycleOwner) {

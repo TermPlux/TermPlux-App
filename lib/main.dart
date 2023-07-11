@@ -1,6 +1,8 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_boost/flutter_boost.dart';
 import 'package:url_strategy/url_strategy.dart';
 
@@ -31,8 +33,15 @@ Future main() async {
   if (kIsWeb) setPathUrlStrategy();
 
   // 启动应用
+  // runApp(
+  //   DevicePreview(
+  //     enabled: true,
+  //     builder: (context) => const TermPluxApp(),
+  //   ),
+  // );
   runApp(const TermPluxApp());
 
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   // 窗口管理
   if (kIsDesktop) {
     doWhenWindowReady(() {

@@ -163,9 +163,18 @@ class _TermPluxAppState extends State<TermPluxApp> {
   @override
   Widget build(BuildContext context) {
     if (kIsUseBoost) {
-      return FlutterBoostApp(routeFactory, appBuilder: (home) {
-        return appBuilder(context, home, true);
-      });
+      return DevicePreview(
+        builder: (context) {
+          return FlutterBoostApp(routeFactory, appBuilder: (home) {
+            return appBuilder(context, home, true);
+          });
+        },
+        isToolbarVisible: true,
+        availableLocales: const [
+          Locale('zh_CN'),
+        ],
+        enabled: true,
+      );
     } else {
       return DevicePreview(
         builder: (context) {
@@ -175,7 +184,7 @@ class _TermPluxAppState extends State<TermPluxApp> {
         availableLocales: const [
           Locale('zh_CN'),
         ],
-        enabled: kIsUsePreview,
+        enabled: true,
       );
     }
   }
