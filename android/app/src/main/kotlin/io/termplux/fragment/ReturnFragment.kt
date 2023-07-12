@@ -31,6 +31,8 @@ class ReturnFragment : FlutterBoostFragment() {
         }
     }
 
+    override fun shouldAttachEngineToActivity(): Boolean = false
+
     private fun findFlutterView(view: View): FlutterView? {
         when (view) {
             is FlutterView -> return view

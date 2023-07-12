@@ -1,5 +1,6 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:dynamic_color/dynamic_color.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_boost/flutter_boost.dart';
 
@@ -29,6 +30,12 @@ class _TermPluxAppState extends State<TermPluxApp> {
   // ”/“为主页，其他为子页面
   static Map<String, FlutterBoostRouteFactory> routerMap = {
     '/': (settings, uniqueId) {
+      return CupertinoPageRoute(
+          settings: settings,
+          title: appName,
+          builder: (_) {
+            return const MyHomePage();
+          });
       return MaterialPageRoute<dynamic>(
           settings: settings,
           builder: (_) {
@@ -41,7 +48,7 @@ class _TermPluxAppState extends State<TermPluxApp> {
       //     });
     },
     '/android': (settings, uniqueId) {
-      return MaterialPageRoute<dynamic>(
+      return CupertinoPageRoute<dynamic>(
           settings: settings,
           builder: (_) {
             return const AndroidPlatformPage();
@@ -106,6 +113,13 @@ class _TermPluxAppState extends State<TermPluxApp> {
 
   Widget appBuilder(BuildContext context, Widget home, bool dynamicColors) {
     if (dynamicColors) {
+      return CupertinoApp(
+        home: home,
+        builder: (_, __) {
+          return home;
+        },
+        title: appName,
+      );
       return DynamicColorBuilder(builder: (lightColorScheme, darkColorScheme) {
         return MaterialApp(
             routes: routes,

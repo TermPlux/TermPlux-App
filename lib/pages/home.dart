@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:termplux/widget/record_text.dart';
@@ -75,6 +76,178 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    return CupertinoTabScaffold(
+      tabBar: CupertinoTabBar(
+        currentIndex: 0,
+        items: const <BottomNavigationBarItem>[
+          // 3 <-- SEE HERE
+          BottomNavigationBarItem(
+              icon: Icon(CupertinoIcons.phone), label: 'Calls'),
+          BottomNavigationBarItem(
+              icon: Icon(CupertinoIcons.chat_bubble_2), label: 'Chats'),
+          BottomNavigationBarItem(
+              icon: Icon(CupertinoIcons.settings), label: 'Settings'),
+        ],
+      ),
+      tabBuilder: (context, index) {
+        late final CupertinoTabView returnValue;
+        switch (index) {
+          case 0:
+          // 4 <-- SEE HERE
+            returnValue = CupertinoTabView(builder: (context) {
+              return CupertinoPageScaffold(
+                navigationBar: CupertinoNavigationBar(
+                  middle: Text('Calls'),
+                ),
+                child: PlatformCard(
+                  cover: const Image(
+                    image: AssetImage("cover/android.png"),
+                    fit: BoxFit.cover,
+                  ),
+                  title: "Google - Android",
+                  icons: const [
+                    Padding(
+                        padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
+                        child: ImageLogo(assets: 'icon/android.png')),
+                    Padding(
+                        padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
+                        child: FlutterLogo()),
+                    Padding(
+                        padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
+                        child: ImageLogo(assets: 'icon/compose.png')),
+                    Padding(
+                        padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
+                        child: ImageLogo(assets: 'icon/unity.png')),
+                  ],
+                  pressed: android,
+                )
+              );
+            });
+            break;
+          case 1:
+            returnValue = CupertinoTabView(
+              builder: (context) {
+                return Container();
+              },
+            );
+            break;
+          case 2:
+            returnValue = CupertinoTabView(
+              builder: (context) {
+                return Container();
+              },
+            );
+            break;
+        }
+        return returnValue;
+      },
+
+    );
+
+
+
+
+    return CupertinoPageScaffold(
+      navigationBar: const CupertinoNavigationBar(),
+      child: Center(
+        child: Scrollbar(
+          child: ListView(
+            padding: const EdgeInsets.all(8),
+            children: [
+              //   Text(_platformVersion),
+              PlatformCard(
+                cover: const Image(
+                  image: AssetImage("cover/android.png"),
+                  fit: BoxFit.cover,
+                ),
+                title: "Google - Android",
+                icons: const [
+                  Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
+                      child: ImageLogo(assets: 'icon/android.png')),
+                  Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
+                      child: FlutterLogo()),
+                  Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
+                      child: ImageLogo(assets: 'icon/compose.png')),
+                  Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
+                      child: ImageLogo(assets: 'icon/unity.png')),
+                ],
+                pressed: android,
+              ),
+              PlatformCard(
+                cover: const Image(
+                  image: AssetImage("cover/ios.png"),
+                  fit: BoxFit.cover,
+                ),
+                title: "Apple - iOS (实验性)",
+                icons: const [
+                  Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
+                      child: ImageLogo(assets: 'icon/apple.png')),
+                  Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
+                      child: FlutterLogo()),
+                ],
+                pressed: ios,
+              ),
+              PlatformCard(
+                cover: const Image(
+                  image: AssetImage("cover/windows.png"),
+                  fit: BoxFit.cover,
+                ),
+                title: "Microsoft - Windows (实验性)",
+                icons: const [
+                  Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
+                      child: ImageLogo(assets: 'icon/windows.png')),
+                  Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
+                      child: FlutterLogo()),
+                ],
+                pressed: windows,
+              ),
+              PlatformCard(
+                cover: const Image(
+                  image: AssetImage("cover/macos.png"),
+                  fit: BoxFit.cover,
+                ),
+                title: "Apple - macOS (实验性)",
+                icons: const [
+                  Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
+                      child: ImageLogo(assets: 'icon/apple.png')),
+                  Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
+                      child: FlutterLogo()),
+                ],
+                pressed: macos,
+              ),
+              PlatformCard(
+                cover: const Image(
+                  image: AssetImage("assets/cover.jpg"),
+                  fit: BoxFit.cover,
+                ),
+                title: "GNU/Linux (实验性)",
+                icons: const [
+                  Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
+                      child: ImageLogo(assets: 'icon/linux.png')),
+                  Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
+                      child: FlutterLogo()),
+                ],
+                pressed: linux,
+              ),
+              const RecordText()
+            ],
+          ),
+        ),
+      ),
+
+    );
     return Scaffold(
       appBar: AppBar(
         title: const Text("欢迎访问 - 选择目标平台"),

@@ -1,5 +1,4 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
-import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,6 +9,27 @@ import 'app/app.dart';
 import 'platform/platform.dart';
 import 'boost/binding.dart';
 import 'boost/observer.dart';
+
+///                          _ooOoo_
+///                         o8888888o
+///                         88" . "88
+///                         (| ^_^ |)
+///                         O\  =  /O
+///                      ____/`---'\____
+///                    .'  \\|     |//  `.
+///                   /  \\|||  :  |||//  \
+///                  /  _||||| -:- |||||-  \
+///                  |   | \\\  -  /// |   |
+///                  | \_|  ''\---/''  |   |
+///                  \  .-\__  `-`  ___/-. /
+///                ___`. .'  /--.--\  `. . ___
+///              ."" '<  `.___\_<|>_/___.'  >'"".
+///            | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+///            \  \ `-.   \_ __\ /__ _/   .-` /  /
+///      ========`-.____`-.___\_____/___.-`____.-'========
+///                           `=---='
+///      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+///              佛祖保佑       永不宕机     永无BUG
 
 /// 应用名称
 const String appName = 'TermPlux';
@@ -32,16 +52,8 @@ Future main() async {
   // 在Web中隐藏井号
   if (kIsWeb) setPathUrlStrategy();
 
-  // 启动应用
-  // runApp(
-  //   DevicePreview(
-  //     enabled: true,
-  //     builder: (context) => const TermPluxApp(),
-  //   ),
-  // );
-  runApp(const TermPluxApp());
+  WidgetsFlutterBinding.ensureInitialized();
 
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   // 窗口管理
   if (kIsDesktop) {
     doWhenWindowReady(() {
@@ -52,4 +64,10 @@ Future main() async {
       appWindow.show();
     });
   }
+
+  // 启用边到边
+  if (kIsMobile) SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+
+  // 启动应用
+  runApp(const TermPluxApp());
 }

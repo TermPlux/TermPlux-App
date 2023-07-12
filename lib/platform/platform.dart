@@ -24,3 +24,12 @@ bool get kIsDesktop {
     TargetPlatform.macOS,
   ].contains(defaultTargetPlatform);
 }
+
+bool get kIsMobile {
+  if (kIsWeb) return false;
+  return [
+    TargetPlatform.iOS,
+    TargetPlatform.android,
+    TargetPlatform.fuchsia,
+  ].contains(defaultTargetPlatform);
+}
