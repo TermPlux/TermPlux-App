@@ -57,19 +57,27 @@ android {
             )
         }
     }
+
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
+
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "11"
     }
+
     buildFeatures {
+        viewBinding = true
+        buildConfig = true
         compose = true
+        aidl = true
     }
+
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.3"
     }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -89,9 +97,11 @@ dependencies {
     implementation(dependencyNotation = project(path = ":flutter_boost"))
     // AndroidUtilCode: https://github.com/Blankj/AndroidUtilCode
     implementation(dependencyNotation = "com.blankj:utilcodex:1.31.1")
+    // LibTaskbar: https://github.com/farmerbb/libtaskbar
+    implementation(dependencyNotation = "com.github.farmerbb:libtaskbar:2.2.0")
     // DialogX: https://github.com/kongzue/DialogX
     implementation(dependencyNotation = "com.kongzue.dialogx:DialogX:0.0.48")
-    implementation(dependencyNotation = "com.kongzue.dialogx.style:DialogXMaterialYouStyle:0.0.48")
+    implementation(dependencyNotation = "com.kongzue.dialogx.style:DialogXIOSStyle:0.0.48")
     // LicensesDialog: https://github.com/PSDev/LicensesDialog
     implementation(dependencyNotation = "de.psdev.licensesdialog:licensesdialog:2.2.0")
     // Shizuku-API: https://github.com/RikkaApps/Shizuku-API
@@ -129,6 +139,7 @@ dependencies {
     implementation(dependencyNotation = "androidx.activity:activity-compose:1.7.2")
     implementation(dependencyNotation = "androidx.activity:activity-compose:1.7.2")
     implementation(dependencyNotation = "com.google.android.gms:play-services-base:18.2.0")
+    implementation(dependencyNotation = "com.google.android.material:material:1.9.0")
     implementation(dependencyNotation = "com.google.accompanist:accompanist-webview:0.30.1")
     implementation(dependencyNotation = "com.google.accompanist:accompanist-systemuicontroller:0.30.1")
     implementation(dependencyNotation = "com.google.accompanist:accompanist-adaptive:0.30.1")
