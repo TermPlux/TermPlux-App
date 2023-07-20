@@ -19,7 +19,6 @@ local.properties
 .packages
 .pub/
 
-.idea/
 .vagrant/
 .sconsign.dblite
 .svn/
