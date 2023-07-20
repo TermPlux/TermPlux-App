@@ -675,7 +675,8 @@ fun ActivityMain(
             content()
         }
 
-        NavigationType.NavigationRail, NavigationType.BottomNavigation -> ModalNavigationDrawer(
+        NavigationType.NavigationRail,
+        NavigationType.BottomNavigation -> ModalNavigationDrawer(
             drawerContent = {
                 ModalDrawerSheet {
                     nav()
@@ -683,16 +684,16 @@ fun ActivityMain(
             },
             modifier = Modifier.fillMaxSize(),
             drawerState = drawerState,
-            gesturesEnabled = false
+            gesturesEnabled = true
         ) {
             content()
         }
     }
 }
 
-@Preview
-@Composable
-fun ActivityMainPreview() {
-    TermPluxTheme {
-    }
-}
+//@Preview
+//@Composable
+//fun ActivityMainPreview() {
+//    TermPluxTheme {
+//    }
+//}
