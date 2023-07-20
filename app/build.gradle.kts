@@ -18,6 +18,32 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        ndk {
+            // Filter for architectures supported by Flutter.
+            abiFilters.add("armeabi-v7a")
+            abiFilters.add("arm64-v8a")
+            abiFilters.add("x86_64")
+            abiFilters.add("x86")
+        }
+
+        externalNativeBuild {
+            cmake {
+                abiFilters.add("armeabi-v7a")
+                abiFilters.add("arm64-v8a")
+                abiFilters.add("x86_64")
+                abiFilters.add("x86")
+                cppFlags("-std=c++17")
+                arguments("-DANDROID_TOOLCHAIN=clang", "-DANDROID_STL=c++_static")
+            }
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            path = file("src/main/cpp/CMakeLists.txt")
+            version = "3.22.1"
+        }
     }
 
     buildTypes {
