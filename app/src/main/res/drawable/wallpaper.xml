@@ -1,0 +1,32 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:width="642dp"
+    android:height="1141dp"
+    android:viewportWidth="642"
+    android:viewportHeight="1141"
+    tools:ignore="VectorRaster">
+    <path
+        android:fillColor="#C29DC6"
+        android:pathData="M0,0.5h642v271.8c-36,14.3 -72.3,27.8 -108.4,41.8c-132.5,50.8 -265,101.7 -397.5,152.6C90.8,484.2 45.3,501.4 0,519.1V0.5z" />
+    <path
+        android:fillColor="#C29DC6"
+        android:pathData="M593.1,624.6c16.2,-6.5 32.9,-12.1 48.9,-19.2v536.1H0V852.6c13.6,-6.2 27.9,-10.7 41.7,-16.4C225.5,765.7 409.3,695.1 593.1,624.6z" />
+    <path
+        android:fillColor="#7EB756"
+        android:pathData="M533.6,314.1c36.1,-14.1 72.4,-27.5 108.4,-41.8v55.7C436.7,406.9 231.3,485.6 26,564.5c-8.6,3.5 -17.5,6.4 -26,10.2v-55.6c45.3,-17.7 90.8,-34.9 136.1,-52.4C268.6,415.8 401.1,365 533.6,314.1z" />
+    <path
+        android:fillColor="#FFBD4F"
+        android:pathData="M26,564.5c205.3,-78.9 410.7,-157.6 616,-236.5v55.2c-17.8,7.6 -36.1,14 -54.1,21.1C392,479.7 195.9,554.7 0,630.1v-55.4C8.5,571 17.4,568 26,564.5z" />
+    <path
+        android:fillColor="#FF8A3D"
+        android:pathData="M587.9,404.4c18,-7.1 36.3,-13.5 54.1,-21.1v55.8C428.1,521.4 213.9,603.3 0,685.7v-55.6C195.9,554.7 392,479.7 587.9,404.4z" />
+    <path
+        android:fillColor="#E94C47"
+        android:pathData="M0,685.7c213.9,-82.4 428.1,-164.3 642,-246.6v55.4c-37.6,15 -75.6,29.1 -113.3,43.8C352.4,605.7 176.3,673.6 0,741.1V685.7z" />
+    <path
+        android:fillColor="#9D4593"
+        android:pathData="M528.7,538.2c37.7,-14.7 75.7,-28.8 113.3,-43.8v55.7C442.1,627.1 242,703.6 42,780.5c-14,5.5 -28.2,10.4 -42,16.4v-55.8C176.3,673.6 352.4,605.7 528.7,538.2z" />
+    <path
+        android:fillColor="#459BD8"
+        android:pathData="M42,780.5c200,-76.9 400.1,-153.4 600,-230.4v55.3c-16,7.1 -32.7,12.7 -48.9,19.2C409.3,695.1 225.5,765.7 41.7,836.2C27.9,841.9 13.6,846.4 0,852.6v-55.7C13.8,790.9 28,786 42,780.5z" />
+</vector>
