@@ -1,5 +1,6 @@
 name: termplux
 description: TermPlux Project
+
 publish_to: 'none'
 
 version: 1.0.0+1
@@ -10,7 +11,20 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_boost:
+    git:
+      url: 'https://github.com/alibaba/flutter_boost.git'
+      ref: '4.3.0'
+  plugin_platform_interface: ^2.0.2
   cupertino_icons: ^1.0.2
+  dynamic_color: ^1.6.3
+  device_preview: ^1.1.0
+  shared_preferences: ^2.2.0
+  webview_flutter: ^4.2.1
+  xterm: ^3.5.0
+  dartssh2: ^2.5.0
+  flutter_pty: ^0.3.0
+  flutter_rfb: ^0.6.2
 
 dev_dependencies:
   flutter_test:
@@ -19,6 +33,13 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - README.md
+    - LICENSE
+    - assets/
+    - icon/
+    - cover/
 
   module:
     androidX: true
