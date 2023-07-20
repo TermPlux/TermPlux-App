@@ -1,11 +1,10 @@
-package io.termplux.app.flutter
+package io.termplux.framework.flutter
 
+import android.app.Application
 import android.util.Log
 import com.idlefish.flutterboost.FlutterBoost
-import com.idlefish.flutterboost.FlutterBoostDelegate
 import com.idlefish.flutterboost.FlutterBoostRouteOptions
 import com.idlefish.flutterboost.containers.FlutterBoostFragment
-import io.flutter.app.FlutterApplication
 import io.flutter.embedding.android.FlutterFragment
 import io.flutter.embedding.android.RenderMode
 import io.flutter.embedding.android.TransparencyMode
@@ -15,24 +14,25 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugins.GeneratedPluginRegistrant
 import io.termplux.app.fragment.MainFragment
+import io.termplux.framework.base.BaseClass
 import java.lang.ref.WeakReference
 
-class FlutterController : FlutterPlugin, Controller, FlutterBoostDelegate, FlutterBoost.Callback, MethodChannel.MethodCallHandler {
+open class TermPluxPlugin : BaseClass() {
 
-    private lateinit var mFlutterFragment: FlutterBoostFragment
+    protected lateinit var mFlutter: FlutterFragment
 
-    override fun initFlutterBoost(application: FlutterApplication) {
+    override fun initFlutterBoost(application: Application) {
         WeakReference(application).get()?.apply {
             FlutterBoost.instance().setup(
                 this@apply,
-                this@FlutterController,
-                this@FlutterController
+                this@TermPluxPlugin,
+                this@TermPluxPlugin
             )
         }
     }
 
     override fun initFlutterFragment() {
-        mFlutterFragment = FlutterBoostFragment.CachedEngineFragmentBuilder(
+        mFlutter = FlutterBoostFragment.CachedEngineFragmentBuilder(
             MainFragment::class.java
         )
             .destroyEngineWithFragment(false)
@@ -40,26 +40,6 @@ class FlutterController : FlutterPlugin, Controller, FlutterBoostDelegate, Flutt
             .transparencyMode(TransparencyMode.opaque)
             .shouldAttachEngineToActivity(false)
             .build<MainFragment>()
-    }
-
-    override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-
-    }
-
-    override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-
-    }
-
-    override fun onStart(engine: FlutterEngine?) {
-        engine?.let {
-            try {
-                it.plugins.add(this@FlutterController).run {
-                    GeneratedPluginRegistrant.registerWith(it)
-                }
-            } catch (e: Exception){
-                Log.e("Plugin", Log.getStackTraceString(e))
-            }
-        }
     }
 
     override fun pushNativeRoute(options: FlutterBoostRouteOptions?) {
@@ -70,11 +50,42 @@ class FlutterController : FlutterPlugin, Controller, FlutterBoostDelegate, Flutt
 
     }
 
+    /**
+     * 插件注册
+     */
+    override fun onStart(engine: FlutterEngine?) {
+        engine?.let {
+            try {
+                it.plugins.add(this@TermPluxPlugin).run {
+                    GeneratedPluginRegistrant.registerWith(it)
+                }
+            } catch (e: Exception) {
+                Log.e(tag, Log.getStackTraceString(e))
+            }
+        }
+    }
+
+    override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+
+    }
+
+    override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+
+    }
+
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
 
     }
 
-    override fun getFragment(): FlutterBoostFragment {
-        return mFlutterFragment
+    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+
+    }
+
+    override fun cleanUpFlutterEngine(flutterEngine: FlutterEngine) {
+
+    }
+
+    companion object {
+        const val tag: String = "EcosedPlugin"
     }
 }
