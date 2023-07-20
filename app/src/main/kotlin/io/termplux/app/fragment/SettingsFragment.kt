@@ -2,7 +2,7 @@ package io.termplux.app.fragment
 
 import android.os.Bundle
 import androidx.preference.PreferenceFragmentCompat
-import io.termplux.app.R
+import io.termplux.R
 
 class SettingsFragment : PreferenceFragmentCompat() {
 

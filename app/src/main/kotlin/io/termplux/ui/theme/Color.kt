@@ -1,4 +1,4 @@
-package io.termplux.app.ui.theme
+package io.termplux.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

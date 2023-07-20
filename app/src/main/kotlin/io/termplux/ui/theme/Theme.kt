@@ -1,4 +1,4 @@
-package io.termplux.app.ui.theme
+package io.termplux.ui.theme
 
 import android.content.Context
 import android.os.Build
@@ -30,7 +30,7 @@ private val lightColorScheme = lightColorScheme(
 )
 
 @Composable
-fun TermPluxAppTheme(
+fun TermPluxTheme(
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {

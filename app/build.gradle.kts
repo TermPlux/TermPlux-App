@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "io.termplux.app"
+    namespace = "io.termplux"
     compileSdk = 33
 
     defaultConfig {
-        applicationId = "io.termplux.app"
+        applicationId = "io.termplux"
         minSdk = 24
         targetSdk = 33
         versionCode = 1
@@ -144,10 +144,11 @@ dependencies {
     implementation(dependencyNotation = "com.google.accompanist:accompanist-systemuicontroller:0.30.1")
     implementation(dependencyNotation = "com.google.accompanist:accompanist-adaptive:0.30.1")
     implementation(dependencyNotation = platform(notation = "androidx.compose:compose-bom:2023.03.00"))
-    implementation(dependencyNotation = "androidx.compose.ui:ui")
-    implementation(dependencyNotation = "androidx.compose.ui:ui-graphics")
-    implementation(dependencyNotation = "androidx.compose.ui:ui-tooling-preview")
-    implementation(dependencyNotation = "androidx.compose.material3:material3")
+    implementation(dependencyNotation = "androidx.compose.ui:ui:1.4.3")
+    implementation(dependencyNotation = "androidx.compose.ui:ui-graphics:1.4.3")
+    implementation(dependencyNotation = "androidx.compose.ui:ui-tooling-preview:1.4.3")
+    implementation(dependencyNotation = "androidx.compose.material3:material3:1.1.1")
+    implementation(dependencyNotation = "androidx.compose.material3:material3-window-size-class:1.1.1")
     implementation(dependencyNotation = "androidx.compose.material:material-icons-core:1.4.3")
     implementation(dependencyNotation = "androidx.compose.material:material-icons-extended:1.4.3")
     implementation(dependencyNotation = "androidx.navigation:navigation-compose:2.6.0")
@@ -156,8 +157,8 @@ dependencies {
     androidTestImplementation(dependencyNotation = "androidx.test.ext:junit:1.1.5")
     androidTestImplementation(dependencyNotation = "androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation(dependencyNotation = platform(notation = "androidx.compose:compose-bom:2023.03.00"))
-    androidTestImplementation(dependencyNotation = "androidx.compose.ui:ui-test-junit4")
+    androidTestImplementation(dependencyNotation = "androidx.compose.ui:ui-test-junit4:1.4.3")
     androidTestImplementation(dependencyNotation = "androidx.navigation:navigation-testing:2.6.0")
-    debugImplementation(dependencyNotation = "androidx.compose.ui:ui-tooling")
-    debugImplementation(dependencyNotation = "androidx.compose.ui:ui-test-manifest")
+    debugImplementation(dependencyNotation = "androidx.compose.ui:ui-tooling:1.4.3")
+    debugImplementation(dependencyNotation = "androidx.compose.ui:ui-test-manifest:1.4.3")
 }

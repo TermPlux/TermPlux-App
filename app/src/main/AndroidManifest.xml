@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
-        android:name=".TermPluxApp"
+        android:name=".app.application.TermPluxApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:enableOnBackInvokedCallback="true"
@@ -23,7 +23,7 @@
             android:value="@string/fake_signature" />
 
         <activity
-            android:name=".MainActivity"
+            android:name=".app.activity.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
