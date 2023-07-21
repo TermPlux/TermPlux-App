@@ -18,6 +18,7 @@
         android:theme="@style/Theme.TermPlux"
         android:usesCleartextTraffic="true"
         tools:targetApi="33">
+
         <meta-data
             android:name="fake-signature"
             android:value="@string/fake_signature" />

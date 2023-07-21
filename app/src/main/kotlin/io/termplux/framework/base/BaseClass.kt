@@ -17,10 +17,8 @@ abstract class BaseClass : MaterialActivity(), FlutterBoostDelegate, FlutterBoos
     override fun onCreate(savedInstanceState: Bundle?) {
         mApplication = application
         initFlutterBoost(application = mApplication)
-        initFlutterFragment()
         super.onCreate(savedInstanceState)
     }
 
     abstract fun initFlutterBoost(application: Application)
-    abstract fun initFlutterFragment()
 }

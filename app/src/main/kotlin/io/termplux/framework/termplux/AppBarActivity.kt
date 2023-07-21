@@ -2,18 +2,33 @@ package io.termplux.framework.termplux
 
 import android.graphics.Color
 import android.os.Bundle
+import android.view.Menu
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.FragmentContainerView
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.setupActionBarWithNavController
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.shape.MaterialShapeDrawable
+import io.termplux.R
+import io.termplux.databinding.ContainerBinding
 import rikka.core.ktx.unsafeLazy
 
 abstract class AppBarActivity : AppActivity() {
 
-    open lateinit var mAppBar: AppBarLayout
+    protected lateinit var mAppBar: AppBarLayout
+    protected lateinit var mContainer: FragmentContainerView
 
+    private lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var navController: NavController
+    private lateinit var mFragmentContainerView: FragmentContainerView
     private lateinit var mActionBar: ActionBar
+
+    private lateinit var binding: ContainerBinding
 
     private val poem = listOf(
         "不向焦虑与抑郁投降，这个世界终会有我们存在的地方。",
@@ -53,20 +68,43 @@ abstract class AppBarActivity : AppActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // 绑定布局
+        binding = ContainerBinding.inflate(layoutInflater)
+        // 获取Fragment容器控件
+        mFragmentContainerView = binding.navHostFragmentContentMain
+        // 绑定导航主机
+        val navHostFragment = supportFragmentManager.findFragmentById(
+            mFragmentContainerView.id
+        ) as NavHostFragment
+        // 导航控制器
+        navController = navHostFragment.navController
+        // 应用栏配置
+        appBarConfiguration = AppBarConfiguration(
+            navGraph = navController.graph
+        )
         // 设置操作栏
         setSupportActionBar(toolbar)
+        // 将操作栏与导航控制器绑定
+        setupActionBarWithNavController(
+            navController = navController,
+            configuration = appBarConfiguration
+        )
         // 获取操作栏
         supportActionBar?.let {
             mActionBar = it
         }
         mAppBar = toolbarContainer
+        mContainer = mFragmentContainerView
         // 随机抽取诗句作为子标题
         mActionBar.subtitle = poem[(poem.indices).random()]
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.main, menu)
+        return true
+    }
 
-
-
-
-
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
 }

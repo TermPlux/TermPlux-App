@@ -20,8 +20,6 @@ import java.lang.ref.WeakReference
 
 open class TermPluxPlugin : BaseClass() {
 
-    open lateinit var mFlutter: FlutterFragment
-
     override fun initFlutterBoost(application: Application) {
         WeakReference(application).get()?.apply {
             FlutterBoost.instance().setup(
@@ -30,17 +28,6 @@ open class TermPluxPlugin : BaseClass() {
                 this@TermPluxPlugin
             )
         }
-    }
-
-    override fun initFlutterFragment() {
-        mFlutter = FlutterBoostFragment.CachedEngineFragmentBuilder(
-            ReturnFragment::class.java
-        )
-            .destroyEngineWithFragment(false)
-            .renderMode(RenderMode.surface)
-            .transparencyMode(TransparencyMode.opaque)
-            .shouldAttachEngineToActivity(false)
-            .build<ReturnFragment>()
     }
 
     override fun pushNativeRoute(options: FlutterBoostRouteOptions?) {

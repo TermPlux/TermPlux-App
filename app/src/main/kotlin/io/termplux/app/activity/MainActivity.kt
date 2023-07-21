@@ -18,18 +18,13 @@ class MainActivity : ComposeActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
-
-
-
-
-
     }
 
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     @Composable
     override fun Contents() {
         super.Contents()
+
         val windowSize: WindowSizeClass = calculateWindowSizeClass(activity = this@MainActivity)
         val displayFeatures: List<DisplayFeature> =
             calculateDisplayFeatures(activity = this@MainActivity)

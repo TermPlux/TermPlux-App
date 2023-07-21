@@ -7,4 +7,13 @@
         <item name="windowActionBar">true</item>
         <item name="windowNoTitle">false</item>
     </style>
+
+    <style name="Theme.TermPlux.NoActionBar" parent="Theme.TermPlux">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.TermPlux.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.TermPlux.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

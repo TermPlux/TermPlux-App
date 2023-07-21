@@ -130,6 +130,7 @@ dependencies {
     implementation(dependencyNotation = "androidx.browser:browser:1.5.0")
     implementation(dependencyNotation = "androidx.fragment:fragment-ktx:1.6.0")
     implementation(dependencyNotation = "androidx.preference:preference-ktx:1.2.0")
+    implementation(dependencyNotation = "androidx.constraintlayout:constraintlayout:2.1.4")
     implementation(dependencyNotation = "androidx.viewpager2:viewpager2:1.0.0")
     implementation(dependencyNotation = "androidx.recyclerview:recyclerview:1.3.0")
     implementation(dependencyNotation = "androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
@@ -152,6 +153,8 @@ dependencies {
     implementation(dependencyNotation = "androidx.compose.material:material-icons-core:1.4.3")
     implementation(dependencyNotation = "androidx.compose.material:material-icons-extended:1.4.3")
     implementation(dependencyNotation = "androidx.navigation:navigation-compose:2.6.0")
+    implementation(dependencyNotation = "androidx.navigation:navigation-fragment-ktx:2.6.0")
+    implementation(dependencyNotation = "androidx.navigation:navigation-ui-ktx:2.6.0")
     // 测试和调试
     testImplementation(dependencyNotation = "junit:junit:4.13.2")
     androidTestImplementation(dependencyNotation = "androidx.test.ext:junit:1.1.5")
