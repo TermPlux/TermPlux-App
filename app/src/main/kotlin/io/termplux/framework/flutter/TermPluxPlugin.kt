@@ -6,6 +6,7 @@ import com.idlefish.flutterboost.FlutterBoost
 import com.idlefish.flutterboost.FlutterBoostRouteOptions
 import com.idlefish.flutterboost.containers.FlutterBoostFragment
 import io.flutter.embedding.android.FlutterFragment
+import io.flutter.embedding.android.FlutterView
 import io.flutter.embedding.android.RenderMode
 import io.flutter.embedding.android.TransparencyMode
 import io.flutter.embedding.engine.FlutterEngine
@@ -13,13 +14,13 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugins.GeneratedPluginRegistrant
-import io.termplux.app.fragment.MainFragment
+import io.termplux.app.fragment.ReturnFragment
 import io.termplux.framework.base.BaseClass
 import java.lang.ref.WeakReference
 
 open class TermPluxPlugin : BaseClass() {
 
-    protected lateinit var mFlutter: FlutterFragment
+    open lateinit var mFlutter: FlutterFragment
 
     override fun initFlutterBoost(application: Application) {
         WeakReference(application).get()?.apply {
@@ -33,13 +34,13 @@ open class TermPluxPlugin : BaseClass() {
 
     override fun initFlutterFragment() {
         mFlutter = FlutterBoostFragment.CachedEngineFragmentBuilder(
-            MainFragment::class.java
+            ReturnFragment::class.java
         )
             .destroyEngineWithFragment(false)
             .renderMode(RenderMode.surface)
             .transparencyMode(TransparencyMode.opaque)
             .shouldAttachEngineToActivity(false)
-            .build<MainFragment>()
+            .build<ReturnFragment>()
     }
 
     override fun pushNativeRoute(options: FlutterBoostRouteOptions?) {
@@ -47,6 +48,14 @@ open class TermPluxPlugin : BaseClass() {
     }
 
     override fun pushFlutterRoute(options: FlutterBoostRouteOptions?) {
+
+    }
+
+    override fun onFlutterCreated(flutterView: FlutterView?) {
+
+    }
+
+    override fun onFlutterDestroy(flutterView: FlutterView?) {
 
     }
 

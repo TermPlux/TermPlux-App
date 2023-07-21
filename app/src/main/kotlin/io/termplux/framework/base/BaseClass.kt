@@ -10,7 +10,7 @@ import io.flutter.plugin.common.MethodChannel
 import rikka.material.app.MaterialActivity
 
 abstract class BaseClass : MaterialActivity(), FlutterBoostDelegate, FlutterBoost.Callback,
-    FlutterPlugin, MethodChannel.MethodCallHandler, FlutterEngineConfigurator {
+    FlutterViewReturn, FlutterPlugin, MethodChannel.MethodCallHandler, FlutterEngineConfigurator {
 
     private lateinit var mApplication: Application
 

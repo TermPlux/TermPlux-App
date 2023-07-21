@@ -8,6 +8,7 @@ import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.window.layout.DisplayFeature
 import com.google.accompanist.adaptive.calculateDisplayFeatures
+import io.termplux.app.adapter.PreferenceAdapter
 import io.termplux.framework.termplux.ComposeActivity
 import io.termplux.ui.layout.ActivityMain
 import io.termplux.ui.theme.TermPluxTheme
@@ -32,6 +33,7 @@ class MainActivity : ComposeActivity() {
         val windowSize: WindowSizeClass = calculateWindowSizeClass(activity = this@MainActivity)
         val displayFeatures: List<DisplayFeature> =
             calculateDisplayFeatures(activity = this@MainActivity)
+        val preferenceAdapter = PreferenceAdapter(activity = this@MainActivity)
 
         val poem = listOf(
             "不向焦虑与抑郁投降，这个世界终会有我们存在的地方。",
@@ -57,7 +59,12 @@ class MainActivity : ComposeActivity() {
                     setSupportActionBar(toolbar)
                     supportActionBar?.subtitle = poem[(poem.indices).random()]
                 },
-                preferenceUpdate = {},
+                preferenceUpdate = {preference ->
+                    preference.apply {
+                        adapter = preferenceAdapter
+                        offscreenPageLimit = preferenceAdapter.itemCount
+                    }
+                },
                 androidVersion = "13",
                 shizukuVersion = "13",
                 current = {},

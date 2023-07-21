@@ -1,14 +1,19 @@
 package io.termplux.framework.termplux
 
+import android.graphics.Color
 import android.os.Bundle
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.widget.Toolbar
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.shape.MaterialShapeDrawable
 import rikka.core.ktx.unsafeLazy
 
 abstract class AppBarActivity : AppActivity() {
 
-    protected lateinit var mAppBar: AppBarLayout
+    open lateinit var mAppBar: AppBarLayout
+
+    private lateinit var mActionBar: ActionBar
 
     private val poem = listOf(
         "不向焦虑与抑郁投降，这个世界终会有我们存在的地方。",
@@ -25,6 +30,11 @@ abstract class AppBarActivity : AppActivity() {
 
     private val toolbarContainer: AppBarLayout by unsafeLazy {
         AppBarLayout(this@AppBarActivity).apply {
+            setBackgroundColor(Color.TRANSPARENT)
+            isLiftOnScroll = true
+            statusBarForeground = MaterialShapeDrawable.createWithElevationOverlay(
+                this@AppBarActivity
+            )
             addView(
                 toolbar,
                 AppBarLayout.LayoutParams(
@@ -37,14 +47,26 @@ abstract class AppBarActivity : AppActivity() {
 
     private val toolbar: Toolbar by unsafeLazy {
         MaterialToolbar(this@AppBarActivity).apply {
-            subtitle = poem[(poem.indices).random()]
+            setBackgroundColor(Color.TRANSPARENT)
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-     //   setSupportActionBar(toolbar)
+        // 设置操作栏
+        setSupportActionBar(toolbar)
+        // 获取操作栏
+        supportActionBar?.let {
+            mActionBar = it
+        }
         mAppBar = toolbarContainer
+        // 随机抽取诗句作为子标题
+        mActionBar.subtitle = poem[(poem.indices).random()]
     }
+
+
+
+
+
 
 }
