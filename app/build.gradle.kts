@@ -1,14 +1,15 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("androidx.navigation.safeargs.kotlin")
 }
 
 android {
-    namespace = "io.termplux"
+    namespace = "io.termplux.app"
     compileSdk = 33
 
     defaultConfig {
-        applicationId = "io.termplux"
+        applicationId = "io.termplux.app"
         minSdk = 24
         targetSdk = 33
         versionCode = 1
@@ -72,10 +73,13 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.3"
+        kotlinCompilerExtensionVersion = "1.4.7"
     }
 
     packaging {
+        jniLibs {
+            useLegacyPackaging = true
+        }
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }

@@ -9,9 +9,9 @@ import androidx.compose.runtime.Composable
 import androidx.window.layout.DisplayFeature
 import com.google.accompanist.adaptive.calculateDisplayFeatures
 import io.termplux.app.adapter.PreferenceAdapter
-import io.termplux.framework.termplux.ComposeActivity
-import io.termplux.ui.layout.ActivityMain
-import io.termplux.ui.theme.TermPluxTheme
+import io.termplux.app.framework.termplux.ComposeActivity
+import io.termplux.app.ui.layout.ActivityMain
+import io.termplux.app.ui.theme.TermPluxTheme
 
 class MainActivity : ComposeActivity() {
 

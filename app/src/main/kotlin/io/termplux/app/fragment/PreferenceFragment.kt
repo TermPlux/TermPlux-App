@@ -2,19 +2,10 @@ package io.termplux.app.fragment
 
 import android.content.Context
 import android.os.Bundle
-import android.util.TypedValue
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import android.widget.FrameLayout
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.TwoStatePreference
-import androidx.recyclerview.widget.RecyclerView
-import io.termplux.R
-import rikka.material.preference.MaterialSwitchPreference
-import rikka.recyclerview.addEdgeSpacing
-import rikka.recyclerview.fixEdgeEffect
-import rikka.widget.borderview.BorderRecyclerView
+import io.termplux.app.R
 
 class PreferenceFragment : PreferenceFragmentCompat() {
 

@@ -17,9 +17,6 @@ dependencies:
       ref: '4.3.0'
   plugin_platform_interface: ^2.0.2
   cupertino_icons: ^1.0.2
-  dynamic_color: ^1.6.3
-  device_preview: ^1.1.0
-  shared_preferences: ^2.2.0
   webview_flutter: ^4.2.1
   xterm: ^3.5.0
   dartssh2: ^2.5.0
