@@ -38,23 +38,23 @@ class PreferenceFragment : PreferenceFragmentCompat() {
 
     }
 
-    override fun onCreateRecyclerView(
-        inflater: LayoutInflater,
-        parent: ViewGroup,
-        savedInstanceState: Bundle?
-    ): RecyclerView {
-        val recyclerView = super.onCreateRecyclerView(inflater, parent, savedInstanceState) as BorderRecyclerView
-        recyclerView.fixEdgeEffect()
-        recyclerView.addEdgeSpacing(bottom = 8f, unit = TypedValue.COMPLEX_UNIT_DIP)
-
-        val lp = recyclerView.layoutParams
-        if (lp is FrameLayout.LayoutParams) {
-            lp.rightMargin = recyclerView.context.resources.getDimension(R.dimen.rd_activity_horizontal_margin).toInt()
-            lp.leftMargin = lp.rightMargin
-        }
-
-        return recyclerView
-    }
+//    override fun onCreateRecyclerView(
+//        inflater: LayoutInflater,
+//        parent: ViewGroup,
+//        savedInstanceState: Bundle?
+//    ): RecyclerView {
+//        val recyclerView = super.onCreateRecyclerView(inflater, parent, savedInstanceState) as BorderRecyclerView
+//        recyclerView.fixEdgeEffect()
+//        recyclerView.addEdgeSpacing(bottom = 8f, unit = TypedValue.COMPLEX_UNIT_DIP)
+//
+//        val lp = recyclerView.layoutParams
+//        if (lp is FrameLayout.LayoutParams) {
+//            lp.rightMargin = recyclerView.context.resources.getDimension(R.dimen.rd_activity_horizontal_margin).toInt()
+//            lp.leftMargin = lp.rightMargin
+//        }
+//
+//        return recyclerView
+//    }
 
     companion object {
         fun newInstance(): PreferenceFragment{

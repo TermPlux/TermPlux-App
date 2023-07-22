@@ -3,14 +3,15 @@
 
 using namespace std;
 
-void call();
-
-extern "C"
-JNIEXPORT void JNICALL
-Java_io_termplux_activity_MainActivityOld_fuck(JNIEnv *env, jobject thiz) {
-    call();
-}
-
 void call() {
     printf("fuck");
+}
+
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_io_termplux_framework_library_NativeLib_stringFromJNI(JNIEnv *env, jobject thiz) {
+    call();
+
+    std::string hello = "Hello from C++";
+    return env->NewStringUTF(hello.c_str());
 }

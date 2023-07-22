@@ -78,6 +78,7 @@ abstract class AppBarActivity : AppActivity() {
         ) as NavHostFragment
         // 导航控制器
         navController = navHostFragment.navController
+        navController.setGraph(R.navigation.mobile_navigation)
         // 应用栏配置
         appBarConfiguration = AppBarConfiguration(
             navGraph = navController.graph

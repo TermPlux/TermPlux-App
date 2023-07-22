@@ -3,6 +3,7 @@ package io.termplux.framework.library
 class NativeLib {
 
 
+    external fun stringFromJNI(): String
 
     companion object {
         init {
