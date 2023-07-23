@@ -24,6 +24,7 @@ import com.google.android.material.appbar.MaterialToolbar
 import io.termplux.app.BuildConfig
 import io.termplux.app.R
 import io.termplux.app.ui.preview.ScreenPreviews
+import io.termplux.app.ui.theme.TermPluxTheme
 import io.termplux.app.ui.widget.TopActionBar
 
 @Composable
@@ -548,24 +549,26 @@ fun ScreenManager(
 @Composable
 @ScreenPreviews
 private fun ScreenManagerPreview() {
-    ScreenManager(
-        navController = rememberNavController(),
-        toggle = {},
-        current = {},
-        targetAppName = stringResource(
-            id = R.string.app_name
-        ),
-        targetAppPackageName = BuildConfig.APPLICATION_ID,
-        targetAppDescription = stringResource(
-            id = R.string.app_description
-        ),
-        targetAppVersionName = BuildConfig.VERSION_NAME,
-        NavigationOnClick = {},
-        MenuOnClick = {},
-        SearchOnClick = {},
-        SheetOnClick = {},
-        AppsOnClick = {},
-        SelectOnClick = {},
-        onNavigateToApps = {}
-    )
+    TermPluxTheme {
+        ScreenManager(
+            navController = rememberNavController(),
+            toggle = {},
+            current = {},
+            targetAppName = stringResource(
+                id = R.string.app_name
+            ),
+            targetAppPackageName = BuildConfig.APPLICATION_ID,
+            targetAppDescription = stringResource(
+                id = R.string.app_description
+            ),
+            targetAppVersionName = BuildConfig.VERSION_NAME,
+            NavigationOnClick = {},
+            MenuOnClick = {},
+            SearchOnClick = {},
+            SheetOnClick = {},
+            AppsOnClick = {},
+            SelectOnClick = {},
+            onNavigateToApps = {}
+        )
+    }
 }

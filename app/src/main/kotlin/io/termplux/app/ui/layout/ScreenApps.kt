@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.recyclerview.widget.RecyclerView
 import io.termplux.app.R
 import io.termplux.app.ui.preview.ScreenPreviews
+import io.termplux.app.ui.theme.TermPluxTheme
 import io.termplux.app.ui.widget.AppsGrid
 
 @Composable
@@ -48,7 +49,8 @@ fun ScreenApps(
                     id = R.drawable.custom_wallpaper_24
                 ),
                 contentDescription = null,
-                contentScale = ContentScale.FillBounds
+                contentScale = ContentScale.FillBounds,
+                modifier = Modifier.fillMaxSize()
             )
             Column(
                 modifier = Modifier.fillMaxSize()
@@ -121,7 +123,9 @@ fun ScreenApps(
 @ScreenPreviews
 @Composable
 fun ScreenAppsPreview() {
-    ScreenApps {
+    TermPluxTheme {
+        ScreenApps {
 
+        }
     }
 }

@@ -1,4 +1,4 @@
-package io.termplux.app.framework.library
+package io.termplux.app.library
 
 class NativeLib {
 

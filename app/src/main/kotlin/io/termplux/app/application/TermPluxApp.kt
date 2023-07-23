@@ -10,7 +10,7 @@ import com.google.android.material.color.DynamicColors
 import com.kongzue.dialogx.DialogX
 import com.kongzue.dialogx.style.IOSStyle
 import io.flutter.app.FlutterApplication
-import io.termplux.app.framework.settings.TermPluxSettings
+import io.termplux.app.settings.TermPluxSettings
 import org.lsposed.hiddenapibypass.HiddenApiBypass
 import rikka.material.app.LocaleDelegate
 

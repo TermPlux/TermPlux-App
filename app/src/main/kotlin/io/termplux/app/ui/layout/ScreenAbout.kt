@@ -45,6 +45,7 @@ import com.blankj.utilcode.util.AppUtils
 import io.termplux.app.BuildConfig
 import io.termplux.app.R
 import io.termplux.app.ui.preview.ScreenPreviews
+import io.termplux.app.ui.theme.TermPluxTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -537,16 +538,18 @@ fun ScreenAbout(
 @ScreenPreviews
 @Composable
 fun ScreenAboutPreview() {
-    ScreenAbout(
-        scope = rememberCoroutineScope(),
-        snackBarHostState = remember {
-            SnackbarHostState()
-        },
-        onEasterEgg = {},
-        onNotice = {},
-        onSource = {},
-        onDevGitHub = {},
-        onDevTwitter = {},
-        onTeamGitHub = {}
-    )
+    TermPluxTheme {
+        ScreenAbout(
+            scope = rememberCoroutineScope(),
+            snackBarHostState = remember {
+                SnackbarHostState()
+            },
+            onEasterEgg = {},
+            onNotice = {},
+            onSource = {},
+            onDevGitHub = {},
+            onDevTwitter = {},
+            onTeamGitHub = {}
+        )
+    }
 }

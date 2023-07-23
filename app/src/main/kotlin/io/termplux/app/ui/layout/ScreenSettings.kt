@@ -33,6 +33,7 @@ import io.termplux.app.BuildConfig
 import io.termplux.app.R
 import io.termplux.app.ui.preview.ScreenPreviews
 import io.termplux.app.ui.screen.Screen
+import io.termplux.app.ui.theme.TermPluxTheme
 import io.termplux.app.ui.widget.SettingsItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -184,15 +185,17 @@ fun ScreenSettings(
 @ScreenPreviews
 @Composable
 private fun ScreenSettingsPreview() {
-    ScreenSettings(
-        navController = rememberNavController(),
-        scope = rememberCoroutineScope(),
-        snackBarHostState = remember {
-            SnackbarHostState()
-        },
-        current = {},
-        onTaskBarSettings = {},
-        onSystemSettings = {},
-        onDefaultLauncherSettings = {}
-    )
+    TermPluxTheme {
+        ScreenSettings(
+            navController = rememberNavController(),
+            scope = rememberCoroutineScope(),
+            snackBarHostState = remember {
+                SnackbarHostState()
+            },
+            current = {},
+            onTaskBarSettings = {},
+            onSystemSettings = {},
+            onDefaultLauncherSettings = {}
+        )
+    }
 }

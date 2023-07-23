@@ -3,10 +3,6 @@ package io.termplux.app.ui.screen
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Android
-import androidx.compose.material.icons.filled.Apps
-import androidx.compose.material.icons.filled.FlutterDash
-import androidx.compose.material.icons.filled.RocketLaunch
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.twotone.AppSettingsAlt
 import androidx.compose.material.icons.twotone.Apps
 import androidx.compose.material.icons.twotone.FlutterDash
@@ -28,12 +24,12 @@ sealed class Screen constructor(
     @StringRes val title: Int,
 ) {
 
-    object ComposeTitle : Screen(
-        type = ScreenType.Title,
-        item = ItemType.Title,
-        route = ScreenRoute.Title,
-        imageVector = Icons.Filled.Android,
-        title = R.string.menu_apps
+    object Overview: Screen(
+        type = ScreenType.Compose,
+        item = ItemType.Default,
+        route = ScreenRoute.routeDashboard,
+        imageVector = Icons.TwoTone.ListAlt,
+        title = R.string.menu_overview
     )
 
     object Apps: Screen(
@@ -52,14 +48,6 @@ sealed class Screen constructor(
         title = R.string.menu_flutter
     )
 
-    object Overview: Screen(
-        type = ScreenType.Compose,
-        item = ItemType.Default,
-        route = ScreenRoute.routeDashboard,
-        imageVector = Icons.TwoTone.ListAlt,
-        title = R.string.menu_overview
-    )
-
 //    object Dashboard : Screen(
 //        type = ScreenType.Compose,
 //        item = ItemType.Default,
@@ -74,6 +62,14 @@ sealed class Screen constructor(
         route = ScreenRoute.routeManager,
         imageVector = Icons.TwoTone.AppSettingsAlt,
         title = R.string.menu_manager
+    )
+
+    object Divider : Screen(
+        type = ScreenType.Divider,
+        item = ItemType.Divider,
+        route = ScreenRoute.Divider,
+        imageVector = Icons.Filled.Android,
+        title = R.string.app_name
     )
 
     object Settings : Screen(
@@ -98,53 +94,5 @@ sealed class Screen constructor(
         route = ScreenRoute.routeAbout,
         imageVector = Icons.TwoTone.Info,
         title = R.string.menu_about
-    )
-
-    object Divider : Screen(
-        type = ScreenType.Divider,
-        item = ItemType.Divider,
-        route = ScreenRoute.Divider,
-        imageVector = Icons.Filled.Android,
-        title = R.string.app_name
-    )
-
-    object FragmentTitle : Screen(
-        type = ScreenType.Title,
-        item = ItemType.Title,
-        route = ScreenRoute.Title,
-        imageVector = Icons.Filled.Android,
-        title = R.string.app_name
-    )
-
-    object LauncherFragment : Screen(
-        type = ScreenType.Fragment,
-        item = ItemType.Default,
-        route = ScreenRoute.routeLauncherFragment,
-        imageVector = Icons.Filled.RocketLaunch,
-        title = R.string.app_name
-    )
-
-    object HomeFragment : Screen(
-        type = ScreenType.Fragment,
-        item = ItemType.Default,
-        route = ScreenRoute.routeHomeFragment,
-        imageVector = Icons.Filled.FlutterDash,
-        title = R.string.app_name
-    )
-
-    object AppsFragment : Screen(
-        type = ScreenType.Fragment,
-        item = ItemType.Default,
-        route = ScreenRoute.routeAppsFragment,
-        imageVector = Icons.Filled.Apps,
-        title = R.string.menu_apps
-    )
-
-    object SettingsFragment : Screen(
-        type = ScreenType.Fragment,
-        item = ItemType.Default,
-        route = ScreenRoute.routeSettingsFragment,
-        imageVector = Icons.Filled.Settings,
-        title = R.string.menu_settings
     )
 }

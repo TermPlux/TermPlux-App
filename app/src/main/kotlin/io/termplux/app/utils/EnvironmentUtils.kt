@@ -1,4 +1,4 @@
-package io.termplux.app.framework.utils
+package io.termplux.app.utils
 
 import android.app.UiModeManager
 import android.content.Context

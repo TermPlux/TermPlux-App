@@ -1,11 +1,11 @@
-package io.termplux.app.framework.settings
+package io.termplux.app.settings
 
 import android.content.Context
 import android.content.SharedPreferences
 import android.text.TextUtils
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
-import io.termplux.app.framework.utils.EnvironmentUtils
+import io.termplux.app.utils.EnvironmentUtils
 import java.util.Locale
 
 object TermPluxSettings {

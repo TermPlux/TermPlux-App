@@ -1,11 +1,11 @@
-package io.termplux.app.framework.theme
+package io.termplux.app.theme
 
 import android.content.Context
 import androidx.annotation.StyleRes;
 import android.os.Build
 import io.termplux.app.R
-import io.termplux.app.framework.settings.TermPluxSettings
-import io.termplux.app.framework.utils.EnvironmentUtils
+import io.termplux.app.settings.TermPluxSettings
+import io.termplux.app.utils.EnvironmentUtils
 import rikka.core.util.ResourceUtils
 
 object ThemeHelper {

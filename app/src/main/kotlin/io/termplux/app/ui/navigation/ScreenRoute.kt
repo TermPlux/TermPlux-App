@@ -15,11 +15,6 @@ object ScreenRoute {
     const val routeSettings: String = "settings"
     const val routeAbout: String = "about"
 
-    const val routeLauncherFragment: String = "ContentAdapter.launcher.toString()"
-    const val routeHomeFragment: String = ""
-    const val routeAppsFragment: String= "ContentAdapter.apps.toString()"
-    const val routeSettingsFragment: String = "ContentAdapter.settings.toString()"
-
     const val Divider: String = "divider"
     const val Title: String = "title"
 }

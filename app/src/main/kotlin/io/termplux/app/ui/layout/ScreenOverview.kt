@@ -34,6 +34,7 @@ import io.termplux.app.BuildConfig
 import io.termplux.app.R
 import io.termplux.app.ui.preview.ScreenPreviews
 import io.termplux.app.ui.screen.Screen
+import io.termplux.app.ui.theme.TermPluxTheme
 
 @Composable
 fun ScreenOverview(
@@ -342,9 +343,10 @@ fun ScreenOverview(
 @ScreenPreviews
 @Composable
 private fun ScreenOverviewPreview() {
-    ScreenOverview(
-        navController = rememberNavController(),
-        shizukuVersion = "13"
-    )
+    TermPluxTheme {
+        ScreenOverview(
+            navController = rememberNavController(),
+            shizukuVersion = "13"
+        )
+    }
 }
-

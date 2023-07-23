@@ -10,7 +10,7 @@ import com.google.android.material.navigation.NavigationView
 import com.idlefish.flutterboost.containers.FlutterBoostFragment
 import io.flutter.embedding.android.FlutterView
 import io.termplux.app.R
-import io.termplux.app.framework.base.FlutterViewReturn
+import io.termplux.app.FlutterViewReturn
 
 class ReturnFragment : FlutterBoostFragment() {
 

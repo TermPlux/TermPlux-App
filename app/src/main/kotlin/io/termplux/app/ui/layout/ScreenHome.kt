@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import com.google.android.material.appbar.MaterialToolbar
 import io.termplux.app.R
 import io.termplux.app.ui.preview.ScreenPreviews
+import io.termplux.app.ui.theme.TermPluxTheme
 import io.termplux.app.ui.widget.RootContent
 import io.termplux.app.ui.widget.TopActionBar
 
@@ -56,7 +57,8 @@ fun ScreenHome(
                     id = R.drawable.custom_wallpaper_24
                 ),
                 contentDescription = null,
-                contentScale = ContentScale.FillBounds
+                contentScale = ContentScale.FillBounds,
+                modifier = Modifier.fillMaxSize()
             )
             Column {
                 Column(
@@ -157,22 +159,24 @@ fun ScreenHome(
 @ScreenPreviews
 fun ScreenHomePreview() {
     val context = LocalContext.current
-    ScreenHome(
-        topBarVisible = true,
-        topBarUpdate = {},
-        rootLayout = FrameLayout(context).apply {
-            addView(
-                TextView(context).apply {
-                    text = stringResource(
-                        id = R.string.flutter_view_preview
+    TermPluxTheme {
+        ScreenHome(
+            topBarVisible = true,
+            topBarUpdate = {},
+            rootLayout = FrameLayout(context).apply {
+                addView(
+                    TextView(context).apply {
+                        text = stringResource(
+                            id = R.string.flutter_view_preview
+                        )
+                    },
+                    FrameLayout.LayoutParams(
+                        FrameLayout.LayoutParams.WRAP_CONTENT,
+                        FrameLayout.LayoutParams.WRAP_CONTENT,
+                        Gravity.CENTER
                     )
-                },
-                FrameLayout.LayoutParams(
-                    FrameLayout.LayoutParams.WRAP_CONTENT,
-                    FrameLayout.LayoutParams.WRAP_CONTENT,
-                    Gravity.CENTER
                 )
-            )
-        }
-    )
+            }
+        )
+    }
 }
