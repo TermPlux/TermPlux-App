@@ -22,6 +22,7 @@ class TermPluxApp : FlutterApplication() {
         super.onCreate()
         initSharedPreferences()
 
+
         LocaleDelegate.defaultLocale = TermPluxSettings.getLocale()
         AppCompatDelegate.setDefaultNightMode(TermPluxSettings.getNightMode(context = this@TermPluxApp))
 

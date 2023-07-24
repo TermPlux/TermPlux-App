@@ -6,6 +6,7 @@ import androidx.compose.material.icons.filled.Android
 import androidx.compose.material.icons.twotone.AppSettingsAlt
 import androidx.compose.material.icons.twotone.Apps
 import androidx.compose.material.icons.twotone.FlutterDash
+import androidx.compose.material.icons.twotone.Home
 import androidx.compose.material.icons.twotone.Info
 import androidx.compose.material.icons.twotone.ListAlt
 import androidx.compose.material.icons.twotone.RoomPreferences
@@ -28,7 +29,7 @@ sealed class Screen constructor(
         type = ScreenType.Compose,
         item = ItemType.Default,
         route = ScreenRoute.routeDashboard,
-        imageVector = Icons.TwoTone.ListAlt,
+        imageVector = Icons.TwoTone.Home,
         title = R.string.menu_overview
     )
 

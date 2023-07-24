@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory>
+    <PreferenceCategory
+        android:key="app"
+        android:title="@string/app_name">
 
-        <rikka.material.preference.MaterialSwitchPreference
-
-
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:icon="@drawable/baseline_view_in_ar_24"
             android:key="full_mode"
             android:summary="完整的用户界面"
             android:title="以完整模式运行" />
 
-        <rikka.material.preference.MaterialSwitchPreference
+        <SwitchPreferenceCompat
             android:defaultValue="true"
             android:icon="@drawable/baseline_color_lens_24"
             android:key="dynamic_colors"
             android:summary="@string/dynamic_colors_summary"
             android:title="@string/dynamic_colors_title" />
 
-        <rikka.material.preference.MaterialSwitchPreference
+        <SwitchPreferenceCompat
             android:defaultValue="true"
             android:icon="@drawable/baseline_view_carousel_24"
             android:key="desktop"

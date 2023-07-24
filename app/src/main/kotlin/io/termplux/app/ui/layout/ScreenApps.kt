@@ -44,14 +44,14 @@ fun ScreenApps(
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
-            Image(
-                painter = painterResource(
-                    id = R.drawable.custom_wallpaper_24
-                ),
-                contentDescription = null,
-                contentScale = ContentScale.FillBounds,
-                modifier = Modifier.fillMaxSize()
-            )
+//            Image(
+//                painter = painterResource(
+//                    id = R.drawable.custom_wallpaper_24
+//                ),
+//                contentDescription = null,
+//                contentScale = ContentScale.FillBounds,
+//                modifier = Modifier.fillMaxSize()
+//            )aA
             Column(
                 modifier = Modifier.fillMaxSize()
             ) {

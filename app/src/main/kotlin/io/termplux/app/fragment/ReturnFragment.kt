@@ -10,7 +10,7 @@ import com.google.android.material.navigation.NavigationView
 import com.idlefish.flutterboost.containers.FlutterBoostFragment
 import io.flutter.embedding.android.FlutterView
 import io.termplux.app.R
-import io.termplux.app.FlutterViewReturn
+import io.termplux.app.utils.AppCompatFlutter
 
 class ReturnFragment : FlutterBoostFragment() {
 
@@ -22,9 +22,7 @@ class ReturnFragment : FlutterBoostFragment() {
         savedInstanceState: Bundle?
     ): View = NavigationView(requireActivity()).apply {
         super.onCreateView(inflater, container, savedInstanceState)?.let { parent ->
-            flutterView = findFlutterView(
-                view = parent
-            )
+            flutterView = findFlutterView(view = parent)
             apply {
                 inflateHeaderView(R.layout.nav_header_main)
                 inflateMenu(R.menu.activity_main_drawer)
@@ -33,8 +31,8 @@ class ReturnFragment : FlutterBoostFragment() {
                 )
             }.run {
                 when (val activity = requireActivity()) {
-                    is FlutterViewReturn -> {
-                        (activity as FlutterViewReturn).apply {
+                    is AppCompatFlutter -> {
+                        (activity as AppCompatFlutter).apply {
                             onFlutterCreated(
                                 flutterView = flutterView
                             )
@@ -48,13 +46,12 @@ class ReturnFragment : FlutterBoostFragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         when (val activity = requireActivity()) {
-            is FlutterViewReturn -> {
-                (activity as FlutterViewReturn).apply {
+            is AppCompatFlutter -> {
+                (activity as AppCompatFlutter).apply {
                     onFlutterDestroy(flutterView = flutterView)
                 }
             }
         }
-
         flutterView = null
     }
 

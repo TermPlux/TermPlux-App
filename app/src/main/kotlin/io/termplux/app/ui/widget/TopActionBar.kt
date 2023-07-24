@@ -7,6 +7,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import com.google.android.material.appbar.AppBarLayout
@@ -18,18 +19,10 @@ import io.termplux.app.ui.preview.WidgetPreview
 @Composable
 @OptIn(ExperimentalComposeUiApi::class)
 fun TopActionBar(
+    factory: MaterialToolbar,
     modifier: Modifier,
-    visible: Boolean,
-    update: (MaterialToolbar) -> Unit
+    visible: Boolean
 ) {
-    val toolbar: MaterialToolbar = MaterialToolbar(
-        LocalContext.current
-    ).apply {
-        setBackgroundColor(Color.Transparent.value.toInt())
-    }.also { toolbar ->
-        update(toolbar)
-    }
-
     val toolbarParams: AppBarLayout.LayoutParams = AppBarLayout.LayoutParams(
         AppBarLayout.LayoutParams.MATCH_PARENT,
         AppBarLayout.LayoutParams.WRAP_CONTENT
@@ -43,12 +36,12 @@ fun TopActionBar(
         AndroidView(
             factory = { context ->
                 AppBarLayout(context).apply {
-                    addView(toolbar, toolbarParams)
+                    addView(factory, toolbarParams)
                 }
             },
             onReset = { appBar ->
-                appBar.removeView(toolbar)
-                appBar.addView(toolbar, toolbarParams)
+                appBar.removeView(factory)
+                appBar.addView(factory, toolbarParams)
             },
             modifier = modifier,
             update = { appBar ->
@@ -59,7 +52,7 @@ fun TopActionBar(
                 )
             },
             onRelease = { appBar ->
-                appBar.removeView(toolbar)
+                appBar.removeView(factory)
             }
         )
     }
@@ -69,17 +62,14 @@ fun TopActionBar(
 @WidgetPreview
 fun TopActionBarPreview() {
     TopActionBar(
-        modifier = Modifier.fillMaxWidth(),
-        visible = true
-    ) {
-        it.apply {
-            title = context.getString(
-                R.string.toolbar_preview
-            )
+        factory = MaterialToolbar(LocalContext.current).apply {
+            title = stringResource(id = R.string.toolbar_preview)
             navigationIcon = ContextCompat.getDrawable(
-                context,
+                LocalContext.current,
                 R.drawable.baseline_arrow_back_24
             )
-        }
-    }
+        },
+        modifier = Modifier.fillMaxWidth(),
+        visible = true
+    )
 }

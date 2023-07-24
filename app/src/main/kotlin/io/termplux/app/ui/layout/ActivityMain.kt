@@ -56,6 +56,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.fragment.app.FragmentContainerView
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -86,10 +87,11 @@ import kotlinx.coroutines.launch
 fun ActivityMain(
     windowSize: WindowSizeClass,
     displayFeatures: List<DisplayFeature>,
-    rootLayout: FrameLayout,
+    container: FragmentContainerView,
+    flutter: FrameLayout,
     appsUpdate: (RecyclerView) -> Unit,
     topBarVisible: Boolean,
-    topBarUpdate: (MaterialToolbar) -> Unit,
+    topBarView: MaterialToolbar,
     preferenceUpdate: (ViewPager2) -> Unit,
     androidVersion: String,
     shizukuVersion: String,
@@ -581,8 +583,9 @@ fun ActivityMain(
                     ) {
                         ScreenHome(
                             topBarVisible = topBarVisible,
-                            topBarUpdate = topBarUpdate,
-                            rootLayout = rootLayout
+                            topBarView = topBarView,
+                            container = container,
+                            rootLayout = flutter
                         )
                     }
                     composable(

@@ -9,11 +9,15 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.FrameLayout
+import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.ActionBar
+import androidx.appcompat.widget.AppCompatImageView
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
+import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.DefaultLifecycleObserver
@@ -46,7 +50,7 @@ import io.termplux.app.R
 import io.termplux.app.adapter.PreferenceAdapter
 import io.termplux.app.databinding.ContainerBinding
 import io.termplux.app.fragment.ReturnFragment
-import io.termplux.app.FlutterViewReturn
+import io.termplux.app.utils.AppCompatFlutter
 import io.termplux.app.theme.ThemeHelper
 import io.termplux.app.ui.layout.ActivityMain
 import io.termplux.app.ui.theme.TermPluxTheme
@@ -58,7 +62,7 @@ import rikka.shizuku.Shizuku
 import java.lang.ref.WeakReference
 
 class MainActivity : MaterialActivity(), FlutterBoostDelegate, FlutterBoost.Callback, FlutterPlugin,
-    MethodChannel.MethodCallHandler, FlutterViewReturn, FlutterEngineConfigurator,
+    MethodChannel.MethodCallHandler, AppCompatFlutter, FlutterEngineConfigurator,
     Shizuku.OnBinderReceivedListener, Shizuku.OnBinderDeadListener,
     Shizuku.OnRequestPermissionResultListener, DefaultLifecycleObserver, Runnable {
 
@@ -66,7 +70,6 @@ class MainActivity : MaterialActivity(), FlutterBoostDelegate, FlutterBoost.Call
     private lateinit var navController: NavController
     private lateinit var mFragmentContainerView: FragmentContainerView
     private lateinit var mActionBar: ActionBar
-    private lateinit var mAppBar: AppBarLayout
     private lateinit var mContainer: FragmentContainerView
 
     private lateinit var mFlutterFragment: FlutterBoostFragment
@@ -87,23 +90,6 @@ class MainActivity : MaterialActivity(), FlutterBoostDelegate, FlutterBoost.Call
         "我不曾活着，又何必害怕死亡。"
     )
 
-    private val toolbarContainer: AppBarLayout by unsafeLazy {
-        AppBarLayout(this@MainActivity).apply {
-            setBackgroundColor(Color.TRANSPARENT)
-            isLiftOnScroll = true
-            statusBarForeground = MaterialShapeDrawable.createWithElevationOverlay(
-                this@MainActivity
-            )
-            addView(
-                toolbar,
-                AppBarLayout.LayoutParams(
-                    AppBarLayout.LayoutParams.MATCH_PARENT,
-                    AppBarLayout.LayoutParams.WRAP_CONTENT
-                )
-            )
-        }
-    }
-
     private val toolbar: MaterialToolbar by unsafeLazy {
         MaterialToolbar(this@MainActivity).apply {
             setBackgroundColor(Color.TRANSPARENT)
@@ -116,7 +102,25 @@ class MainActivity : MaterialActivity(), FlutterBoostDelegate, FlutterBoost.Call
         }
     }
 
+    private val flutterTips: AppCompatTextView by unsafeLazy {
+        AppCompatTextView(this@MainActivity).apply {
+            text = "FlutterFragment已销毁，返回主页后继续~"
+        }
+    }
+
+    private val splashLogo: AppCompatImageView by unsafeLazy {
+        AppCompatImageView(this@MainActivity).apply {
+            setImageDrawable(
+                ContextCompat.getDrawable(
+                    this@MainActivity,
+                    R.drawable.custom_termplux_24
+                )
+            )
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        // 初始化FlutterBoost
         WeakReference(application).get()?.apply {
             FlutterBoost.instance().setup(
                 this@apply,
@@ -124,8 +128,7 @@ class MainActivity : MaterialActivity(), FlutterBoostDelegate, FlutterBoost.Call
                 this@MainActivity
             )
         }
-
-
+        // 初始化FlutterFragment
         mFlutterFragment = FlutterBoostFragment.CachedEngineFragmentBuilder(
             ReturnFragment::class.java
         )
@@ -134,10 +137,8 @@ class MainActivity : MaterialActivity(), FlutterBoostDelegate, FlutterBoost.Call
             .transparencyMode(TransparencyMode.opaque)
             .shouldAttachEngineToActivity(false)
             .build()
-
+        // 执行父类代码
         super<MaterialActivity>.onCreate(savedInstanceState)
-
-
         // 绑定布局
         binding = ContainerBinding.inflate(layoutInflater)
         // 获取Fragment容器控件
@@ -148,7 +149,6 @@ class MainActivity : MaterialActivity(), FlutterBoostDelegate, FlutterBoost.Call
         ) as NavHostFragment
         // 导航控制器
         navController = navHostFragment.navController
-        navController.setGraph(R.navigation.mobile_navigation)
         // 应用栏配置
         appBarConfiguration = AppBarConfiguration(
             navGraph = navController.graph
@@ -164,12 +164,11 @@ class MainActivity : MaterialActivity(), FlutterBoostDelegate, FlutterBoost.Call
         supportActionBar?.let {
             mActionBar = it
         }
-        mAppBar = toolbarContainer
+
         mContainer = mFragmentContainerView
         // 随机抽取诗句作为子标题
         mActionBar.subtitle = poem[(poem.indices).random()]
-
-
+        // 添加生命周期观察者
         lifecycle.addObserver(this@MainActivity)
     }
 
@@ -256,6 +255,11 @@ class MainActivity : MaterialActivity(), FlutterBoostDelegate, FlutterBoost.Call
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
+    override fun onDestroy() {
+        super<MaterialActivity>.onDestroy()
+        lifecycle.removeObserver(this@MainActivity)
+    }
+
     override fun pushNativeRoute(options: FlutterBoostRouteOptions?) {
 
     }
@@ -277,7 +281,7 @@ class MainActivity : MaterialActivity(), FlutterBoostDelegate, FlutterBoost.Call
     }
 
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-        mChannel = MethodChannel(binding.binaryMessenger, plugin_channel)
+        mChannel = MethodChannel(binding.binaryMessenger, channel)
         mChannel.setMethodCallHandler(this@MainActivity)
     }
 
@@ -292,11 +296,11 @@ class MainActivity : MaterialActivity(), FlutterBoostDelegate, FlutterBoost.Call
     }
 
     override fun onFlutterCreated(flutterView: FlutterView?) {
-
+        Toast.makeText(this, "芜湖", Toast.LENGTH_SHORT).show()
     }
 
     override fun onFlutterDestroy(flutterView: FlutterView?) {
-
+        Toast.makeText(this, "欸嘿", Toast.LENGTH_SHORT).show()
     }
 
     override fun getFlutterFragment(): FlutterBoostFragment {
@@ -336,13 +340,12 @@ class MainActivity : MaterialActivity(), FlutterBoostDelegate, FlutterBoost.Call
                 ActivityMain(
                     windowSize = windowSize,
                     displayFeatures = displayFeatures,
-                    rootLayout = FrameLayout(this@MainActivity),
+                    container = mContainer,
+                    flutter = flutterFrame,
+
                     appsUpdate = {},
                     topBarVisible = true,
-                    topBarUpdate = { toolbar ->
-                        setSupportActionBar(toolbar)
-                        supportActionBar?.subtitle = poem[(poem.indices).random()]
-                    },
+                    topBarView = toolbar,
                     preferenceUpdate = { preference ->
                         preference.apply {
                             adapter = preferenceAdapter
@@ -386,6 +389,6 @@ class MainActivity : MaterialActivity(), FlutterBoostDelegate, FlutterBoost.Call
 
     companion object {
         const val tag: String = "MainActivity"
-        const val plugin_channel: String = "flutter_termplux"
+        const val channel: String = "flutter_termplux"
     }
 }

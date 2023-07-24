@@ -1,8 +1,12 @@
+import com.android.build.api.dsl.AaptOptions
+import com.android.build.api.dsl.AndroidResources
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("androidx.navigation.safeargs.kotlin")
 }
+
 
 android {
     namespace = "io.termplux.app"
@@ -93,9 +97,17 @@ configurations.all {
 dependencies {
     // 第三方库
     // Flutter: https://github.com/flutter/flutter
-    implementation(dependencyNotation = project(path = ":flutter"))
+    implementation(
+        dependencyNotation = project(
+            path = ":flutter"
+        )
+    )
     // FlutterBoost: https://github.com/alibaba/flutter_boost
-    implementation(dependencyNotation = project(path = ":flutter_boost"))
+    implementation(
+        dependencyNotation = project(
+            path = ":flutter_boost"
+        )
+    )
     // AndroidUtilCode: https://github.com/Blankj/AndroidUtilCode
     implementation(dependencyNotation = "com.blankj:utilcodex:1.31.1")
     // LibTaskbar: https://github.com/farmerbb/libtaskbar
@@ -129,6 +141,7 @@ dependencies {
     implementation(dependencyNotation = "androidx.core:core-ktx:1.10.1")
     implementation(dependencyNotation = "androidx.annotation:annotation:1.6.0")
     implementation(dependencyNotation = "androidx.browser:browser:1.5.0")
+    implementation(dependencyNotation = "androidx.webkit:webkit:1.7.0")
     implementation(dependencyNotation = "androidx.fragment:fragment-ktx:1.6.0")
     implementation(dependencyNotation = "androidx.preference:preference-ktx:1.2.0")
     implementation(dependencyNotation = "androidx.constraintlayout:constraintlayout:2.1.4")

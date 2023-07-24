@@ -1,9 +1,9 @@
-package io.termplux.app
+package io.termplux.app.utils
 
 import com.idlefish.flutterboost.containers.FlutterBoostFragment
 import io.flutter.embedding.android.FlutterView
 
-interface FlutterViewReturn {
+interface AppCompatFlutter {
 
     fun onFlutterCreated(flutterView: FlutterView?)
     fun onFlutterDestroy(flutterView: FlutterView?)

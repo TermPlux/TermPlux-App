@@ -32,6 +32,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentContainerView
 import com.google.android.material.appbar.MaterialToolbar
 import io.termplux.app.R
 import io.termplux.app.ui.preview.ScreenPreviews
@@ -42,7 +45,8 @@ import io.termplux.app.ui.widget.TopActionBar
 @Composable
 fun ScreenHome(
     topBarVisible: Boolean,
-    topBarUpdate: (MaterialToolbar) -> Unit,
+    topBarView: MaterialToolbar,
+    container: FragmentContainerView,
     rootLayout: FrameLayout
 ) {
     Surface(
@@ -52,14 +56,14 @@ fun ScreenHome(
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
-            Image(
-                painter = painterResource(
-                    id = R.drawable.custom_wallpaper_24
-                ),
-                contentDescription = null,
-                contentScale = ContentScale.FillBounds,
-                modifier = Modifier.fillMaxSize()
-            )
+//            Image(
+//                painter = painterResource(
+//                    id = R.drawable.custom_wallpaper_24
+//                ),
+//                contentDescription = null,
+//                contentScale = ContentScale.FillBounds,
+//                modifier = Modifier.fillMaxSize()
+//            )
             Column {
                 Column(
                     modifier = Modifier
@@ -83,9 +87,9 @@ fun ScreenHome(
                         )
                     ) {
                         TopActionBar(
+                            factory = topBarView,
                             modifier = Modifier.fillMaxWidth(),
                             visible = topBarVisible,
-                            update = topBarUpdate
                         )
                     }
                     ElevatedCard(
@@ -96,8 +100,14 @@ fun ScreenHome(
                                 horizontal = 16.dp
                             )
                     ) {
-                        RootContent(
-                            rootLayout = rootLayout,
+//                        RootContent(
+//                            rootLayout = rootLayout,
+//                            modifier = Modifier.fillMaxSize()
+//                        )
+                        AndroidView(
+                            factory = {
+                                container
+                            },
                             modifier = Modifier.fillMaxSize()
                         )
                     }
@@ -162,7 +172,14 @@ fun ScreenHomePreview() {
     TermPluxTheme {
         ScreenHome(
             topBarVisible = true,
-            topBarUpdate = {},
+            topBarView = MaterialToolbar(LocalContext.current).apply {
+                title = stringResource(id = R.string.toolbar_preview)
+                navigationIcon = ContextCompat.getDrawable(
+                    LocalContext.current,
+                    R.drawable.baseline_arrow_back_24
+                )
+            },
+            container = FragmentContainerView(context),
             rootLayout = FrameLayout(context).apply {
                 addView(
                     TextView(context).apply {
