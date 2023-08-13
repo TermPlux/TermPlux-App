@@ -1,4 +1,4 @@
-package io.ecosed.libecosed
+package io.ecosed.libecosed.activity
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -10,13 +10,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import io.ecosed.libecosed.ui.theme.LibecosedTheme
+import io.ecosed.libecosed.ui.theme.LibEcosedTheme
 
-class ManagerActivity : ComponentActivity() {
+internal class ManagerActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            LibecosedTheme {
+            LibEcosedTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -27,20 +27,20 @@ class ManagerActivity : ComponentActivity() {
             }
         }
     }
-}
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+    @Composable
+    private fun Greeting(name: String, modifier: Modifier = Modifier) {
+        Text(
+            text = "Hello $name!",
+            modifier = modifier
+        )
+    }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    LibecosedTheme {
-        Greeting("Android")
+    @Preview(showBackground = true)
+    @Composable
+    private fun GreetingPreview() {
+        LibEcosedTheme {
+            Greeting("Android")
+        }
     }
 }

@@ -3,10 +3,10 @@
 
     <application>
         <activity
-            android:name=".ManagerActivity"
+            android:name=".activity.ManagerActivity"
             android:exported="false"
             android:label="@string/title_activity_manager"
-            android:theme="@style/Theme.Libecosed" />
+            android:theme="@style/Theme.LibEcosed" />
     </application>
 
 </manifest>

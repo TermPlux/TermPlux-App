@@ -14,6 +14,20 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        externalNativeBuild {
+            cmake {
+                cppFlags += "-std=c++17"
+                abiFilters("armeabi-v7a", "arm64-v8a", "x86_64", "x86")
+                arguments("-DANDROID_TOOLCHAIN=clang", "-DANDROID_STL=c++_static")
+            }
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            path = file(path = "src/main/cpp/CMakeLists.txt")
+            version = "3.22.1"
+        }
     }
 
     buildFeatures {
@@ -37,6 +51,10 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 
+    kotlin {
+        jvmToolchain(11)
+    }
+
     kotlinOptions {
         jvmTarget = "11"
     }
@@ -46,6 +64,9 @@ android {
     }
 
     packaging {
+        jniLibs {
+            useLegacyPackaging = true
+        }
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
