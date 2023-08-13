@@ -1,6 +1,7 @@
 package io.ecosed.libecosed.plugin
 
 import android.content.Context
+import android.widget.Toast
 import io.ecosed.libecosed.client.EcosedBuilder
 import io.ecosed.plugin.EcosedPlugin
 import io.ecosed.plugin.EcosedPluginBinding
@@ -18,6 +19,8 @@ internal class LibEcosed : EcosedPlugin {
         mPluginMethod = EcosedPluginMethod(binding = binding, channel = channel)
         mContext = mPluginMethod.getActivity()
         mPluginMethod.setMethodCallHandler(callBack = this@LibEcosed)
+
+        Toast.makeText(mContext, "666!", Toast.LENGTH_SHORT).show()
     }
 
     override fun onEcosedDetached(binding: EcosedPluginBinding) {

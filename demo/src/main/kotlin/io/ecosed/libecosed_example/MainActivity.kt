@@ -34,10 +34,10 @@ class MainActivity : ComponentActivity(), LibEcosedImpl by LibEcosedBuilder  {
 
 
 
-        engine.execMethodCall(
-            channel = libecosedChannel,
-            call = ""
-        )
+//        engine.execMethodCall(
+//            channel = libecosedChannel,
+//            call = ""
+//        )
 
 
         setContent {

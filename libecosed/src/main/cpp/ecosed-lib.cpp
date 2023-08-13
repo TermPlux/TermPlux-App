@@ -9,7 +9,7 @@ void call() {
 
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_io_termplux_framework_library_NativeLib_stringFromJNI(JNIEnv *env, jobject thiz) {
+Java_io_ecosed_libecosed_nativelib_NativeLib_stringFromJNI(JNIEnv *env, jobject thiz) {
     call();
 
     std::string hello = "Hello from C++";
