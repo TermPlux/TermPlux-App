@@ -55,7 +55,7 @@ android {
 }
 
 dependencies {
-    implementation(dependencyNotation = "com.github.ecosed:plugin:1.2.1")
+    implementation(dependencyNotation = "com.github.ecosed:plugin:2.2.0")
     implementation(dependencyNotation = project(path = ":libecosed"))
 
     implementation(dependencyNotation = "androidx.core:core-ktx:1.10.1")

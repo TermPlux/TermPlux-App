@@ -1,6 +1,7 @@
 package io.ecosed.libecosed_example
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
@@ -18,26 +19,29 @@ import androidx.compose.ui.tooling.preview.Preview
 import io.ecosed.libecosed.LibEcosedBuilder
 import io.ecosed.libecosed.LibEcosedImpl
 import io.ecosed.libecosed_example.ui.theme.LibEcosedTheme
-import io.ecosed.plugin.EcosedPlugin
-import io.ecosed.plugin.EcosedPluginEngine
-import io.ecosed.plugin.PluginEngineBuilder
+import io.ecosed.plugin.PluginEngine
 
 class MainActivity : ComponentActivity(), LibEcosedImpl by LibEcosedBuilder  {
 
-    private lateinit var engine: EcosedPluginEngine
+    private lateinit var engine: PluginEngine
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        engine = PluginEngineBuilder().init(activity = this@MainActivity).build()
+        engine = PluginEngine.build(context = this@MainActivity)
         engine.attach()
-        engine.addPlugin(plugin = libecosedPlugin)
+        engine.addPlugin(libecosedPlugin)
 
 
-
-//        engine.execMethodCall(
-//            channel = libecosedChannel,
-//            call = ""
-//        )
+        engine.execMethodCall(
+            name = libecosedChannel,
+            method = "text"
+        )?.let {
+            Toast.makeText(
+                this@MainActivity,
+                it.toString(),
+                Toast.LENGTH_SHORT
+            ).show()
+        }
 
 
         setContent {
@@ -54,7 +58,7 @@ class MainActivity : ComponentActivity(), LibEcosedImpl by LibEcosedBuilder  {
 
     override fun onDestroy() {
         super.onDestroy()
-        engine.removePlugin(plugin = libecosedPlugin)
+        engine.removePlugin(libecosedPlugin)
         engine.detach()
     }
 

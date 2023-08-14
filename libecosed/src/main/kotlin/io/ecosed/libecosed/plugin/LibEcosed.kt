@@ -1,42 +1,33 @@
 package io.ecosed.libecosed.plugin
 
 import android.content.Context
-import android.widget.Toast
-import io.ecosed.libecosed.client.EcosedBuilder
 import io.ecosed.plugin.EcosedPlugin
-import io.ecosed.plugin.EcosedPluginBinding
-import io.ecosed.plugin.EcosedPluginMethod
-import io.ecosed.plugin.EcosedResult
+import io.ecosed.plugin.PluginChannel
 
-internal class LibEcosed : EcosedPlugin {
+internal class LibEcosed : EcosedPlugin, PluginChannel.MethodCallHandler {
 
-    private lateinit var mPluginMethod: EcosedPluginMethod
+    private lateinit var mPluginChannel: PluginChannel
     private lateinit var mContext: Context
 
-    override fun getEcosedPluginMethod(): EcosedPluginMethod = mPluginMethod
-
-    override fun onEcosedAttached(binding: EcosedPluginBinding) {
-        mPluginMethod = EcosedPluginMethod(binding = binding, channel = channel)
-        mContext = mPluginMethod.getActivity()
-        mPluginMethod.setMethodCallHandler(callBack = this@LibEcosed)
-
-        Toast.makeText(mContext, "666!", Toast.LENGTH_SHORT).show()
+    override fun onEcosedAdded(binding: EcosedPlugin.EcosedPluginBinding) {
+        mPluginChannel = PluginChannel(binding = binding, channel = channel)
+        mContext = mPluginChannel.getContext()
+        mPluginChannel.setMethodCallHandler(handler = this@LibEcosed)
     }
 
-    override fun onEcosedDetached(binding: EcosedPluginBinding) {
-        mPluginMethod.setMethodCallHandler(callBack = null)
+    override fun onEcosedRemoved(binding: EcosedPlugin.EcosedPluginBinding) {
+        mPluginChannel.setMethodCallHandler(handler = null)
     }
 
-    override fun onEcosedMethodCall(call: String, result: EcosedResult) {
-        EcosedBuilder().init(
-            context = mContext
-        ).build {
-            when (call) {
-                "" -> result.success("")
-                else -> result.notImplemented()
-            }
+    override fun onEcosedMethodCall(call: PluginChannel.MethodCall, result: PluginChannel.Result) {
+        when (call.method) {
+            "text" -> result.success("Hello World!")
+            else -> result.notImplemented()
         }
     }
+
+    override val getPluginChannel: PluginChannel
+        get() = mPluginChannel
 
     companion object {
         const val channel: String = "libecosed"

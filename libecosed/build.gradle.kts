@@ -74,7 +74,7 @@ android {
 }
 
 dependencies {
-    implementation(dependencyNotation = "com.github.ecosed:plugin:1.2.1")
+    implementation(dependencyNotation = "com.github.ecosed:plugin:2.2.0")
     implementation(dependencyNotation = "androidx.core:core-ktx:1.10.1")
     implementation(dependencyNotation = "androidx.appcompat:appcompat:1.6.1")
     implementation(dependencyNotation = "com.google.android.material:material:1.9.0")
