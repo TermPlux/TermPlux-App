@@ -41,6 +41,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     composeOptions {
@@ -55,7 +56,7 @@ android {
 }
 
 dependencies {
-    implementation(dependencyNotation = "com.github.ecosed:plugin:2.2.0")
+    implementation(dependencyNotation = "com.github.ecosed:plugin:3.1.0")
     implementation(dependencyNotation = project(path = ":libecosed"))
 
     implementation(dependencyNotation = "androidx.core:core-ktx:1.10.1")

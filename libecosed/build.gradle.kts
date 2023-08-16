@@ -1,6 +1,8 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.kapt")
+    id("maven-publish")
 }
 
 android {
@@ -73,8 +75,47 @@ android {
     }
 }
 
+afterEvaluate {
+    publishing {
+        publications {
+            create<MavenPublication>("release") {
+                from(components["release"])
+            }
+        }
+    }
+}
+
+configurations.all {
+    exclude(
+        group = "androidx.appcompat",
+        module = "appcompat"
+    )
+}
+
 dependencies {
-    implementation(dependencyNotation = "com.github.ecosed:plugin:2.2.0")
+
+    implementation(dependencyNotation = "com.blankj:utilcodex:1.31.1")
+    implementation(dependencyNotation = "com.github.ecosed:plugin:3.1.0")
+    implementation(dependencyNotation = "com.github.farmerbb:libtaskbar:2.2.0")
+    implementation(dependencyNotation = "de.psdev.licensesdialog:licensesdialog:2.2.0")
+    implementation(dependencyNotation = "dev.rikka.shizuku:api:13.1.1")
+    implementation(dependencyNotation = "dev.rikka.shizuku:provider:13.1.1")
+    implementation(dependencyNotation = "org.lsposed.hiddenapibypass:hiddenapibypass:4.3")
+
+    implementation(dependencyNotation = "dev.rikka.rikkax.appcompat:appcompat:1.6.1")
+    implementation(dependencyNotation = "dev.rikka.rikkax.buildcompat:buildcompat:34.0.1")
+    implementation(dependencyNotation = "dev.rikka.rikkax.core:core-ktx:1.4.1")
+    implementation(dependencyNotation = "dev.rikka.rikkax.insets:insets:1.3.0")
+    implementation(dependencyNotation = "dev.rikka.rikkax.layoutinflater:layoutinflater:1.3.0")
+    implementation(dependencyNotation = "dev.rikka.rikkax.material:material:2.7.0")
+    implementation(dependencyNotation = "dev.rikka.rikkax.material:material-preference:2.0.0")
+    implementation(dependencyNotation = "dev.rikka.rikkax.parcelablelist:parcelablelist:2.0.1")
+    implementation(dependencyNotation = "dev.rikka.rikkax.recyclerview:recyclerview-ktx:1.3.1")
+    implementation(dependencyNotation = "dev.rikka.rikkax.widget:borderview:1.1.0")
+    implementation(dependencyNotation = "dev.rikka.rikkax.widget:mainswitchbar:1.0.2")
+
+
+
     implementation(dependencyNotation = "androidx.core:core-ktx:1.10.1")
     implementation(dependencyNotation = "androidx.appcompat:appcompat:1.6.1")
     implementation(dependencyNotation = "com.google.android.material:material:1.9.0")

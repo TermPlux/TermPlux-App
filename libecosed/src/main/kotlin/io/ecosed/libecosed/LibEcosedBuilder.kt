@@ -5,9 +5,6 @@ import io.ecosed.plugin.EcosedPlugin
 
 object LibEcosedBuilder : LibEcosedImpl {
 
-    override val libecosedPlugin: EcosedPlugin
+    override val mLibEcosed: EcosedPlugin
         get() = LibEcosed()
-
-    override val libecosedChannel: String
-        get() = LibEcosed.channel
 }

@@ -1,12 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- 完全的网络访问权限 -->
+    <uses-permission
+        android:name="android.permission.QUERY_ALL_PACKAGES"
+        tools:ignore="QueryAllPackagesPermission" /> <!-- 获取所有软件包 -->
+    <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" /> <!-- 删除软件包 -->
+    <uses-permission android:name="android.permission.FAKE_PACKAGE_SIGNATURE" /> <!-- 虚拟签名欺骗 -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> <!-- 前台服务 -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" /> <!-- 弹出通知 -->
 
     <application>
+
+        <meta-data
+            android:name="fake-signature"
+            android:value="@string/fake_signature" />
+        
         <activity
             android:name=".activity.ManagerActivity"
-            android:exported="false"
-            android:label="@string/title_activity_manager"
-            android:theme="@style/Theme.LibEcosed" />
+            android:exported="true"
+            android:theme="@style/Theme.LibEcosed">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="libecosed" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.HOME" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.MONKEY" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER_APP" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

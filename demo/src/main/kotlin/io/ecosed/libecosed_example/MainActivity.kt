@@ -21,27 +21,12 @@ import io.ecosed.libecosed.LibEcosedImpl
 import io.ecosed.libecosed_example.ui.theme.LibEcosedTheme
 import io.ecosed.plugin.PluginEngine
 
-class MainActivity : ComponentActivity(), LibEcosedImpl by LibEcosedBuilder  {
+class MainActivity : ComponentActivity()  {
 
     private lateinit var engine: PluginEngine
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        engine = PluginEngine.build(context = this@MainActivity)
-        engine.attach()
-        engine.addPlugin(libecosedPlugin)
-
-
-        engine.execMethodCall(
-            name = libecosedChannel,
-            method = "text"
-        )?.let {
-            Toast.makeText(
-                this@MainActivity,
-                it.toString(),
-                Toast.LENGTH_SHORT
-            ).show()
-        }
 
 
         setContent {
@@ -58,8 +43,7 @@ class MainActivity : ComponentActivity(), LibEcosedImpl by LibEcosedBuilder  {
 
     override fun onDestroy() {
         super.onDestroy()
-        engine.removePlugin(libecosedPlugin)
-        engine.detach()
+
     }
 
     @Composable
