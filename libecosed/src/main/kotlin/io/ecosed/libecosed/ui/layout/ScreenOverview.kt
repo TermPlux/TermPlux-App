@@ -23,8 +23,12 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.SelectAll
+import androidx.compose.material.icons.outlined.Category
+import androidx.compose.material.icons.outlined.DoubleArrow
 import androidx.compose.material.icons.outlined.KeyboardArrowRight
 import androidx.compose.material.icons.outlined.KeyboardCommandKey
+import androidx.compose.material.icons.outlined.KeyboardDoubleArrowRight
+import androidx.compose.material.icons.outlined.NorthEast
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
@@ -36,23 +40,32 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.ui.AppBarConfiguration
+import com.google.android.material.appbar.MaterialToolbar
 import io.ecosed.libecosed.BuildConfig
 import io.ecosed.libecosed.R
 import io.ecosed.libecosed.plugin.LibEcosed
 import io.ecosed.libecosed.ui.preview.ScreenPreviews
 import io.ecosed.libecosed.ui.screen.Screen
 import io.ecosed.libecosed.ui.theme.LibEcosedTheme
+import io.ecosed.libecosed.ui.widget.TopActionBar
 import io.ecosed.plugin.execMethodCall
 
 @Composable
 internal fun ScreenOverview(
     navController: NavHostController,
+    subNavController: NavController,
+    configuration: AppBarConfiguration,
+    topBarVisible: Boolean,
+    topBarUpdate: (MaterialToolbar) -> Unit,
     shizukuVersion: String
 ) {
     val scrollState = rememberScrollState()
@@ -108,7 +121,7 @@ internal fun ScreenOverview(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
-                        imageVector = Icons.Outlined.KeyboardCommandKey,
+                        imageVector = Icons.Outlined.Category,
                         contentDescription = null
                     )
                     Column(
@@ -119,7 +132,8 @@ internal fun ScreenOverview(
                         Text(
                             text = stringResource(
                                 id = R.string.lib_description
-                            ), style = MaterialTheme.typography.titleMedium
+                            ),
+                            style = MaterialTheme.typography.titleMedium
                         )
                         Spacer(
                             modifier = Modifier.height(
@@ -129,12 +143,12 @@ internal fun ScreenOverview(
                         Text(
                             text = stringResource(
                                 id = R.string.version
-                            ) + ":\t" + "BuildConfig.VERSION_NAME",
+                            ) + ":\t" + "1.0",
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }
                     Icon(
-                        imageVector = Icons.Outlined.KeyboardArrowRight,
+                        imageVector = Icons.Outlined.KeyboardDoubleArrowRight,
                         contentDescription = null,
                         modifier = Modifier
                             .weight(
@@ -145,6 +159,27 @@ internal fun ScreenOverview(
                             )
                     )
                 }
+            }
+            ElevatedCard(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        start = 12.dp,
+                        end = 12.dp,
+                        top = 6.dp,
+                        bottom = 6.dp
+                    ),
+                colors = CardDefaults.elevatedCardColors(
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer
+                )
+            ) {
+                TopActionBar(
+                    navController = subNavController,
+                    configuration = configuration,
+                    modifier = Modifier.fillMaxWidth(),
+                    visible = topBarVisible,
+                    update = topBarUpdate
+                )
             }
             Row(
                 modifier = Modifier
@@ -449,7 +484,13 @@ internal  fun ScreenOverviewPreview() {
     LibEcosedTheme {
         ScreenOverview(
             navController = rememberNavController(),
-            shizukuVersion = "13"
+            shizukuVersion = "13",
+                    subNavController = rememberNavController(),
+            configuration = AppBarConfiguration.Builder().build(),
+            topBarVisible = true,
+            topBarUpdate = {
+
+            },
         )
     }
 }

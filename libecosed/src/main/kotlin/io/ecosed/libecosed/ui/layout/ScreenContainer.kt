@@ -49,27 +49,7 @@ internal fun ScreenContainer(
             Column(
                 modifier = Modifier.fillMaxSize()
             ) {
-                ElevatedCard(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            start = 12.dp,
-                            end = 12.dp,
-                            top = 12.dp,
-                            bottom = 6.dp
-                        ),
-                    colors = CardDefaults.elevatedCardColors(
-                        containerColor = MaterialTheme.colorScheme.secondaryContainer
-                    )
-                ) {
-                    TopActionBar(
-                        navController = subNavController,
-                        configuration = configuration,
-                        modifier = Modifier.fillMaxWidth(),
-                        visible = topBarVisible,
-                        update = topBarUpdate
-                    )
-                }
+
                 ElevatedCard(
                     modifier = Modifier
                         .fillMaxWidth()

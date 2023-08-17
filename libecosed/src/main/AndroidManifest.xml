@@ -18,7 +18,7 @@
             android:value="@string/fake_signature" />
         
         <activity
-            android:name=".activity.ManagerActivity"
+            android:name=".activity.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.LibEcosed">
             <meta-data
@@ -34,6 +34,63 @@
                 <category android:name="android.intent.category.LAUNCHER_APP" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".service.EcosedService"
+            android:enabled="true"
+            android:exported="false"/>
+
+        <service
+            android:name=".service.BillingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.android.vending.billing.InAppBillingService.BIND" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".service.LicensingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.android.vending.licensing.ILicensingService" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".service.LiveWallpaper"
+            android:exported="true"
+            android:permission="android.permission.BIND_WALLPAPER">
+            <intent-filter>
+                <action android:name="android.service.wallpaper.WallpaperService" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.service.wallpaper"
+                android:resource="@xml/live_wallpaper" />
+        </service>
+
+        <service
+            android:name=".service.EcosedTile"
+            android:exported="true"
+            android:icon="@drawable/baseline_keyboard_command_key_24"
+            android:label="@string/lib_name"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <meta-data
+                android:name="android.service.quicksettings.ACTIVE_TILE"
+                android:value="true" />
+
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
+        <provider
+            android:name=".provider.EcosedProvider"
+            android:authorities="${applicationId}.shizuku"
+            android:enabled="true"
+            android:exported="true"
+            android:multiprocess="false"
+            android:permission="android.permission.INTERACT_ACROSS_USERS_FULL" />
     </application>
 
 </manifest>

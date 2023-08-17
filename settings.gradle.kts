@@ -18,6 +18,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "libecosed"
+rootProject.name = "LibEcosed"
 include(":demo")
 include(":libecosed")

@@ -1,8 +1,13 @@
 package io.ecosed.libecosed.ui.layout
 
+import android.view.Gravity
+import android.view.View
 import android.widget.FrameLayout
+import android.widget.LinearLayout
+import android.widget.Space
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -17,16 +22,24 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MenuOpen
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.outlined.Category
 import androidx.compose.material.icons.outlined.Terminal
+import androidx.compose.material.icons.twotone.OpenInNew
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationBar
@@ -53,9 +66,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.FragmentContainerView
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -71,6 +88,7 @@ import androidx.viewpager2.widget.ViewPager2
 import androidx.window.layout.DisplayFeature
 import androidx.window.layout.FoldingFeature
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.navigation.NavigationView
 import io.ecosed.libecosed.R
 import io.ecosed.libecosed.ui.navigation.ItemType
 import io.ecosed.libecosed.ui.navigation.ScreenType
@@ -129,7 +147,7 @@ internal fun ActivityMain(
 
     val scope = rememberCoroutineScope()
     val navBackStackEntry by navControllerCompose.currentBackStackEntryAsState()
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val currentDestination = navBackStackEntry?.destination
     val snackBarHostState = remember {
         SnackbarHostState()
@@ -237,6 +255,28 @@ internal fun ActivityMain(
                         }
                     }
                 }
+                ExtendedFloatingActionButton(
+                    text = {
+                        Text(text = "应用名称")
+                    },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.TwoTone.OpenInNew,
+                            contentDescription = null
+                        )
+                    },
+                    onClick = {
+
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            bottom = 16.dp
+                        )
+                        .padding(
+                            paddingValues = NavigationDrawerItemDefaults.ItemPadding
+                        )
+                )
             }
             // 导航列表
             Column(
@@ -377,13 +417,15 @@ internal fun ActivityMain(
 
     @Composable
     fun content() {
+
+
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             topBar = {
                 AnimatedVisibility(
                     visible = true
                 ) {
-                    CenterAlignedTopAppBar(
+                    LargeTopAppBar(
                         title = {
                             Text(
                                 text = stringResource(
@@ -436,7 +478,7 @@ internal fun ActivityMain(
                                 )
                             }
                         },
-                        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(),
+                        colors = TopAppBarDefaults.largeTopAppBarColors(),
                         scrollBehavior = scrollBehavior
                     )
                 }
@@ -480,7 +522,7 @@ internal fun ActivityMain(
                                         )
                                     )
                                 },
-                                alwaysShowLabel = false
+                                alwaysShowLabel = true
                             )
                         }
                     }
@@ -491,6 +533,17 @@ internal fun ActivityMain(
                     hostState = snackBarHostState
                 )
             },
+//            floatingActionButton = {
+//                FloatingActionButton(onClick = { /*TODO*/ }) {
+//                    Icon(
+//                        imageVector = Icons.Outlined.Category,
+//                        contentDescription = null
+//                    )
+//
+//
+//                }
+//            },
+//            floatingActionButtonPosition = FabPosition.End,
             contentWindowInsets = ScaffoldDefaults.contentWindowInsets
         ) { innerPadding ->
             Row(
@@ -577,6 +630,10 @@ internal fun ActivityMain(
                         route = Screen.Overview.route
                     ) {
                         ScreenOverview(
+                            subNavController = subNavController,
+                            configuration = configuration,
+                            topBarVisible = topBarVisible,
+                            topBarUpdate = topBarUpdate,
                             navController = navControllerCompose,
                             shizukuVersion = shizukuVersion
                         )
@@ -665,8 +722,6 @@ internal fun ActivityMain(
 
             }
         }
-
-
     }
 
     when (navigationType) {

@@ -7,9 +7,13 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Build
 import android.util.Log
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.preference.PreferenceManager
 import com.farmerbb.taskbar.lib.Taskbar
 import com.google.android.material.color.DynamicColors
+import com.kongzue.dialogx.DialogX
+import com.kongzue.dialogx.style.IOSStyle
 import io.ecosed.libecosed.settings.EcosedSettings
 import io.ecosed.plugin.EcosedPlugin
 import io.ecosed.plugin.PluginBinding
@@ -52,9 +56,10 @@ internal class LibEcosed : EcosedPlugin, PluginChannel.MethodCallHandler {
 
     override fun initSDK(application: Application) {
         super.initSDK(application)
-        Log.d("tag", "sdk已加载")
+
         EcosedSettings.initialize(context = application)
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(application)
+
         Taskbar.setEnabled(
             application,
             mSharedPreferences.getBoolean(
@@ -68,16 +73,16 @@ internal class LibEcosed : EcosedPlugin, PluginChannel.MethodCallHandler {
             ) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
         ) DynamicColors.applyToActivitiesIfAvailable(application)
 
-//        DialogX.init(application)
-//        DialogX.globalStyle = IOSStyle()
-//        DialogX.globalTheme = DialogX.THEME.AUTO
-//        DialogX.autoShowInputKeyboard = true
-//        DialogX.onlyOnePopTip = false
-//        DialogX.cancelable = true
-//        DialogX.cancelableTipDialog = false
-//        DialogX.bottomDialogNavbarColor = Color.TRANSPARENT
-//        DialogX.autoRunOnUIThread = true
-//        DialogX.useHaptic = true
+        DialogX.init(application)
+        DialogX.globalStyle = IOSStyle()
+        DialogX.globalTheme = DialogX.THEME.AUTO
+        DialogX.autoShowInputKeyboard = true
+        DialogX.onlyOnePopTip = false
+        DialogX.cancelable = true
+        DialogX.cancelableTipDialog = false
+        DialogX.bottomDialogNavbarColor = Color.Transparent.toArgb()
+        DialogX.autoRunOnUIThread = true
+        DialogX.useHaptic = true
     }
 
     override fun onEcosedMethodCall(call: PluginChannel.MethodCall, result: PluginChannel.Result) {

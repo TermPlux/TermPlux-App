@@ -163,7 +163,7 @@ dependencies {
     androidTestImplementation(dependencyNotation = "androidx.test.ext:junit:1.1.5")
     androidTestImplementation(dependencyNotation = "androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation(dependencyNotation = platform(notation = "androidx.compose:compose-bom:2023.03.00"))
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.5.0")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     androidTestImplementation(dependencyNotation = "androidx.navigation:navigation-testing:2.6.0")
     debugImplementation(dependencyNotation = "androidx.compose.ui:ui-tooling")
     debugImplementation(dependencyNotation = "androidx.compose.ui:ui-test-manifest")

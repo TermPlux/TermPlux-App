@@ -1,5 +1,5 @@
 <resources>
-    <string name="lib_name">Ecosed Framework</string>
+    <string name="lib_name">LibEcosed</string>
     <string name="lib_description">Ecosed Framework</string>
 
     <string name="action_settings">Settings</string>
