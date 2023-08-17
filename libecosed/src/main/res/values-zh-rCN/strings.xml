@@ -1,4 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="title_activity_manager">ManagerActivity</string>
+    <string name="lib_name">Ecosed Framework</string>
+    <string name="lib_description">Ecosed Framework</string>
+    <!-- 菜单 -->
+    <string name="menu_overview">概览</string>
+    <string name="menu_flutter">主页</string>
+    <string name="menu_apps">应用</string>
+    <string name="menu_manager">管理器</string>
+    <string name="menu_settings">设置</string>
+    <string name="menu_preference">首选项</string>
+    <string name="menu_about">关于</string>
+    <string name="menu_open">打开</string>
+    <string name="menu_info">应用信息</string>
+    <string name="menu_delete">卸载</string>
+    <string name="error">错误</string>
+    <!-- 主页 -->
+    <string name="version">版本</string>
+    <string name="android_version">Android 版本</string>
+    <string name="shizuku_version">Shizuku 版本</string>
+    <string name="kernel_version">内核版本</string>
+    <string name="system_version">系统版本</string>
+    <string name="device_arch">设备架构</string>
+    <string name="device_code">设备代号</string>
+    <string name="copy_info">复制</string>
+    <string name="copied_to_clipboard">已复制到剪贴板</string>
+    <!-- -->
+    <string name="nav_header_desc">导航标题</string>
+    <string name="action_settings">设置</string>
+    <!-- 应用 -->
+    <string name="uninstall_tip">点击卸载以卸载此应用</string>
+    <string name="uninstall_error">无法卸载系统应用</string>
+    <!-- 设置 -->
+    <string name="app_category_title">应用</string>
+    <string name="dynamic_colors_title">使用系统主题颜色</string>
+    <string name="dynamic_colors_summary">重启应用后生效。仅支持Android 12+</string>
+    <string name="dynamic_colors_error">仅支持Android 12+</string>
+    <string name="about_title">关于</string>
+    <string name="about_summary">关于 Ecosed Framework</string>
+    <string name="uninstall_title">卸载</string>
+    <string name="uninstall_summary">卸载 Ecosed Framework</string>
+    <string name="desktop_category_title">桌面</string>
+    <string name="desktop_title">使用完整桌面模式</string>
+    <string name="desktop_summary">重启应用后生效。仅支持Android 10+</string>
+    <string name="desktop_error">仅支持Android 10+</string>
+    <string name="taskbar_title">桌面模式设置</string>
+    <string name="taskbar_summary">任务栏设置</string>
+    <string name="system_category_title">系统</string>
+    <string name="default_launcher_title">选择默认主屏幕应用</string>
+    <string name="default_launcher_summary">将此应用设置为默认主屏幕应用以在副屏上启用完整桌面模式</string>
+    <string name="system_settings_title">系统设置</string>
+    <string name="system_settings_summary">打开 Android 系统设置</string>
+
+    <string name="error_could_not_start">不支持的应用程序</string>
+    <string name="toolbar_preview">Toolbar 预览</string>
+    <string name="flutter_view_preview">FlutterView 预览</string>
 </resources>
