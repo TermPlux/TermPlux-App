@@ -42,7 +42,7 @@ import kotlinx.coroutines.launch
 @Composable
 internal fun ScreenSettings(
     navControllerCompose: NavHostController,
-    navControllerFragment: NavController,
+   // navControllerFragment: NavController,
     scope: CoroutineScope,
     snackBarHostState: SnackbarHostState,
     current: (Int) -> Unit,
@@ -92,11 +92,11 @@ internal fun ScreenSettings(
                         launchSingleTop = true
                         restoreState = true
                     }.run {
-                        if (navControllerFragment.currentDestination?.id != R.id.nav_settings){
-                            navControllerFragment.navigate(R.id.nav_settings)
-                        } else {
-
-                        }
+//                        if (navControllerFragment.currentDestination?.id != R.id.nav_settings){
+//                            navControllerFragment.navigate(R.id.nav_settings)
+//                        } else {
+//
+//                        }
                     }
                 }
                 // 关于
@@ -196,7 +196,7 @@ internal  fun ScreenSettingsPreview() {
     LibEcosedTheme {
         ScreenSettings(
             navControllerCompose = rememberNavController(),
-            navControllerFragment = rememberNavController(),
+        //    navControllerFragment = rememberNavController(),
             scope = rememberCoroutineScope(),
             snackBarHostState = remember {
                 SnackbarHostState()

@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Build
-import android.util.Log
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.preference.PreferenceManager
@@ -15,11 +14,11 @@ import com.google.android.material.color.DynamicColors
 import com.kongzue.dialogx.DialogX
 import com.kongzue.dialogx.style.IOSStyle
 import io.ecosed.libecosed.settings.EcosedSettings
-import io.ecosed.plugin.EcosedPlugin
+import io.ecosed.plugin.LibEcosed
 import io.ecosed.plugin.PluginBinding
 import io.ecosed.plugin.PluginChannel
 
-internal class LibEcosed : EcosedPlugin, PluginChannel.MethodCallHandler {
+internal class LibEcosedPlugin : LibEcosed {
 
     private lateinit var mPluginChannel: PluginChannel
 
@@ -41,13 +40,13 @@ internal class LibEcosed : EcosedPlugin, PluginChannel.MethodCallHandler {
         mPluginChannel.isDebug().let {
             mDebug = it
         }
-        mPluginChannel.getPackageName(plugin = this@LibEcosed)?.let {
+        mPluginChannel.getPackageName(lib = this@LibEcosedPlugin)?.let {
             mPackageName = it
         }
-        mPluginChannel.getLaunchActivity(plugin = this@LibEcosed)?.let {
+        mPluginChannel.getLaunchActivity(lib = this@LibEcosedPlugin)?.let {
             mLaunchActivity = it
         }
-        mPluginChannel.setMethodCallHandler(handler = this@LibEcosed)
+        mPluginChannel.setMethodCallHandler(handler = this@LibEcosedPlugin)
     }
 
     override fun onEcosedRemoved(binding: PluginBinding) {

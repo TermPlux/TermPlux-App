@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.setupWithNavController
+//import androidx.navigation.fragment.findNavController
+//import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
 import io.ecosed.libecosed.R
 
@@ -26,9 +26,9 @@ internal class ContainerFragment : Fragment() {
         (view as NavigationView).apply {
             inflateHeaderView(R.layout.nav_header_main)
             inflateMenu(R.menu.activity_main_drawer)
-            setupWithNavController(
-                navController = findNavController()
-            )
+//            setupWithNavController(
+//                navController = findNavController()
+//            )
         }
     }
 }

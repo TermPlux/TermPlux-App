@@ -12,11 +12,11 @@ import androidx.compose.ui.tooling.preview.Wallpapers
 @Preview(
     name = "Compact",
     group = "Ecosed Framework",
-    device = "id:pixel_6_pro",
+    device = "id:pixel_7_pro",
     apiLevel = 33,
     locale = "zh-rCN",
     fontScale = 1.0f,
-    showSystemUi = true,
+    showSystemUi = false,
     showBackground = true,
     backgroundColor = 0xFFFFFFFF,
     uiMode = Configuration.UI_MODE_NIGHT_NO or Configuration.UI_MODE_TYPE_UNDEFINED,
@@ -34,7 +34,7 @@ import androidx.compose.ui.tooling.preview.Wallpapers
     apiLevel = 33,
     locale = "zh-rCN",
     fontScale = 1.0f,
-    showSystemUi = true,
+    showSystemUi = false,
     showBackground = true,
     backgroundColor = 0xFFFFFFFF,
     uiMode = Configuration.UI_MODE_NIGHT_NO or Configuration.UI_MODE_TYPE_UNDEFINED,
@@ -52,7 +52,7 @@ import androidx.compose.ui.tooling.preview.Wallpapers
     apiLevel = 33,
     locale = "zh-rCN",
     fontScale = 1.0f,
-    showSystemUi = true,
+    showSystemUi = false,
     showBackground = true,
     backgroundColor = 0xFFFFFFFF,
     uiMode = Configuration.UI_MODE_NIGHT_NO or Configuration.UI_MODE_TYPE_UNDEFINED,
@@ -61,8 +61,8 @@ import androidx.compose.ui.tooling.preview.Wallpapers
 /**
  * 作者: wyq0918dev
  * 仓库: https://github.com/TermPlux/TermPlux-App
- * 时间: 2023/04/23
+ * 时间: 2023/08/18
  * 描述: Compose界面预览类
  * 文档: https://developer.android.google.cn/jetpack/compose/tooling/previews
  */
-annotation class ScreenPreviews
+internal annotation class ScreenPreviews

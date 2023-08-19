@@ -8,6 +8,7 @@ import io.ecosed.libecosed.LibEcosedImpl
 import io.ecosed.plugin.EcosedApplication
 import io.ecosed.plugin.EcosedHost
 import io.ecosed.plugin.EcosedPlugin
+import io.ecosed.plugin.LibEcosed
 import io.ecosed.plugin.PluginEngine
 import io.ecosed.plugin.pluginArrayOf
 
@@ -20,7 +21,7 @@ class MyApplication : Application(), EcosedApplication, LibEcosedImpl by LibEcos
         override val getPluginEngine: PluginEngine
             get() = mEngine
 
-        override val getLibEcosed: EcosedPlugin
+        override val getLibEcosed: LibEcosed
             get() = mLibEcosed
 
         override val getPluginList: ArrayList<EcosedPlugin>

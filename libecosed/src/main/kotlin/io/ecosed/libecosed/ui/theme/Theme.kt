@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Build
 import android.view.View
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
@@ -17,13 +18,13 @@ import androidx.compose.ui.platform.LocalView
 import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
-private val darkColorScheme = darkColorScheme(
+private val darkColorScheme: ColorScheme = darkColorScheme(
     primary = Purple80,
     secondary = PurpleGrey80,
     tertiary = Pink80
 )
 
-private val lightColorScheme = lightColorScheme(
+private val lightColorScheme: ColorScheme = lightColorScheme(
     primary = Purple40,
     secondary = PurpleGrey40,
     tertiary = Pink40
@@ -43,12 +44,12 @@ internal fun LibEcosedTheme(
     // 初始化系统栏控制器
     val systemUiController: SystemUiController = rememberSystemUiController()
 
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+    val colorScheme: ColorScheme = when {
+        dynamicColor and (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) -> {
             if (darkTheme) {
-                dynamicDarkColorScheme(context)
+                dynamicDarkColorScheme(context = context)
             } else {
-                dynamicLightColorScheme(context)
+                dynamicLightColorScheme(context = context)
             }
         }
 

@@ -1,10 +1,10 @@
 package io.ecosed.libecosed
 
-import io.ecosed.libecosed.plugin.LibEcosed
-import io.ecosed.plugin.EcosedPlugin
+import io.ecosed.libecosed.plugin.LibEcosedPlugin
+import io.ecosed.plugin.LibEcosed
 
 object LibEcosedBuilder : LibEcosedImpl {
 
-    override val mLibEcosed: EcosedPlugin
-        get() = LibEcosed()
+    override val mLibEcosed: LibEcosed
+        get() = LibEcosedPlugin()
 }

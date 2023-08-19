@@ -98,7 +98,7 @@ dependencies {
     // AndroidUtilCode: https://github.com/Blankj/AndroidUtilCode
     implementation(dependencyNotation = "com.blankj:utilcodex:1.31.1")
     // EcosedPlugin: https://github.com/ecosed/plugin
-    implementation(dependencyNotation = "com.github.ecosed:plugin:3.2.0")
+    implementation(dependencyNotation = "com.github.ecosed:plugin:3.3.0")
     // LibTaskbar: https://github.com/farmerbb/libtaskbar
     implementation(dependencyNotation = "com.github.farmerbb:libtaskbar:2.2.0")
     // DialogX: https://github.com/kongzue/DialogX
@@ -107,8 +107,8 @@ dependencies {
     // LicensesDialog: https://github.com/PSDev/LicensesDialog
     implementation(dependencyNotation = "de.psdev.licensesdialog:licensesdialog:2.2.0")
     // Shizuku-API: https://github.com/RikkaApps/Shizuku-API
-    implementation(dependencyNotation = "dev.rikka.shizuku:api:13.1.1")
-    implementation(dependencyNotation = "dev.rikka.shizuku:provider:13.1.1")
+    implementation(dependencyNotation = "dev.rikka.shizuku:api:13.1.4")
+    implementation(dependencyNotation = "dev.rikka.shizuku:provider:13.1.4")
     // AndroidHiddenApiBypass: https://github.com/LSPosed/AndroidHiddenApiBypass
     implementation(dependencyNotation = "org.lsposed.hiddenapibypass:hiddenapibypass:4.3")
     // RikkaX: https://github.com/RikkaApps/RikkaX
@@ -130,7 +130,7 @@ dependencies {
     implementation(dependencyNotation = "androidx.core:core-ktx:1.10.1")
     implementation(dependencyNotation = "androidx.annotation:annotation:1.6.0")
     implementation(dependencyNotation = "androidx.fragment:fragment-ktx:1.6.1")
-    implementation(dependencyNotation = "androidx.preference:preference-ktx:1.2.0")
+    implementation(dependencyNotation = "androidx.preference:preference-ktx:1.2.1")
     implementation(dependencyNotation = "androidx.viewpager2:viewpager2:1.0.0")
     implementation(dependencyNotation = "androidx.recyclerview:recyclerview:1.3.1")
     implementation(dependencyNotation = "androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
@@ -143,7 +143,6 @@ dependencies {
     implementation(dependencyNotation = "com.google.accompanist:accompanist-systemuicontroller:0.30.1")
     implementation(dependencyNotation = "com.google.accompanist:accompanist-adaptive:0.30.1")
     implementation(dependencyNotation = "androidx.navigation:navigation-compose:2.6.0")
-    implementation(dependencyNotation = "androidx.navigation:navigation-fragment-ktx:2.6.0")
     implementation(dependencyNotation = "androidx.navigation:navigation-ui-ktx:2.6.0")
     implementation(dependencyNotation = "androidx.core:core-ktx:1.10.1")
     implementation(dependencyNotation = "androidx.appcompat:appcompat:1.6.1")
@@ -154,6 +153,7 @@ dependencies {
     implementation(dependencyNotation = "androidx.compose.ui:ui")
     implementation(dependencyNotation = "androidx.compose.ui:ui-graphics")
     implementation(dependencyNotation = "androidx.compose.ui:ui-tooling-preview")
+    implementation(dependencyNotation = "androidx.compose.ui:ui-viewbinding")
     implementation(dependencyNotation = "androidx.compose.material3:material3")
     implementation(dependencyNotation = "androidx.compose.material3:material3-window-size-class")
     implementation(dependencyNotation = "androidx.compose.material:material-icons-core")

@@ -1,13 +1,9 @@
 package io.ecosed.libecosed.ui.layout
 
-import android.view.Gravity
-import android.view.View
 import android.widget.FrameLayout
-import android.widget.LinearLayout
-import android.widget.Space
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -22,24 +18,24 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MenuOpen
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.outlined.Category
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.MoreHoriz
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Terminal
 import androidx.compose.material.icons.twotone.OpenInNew
-import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationBar
@@ -61,20 +57,17 @@ import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
-import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.fragment.app.FragmentContainerView
-import androidx.navigation.NavController
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -82,13 +75,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.ui.AppBarConfiguration
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import androidx.window.layout.DisplayFeature
 import androidx.window.layout.FoldingFeature
 import com.google.android.material.appbar.MaterialToolbar
-import com.google.android.material.navigation.NavigationView
 import io.ecosed.libecosed.R
 import io.ecosed.libecosed.ui.navigation.ItemType
 import io.ecosed.libecosed.ui.navigation.ScreenType
@@ -107,10 +98,6 @@ import kotlinx.coroutines.launch
 internal fun ActivityMain(
     windowSize: WindowSizeClass,
     displayFeatures: List<DisplayFeature>,
-    subNavController: NavController,
-    configuration: AppBarConfiguration,
-    container: FragmentContainerView,
-    flutter: FrameLayout,
     appsUpdate: (RecyclerView) -> Unit,
     topBarVisible: Boolean,
     topBarUpdate: (MaterialToolbar) -> Unit,
@@ -143,12 +130,14 @@ internal fun ActivityMain(
         Screen.Settings
     )
 
-    val navControllerCompose: NavHostController = rememberNavController()
+    val navController: NavHostController = rememberNavController()
+
 
     val scope = rememberCoroutineScope()
-    val navBackStackEntry by navControllerCompose.currentBackStackEntryAsState()
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val currentDestination = navBackStackEntry?.destination
+
     val snackBarHostState = remember {
         SnackbarHostState()
     }
@@ -156,6 +145,10 @@ internal fun ActivityMain(
     val drawerState: DrawerState = rememberDrawerState(
         initialValue = DrawerValue.Closed
     )
+
+    val expanded = remember {
+        mutableStateOf(value = false)
+    }
 
     val navigationType: NavigationType
     val contentType: ContentType
@@ -311,11 +304,11 @@ internal fun ActivityMain(
                             } == true,
                             onClick = {
                                 when (item.type) {
-                                    ScreenType.Compose -> navControllerCompose.navigate(
+                                    ScreenType.Compose -> navController.navigate(
                                         route = item.route
                                     ) {
                                         popUpTo(
-                                            id = navControllerCompose.graph.findStartDestination().id
+                                            id = navController.graph.findStartDestination().id
                                         ) {
                                             saveState = true
                                         }
@@ -334,11 +327,11 @@ internal fun ActivityMain(
                                     ScreenType.Fragment -> current(
                                         item.route.toInt()
                                     ).also {
-                                        navControllerCompose.navigate(
+                                        navController.navigate(
                                             route = Screen.Flutter.route
                                         ) {
                                             popUpTo(
-                                                id = navControllerCompose.graph.findStartDestination().id
+                                                id = navController.graph.findStartDestination().id
                                             ) {
                                                 saveState = true
                                             }
@@ -417,8 +410,6 @@ internal fun ActivityMain(
 
     @Composable
     fun content() {
-
-
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             topBar = {
@@ -435,41 +426,65 @@ internal fun ActivityMain(
                         },
                         modifier = Modifier.fillMaxWidth(),
                         navigationIcon = {
-                            AnimatedVisibility(
-                                visible = navigationType != NavigationType.PermanentNavigationDrawer
-                            ) {
-                                IconButton(
-                                    onClick = {
-                                        if (
-                                            navigationType != NavigationType.PermanentNavigationDrawer
-                                        ) {
-                                            scope.launch {
-                                                drawerState.open()
-                                            }
-                                        }
-                                    }
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Filled.Menu,
-                                        contentDescription = null
-                                    )
+                            IconButton(
+                                onClick = {
+
                                 }
+                            ) {
+                                Image(
+                                    painter = painterResource(
+                                        id = R.drawable.custom_ecosed_24
+                                    ),
+                                    contentDescription = null
+                                )
                             }
                         },
                         actions = {
+                            DropdownMenu(
+                                expanded = expanded.value,
+                                onDismissRequest = {
+                                    expanded.value = false
+                                }
+                            ) {
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(text = "关于")
+                                    },
+                                    onClick = {
+
+                                    },
+                                    leadingIcon = {
+                                        Icon(
+                                            imageVector = Icons.Outlined.Info,
+                                            contentDescription = null
+                                        )
+                                    },
+                                    enabled = true
+                                )
+                            }
                             IconButton(
                                 onClick = {
-                                    navControllerCompose.navigate(
-                                        route = Screen.Manager.route
+                                    navController.navigate(
+                                        route = Screen.Settings.route
                                     ) {
                                         popUpTo(
-                                            id = navControllerCompose.graph.findStartDestination().id
+                                            id = navController.graph.findStartDestination().id
                                         ) {
                                             saveState = true
                                         }
                                         launchSingleTop = true
                                         restoreState = true
                                     }
+                                }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Settings,
+                                    contentDescription = null
+                                )
+                            }
+                            IconButton(
+                                onClick = {
+                                    expanded.value = !expanded.value
                                 }
                             ) {
                                 Icon(
@@ -496,11 +511,11 @@ internal fun ActivityMain(
                                     it.route == item.route
                                 } == true,
                                 onClick = {
-                                    if (item.type == ScreenType.Compose) navControllerCompose.navigate(
+                                    if (item.type == ScreenType.Compose) navController.navigate(
                                         route = item.route
                                     ) {
                                         popUpTo(
-                                            id = navControllerCompose.graph.findStartDestination().id
+                                            id = navController.graph.findStartDestination().id
                                         ) {
                                             saveState = true
                                         }
@@ -582,11 +597,11 @@ internal fun ActivityMain(
                                         it.route == item.route
                                     } == true,
                                     onClick = {
-                                        if (item.type == ScreenType.Compose) navControllerCompose.navigate(
+                                        if (item.type == ScreenType.Compose) navController.navigate(
                                             route = item.route
                                         ) {
                                             popUpTo(
-                                                id = navControllerCompose.graph.findStartDestination().id
+                                                id = navController.graph.findStartDestination().id
                                             ) {
                                                 saveState = true
                                             }
@@ -615,7 +630,7 @@ internal fun ActivityMain(
                     }
                 }
                 NavHost(
-                    navController = navControllerCompose,
+                    navController = navController,
                     startDestination = Screen.Overview.route,
                     modifier = when (navigationType) {
                         NavigationType.PermanentNavigationDrawer -> Modifier.fillMaxSize()
@@ -630,24 +645,27 @@ internal fun ActivityMain(
                         route = Screen.Overview.route
                     ) {
                         ScreenOverview(
-                            subNavController = subNavController,
-                            configuration = configuration,
                             topBarVisible = topBarVisible,
+                            openDrawer = {
+                                scope.launch {
+                                    drawerState.open()
+                                }
+                            },
                             topBarUpdate = topBarUpdate,
-                            navController = navControllerCompose,
+                            navController = navController,
                             shizukuVersion = shizukuVersion
                         )
                     }
                     composable(
                         route = Screen.Container.route
                     ) {
-                        ScreenContainer(
-                            subNavController = subNavController,
-                            configuration = configuration,
-                            topBarVisible = topBarVisible,
-                            topBarUpdate = topBarUpdate,
-                            container = container
-                        )
+//                        ScreenContainer(
+//                         //   subNavController = subNavController,
+//                        //    configuration = configuration,
+//                            topBarVisible = topBarVisible,
+//                            topBarUpdate = topBarUpdate,
+//                            container = container
+//                        )
                     }
                     composable(
                         route = Screen.Apps.route
@@ -657,17 +675,17 @@ internal fun ActivityMain(
                     composable(
                         route = Screen.Flutter.route
                     ) {
-                        ScreenFlutter(
-                            rootLayout = flutter,
-                            search = {},
-                            subNavController = subNavController
-                        )
+//                        ScreenFlutter(
+//                            rootLayout = flutter,
+//                            search = {},
+//                            subNavController = subNavController
+//                        )
                     }
                     composable(
                         route = Screen.Manager.route
                     ) {
                         ScreenManager(
-                            navController = navControllerCompose,
+                            navController = navController,
                             toggle = toggle,
                             current = current,
                             targetAppName = stringResource(id = R.string.lib_name),
@@ -687,8 +705,8 @@ internal fun ActivityMain(
                         route = Screen.Settings.route
                     ) {
                         ScreenSettings(
-                            navControllerCompose = navControllerCompose,
-                            navControllerFragment = subNavController,
+                            navControllerCompose = navController,
+                            //  navControllerFragment = subNavController,
                             scope = scope,
                             snackBarHostState = snackBarHostState,
                             current = current,
@@ -697,13 +715,6 @@ internal fun ActivityMain(
                             onDefaultLauncherSettings = {}
                         )
                     }
-//                    composable(
-//                        route = Screen.Preference.route
-//                    ) {
-//                        ScreenPreference(
-//                            preferenceUpdate = preferenceUpdate
-//                        )
-//                    }
                     composable(
                         route = Screen.About.route
                     ) {
@@ -719,7 +730,6 @@ internal fun ActivityMain(
                         )
                     }
                 }
-
             }
         }
     }
@@ -754,7 +764,7 @@ internal fun ActivityMain(
 
 @ScreenPreviews
 @Composable
-internal fun ActivityMainPreview() {
+private fun ActivityMainPreview() {
     LibEcosedTheme {
 
     }

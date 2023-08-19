@@ -11,6 +11,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
+import androidx.customview.widget.Openable
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -22,13 +23,13 @@ import io.ecosed.libecosed.R
 import io.ecosed.libecosed.ui.preview.WidgetPreview
 import io.ecosed.libecosed.ui.theme.LibEcosedTheme
 
-@Composable
 @OptIn(ExperimentalComposeUiApi::class)
-fun TopActionBar(
+@Composable
+internal fun TopActionBar(
     navController: NavController,
-    configuration: AppBarConfiguration,
     modifier: Modifier,
     visible: Boolean,
+    openDrawer: () -> Unit,
     update: (MaterialToolbar) -> Unit
 ) {
     val toolbarParams: AppBarLayout.LayoutParams = AppBarLayout.LayoutParams(
@@ -36,12 +37,21 @@ fun TopActionBar(
         AppBarLayout.LayoutParams.WRAP_CONTENT
     )
 
+    val openable: Openable = object : Openable {
+        override fun isOpen(): Boolean = false
+        override fun close() = Unit
+        override fun open() = openDrawer()
+    }
+
+    val configuration = AppBarConfiguration(
+        navGraph = navController.graph,
+        drawerLayout = openable
+    )
+
     val toolbar: MaterialToolbar = MaterialToolbar(
         LocalContext.current
     ).apply {
-        setBackgroundColor(
-            Color.Transparent.toArgb()
-        )
+        setBackgroundColor(Color.Transparent.toArgb())
         update(this@apply)
         setupWithNavController(
             navController = navController,
@@ -92,9 +102,9 @@ fun TopActionBarPreview() {
     LibEcosedTheme {
         TopActionBar(
             navController = rememberNavController(),
-            configuration = AppBarConfiguration.Builder().build(),
             modifier = Modifier.fillMaxWidth(),
-            visible = true
+            visible = true,
+            openDrawer = {}
         ) {
             it.title = title
             it.navigationIcon = icon

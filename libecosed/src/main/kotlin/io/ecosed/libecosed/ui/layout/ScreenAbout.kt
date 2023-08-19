@@ -4,8 +4,10 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.animateScrollBy
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,6 +32,7 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Source
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
@@ -573,7 +576,7 @@ internal fun ScreenAbout(
                 }
             }
             AnimatedVisibility(
-                visible = !contest
+                visible = false
             ) {
                 ElevatedCard(
                     modifier = Modifier
@@ -755,29 +758,10 @@ internal fun ScreenAbout(
                 ) {
                     Column {
                         Text(
-                            text = "部分设计源自彩虹的缤纷色彩，旨在支持LGBTQ+群体。",
+                            text = "Powered by LibEcosed",
                             modifier = Modifier.fillMaxWidth(),
                             textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.bodySmall
-                        )
-                        Text(
-                            text = "不向焦虑与抑郁投降，这个世界终会有我们存在的地方。",
-                            modifier = Modifier.fillMaxWidth(),
-                            textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.bodySmall
-                        )
-                        Text(
-                            text = "愿人间少一份伤害，多一份理解与尊重。",
-                            modifier = Modifier.fillMaxWidth(),
-                            textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.bodySmall
-                        )
-                        Image(
-                            imageVector = Icons.Filled.Favorite,
-                            contentDescription = null,
-                            modifier = Modifier.fillMaxWidth(),
-                            contentScale = ContentScale.Fit,
-                            colorFilter = ColorFilter.tint(color = Color.Red)
+                            style = MaterialTheme.typography.titleSmall
                         )
                     }
                 }

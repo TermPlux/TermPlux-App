@@ -1,7 +1,7 @@
 package io.ecosed.libecosed
 
-import io.ecosed.plugin.EcosedPlugin
+import io.ecosed.plugin.LibEcosed
 
 interface LibEcosedImpl {
-    val mLibEcosed: EcosedPlugin
+    val mLibEcosed: LibEcosed
 }

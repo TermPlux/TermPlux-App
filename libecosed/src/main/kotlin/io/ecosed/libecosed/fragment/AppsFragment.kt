@@ -14,11 +14,24 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.ecosed.libecosed.adapter.AppsAdapter
 import io.ecosed.libecosed.model.AppsModel
+import io.ecosed.libecosed.plugin.LibEcosedPlugin
 import io.ecosed.libecosed.receiver.AppsReceiver
+import io.ecosed.plugin.execMethodCall
 
 internal class AppsFragment : Fragment() {
 
     private lateinit var appReceiver: AppsReceiver
+
+    private var pack: String? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        pack = execMethodCall(
+            activity = requireActivity(),
+            name = LibEcosedPlugin.channel,
+            method = LibEcosedPlugin.getPackage
+        ).toString()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -66,10 +79,15 @@ internal class AppsFragment : Fragment() {
         // 应用列表
         val applicationList: MutableList<AppsModel> = ArrayList()
 
-//        // 添加自己
-//        applicationList.add(
-//            AppsModel(pkgName = BuildConfig.APPLICATION_ID)
-//        )
+
+
+
+        // 添加自己
+        pack?.let { me ->
+            applicationList.add(
+                AppsModel(pkgName = me)
+            )
+        }
 
         // 获取启动器列表
         for (resolveInfo in if (
@@ -82,11 +100,13 @@ internal class AppsFragment : Fragment() {
             PackageManager.MATCH_ALL
         )) {
             val pkg = resolveInfo.activityInfo.packageName
-           // if (pkg != BuildConfig.APPLICATION_ID) {
-                applicationList.add(
-                    AppsModel(pkgName = pkg)
-                )
-          //  }
+            pack?.let { me ->
+                if (pkg != me) {
+                    applicationList.add(
+                        AppsModel(pkgName = pkg)
+                    )
+                }
+            }
         }
 
         // 设置适配器

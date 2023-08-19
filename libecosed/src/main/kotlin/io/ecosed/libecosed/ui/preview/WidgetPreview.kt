@@ -4,7 +4,6 @@ import android.content.res.Configuration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.Wallpapers
 
-
 @Preview(
     name = "Widget",
     group = "Ecosed Framework",
@@ -16,4 +15,4 @@ import androidx.compose.ui.tooling.preview.Wallpapers
     showBackground = true,
     wallpaper = Wallpapers.BLUE_DOMINATED_EXAMPLE
 )
-annotation class WidgetPreview
+internal annotation class WidgetPreview

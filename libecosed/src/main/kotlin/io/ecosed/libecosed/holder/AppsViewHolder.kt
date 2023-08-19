@@ -11,8 +11,8 @@ internal class AppsViewHolder constructor(
     title: AppCompatTextView
 ) : RecyclerView.ViewHolder(item) {
 
-    val mAppIconView: AppCompatImageView
-    val mTextView: AppCompatTextView
+    internal val mAppIconView: AppCompatImageView
+    internal val mTextView: AppCompatTextView
 
     init {
         mAppIconView = icon

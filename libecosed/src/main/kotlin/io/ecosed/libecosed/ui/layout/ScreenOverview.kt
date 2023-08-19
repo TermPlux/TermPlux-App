@@ -24,11 +24,7 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.SelectAll
 import androidx.compose.material.icons.outlined.Category
-import androidx.compose.material.icons.outlined.DoubleArrow
-import androidx.compose.material.icons.outlined.KeyboardArrowRight
-import androidx.compose.material.icons.outlined.KeyboardCommandKey
 import androidx.compose.material.icons.outlined.KeyboardDoubleArrowRight
-import androidx.compose.material.icons.outlined.NorthEast
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
@@ -40,21 +36,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.ui.AppBarConfiguration
 import com.google.android.material.appbar.MaterialToolbar
-import io.ecosed.libecosed.BuildConfig
 import io.ecosed.libecosed.R
-import io.ecosed.libecosed.plugin.LibEcosed
+import io.ecosed.libecosed.plugin.LibEcosedPlugin
 import io.ecosed.libecosed.ui.preview.ScreenPreviews
-import io.ecosed.libecosed.ui.screen.Screen
 import io.ecosed.libecosed.ui.theme.LibEcosedTheme
 import io.ecosed.libecosed.ui.widget.TopActionBar
 import io.ecosed.plugin.execMethodCall
@@ -62,9 +52,8 @@ import io.ecosed.plugin.execMethodCall
 @Composable
 internal fun ScreenOverview(
     navController: NavHostController,
-    subNavController: NavController,
-    configuration: AppBarConfiguration,
     topBarVisible: Boolean,
+    openDrawer: () -> Unit,
     topBarUpdate: (MaterialToolbar) -> Unit,
     shizukuVersion: String
 ) {
@@ -111,8 +100,8 @@ internal fun ScreenOverview(
 
                             execMethodCall(
                                 activity = activity,
-                                name = LibEcosed.channel,
-                                method = LibEcosed.launchApp
+                                name = LibEcosedPlugin.channel,
+                                method = LibEcosedPlugin.launchApp
                             )
                         }
                         .padding(
@@ -174,10 +163,10 @@ internal fun ScreenOverview(
                 )
             ) {
                 TopActionBar(
-                    navController = subNavController,
-                    configuration = configuration,
+                    navController = navController,
                     modifier = Modifier.fillMaxWidth(),
                     visible = topBarVisible,
+                    openDrawer = openDrawer,
                     update = topBarUpdate
                 )
             }
@@ -485,12 +474,9 @@ internal  fun ScreenOverviewPreview() {
         ScreenOverview(
             navController = rememberNavController(),
             shizukuVersion = "13",
-                    subNavController = rememberNavController(),
-            configuration = AppBarConfiguration.Builder().build(),
             topBarVisible = true,
-            topBarUpdate = {
-
-            },
+            openDrawer = {},
+            topBarUpdate = {}
         )
     }
 }
