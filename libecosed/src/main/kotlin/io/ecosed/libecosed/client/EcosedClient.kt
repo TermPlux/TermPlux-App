@@ -5,7 +5,9 @@ import android.content.Context
 import android.content.ServiceConnection
 import android.os.IBinder
 
-internal class EcosedClient constructor(context: Context): ServiceConnection, EcosedCallBack {
+internal class EcosedClient constructor(
+    context: Context
+): ServiceConnection, EcosedCallBack {
 
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
 

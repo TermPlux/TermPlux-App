@@ -12,11 +12,10 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.blankj.utilcode.util.AppUtils
 import io.ecosed.libecosed.adapter.AppsAdapter
 import io.ecosed.libecosed.model.AppsModel
-import io.ecosed.libecosed.plugin.LibEcosedPlugin
 import io.ecosed.libecosed.receiver.AppsReceiver
-import io.ecosed.plugin.execMethodCall
 
 internal class AppsFragment : Fragment() {
 
@@ -26,11 +25,7 @@ internal class AppsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        pack = execMethodCall(
-            activity = requireActivity(),
-            name = LibEcosedPlugin.channel,
-            method = LibEcosedPlugin.getPackage
-        ).toString()
+        pack = AppUtils.getAppPackageName()
     }
 
     override fun onCreateView(

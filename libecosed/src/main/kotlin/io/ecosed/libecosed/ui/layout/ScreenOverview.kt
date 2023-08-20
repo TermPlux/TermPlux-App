@@ -27,12 +27,16 @@ import androidx.compose.material.icons.outlined.Category
 import androidx.compose.material.icons.outlined.KeyboardDoubleArrowRight
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DrawerState
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,11 +53,12 @@ import io.ecosed.libecosed.ui.theme.LibEcosedTheme
 import io.ecosed.libecosed.ui.widget.TopActionBar
 import io.ecosed.plugin.execMethodCall
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ScreenOverview(
     navController: NavHostController,
     topBarVisible: Boolean,
-    openDrawer: () -> Unit,
+    drawerState: DrawerState,
     topBarUpdate: (MaterialToolbar) -> Unit,
     shizukuVersion: String
 ) {
@@ -98,11 +103,11 @@ internal fun ScreenOverview(
 //                            }
 
 
-                            execMethodCall(
-                                activity = activity,
-                                name = LibEcosedPlugin.channel,
-                                method = LibEcosedPlugin.launchApp
-                            )
+//                            execMethodCall(
+//                                activity = activity,
+//                                name = LibEcosedPlugin.channel,
+//                                method = LibEcosedPlugin.launchApp
+//                            )
                         }
                         .padding(
                             all = 24.dp
@@ -166,7 +171,7 @@ internal fun ScreenOverview(
                     navController = navController,
                     modifier = Modifier.fillMaxWidth(),
                     visible = topBarVisible,
-                    openDrawer = openDrawer,
+                    drawerState = drawerState,
                     update = topBarUpdate
                 )
             }
@@ -467,15 +472,18 @@ internal fun ScreenOverview(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @ScreenPreviews
 @Composable
-internal  fun ScreenOverviewPreview() {
+private fun ScreenOverviewPreview() {
     LibEcosedTheme {
         ScreenOverview(
             navController = rememberNavController(),
             shizukuVersion = "13",
             topBarVisible = true,
-            openDrawer = {},
+            drawerState = rememberDrawerState(
+                initialValue = DrawerValue.Closed
+            ),
             topBarUpdate = {}
         )
     }

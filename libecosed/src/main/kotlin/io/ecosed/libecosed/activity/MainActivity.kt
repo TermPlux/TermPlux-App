@@ -1,6 +1,7 @@
 package io.ecosed.libecosed.activity
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.res.Resources
 import android.os.Bundle
 import android.os.Handler
@@ -9,8 +10,10 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
@@ -61,27 +64,29 @@ internal class MainActivity : MaterialActivity(), Shizuku.OnBinderReceivedListen
     }
 
 
+    private lateinit var mActivity: Activity
+    
+    
+
+
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
 
+        mActivity = execMethodCall(
+            activity = this@MainActivity,
+            name = LibEcosedPlugin.channel,
+            method = LibEcosedPlugin.getLaunchActivity
+        ) as Activity
 
-
+        mVisible = true
+        title = AppUtils.getAppName()
 
         super.onCreate(savedInstanceState)
         setContent {
 
-            title = AppUtils.getAppName(
-                execMethodCall(
-                    activity = this@MainActivity,
-                    name = LibEcosedPlugin.channel,
-                    method = LibEcosedPlugin.getPackage
-                ).toString()
-            )
 
 
 
-
-            mVisible = true
 
             LocalView.current.setOnTouchListener(delayHideTouchListener)
 
@@ -92,10 +97,25 @@ internal class MainActivity : MaterialActivity(), Shizuku.OnBinderReceivedListen
                 ActivityMain(
                     windowSize = windowSize,
                     displayFeatures = displayFeatures,
-                    appsUpdate = {},
                     topBarVisible = actionBarVisible,
                     topBarUpdate = {
                         setSupportActionBar(it)
+
+
+                        supportActionBar?.apply {
+                            val lp = ActionBar.LayoutParams(
+                                ActionBar.LayoutParams.MATCH_PARENT,
+                                ActionBar.LayoutParams.MATCH_PARENT
+                            )
+
+                            val view = TextView(this@MainActivity).apply {
+                                text = "CustomView"
+                            }
+
+                            setCustomView(view, lp)
+                            displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
+                            setDisplayShowCustomEnabled(true)
+                        }
                     },
                     preferenceUpdate = { preference ->
 
@@ -113,6 +133,7 @@ internal class MainActivity : MaterialActivity(), Shizuku.OnBinderReceivedListen
 
 
     }
+
 
     override fun computeUserThemeKey(): String {
         super.computeUserThemeKey()
@@ -207,6 +228,7 @@ internal class MainActivity : MaterialActivity(), Shizuku.OnBinderReceivedListen
     override fun onRequestPermissionResult(requestCode: Int, grantResult: Int) {
         TODO("Not yet implemented")
     }
+
 
 
 }

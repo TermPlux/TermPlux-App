@@ -98,7 +98,7 @@ import kotlinx.coroutines.launch
 internal fun ActivityMain(
     windowSize: WindowSizeClass,
     displayFeatures: List<DisplayFeature>,
-    appsUpdate: (RecyclerView) -> Unit,
+    //appsUpdate: (RecyclerView) -> Unit,
     topBarVisible: Boolean,
     topBarUpdate: (MaterialToolbar) -> Unit,
     preferenceUpdate: (ViewPager2) -> Unit,
@@ -123,7 +123,7 @@ internal fun ActivityMain(
     )
     val items = listOf(
         Screen.Overview,
-        Screen.Container,
+        Screen.Manager,
         //Screen.Apps,
         Screen.Flutter,
         //     Screen.Manager,
@@ -248,28 +248,6 @@ internal fun ActivityMain(
                         }
                     }
                 }
-                ExtendedFloatingActionButton(
-                    text = {
-                        Text(text = "应用名称")
-                    },
-                    icon = {
-                        Icon(
-                            imageVector = Icons.TwoTone.OpenInNew,
-                            contentDescription = null
-                        )
-                    },
-                    onClick = {
-
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            bottom = 16.dp
-                        )
-                        .padding(
-                            paddingValues = NavigationDrawerItemDefaults.ItemPadding
-                        )
-                )
             }
             // 导航列表
             Column(
@@ -561,12 +539,131 @@ internal fun ActivityMain(
 //            floatingActionButtonPosition = FabPosition.End,
             contentWindowInsets = ScaffoldDefaults.contentWindowInsets
         ) { innerPadding ->
-            Row(
+            NavHost(
+                navController = navController,
+                startDestination = Screen.Overview.route,
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(
                         paddingValues = innerPadding
                     )
+                    .nestedScroll(
+                        connection = scrollBehavior.nestedScrollConnection
+                    )
+            ) {
+                composable(
+                    route = Screen.Overview.route
+                ) {
+                    ScreenOverview(
+                        topBarVisible = topBarVisible,
+                        drawerState = drawerState,
+                        topBarUpdate = topBarUpdate,
+                        navController = navController,
+                        shizukuVersion = shizukuVersion
+                    )
+                }
+                composable(
+                    route = Screen.Container.route
+                ) {
+//                        ScreenContainer(
+//                         //   subNavController = subNavController,
+//                        //    configuration = configuration,
+//                            topBarVisible = topBarVisible,
+//                            topBarUpdate = topBarUpdate,
+//                            container = container
+//                        )
+                }
+                composable(
+                    route = Screen.Apps.route
+                ) {
+                    //  ScreenApps(appsUpdate = appsUpdate)
+                }
+                composable(
+                    route = Screen.Flutter.route
+                ) {
+//                        ScreenFlutter(
+//                            rootLayout = flutter,
+//                            search = {},
+//                            subNavController = subNavController
+//                        )
+                }
+                composable(
+                    route = Screen.Manager.route
+                ) {
+                    ScreenManager(
+                        navController = navController,
+                        toggle = toggle,
+                        current = current,
+                        targetAppName = stringResource(id = R.string.lib_name),
+                        targetAppPackageName = "BuildConfig.APPLICATION_ID",
+                        targetAppDescription = stringResource(id = R.string.lib_name),
+                        targetAppVersionName = "BuildConfig.VERSION_NAME",
+                        NavigationOnClick = {},
+                        MenuOnClick = {},
+                        SearchOnClick = {},
+                        SheetOnClick = {},
+                        AppsOnClick = {},
+                        SelectOnClick = {},
+                        onNavigateToApps = {}
+                    )
+                }
+                composable(
+                    route = Screen.Settings.route
+                ) {
+                    ScreenSettings(
+                        navControllerCompose = navController,
+                        //  navControllerFragment = subNavController,
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        current = current,
+                        onTaskBarSettings = taskbar,
+                        onSystemSettings = {},
+                        onDefaultLauncherSettings = {}
+                    )
+                }
+                composable(
+                    route = Screen.About.route
+                ) {
+                    ScreenAbout(
+                        scope = scope,
+                        snackBarHostState = snackBarHostState,
+                        onEasterEgg = {},
+                        onNotice = {},
+                        onSource = {},
+                        onDevGitHub = {},
+                        onDevTwitter = {},
+                        onTeamGitHub = {}
+                    )
+                }
+            }
+        }
+    }
+
+    when (navigationType) {
+        NavigationType.PermanentNavigationDrawer -> PermanentNavigationDrawer(
+            drawerContent = {
+                PermanentDrawerSheet {
+                    nav()
+                }
+            },
+            modifier = Modifier.fillMaxSize()
+        ) {
+            content()
+        }
+
+        NavigationType.NavigationRail,
+        NavigationType.BottomNavigation -> ModalNavigationDrawer(
+            drawerContent = {
+                ModalDrawerSheet {
+                    nav()
+                }
+            },
+            modifier = Modifier.fillMaxSize(),
+            drawerState = drawerState,
+            gesturesEnabled = true
+        ) {
+            Row(
+                modifier = Modifier.fillMaxSize()
             ) {
                 AnimatedVisibility(
                     visible = navigationType == NavigationType.NavigationRail
@@ -629,135 +726,8 @@ internal fun ActivityMain(
                         }
                     }
                 }
-                NavHost(
-                    navController = navController,
-                    startDestination = Screen.Overview.route,
-                    modifier = when (navigationType) {
-                        NavigationType.PermanentNavigationDrawer -> Modifier.fillMaxSize()
-                        else -> Modifier
-                            .fillMaxSize()
-                            .nestedScroll(
-                                connection = scrollBehavior.nestedScrollConnection
-                            )
-                    }
-                ) {
-                    composable(
-                        route = Screen.Overview.route
-                    ) {
-                        ScreenOverview(
-                            topBarVisible = topBarVisible,
-                            openDrawer = {
-                                scope.launch {
-                                    drawerState.open()
-                                }
-                            },
-                            topBarUpdate = topBarUpdate,
-                            navController = navController,
-                            shizukuVersion = shizukuVersion
-                        )
-                    }
-                    composable(
-                        route = Screen.Container.route
-                    ) {
-//                        ScreenContainer(
-//                         //   subNavController = subNavController,
-//                        //    configuration = configuration,
-//                            topBarVisible = topBarVisible,
-//                            topBarUpdate = topBarUpdate,
-//                            container = container
-//                        )
-                    }
-                    composable(
-                        route = Screen.Apps.route
-                    ) {
-                        ScreenApps(appsUpdate = appsUpdate)
-                    }
-                    composable(
-                        route = Screen.Flutter.route
-                    ) {
-//                        ScreenFlutter(
-//                            rootLayout = flutter,
-//                            search = {},
-//                            subNavController = subNavController
-//                        )
-                    }
-                    composable(
-                        route = Screen.Manager.route
-                    ) {
-                        ScreenManager(
-                            navController = navController,
-                            toggle = toggle,
-                            current = current,
-                            targetAppName = stringResource(id = R.string.lib_name),
-                            targetAppPackageName = "BuildConfig.APPLICATION_ID",
-                            targetAppDescription = stringResource(id = R.string.lib_name),
-                            targetAppVersionName = "BuildConfig.VERSION_NAME",
-                            NavigationOnClick = {},
-                            MenuOnClick = {},
-                            SearchOnClick = {},
-                            SheetOnClick = {},
-                            AppsOnClick = {},
-                            SelectOnClick = {},
-                            onNavigateToApps = {}
-                        )
-                    }
-                    composable(
-                        route = Screen.Settings.route
-                    ) {
-                        ScreenSettings(
-                            navControllerCompose = navController,
-                            //  navControllerFragment = subNavController,
-                            scope = scope,
-                            snackBarHostState = snackBarHostState,
-                            current = current,
-                            onTaskBarSettings = taskbar,
-                            onSystemSettings = {},
-                            onDefaultLauncherSettings = {}
-                        )
-                    }
-                    composable(
-                        route = Screen.About.route
-                    ) {
-                        ScreenAbout(
-                            scope = scope,
-                            snackBarHostState = snackBarHostState,
-                            onEasterEgg = {},
-                            onNotice = {},
-                            onSource = {},
-                            onDevGitHub = {},
-                            onDevTwitter = {},
-                            onTeamGitHub = {}
-                        )
-                    }
-                }
+                content()
             }
-        }
-    }
-
-    when (navigationType) {
-        NavigationType.PermanentNavigationDrawer -> PermanentNavigationDrawer(
-            drawerContent = {
-                PermanentDrawerSheet {
-                    nav()
-                }
-            },
-            modifier = Modifier.fillMaxSize()
-        ) {
-            content()
-        }
-
-        NavigationType.NavigationRail,
-        NavigationType.BottomNavigation -> ModalNavigationDrawer(
-            drawerContent = {
-                ModalDrawerSheet {
-                    nav()
-                }
-            },
-            modifier = Modifier.fillMaxSize(),
-            drawerState = drawerState,
-            gesturesEnabled = true
-        ) {
-            content()
         }
     }
 }

@@ -23,9 +23,7 @@ internal class LibEcosedPlugin : LibEcosed {
     private lateinit var mPluginChannel: PluginChannel
 
     private lateinit var mContext: Context
-    private var mDebug: Boolean? = null
-    private var mPackageName: String? = null
-    private lateinit var mLaunchActivity: Activity
+
 
     private lateinit var mSharedPreferences: SharedPreferences
 
@@ -37,15 +35,8 @@ internal class LibEcosedPlugin : LibEcosed {
         mPluginChannel.getContext()?.let {
             mContext = it
         }
-        mPluginChannel.isDebug().let {
-            mDebug = it
-        }
-        mPluginChannel.getPackageName(lib = this@LibEcosedPlugin)?.let {
-            mPackageName = it
-        }
-        mPluginChannel.getLaunchActivity(lib = this@LibEcosedPlugin)?.let {
-            mLaunchActivity = it
-        }
+
+
         mPluginChannel.setMethodCallHandler(handler = this@LibEcosedPlugin)
     }
 
@@ -86,13 +77,8 @@ internal class LibEcosedPlugin : LibEcosed {
 
     override fun onEcosedMethodCall(call: PluginChannel.MethodCall, result: PluginChannel.Result) {
         when (call.method) {
-            getPackage -> result.success(mPackageName)
-            launchApp -> mContext.apply {
-                val intent = Intent(this@apply, mLaunchActivity.javaClass)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                startActivity(intent)
-            }
-            isDebug -> result.success(mDebug)
+            getLaunchActivity -> result.success(mPluginChannel.getLaunchActivity(lib = this@LibEcosedPlugin))
+            isDebug -> result.success(mPluginChannel.isDebug())
             else -> result.notImplemented()
         }
     }
@@ -102,8 +88,7 @@ internal class LibEcosedPlugin : LibEcosed {
 
     companion object {
         const val channel: String = "libecosed"
-        const val launchApp: String = "launch_app"
-        const val getPackage: String = "get_package"
+        internal const val getLaunchActivity: String = "launch_app"
         const val isDebug: String = "is_debug"
     }
 }

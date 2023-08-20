@@ -2,7 +2,12 @@ package io.ecosed.libecosed.ui.widget
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.DrawerState
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,43 +27,51 @@ import com.google.android.material.shape.MaterialShapeDrawable
 import io.ecosed.libecosed.R
 import io.ecosed.libecosed.ui.preview.WidgetPreview
 import io.ecosed.libecosed.ui.theme.LibEcosedTheme
+import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
+@OptIn(
+    ExperimentalComposeUiApi::class,
+    ExperimentalMaterial3Api::class
+)
 internal fun TopActionBar(
     navController: NavController,
     modifier: Modifier,
     visible: Boolean,
-    openDrawer: () -> Unit,
+    drawerState: DrawerState,
     update: (MaterialToolbar) -> Unit
 ) {
+    val scope = rememberCoroutineScope()
     val toolbarParams: AppBarLayout.LayoutParams = AppBarLayout.LayoutParams(
         AppBarLayout.LayoutParams.MATCH_PARENT,
         AppBarLayout.LayoutParams.WRAP_CONTENT
     )
-
     val openable: Openable = object : Openable {
         override fun isOpen(): Boolean = false
         override fun close() = Unit
-        override fun open() = openDrawer()
+        override fun open() {
+            scope.launch {
+                drawerState.open()
+            }
+        }
     }
-
     val configuration = AppBarConfiguration(
         navGraph = navController.graph,
         drawerLayout = openable
     )
-
     val toolbar: MaterialToolbar = MaterialToolbar(
         LocalContext.current
-    ).apply {
-        setBackgroundColor(Color.Transparent.toArgb())
-        update(this@apply)
+    ).also { toolbar ->
+        update(toolbar)
+    }.apply {
         setupWithNavController(
             navController = navController,
             configuration = configuration
         )
+        setBackgroundColor(
+            Color.Transparent.toArgb()
+        )
     }
-
     AnimatedVisibility(
         visible = visible,
         modifier = modifier,
@@ -91,7 +104,8 @@ internal fun TopActionBar(
 
 @Composable
 @WidgetPreview
-fun TopActionBarPreview() {
+@OptIn(ExperimentalMaterial3Api::class)
+private fun TopActionBarPreview() {
     val title = stringResource(
         id = R.string.toolbar_preview
     )
@@ -104,7 +118,9 @@ fun TopActionBarPreview() {
             navController = rememberNavController(),
             modifier = Modifier.fillMaxWidth(),
             visible = true,
-            openDrawer = {}
+            drawerState = rememberDrawerState(
+                initialValue = DrawerValue.Closed
+            )
         ) {
             it.title = title
             it.navigationIcon = icon
