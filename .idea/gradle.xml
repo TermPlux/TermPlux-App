@@ -15,7 +15,6 @@
             <option value="$PROJECT_DIR$/libecosed" />
           </set>
         </option>
-        <option name="resolveExternalAnnotations" value="false" />
       </GradleProjectSettings>
     </option>
   </component>
