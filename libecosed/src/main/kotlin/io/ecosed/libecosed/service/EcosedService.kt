@@ -11,6 +11,7 @@ import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.PermissionUtils
 import com.farmerbb.taskbar.lib.Taskbar
 import io.ecosed.libecosed.EcosedFramework
@@ -22,7 +23,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import rikka.shizuku.Shizuku
 
-internal class EcosedService : Service() {
+internal class EcosedService : Service(), Shizuku.OnBinderReceivedListener,
+    Shizuku.OnBinderDeadListener, Shizuku.OnRequestPermissionResultListener {
 
     private val poem: ArrayList<String> = arrayListOf(
         "不向焦虑与抑郁投降，这个世界终会有我们存在的地方。",
@@ -69,8 +71,20 @@ internal class EcosedService : Service() {
 
     }
 
+    override fun onBinderReceived() {
+
+    }
+
+    override fun onBinderDead() {
+
+    }
+
+    override fun onRequestPermissionResult(requestCode: Int, grantResult: Int) {
+
+    }
+
     private fun frameworkVersion(): String {
-        return "BuildConfig.VERSION_NAME"
+        return AppUtils.getAppVersionName()
     }
 
     private fun shizukuVersion(): String {
@@ -114,15 +128,17 @@ internal class EcosedService : Service() {
         }
     }
 
+    // 创建通知渠道
     private fun setupNotificationChannel() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
-        // 创建一个通知渠道
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel(channelId, getString(R.string.lib_name), importance).apply {
-                description = "descriptionText"
+            val channel = NotificationChannel(
+                channelId,
+                getString(R.string.lib_name),
+                importance
+            ).apply {
+                description = getString(R.string.lib_description)
             }
-            // 在系统中注册通知渠道
             val notificationManager: NotificationManager =
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)

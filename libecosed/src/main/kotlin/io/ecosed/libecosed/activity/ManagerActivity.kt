@@ -36,10 +36,8 @@ import io.ecosed.libecosed.utils.ThemeHelper
 import io.ecosed.plugin.PluginExecutor
 import rikka.core.res.isNight
 import rikka.material.app.MaterialActivity
-import rikka.shizuku.Shizuku
 
-internal class MainActivity : MaterialActivity(), Shizuku.OnBinderReceivedListener,
-    Shizuku.OnBinderDeadListener, Shizuku.OnRequestPermissionResultListener {
+internal class ManagerActivity : MaterialActivity() {
 
     private var mVisible: Boolean by mutableStateOf(value = true)
     private var actionBarVisible: Boolean by mutableStateOf(value = true)
@@ -74,7 +72,7 @@ internal class MainActivity : MaterialActivity(), Shizuku.OnBinderReceivedListen
     override fun onCreate(savedInstanceState: Bundle?) {
 
         mActivity = PluginExecutor.execMethodCall(
-            activity = this@MainActivity,
+            activity = this@ManagerActivity,
             name = LibEcosedPlugin.channel,
             method = LibEcosedPlugin.getLaunchActivity
         ) as Activity
@@ -125,7 +123,7 @@ internal class MainActivity : MaterialActivity(), Shizuku.OnBinderReceivedListen
                 ActionBar.LayoutParams.MATCH_PARENT
             )
 
-            val view = TextView(this@MainActivity).apply {
+            val view = TextView(this@ManagerActivity).apply {
                 text = "CustomView"
             }
 
@@ -138,7 +136,7 @@ internal class MainActivity : MaterialActivity(), Shizuku.OnBinderReceivedListen
     override fun computeUserThemeKey(): String {
         super.computeUserThemeKey()
         return ThemeHelper.getTheme(
-            context = this@MainActivity
+            context = this@ManagerActivity
         ) + ThemeHelper.isUsingSystemColor()
     }
 
@@ -152,7 +150,7 @@ internal class MainActivity : MaterialActivity(), Shizuku.OnBinderReceivedListen
             } else {
                 theme.applyStyle(R.style.ThemeOverlay_DynamicColors_Light, true)
             }.run {
-                theme.applyStyle(ThemeHelper.getThemeStyleRes(context = this@MainActivity), true)
+                theme.applyStyle(ThemeHelper.getThemeStyleRes(context = this@ManagerActivity), true)
             }
         }
     }
@@ -172,7 +170,7 @@ internal class MainActivity : MaterialActivity(), Shizuku.OnBinderReceivedListen
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_settings -> Toast.makeText(this@MainActivity, "设置", Toast.LENGTH_SHORT)
+            R.id.action_settings -> Toast.makeText(this@ManagerActivity, "设置", Toast.LENGTH_SHORT)
                 .show()
         }
         return super.onOptionsItemSelected(item)
@@ -215,18 +213,6 @@ internal class MainActivity : MaterialActivity(), Shizuku.OnBinderReceivedListen
         const val uiAnimatorDelay = 300
 
 
-    }
-
-    override fun onBinderReceived() {
-        TODO("Not yet implemented")
-    }
-
-    override fun onBinderDead() {
-        TODO("Not yet implemented")
-    }
-
-    override fun onRequestPermissionResult(requestCode: Int, grantResult: Int) {
-        TODO("Not yet implemented")
     }
 
 

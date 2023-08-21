@@ -18,7 +18,7 @@
             android:value="@string/fake_signature" />
         
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".activity.ManagerActivity"
             android:exported="true"
             android:theme="@style/Theme.LibEcosed">
             <meta-data
@@ -32,6 +32,16 @@
                 <category android:name="android.intent.category.MONKEY" />
                 <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.LAUNCHER_APP" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".activity.SettingsActivity"
+            android:exported="true"
+            android:theme="@style/Theme.LibEcosed">
+            <intent-filter>
+                <action android:name="android.intent.action.APPLICATION_PREFERENCES" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
