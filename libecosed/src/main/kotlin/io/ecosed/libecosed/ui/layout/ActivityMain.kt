@@ -1,6 +1,5 @@
 package io.ecosed.libecosed.ui.layout
 
-import android.widget.FrameLayout
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -15,22 +14,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MenuOpen
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material.icons.outlined.MoreHoriz
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Terminal
-import androidx.compose.material.icons.twotone.OpenInNew
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -67,7 +61,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -75,7 +68,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import androidx.window.layout.DisplayFeature
 import androidx.window.layout.FoldingFeature
@@ -98,8 +90,9 @@ import kotlinx.coroutines.launch
 internal fun ActivityMain(
     windowSize: WindowSizeClass,
     displayFeatures: List<DisplayFeature>,
-    //appsUpdate: (RecyclerView) -> Unit,
     topBarVisible: Boolean,
+
+
     topBarUpdate: (MaterialToolbar) -> Unit,
     preferenceUpdate: (ViewPager2) -> Unit,
     androidVersion: String,
@@ -111,23 +104,17 @@ internal fun ActivityMain(
     val pages = listOf(
         Screen.ComposeTitle,
         Screen.Overview,
-        Screen.Container,
-        //   Screen.Apps,
-        Screen.Flutter,
-        //       Screen.Manager,
+        Screen.Home,
         Screen.Settings,
-        Screen.Divider,
-        //Screen.Preference,
         Screen.About,
+        Screen.Divider,
         Screen.FragmentTitle,
     )
     val items = listOf(
         Screen.Overview,
-        Screen.Manager,
-        //Screen.Apps,
-        Screen.Flutter,
-        //     Screen.Manager,
-        Screen.Settings
+        Screen.Home,
+        Screen.Settings,
+        Screen.About
     )
 
     val navController: NavHostController = rememberNavController()
@@ -306,7 +293,7 @@ internal fun ActivityMain(
                                         item.route.toInt()
                                     ).also {
                                         navController.navigate(
-                                            route = Screen.Flutter.route
+                                            route = Screen.Home.route
                                         ) {
                                             popUpTo(
                                                 id = navController.graph.findStartDestination().id
@@ -396,11 +383,11 @@ internal fun ActivityMain(
                 ) {
                     LargeTopAppBar(
                         title = {
-                            Text(
-                                text = stringResource(
-                                    id = R.string.lib_name
-                                )
-                            )
+                            items.forEach { screen ->
+                                if (screen.route == currentDestination?.route){
+                                    Text(text = stringResource(id = screen.title))
+                                }
+                            }
                         },
                         modifier = Modifier.fillMaxWidth(),
                         navigationIcon = {
@@ -526,17 +513,6 @@ internal fun ActivityMain(
                     hostState = snackBarHostState
                 )
             },
-//            floatingActionButton = {
-//                FloatingActionButton(onClick = { /*TODO*/ }) {
-//                    Icon(
-//                        imageVector = Icons.Outlined.Category,
-//                        contentDescription = null
-//                    )
-//
-//
-//                }
-//            },
-//            floatingActionButtonPosition = FabPosition.End,
             contentWindowInsets = ScaffoldDefaults.contentWindowInsets
         ) { innerPadding ->
             NavHost(
@@ -563,49 +539,9 @@ internal fun ActivityMain(
                     )
                 }
                 composable(
-                    route = Screen.Container.route
+                    route = Screen.Home.route
                 ) {
-//                        ScreenContainer(
-//                         //   subNavController = subNavController,
-//                        //    configuration = configuration,
-//                            topBarVisible = topBarVisible,
-//                            topBarUpdate = topBarUpdate,
-//                            container = container
-//                        )
-                }
-                composable(
-                    route = Screen.Apps.route
-                ) {
-                    //  ScreenApps(appsUpdate = appsUpdate)
-                }
-                composable(
-                    route = Screen.Flutter.route
-                ) {
-//                        ScreenFlutter(
-//                            rootLayout = flutter,
-//                            search = {},
-//                            subNavController = subNavController
-//                        )
-                }
-                composable(
-                    route = Screen.Manager.route
-                ) {
-                    ScreenManager(
-                        navController = navController,
-                        toggle = toggle,
-                        current = current,
-                        targetAppName = stringResource(id = R.string.lib_name),
-                        targetAppPackageName = "BuildConfig.APPLICATION_ID",
-                        targetAppDescription = stringResource(id = R.string.lib_name),
-                        targetAppVersionName = "BuildConfig.VERSION_NAME",
-                        NavigationOnClick = {},
-                        MenuOnClick = {},
-                        SearchOnClick = {},
-                        SheetOnClick = {},
-                        AppsOnClick = {},
-                        SelectOnClick = {},
-                        onNavigateToApps = {}
-                    )
+
                 }
                 composable(
                     route = Screen.Settings.route
@@ -629,10 +565,7 @@ internal fun ActivityMain(
                         snackBarHostState = snackBarHostState,
                         onEasterEgg = {},
                         onNotice = {},
-                        onSource = {},
-                        onDevGitHub = {},
-                        onDevTwitter = {},
-                        onTeamGitHub = {}
+                        onSource = {}
                     )
                 }
             }

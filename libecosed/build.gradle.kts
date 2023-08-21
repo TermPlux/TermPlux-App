@@ -93,12 +93,21 @@ configurations.all {
     )
 }
 
+/**
+ * 我也不知道这是怎么个事儿,
+ * 部分依赖一更新就报错要求api34,
+ * 改了api34以后又报错Gradle不支持,
+ * 都已经最新了还不支持那我更新测试版AndroidStudio,
+ * 结果整个项目都不能编译了,
+ * 我他妈也是服了谷歌这个老六,
+ * 等Android14的release出来了再说吧.
+ */
 dependencies {
     // 第三方库
     // AndroidUtilCode: https://github.com/Blankj/AndroidUtilCode
     implementation(dependencyNotation = "com.blankj:utilcodex:1.31.1")
     // EcosedPlugin: https://github.com/ecosed/plugin
-    implementation(dependencyNotation = "com.github.ecosed:plugin:3.3.0")
+    implementation(dependencyNotation = "com.github.ecosed:plugin:4.1.0")
     // LibTaskbar: https://github.com/farmerbb/libtaskbar
     implementation(dependencyNotation = "com.github.farmerbb:libtaskbar:2.2.0")
     // DialogX: https://github.com/kongzue/DialogX
@@ -142,6 +151,7 @@ dependencies {
     implementation(dependencyNotation = "com.google.accompanist:accompanist-webview:0.30.1")
     implementation(dependencyNotation = "com.google.accompanist:accompanist-systemuicontroller:0.30.1")
     implementation(dependencyNotation = "com.google.accompanist:accompanist-adaptive:0.30.1")
+    implementation(dependencyNotation = "com.google.accompanist:accompanist-drawablepainter:0.30.1")
     implementation(dependencyNotation = "androidx.navigation:navigation-compose:2.6.0")
     implementation(dependencyNotation = "androidx.navigation:navigation-ui-ktx:2.6.0")
     implementation(dependencyNotation = "androidx.core:core-ktx:1.10.1")

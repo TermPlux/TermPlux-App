@@ -77,7 +77,7 @@ internal class LibEcosedPlugin : LibEcosed {
 
     override fun onEcosedMethodCall(call: PluginChannel.MethodCall, result: PluginChannel.Result) {
         when (call.method) {
-            getLaunchActivity -> result.success(mPluginChannel.getLaunchActivity(lib = this@LibEcosedPlugin))
+            getLaunchActivity -> result.success(mPluginChannel.getLaunchActivity(ecosed = this@LibEcosedPlugin))
             isDebug -> result.success(mPluginChannel.isDebug())
             else -> result.notImplemented()
         }

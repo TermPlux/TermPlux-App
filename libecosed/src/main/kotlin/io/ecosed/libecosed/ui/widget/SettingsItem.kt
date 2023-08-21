@@ -21,45 +21,41 @@ fun SettingsItem(
     summary: String,
     onClick: () -> Unit
 ){
-    Surface(
+    Row(
         modifier = Modifier
             .fillMaxWidth()
             .heightIn(min = 70.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .clickable {
-                    onClick()
-                }
-                .padding(horizontal = 16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary
-            )
-            Column(
-                modifier = Modifier
-                    .weight(weight = 1f)
-                    .padding(
-                        start = 16.dp,
-                        end = 5.dp
-                    )
-            ) {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Text(
-                    text = summary,
-                    style = MaterialTheme.typography.bodySmall
-                )
+            .clickable {
+                onClick()
             }
-            Icon(
-                imageVector = Icons.Filled.KeyboardArrowRight,
-                contentDescription = null,
+            .padding(horizontal = 16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.primary
+        )
+        Column(
+            modifier = Modifier
+                .weight(weight = 1f)
+                .padding(
+                    start = 16.dp,
+                    end = 5.dp
+                )
+        ) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleMedium
+            )
+            Text(
+                text = summary,
+                style = MaterialTheme.typography.bodySmall
             )
         }
+        Icon(
+            imageVector = Icons.Filled.KeyboardArrowRight,
+            contentDescription = null,
+        )
     }
 }

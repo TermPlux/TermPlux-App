@@ -13,8 +13,10 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.RoomPreferences
+import androidx.compose.material3.Card
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -42,7 +44,6 @@ import kotlinx.coroutines.launch
 @Composable
 internal fun ScreenSettings(
     navControllerCompose: NavHostController,
-   // navControllerFragment: NavController,
     scope: CoroutineScope,
     snackBarHostState: SnackbarHostState,
     current: (Int) -> Unit,
@@ -63,7 +64,7 @@ internal fun ScreenSettings(
                     state = scrollState
                 )
         ) {
-            ElevatedCard(
+            OutlinedCard(
                 modifier = Modifier.padding(
                     start = 12.dp,
                     top = 12.dp,
@@ -71,18 +72,13 @@ internal fun ScreenSettings(
                     bottom = 6.dp
                 )
             ) {
-                Text(
-                    text = stringResource(id = R.string.app_category_title),
-                    modifier = Modifier.padding(all = 16.dp),
-                    color = MaterialTheme.colorScheme.primary
-                )
                 SettingsItem(
                     icon = Icons.Filled.RoomPreferences,
                     title = "首选项",
                     summary = "配置 Ecosed Framework"
                 ) {
                     navControllerCompose.navigate(
-                        route = Screen.Container.route
+                        route = Screen.Home.route
                     ) {
                         popUpTo(
                             id = navControllerCompose.graph.findStartDestination().id
@@ -91,12 +87,6 @@ internal fun ScreenSettings(
                         }
                         launchSingleTop = true
                         restoreState = true
-                    }.run {
-//                        if (navControllerFragment.currentDestination?.id != R.id.nav_settings){
-//                            navControllerFragment.navigate(R.id.nav_settings)
-//                        } else {
-//
-//                        }
                     }
                 }
                 // 关于
@@ -123,10 +113,10 @@ internal fun ScreenSettings(
                     title = stringResource(id = R.string.uninstall_title),
                     summary = stringResource(id = R.string.uninstall_summary)
                 ) {
-                 //   AppUtils.uninstallApp(BuildConfig.APPLICATION_ID)
+                    AppUtils.uninstallApp(AppUtils.getAppPackageName())
                 }
             }
-            ElevatedCard(
+            OutlinedCard(
                 modifier = Modifier.padding(
                     start = 12.dp,
                     top = 6.dp,
@@ -134,11 +124,6 @@ internal fun ScreenSettings(
                     bottom = 6.dp
                 )
             ) {
-                Text(
-                    text = stringResource(id = R.string.desktop_category_title),
-                    modifier = Modifier.padding(all = 16.dp),
-                    color = MaterialTheme.colorScheme.primary
-                )
                 // 任务栏设置
                 SettingsItem(
                     icon = Icons.Filled.AppSettingsAlt,
@@ -156,7 +141,7 @@ internal fun ScreenSettings(
                     }
                 }
             }
-            ElevatedCard(
+            OutlinedCard(
                 modifier = Modifier.padding(
                     start = 12.dp,
                     top = 6.dp,
@@ -164,11 +149,6 @@ internal fun ScreenSettings(
                     bottom = 12.dp
                 )
             ) {
-                Text(
-                    text = stringResource(id = R.string.system_category_title),
-                    modifier = Modifier.padding(16.dp),
-                    color = MaterialTheme.colorScheme.primary
-                )
                 // 系统设置
                 SettingsItem(
                     icon = Icons.Filled.Android,
@@ -192,11 +172,10 @@ internal fun ScreenSettings(
 
 @ScreenPreviews
 @Composable
-internal  fun ScreenSettingsPreview() {
+private fun ScreenSettingsPreview() {
     LibEcosedTheme {
         ScreenSettings(
             navControllerCompose = rememberNavController(),
-        //    navControllerFragment = rememberNavController(),
             scope = rememberCoroutineScope(),
             snackBarHostState = remember {
                 SnackbarHostState()

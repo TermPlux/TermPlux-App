@@ -10,13 +10,10 @@ object ScreenRoute {
 
 
     const val routeOverview: String = "overview"
-    const val routeContainer: String = "container"
-    const val routeFlutter: String = "flutter"
+    const val routeHome: String = "flutter"
     const val routeSettings: String = "settings"
     const val routeAbout: String = "about"
 
-
-    const val routeManager : String = "manager"
 
 
     const val Divider: String = "divider"

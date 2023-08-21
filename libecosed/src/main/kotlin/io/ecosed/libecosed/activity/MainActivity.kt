@@ -15,6 +15,7 @@ import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.Toolbar
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
@@ -32,7 +33,7 @@ import io.ecosed.libecosed.plugin.LibEcosedPlugin
 import io.ecosed.libecosed.ui.layout.ActivityMain
 import io.ecosed.libecosed.ui.theme.LibEcosedTheme
 import io.ecosed.libecosed.utils.ThemeHelper
-import io.ecosed.plugin.execMethodCall
+import io.ecosed.plugin.PluginExecutor
 import rikka.core.res.isNight
 import rikka.material.app.MaterialActivity
 import rikka.shizuku.Shizuku
@@ -72,7 +73,7 @@ internal class MainActivity : MaterialActivity(), Shizuku.OnBinderReceivedListen
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        mActivity = execMethodCall(
+        mActivity = PluginExecutor.execMethodCall(
             activity = this@MainActivity,
             name = LibEcosedPlugin.channel,
             method = LibEcosedPlugin.getLaunchActivity
@@ -82,40 +83,20 @@ internal class MainActivity : MaterialActivity(), Shizuku.OnBinderReceivedListen
         title = AppUtils.getAppName()
 
         super.onCreate(savedInstanceState)
+
+
         setContent {
-
-
-
-
-
-            LocalView.current.setOnTouchListener(delayHideTouchListener)
-
             val windowSize: WindowSizeClass = calculateWindowSizeClass(activity = this)
             val displayFeatures: List<DisplayFeature> =
                 calculateDisplayFeatures(activity = this)
+            LocalView.current.setOnTouchListener(delayHideTouchListener)
             LibEcosedTheme {
                 ActivityMain(
                     windowSize = windowSize,
                     displayFeatures = displayFeatures,
                     topBarVisible = actionBarVisible,
                     topBarUpdate = {
-                        setSupportActionBar(it)
-
-
-                        supportActionBar?.apply {
-                            val lp = ActionBar.LayoutParams(
-                                ActionBar.LayoutParams.MATCH_PARENT,
-                                ActionBar.LayoutParams.MATCH_PARENT
-                            )
-
-                            val view = TextView(this@MainActivity).apply {
-                                text = "CustomView"
-                            }
-
-                            setCustomView(view, lp)
-                            displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
-                            setDisplayShowCustomEnabled(true)
-                        }
+                        this.setSupportActionBar(it)
                     },
                     preferenceUpdate = { preference ->
 
@@ -132,8 +113,27 @@ internal class MainActivity : MaterialActivity(), Shizuku.OnBinderReceivedListen
         }
 
 
+
+
     }
 
+    override fun setSupportActionBar(toolbar: Toolbar?) {
+        super.setSupportActionBar(toolbar)
+        supportActionBar?.apply {
+            val lp = ActionBar.LayoutParams(
+                ActionBar.LayoutParams.MATCH_PARENT,
+                ActionBar.LayoutParams.MATCH_PARENT
+            )
+
+            val view = TextView(this@MainActivity).apply {
+                text = "CustomView"
+            }
+
+            setCustomView(view, lp)
+            displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
+            setDisplayShowCustomEnabled(true)
+        }
+    }
 
     override fun computeUserThemeKey(): String {
         super.computeUserThemeKey()

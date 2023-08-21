@@ -4,11 +4,8 @@
     <string name="lib_description">Ecosed Framework</string>
     <!-- 菜单 -->
     <string name="menu_overview">概览</string>
-    <string name="menu_flutter">主页</string>
-    <string name="menu_apps">应用</string>
-    <string name="menu_manager">管理器</string>
+    <string name="menu_home">主页</string>
     <string name="menu_settings">设置</string>
-    <string name="menu_preference">首选项</string>
     <string name="menu_about">关于</string>
     <string name="menu_open">打开</string>
     <string name="menu_info">应用信息</string>
@@ -31,7 +28,6 @@
     <string name="uninstall_tip">点击卸载以卸载此应用</string>
     <string name="uninstall_error">无法卸载系统应用</string>
     <!-- 设置 -->
-    <string name="app_category_title">应用</string>
     <string name="dynamic_colors_title">使用系统主题颜色</string>
     <string name="dynamic_colors_summary">重启应用后生效。仅支持Android 12+</string>
     <string name="dynamic_colors_error">仅支持Android 12+</string>
@@ -39,13 +35,11 @@
     <string name="about_summary">关于 Ecosed Framework</string>
     <string name="uninstall_title">卸载</string>
     <string name="uninstall_summary">卸载 Ecosed Framework</string>
-    <string name="desktop_category_title">桌面</string>
     <string name="desktop_title">使用完整桌面模式</string>
     <string name="desktop_summary">重启应用后生效。仅支持Android 10+</string>
     <string name="desktop_error">仅支持Android 10+</string>
     <string name="taskbar_title">桌面模式设置</string>
     <string name="taskbar_summary">任务栏设置</string>
-    <string name="system_category_title">系统</string>
     <string name="default_launcher_title">选择默认主屏幕应用</string>
     <string name="default_launcher_summary">将此应用设置为默认主屏幕应用以在副屏上启用完整桌面模式</string>
     <string name="system_settings_title">系统设置</string>

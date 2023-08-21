@@ -3,14 +3,11 @@ package io.ecosed.libecosed.ui.screen
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Android
-import androidx.compose.material.icons.twotone.AppSettingsAlt
-import androidx.compose.material.icons.twotone.Apps
 import androidx.compose.material.icons.twotone.FlutterDash
 import androidx.compose.material.icons.twotone.Home
 import androidx.compose.material.icons.twotone.Info
 import androidx.compose.material.icons.twotone.Settings
 import androidx.compose.material.icons.twotone.Title
-import androidx.compose.material.icons.twotone.ViewArray
 import androidx.compose.ui.graphics.vector.ImageVector
 import io.ecosed.libecosed.R
 import io.ecosed.libecosed.ui.navigation.ItemType
@@ -41,44 +38,12 @@ internal sealed class Screen constructor(
         title = R.string.menu_overview
     )
 
-    data object Container: Screen(
+    data object Home : Screen(
         type = ScreenType.Compose,
         item = ItemType.Default,
-        route = ScreenRoute.routeContainer,
-        imageVector = Icons.TwoTone.ViewArray,
-        title = R.string.menu_container
-    )
-
-    data object Apps: Screen(
-        type = ScreenType.Compose,
-        item = ItemType.Default,
-        route = "apps",
-        imageVector = Icons.TwoTone.Apps,
-        title = R.string.menu_apps
-    )
-
-    data object Flutter : Screen(
-        type = ScreenType.Compose,
-        item = ItemType.Default,
-        route = ScreenRoute.routeFlutter,
+        route = ScreenRoute.routeHome,
         imageVector = Icons.TwoTone.FlutterDash,
-        title = R.string.menu_flutter
-    )
-
-//    object Dashboard : Screen(
-//        type = ScreenType.Compose,
-//        item = ItemType.Default,
-//        route = ScreenRoute.routeDashboard,
-//        imageVector = Icons.TwoTone.List,
-//        title = R.string.menu_overview
-//    )
-
-    data object Manager : Screen(
-        type = ScreenType.Compose,
-        item = ItemType.Default,
-        route = ScreenRoute.routeManager,
-        imageVector = Icons.TwoTone.AppSettingsAlt,
-        title = R.string.menu_manager
+        title = R.string.menu_home
     )
 
     data object Divider : Screen(
@@ -96,14 +61,6 @@ internal sealed class Screen constructor(
         imageVector = Icons.TwoTone.Settings,
         title = R.string.menu_settings
     )
-
-//    object Preference : Screen(
-//        type = ScreenType.Compose,
-//        item = ItemType.Default,
-//        route = "preference",
-//        imageVector = Icons.TwoTone.RoomPreferences,
-//        title = R.string.menu_preference
-//    )
 
     data object About : Screen(
         type = ScreenType.Compose,

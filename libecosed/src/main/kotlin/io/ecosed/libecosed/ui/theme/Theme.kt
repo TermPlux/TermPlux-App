@@ -66,6 +66,7 @@ internal fun LibEcosedTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
+        shapes = MaterialTheme.shapes,
         typography = Typography,
         content = content
     )
