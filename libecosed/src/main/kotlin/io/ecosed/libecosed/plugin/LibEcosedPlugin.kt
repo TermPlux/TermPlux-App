@@ -1,7 +1,6 @@
 package io.ecosed.libecosed.plugin
 
 import android.app.Application
-import android.content.Context
 import android.content.SharedPreferences
 import android.os.Build
 import androidx.compose.ui.graphics.Color
@@ -19,22 +18,10 @@ import io.ecosed.plugin.PluginChannel
 internal class LibEcosedPlugin : LibEcosed {
 
     private lateinit var mPluginChannel: PluginChannel
-
-    private lateinit var mContext: Context
-
-
     private lateinit var mSharedPreferences: SharedPreferences
 
     override fun onEcosedAdded(binding: PluginBinding) {
-        mPluginChannel = PluginChannel(
-            binding = binding,
-            channel = channel
-        )
-        mPluginChannel.getContext()?.let {
-            mContext = it
-        }
-
-
+        mPluginChannel = PluginChannel(binding = binding, channel = channel)
         mPluginChannel.setMethodCallHandler(handler = this@LibEcosedPlugin)
     }
 
@@ -76,6 +63,7 @@ internal class LibEcosedPlugin : LibEcosed {
     override fun onEcosedMethodCall(call: PluginChannel.MethodCall, result: PluginChannel.Result) {
         when (call.method) {
             getLaunchActivity -> result.success(mPluginChannel.getLaunchActivity(ecosed = this@LibEcosedPlugin))
+            getSettingsActivity -> result.success(mPluginChannel.getSettingsActivity(ecosed = this@LibEcosedPlugin))
             isDebug -> result.success(mPluginChannel.isDebug())
             else -> result.notImplemented()
         }
@@ -86,7 +74,8 @@ internal class LibEcosedPlugin : LibEcosed {
 
     companion object {
         const val channel: String = "libecosed"
-        internal const val getLaunchActivity: String = "launch_app"
+        const val getLaunchActivity: String = "launch_app"
+        const val getSettingsActivity: String = "app_settings"
         const val isDebug: String = "is_debug"
     }
 }

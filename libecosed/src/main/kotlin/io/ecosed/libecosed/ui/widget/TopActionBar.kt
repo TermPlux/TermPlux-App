@@ -8,7 +8,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
@@ -30,10 +29,6 @@ import io.ecosed.libecosed.ui.theme.LibEcosedTheme
 import kotlinx.coroutines.launch
 
 @Composable
-@OptIn(
-    ExperimentalComposeUiApi::class,
-    ExperimentalMaterial3Api::class
-)
 internal fun TopActionBar(
     navController: NavController,
     modifier: Modifier,
@@ -55,18 +50,15 @@ internal fun TopActionBar(
             }
         }
     }
-    val configuration = AppBarConfiguration(
-        navGraph = navController.graph,
-        drawerLayout = openable
-    )
     val toolbar: MaterialToolbar = MaterialToolbar(
         LocalContext.current
-    ).also { toolbar ->
-        update(toolbar)
-    }.apply {
+    ).apply {
         setupWithNavController(
             navController = navController,
-            configuration = configuration
+            configuration = AppBarConfiguration(
+                navGraph = navController.graph,
+                drawerLayout = openable
+            )
         )
         setBackgroundColor(
             Color.Transparent.toArgb()
@@ -75,17 +67,19 @@ internal fun TopActionBar(
     AnimatedVisibility(
         visible = visible,
         modifier = modifier,
-        label = ""
+        label = "TopActionBar"
     ) {
         AndroidView(
             factory = { context ->
                 AppBarLayout(context).apply {
                     addView(toolbar, toolbarParams)
+                    update(toolbar)
                 }
             },
             onReset = { appBar ->
                 appBar.removeView(toolbar)
                 appBar.addView(toolbar, toolbarParams)
+                update(toolbar)
             },
             modifier = modifier,
             update = { appBar ->
@@ -104,7 +98,6 @@ internal fun TopActionBar(
 
 @Composable
 @WidgetPreview
-@OptIn(ExperimentalMaterial3Api::class)
 private fun TopActionBarPreview() {
     val title = stringResource(
         id = R.string.toolbar_preview

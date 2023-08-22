@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -78,6 +79,7 @@ import io.ecosed.libecosed.ui.navigation.ScreenType
 import io.ecosed.libecosed.ui.preview.ScreenPreviews
 import io.ecosed.libecosed.ui.screen.Screen
 import io.ecosed.libecosed.ui.theme.LibEcosedTheme
+import io.ecosed.libecosed.ui.widget.TopActionBar
 import io.ecosed.libecosed.ui.window.ContentType
 import io.ecosed.libecosed.ui.window.DevicePosture
 import io.ecosed.libecosed.ui.window.NavigationType
@@ -91,7 +93,7 @@ internal fun ActivityMain(
     windowSize: WindowSizeClass,
     displayFeatures: List<DisplayFeature>,
     topBarVisible: Boolean,
-
+    viewPager2: ViewPager2,
 
     topBarUpdate: (MaterialToolbar) -> Unit,
     preferenceUpdate: (ViewPager2) -> Unit,
@@ -525,50 +527,51 @@ internal fun ActivityMain(
                     )
                     .nestedScroll(
                         connection = scrollBehavior.nestedScrollConnection
-                    )
-            ) {
-                composable(
-                    route = Screen.Overview.route
-                ) {
-                    ScreenOverview(
-                        topBarVisible = topBarVisible,
-                        drawerState = drawerState,
-                        topBarUpdate = topBarUpdate,
-                        navController = navController,
-                        shizukuVersion = shizukuVersion
-                    )
+                    ),
+                builder = {
+                    composable(
+                        route = Screen.Overview.route
+                    ) {
+                        ScreenOverview(
+                            topBarVisible = topBarVisible,
+                            drawerState = drawerState,
+                            topBarUpdate = topBarUpdate,
+                            navController = navController,
+                            shizukuVersion = shizukuVersion
+                        )
+                    }
+                    composable(
+                        route = Screen.Home.route
+                    ) {
+                        ScreenHome(viewPager2 = viewPager2)
+                    }
+                    composable(
+                        route = Screen.Settings.route
+                    ) {
+                        ScreenSettings(
+                            navControllerCompose = navController,
+                            //  navControllerFragment = subNavController,
+                            scope = scope,
+                            snackBarHostState = snackBarHostState,
+                            current = current,
+                            onTaskBarSettings = taskbar,
+                            onSystemSettings = {},
+                            onDefaultLauncherSettings = {}
+                        )
+                    }
+                    composable(
+                        route = Screen.About.route
+                    ) {
+                        ScreenAbout(
+                            scope = scope,
+                            snackBarHostState = snackBarHostState,
+                            onEasterEgg = {},
+                            onNotice = {},
+                            onSource = {}
+                        )
+                    }
                 }
-                composable(
-                    route = Screen.Home.route
-                ) {
-
-                }
-                composable(
-                    route = Screen.Settings.route
-                ) {
-                    ScreenSettings(
-                        navControllerCompose = navController,
-                        //  navControllerFragment = subNavController,
-                        scope = scope,
-                        snackBarHostState = snackBarHostState,
-                        current = current,
-                        onTaskBarSettings = taskbar,
-                        onSystemSettings = {},
-                        onDefaultLauncherSettings = {}
-                    )
-                }
-                composable(
-                    route = Screen.About.route
-                ) {
-                    ScreenAbout(
-                        scope = scope,
-                        snackBarHostState = snackBarHostState,
-                        onEasterEgg = {},
-                        onNotice = {},
-                        onSource = {}
-                    )
-                }
-            }
+            )
         }
     }
 
@@ -593,7 +596,7 @@ internal fun ActivityMain(
             },
             modifier = Modifier.fillMaxSize(),
             drawerState = drawerState,
-            gesturesEnabled = true
+            gesturesEnabled = false
         ) {
             Row(
                 modifier = Modifier.fillMaxSize()

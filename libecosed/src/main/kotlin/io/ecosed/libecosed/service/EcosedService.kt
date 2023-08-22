@@ -5,8 +5,10 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
@@ -14,6 +16,8 @@ import androidx.core.app.NotificationCompat
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.PermissionUtils
 import com.farmerbb.taskbar.lib.Taskbar
+import com.kongzue.dialogx.dialogs.PopTip
+import io.ecosed.libecosed.BuildConfig
 import io.ecosed.libecosed.EcosedFramework
 import io.ecosed.libecosed.R
 import io.ecosed.libecosed.utils.ChineseCaleUtils
@@ -81,6 +85,26 @@ internal class EcosedService : Service(), Shizuku.OnBinderReceivedListener,
 
     override fun onRequestPermissionResult(requestCode: Int, grantResult: Int) {
 
+    }
+
+    private val mUserServiceArgs = Shizuku.UserServiceArgs(
+        ComponentName(packageName, UserService().javaClass.name)
+    )
+        .daemon(false)
+        .processNameSuffix("service")
+        .debuggable(BuildConfig.DEBUG)
+        .version(AppUtils.getAppVersionCode())
+
+    private fun check() {
+        try {
+            if (Shizuku.checkSelfPermission() != PackageManager.PERMISSION_GRANTED) {
+                Shizuku.requestPermission(0)
+            }
+        } catch (e: Exception) {
+            if (e.javaClass == IllegalStateException().javaClass) {
+                PopTip.show("Shizuku未激活")
+            }
+        }
     }
 
     private fun frameworkVersion(): String {

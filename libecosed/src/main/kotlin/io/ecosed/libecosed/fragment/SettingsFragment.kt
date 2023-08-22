@@ -13,4 +13,10 @@ internal class SettingsFragment : PreferenceFragmentCompat() {
         preferenceManager.sharedPreferencesMode = Context.MODE_PRIVATE
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
     }
+
+    companion object {
+        fun newInstance(): SettingsFragment{
+            return SettingsFragment()
+        }
+    }
 }

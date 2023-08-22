@@ -2,10 +2,14 @@ package io.ecosed.libecosed.activity
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.ComponentName
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.provider.CalendarContract
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
@@ -22,20 +26,30 @@ import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
+import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
+import androidx.viewpager2.widget.ViewPager2
 import androidx.window.layout.DisplayFeature
 import com.blankj.utilcode.util.AppUtils
 import com.google.accompanist.adaptive.calculateDisplayFeatures
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.internal.EdgeToEdgeUtils
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import io.ecosed.libecosed.R
+import io.ecosed.libecosed.adapter.PagerAdapter
 import io.ecosed.libecosed.plugin.LibEcosedPlugin
 import io.ecosed.libecosed.ui.layout.ActivityMain
 import io.ecosed.libecosed.ui.theme.LibEcosedTheme
+import io.ecosed.libecosed.utils.PageTransformerUtils
 import io.ecosed.libecosed.utils.ThemeHelper
 import io.ecosed.plugin.PluginExecutor
 import rikka.core.res.isNight
 import rikka.material.app.MaterialActivity
+
 
 internal class ManagerActivity : MaterialActivity() {
 
@@ -64,8 +78,9 @@ internal class ManagerActivity : MaterialActivity() {
 
 
     private lateinit var mActivity: Activity
-    
-    
+
+    private lateinit var mViewPager2: ViewPager2
+    private lateinit var mMaterialToolbar: MaterialToolbar
 
 
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
@@ -82,6 +97,32 @@ internal class ManagerActivity : MaterialActivity() {
 
         super.onCreate(savedInstanceState)
 
+        val madapter = PagerAdapter(
+            activity = this@ManagerActivity,
+            mainFragment = null,
+            settingsFragment = null
+        )
+
+
+
+//        mMaterialToolbar = MaterialToolbar(this@ManagerActivity).apply {
+//
+//
+//        }
+        mViewPager2 = ViewPager2(this@ManagerActivity).apply {
+
+            isUserInputEnabled = true
+            orientation = ViewPager2.ORIENTATION_HORIZONTAL
+            setPageTransformer(PageTransformerUtils())
+            adapter = madapter
+
+
+        }
+
+ //       this@ManagerActivity.setSupportActionBar(mMaterialToolbar)
+
+
+
 
         setContent {
             val windowSize: WindowSizeClass = calculateWindowSizeClass(activity = this)
@@ -94,8 +135,10 @@ internal class ManagerActivity : MaterialActivity() {
                     displayFeatures = displayFeatures,
                     topBarVisible = actionBarVisible,
                     topBarUpdate = {
-                        this.setSupportActionBar(it)
+                                   this.setSupportActionBar(it)
                     },
+
+                    viewPager2 = mViewPager2,
                     preferenceUpdate = { preference ->
 
                     },
@@ -110,26 +153,49 @@ internal class ManagerActivity : MaterialActivity() {
             }
         }
 
+    }
 
+//    private fun isLauncherEnabled(): Boolean {
+//        try {
+//            val component = ComponentName(this, this.javaClass)
+//            return this.packageManager.getComponentEnabledSetting(component) != PackageManager.COMPONENT_ENABLED_STATE_DISABLED
+//        } catch (ignored: Exception) {
+//        }
+//        return false
+//    }
 
-
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+        intent.categories.forEach { category ->
+            if (category != Intent.CATEGORY_HOME) {
+                super.onBackPressed()
+            }
+        }
     }
 
     override fun setSupportActionBar(toolbar: Toolbar?) {
-        super.setSupportActionBar(toolbar)
-        supportActionBar?.apply {
-            val params = ActionBar.LayoutParams(
-                ActionBar.LayoutParams.MATCH_PARENT,
-                ActionBar.LayoutParams.MATCH_PARENT
-            )
-
-            val view = TextView(this@ManagerActivity).apply {
-                text = "CustomView"
+        super.setSupportActionBar(toolbar).let {
+            supportActionBar?.apply {
+                setDisplayShowCustomEnabled(true)
+                setCustomView(
+                    TabLayout(this@ManagerActivity).apply {
+                        setBackgroundColor(Color.Transparent.toArgb())
+                        tabMode = TabLayout.MODE_AUTO
+                        TabLayoutMediator(this, mViewPager2) { tab, position ->
+                            tab.text = when (position) {
+                                0 -> "主页"
+                                1 -> "设置"
+                                2 -> "设置"
+                                else -> "Error"
+                            }
+                        }.attach()
+                    },
+                    ActionBar.LayoutParams(
+                        ActionBar.LayoutParams.MATCH_PARENT,
+                        ActionBar.LayoutParams.MATCH_PARENT
+                    )
+                )
             }
-
-            setCustomView(view, params)
-            displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
-            setDisplayShowCustomEnabled(true)
         }
     }
 
@@ -214,7 +280,6 @@ internal class ManagerActivity : MaterialActivity() {
 
 
     }
-
 
 
 }

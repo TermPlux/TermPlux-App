@@ -1,29 +1,21 @@
 package io.ecosed.libecosed.ui.widget
 
 import android.widget.FrameLayout
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.viewpager2.widget.ViewPager2
 import io.ecosed.libecosed.ui.preview.WidgetPreview
+import io.ecosed.libecosed.ui.theme.LibEcosedTheme
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun Preference(
+fun Pager(
     modifier: Modifier,
-    update: (ViewPager2) -> Unit
+    viewPager2: ViewPager2
 ) {
-    val preference = ViewPager2(
-        LocalContext.current
-    ).apply {
-        isUserInputEnabled = true
-    }.also {
-        update(it)
-    }
-
-    val preferenceParams: FrameLayout.LayoutParams = FrameLayout.LayoutParams(
+    val params: FrameLayout.LayoutParams = FrameLayout.LayoutParams(
         FrameLayout.LayoutParams.MATCH_PARENT,
         FrameLayout.LayoutParams.MATCH_PARENT
     )
@@ -31,22 +23,27 @@ fun Preference(
     AndroidView(
         factory = { context ->
             FrameLayout(context).apply {
-                addView(preference, preferenceParams)
+                addView(viewPager2, params)
             }
         },
         onReset = { frame ->
-            frame.removeView(preference)
-            frame.addView(preference, preferenceParams)
+            frame.removeView(viewPager2)
+            frame.addView(viewPager2, params)
         },
         modifier = modifier,
         onRelease = { frame ->
-            frame.removeView(preference)
+            frame.removeView(viewPager2)
         }
     )
 }
 
 @Composable
 @WidgetPreview
-fun PreferencePreview() {
-
+fun HomePagerPreview() {
+    LibEcosedTheme {
+        Pager(
+            modifier = Modifier.fillMaxSize(),
+            viewPager2 = ViewPager2(LocalContext.current)
+        )
+    }
 }

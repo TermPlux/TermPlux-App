@@ -26,6 +26,6 @@ dependencies {
 
 3.点击SyncNow完成工程设定.
 
-4.配置Application全局类, 点击查看[示例代码](https://github.dev/ecosed/libecosed/blob/master/demo/src/main/kotlin/io/ecosed/libecosed_example/MyApplication.kt)
+4.配置Application全局类, 点击查看[示例代码](https://github.dev/ecosed/libecosed/blob/master/demo/src/main/kotlin/io/ecosed/libecosed_example/MyApplication.kt).
 
 5.删除AndroidManifest.mxl中LaunchActivity的Launch类型.
