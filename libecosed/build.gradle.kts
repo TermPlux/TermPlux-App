@@ -94,15 +94,6 @@ configurations.all {
     )
 }
 
-/**
- * 我也不知道这是怎么个事儿,
- * 部分依赖一更新就报错要求api34,
- * 改了api34以后又报错Gradle不支持,
- * 都已经最新了还不支持那我更新测试版AndroidStudio,
- * 结果整个项目都不能编译了,
- * 我他妈也是服了谷歌这个老六,
- * 等Android14的release出来了再说吧.
- */
 dependencies {
     // 第三方库
     // AndroidUtilCode: https://github.com/Blankj/AndroidUtilCode
@@ -161,21 +152,21 @@ dependencies {
     implementation(dependencyNotation = "androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
     implementation(dependencyNotation = "androidx.activity:activity-compose:1.7.2")
     implementation(dependencyNotation = platform(notation = "androidx.compose:compose-bom:2023.03.00"))
-    implementation(dependencyNotation = "androidx.compose.ui:ui")
-    implementation(dependencyNotation = "androidx.compose.ui:ui-graphics")
-    implementation(dependencyNotation = "androidx.compose.ui:ui-tooling-preview")
-    implementation(dependencyNotation = "androidx.compose.ui:ui-viewbinding")
-    implementation(dependencyNotation = "androidx.compose.material3:material3")
-    implementation(dependencyNotation = "androidx.compose.material3:material3-window-size-class")
-    implementation(dependencyNotation = "androidx.compose.material:material-icons-core")
-    implementation(dependencyNotation = "androidx.compose.material:material-icons-extended")
+    implementation(dependencyNotation = "androidx.compose.ui:ui:1.5.0")
+    implementation(dependencyNotation = "androidx.compose.ui:ui-graphics:1.5.0")
+    implementation(dependencyNotation = "androidx.compose.ui:ui-tooling-preview:1.5.0")
+    implementation(dependencyNotation = "androidx.compose.ui:ui-viewbinding:1.5.0")
+    implementation(dependencyNotation = "androidx.compose.material3:material3:1.1.1")
+    implementation(dependencyNotation = "androidx.compose.material3:material3-window-size-class:1.1.1")
+    implementation(dependencyNotation = "androidx.compose.material:material-icons-core:1.5.0")
+    implementation(dependencyNotation = "androidx.compose.material:material-icons-extended:1.5.0")
     // 测试和调试
     testImplementation(dependencyNotation = "junit:junit:4.13.2")
     androidTestImplementation(dependencyNotation = "androidx.test.ext:junit:1.1.5")
     androidTestImplementation(dependencyNotation = "androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation(dependencyNotation = platform(notation = "androidx.compose:compose-bom:2023.03.00"))
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.5.0")
     androidTestImplementation(dependencyNotation = "androidx.navigation:navigation-testing:2.7.0")
-    debugImplementation(dependencyNotation = "androidx.compose.ui:ui-tooling")
-    debugImplementation(dependencyNotation = "androidx.compose.ui:ui-test-manifest")
+    debugImplementation(dependencyNotation = "androidx.compose.ui:ui-tooling:1.5.0")
+    debugImplementation(dependencyNotation = "androidx.compose.ui:ui-test-manifest:1.5.0")
 }

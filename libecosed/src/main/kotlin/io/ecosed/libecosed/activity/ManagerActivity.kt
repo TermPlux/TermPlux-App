@@ -118,7 +118,7 @@ internal class ManagerActivity : MaterialActivity() {
     override fun setSupportActionBar(toolbar: Toolbar?) {
         super.setSupportActionBar(toolbar)
         supportActionBar?.apply {
-            val lp = ActionBar.LayoutParams(
+            val params = ActionBar.LayoutParams(
                 ActionBar.LayoutParams.MATCH_PARENT,
                 ActionBar.LayoutParams.MATCH_PARENT
             )
@@ -127,7 +127,7 @@ internal class ManagerActivity : MaterialActivity() {
                 text = "CustomView"
             }
 
-            setCustomView(view, lp)
+            setCustomView(view, params)
             displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
             setDisplayShowCustomEnabled(true)
         }

@@ -1,9 +1,7 @@
 package io.ecosed.libecosed.plugin
 
-import android.app.Activity
 import android.app.Application
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Build
 import androidx.compose.ui.graphics.Color

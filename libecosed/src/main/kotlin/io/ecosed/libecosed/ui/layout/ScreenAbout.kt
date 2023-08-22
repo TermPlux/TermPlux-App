@@ -22,6 +22,7 @@ import androidx.compose.material.icons.filled.Numbers
 import androidx.compose.material.icons.filled.PeopleAlt
 import androidx.compose.material.icons.filled.Source
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
@@ -30,6 +31,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -46,6 +48,7 @@ import io.ecosed.libecosed.ui.theme.LibEcosedTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ScreenAbout(
     scope: CoroutineScope,
@@ -56,7 +59,7 @@ internal fun ScreenAbout(
 ) {
     val scrollState = rememberScrollState()
     val position: MutableState<Int> = remember {
-        mutableStateOf(value = 0)
+        mutableIntStateOf(value = 0)
     }
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -335,28 +338,28 @@ internal fun ScreenAbout(
                     }
                 }
             }
-
-
             OutlinedCard(
-                modifier = Modifier.padding(
-                    start = 12.dp,
-                    top = 6.dp,
-                    end = 12.dp,
-                    bottom = 6.dp
-                )
+                onClick = {},
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        start = 12.dp,
+                        top = 6.dp,
+                        end = 12.dp,
+                        bottom = 6.dp
+                    )
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable {
-
-                        }
                         .padding(
                             all = 24.dp
                         ),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Column() {
+                    Column(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
                         Text(
                             text = "支持开发",
                             style = MaterialTheme.typography.titleSmall
@@ -374,25 +377,27 @@ internal fun ScreenAbout(
                 }
             }
             OutlinedCard(
-                modifier = Modifier.padding(
-                    start = 12.dp,
-                    top = 6.dp,
-                    end = 12.dp,
-                    bottom = 6.dp
-                )
+                onClick = {},
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        start = 12.dp,
+                        top = 6.dp,
+                        end = 12.dp,
+                        bottom = 6.dp
+                    )
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable {
-
-                        }
                         .padding(
                             all = 24.dp
                         ),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Column() {
+                    Column(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
                         Text(
                             text = "了解 Ecosed Framework",
                             style = MaterialTheme.typography.titleSmall
@@ -409,11 +414,6 @@ internal fun ScreenAbout(
                     }
                 }
             }
-
-
-
-
-
             Surface(
                 modifier = Modifier
                     .fillMaxWidth()
