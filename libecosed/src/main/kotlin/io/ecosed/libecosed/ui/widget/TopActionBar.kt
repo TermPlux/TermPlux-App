@@ -63,7 +63,7 @@ internal fun TopActionBar(
     AnimatedVisibility(
         visible = visible,
         modifier = modifier,
-        label = ""
+        label = "TopActionBar"
     ) {
         AndroidView(
             factory = { context ->
