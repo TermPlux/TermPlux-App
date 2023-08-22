@@ -3,11 +3,11 @@ LibEcosed
 
 如何使用
 
-`repositories { 
+repositories { 
     maven(url = "https://jitpack.io")
-}`
+}
 
-`dependencies {
+dependencies {
     implementation(dependencyNotation = "com.github.ecosed:plugin:[![](https://jitpack.io/v/ecosed/plugin.svg)](https://jitpack.io/#ecosed/plugin)")
     implementation(
         dependencyNotation = "com.github.ecosed:libecosed:[![](https://jitpack.io/v/ecosed/libecosed.svg)](https://jitpack.io/#ecosed/libecosed)",
@@ -18,4 +18,4 @@ LibEcosed
             )
         }
     )
-}`
+}
