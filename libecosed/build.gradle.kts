@@ -99,7 +99,7 @@ dependencies {
     // AndroidUtilCode: https://github.com/Blankj/AndroidUtilCode
     implementation(dependencyNotation = "com.blankj:utilcodex:1.31.1")
     // EcosedPlugin: https://github.com/ecosed/plugin
-    implementation(dependencyNotation = "com.github.ecosed:plugin:4.1.0")
+    implementation(dependencyNotation = "com.github.ecosed:plugin:4.2.0")
     // LibTaskbar: https://github.com/farmerbb/libtaskbar
     implementation(dependencyNotation = "com.github.farmerbb:libtaskbar:2.2.0")
     // DialogX: https://github.com/kongzue/DialogX
