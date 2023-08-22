@@ -383,11 +383,11 @@ internal fun ActivityMain(
                 ) {
                     LargeTopAppBar(
                         title = {
-                            items.forEach { screen ->
-                                if (screen.route == currentDestination?.route){
-                                    Text(text = stringResource(id = screen.title))
-                                }
-                            }
+                            Text(
+                                text = stringResource(
+                                    id = R.string.lib_name
+                                )
+                            )
                         },
                         modifier = Modifier.fillMaxWidth(),
                         navigationIcon = {
