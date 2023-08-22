@@ -596,7 +596,7 @@ internal fun ActivityMain(
             },
             modifier = Modifier.fillMaxSize(),
             drawerState = drawerState,
-            gesturesEnabled = false
+            gesturesEnabled = true
         ) {
             Row(
                 modifier = Modifier.fillMaxSize()

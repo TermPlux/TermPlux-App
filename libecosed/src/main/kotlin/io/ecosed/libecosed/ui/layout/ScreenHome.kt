@@ -25,20 +25,24 @@ internal fun ScreenHome(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            Image(
-                painter = painterResource(
-                    id = R.drawable.custom_wallpaper_24
-                ),
-                contentDescription = null,
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.FillBounds
-            )
-            Pager(
-                modifier = Modifier.fillMaxSize(),
-                viewPager2 = viewPager2
-            )
-        }
+        Pager(
+            modifier = Modifier.fillMaxSize(),
+            viewPager2 = viewPager2
+        )
+//        Box(modifier = Modifier.fillMaxSize()) {
+//            Image(
+//                painter = painterResource(
+//                    id = R.drawable.custom_wallpaper_24
+//                ),
+//                contentDescription = null,
+//                modifier = Modifier.fillMaxSize(),
+//                contentScale = ContentScale.FillBounds
+//            )
+//            Pager(
+//                modifier = Modifier.fillMaxSize(),
+//                viewPager2 = viewPager2
+//            )
+//        }
 
     }
 }

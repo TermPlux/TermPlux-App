@@ -4,7 +4,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -50,16 +49,13 @@ internal fun TopActionBar(
             }
         }
     }
+    val configuration = AppBarConfiguration(
+        navGraph = navController.graph,
+        drawerLayout = openable
+    )
     val toolbar: MaterialToolbar = MaterialToolbar(
         LocalContext.current
     ).apply {
-        setupWithNavController(
-            navController = navController,
-            configuration = AppBarConfiguration(
-                navGraph = navController.graph,
-                drawerLayout = openable
-            )
-        )
         setBackgroundColor(
             Color.Transparent.toArgb()
         )
@@ -67,19 +63,27 @@ internal fun TopActionBar(
     AnimatedVisibility(
         visible = visible,
         modifier = modifier,
-        label = "TopActionBar"
+        label = ""
     ) {
         AndroidView(
             factory = { context ->
                 AppBarLayout(context).apply {
                     addView(toolbar, toolbarParams)
                     update(toolbar)
+                    toolbar.setupWithNavController(
+                        navController = navController,
+                        configuration = configuration
+                    )
                 }
             },
             onReset = { appBar ->
                 appBar.removeView(toolbar)
                 appBar.addView(toolbar, toolbarParams)
                 update(toolbar)
+                toolbar.setupWithNavController(
+                    navController = navController,
+                    configuration = configuration
+                )
             },
             modifier = modifier,
             update = { appBar ->

@@ -110,13 +110,10 @@ internal class ManagerActivity : MaterialActivity() {
 //
 //        }
         mViewPager2 = ViewPager2(this@ManagerActivity).apply {
-
-            isUserInputEnabled = true
+            isUserInputEnabled = false
             orientation = ViewPager2.ORIENTATION_HORIZONTAL
-            setPageTransformer(PageTransformerUtils())
+//            setPageTransformer(PageTransformerUtils())
             adapter = madapter
-
-
         }
 
  //       this@ManagerActivity.setSupportActionBar(mMaterialToolbar)
