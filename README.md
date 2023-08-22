@@ -3,8 +3,8 @@ LibEcosed
 
 如何使用
 
-repositories { 
-    maven(url = "https://jitpack.io")
+repositories {
+----maven(url = "https://jitpack.io")
 }
 
 dependencies {  
