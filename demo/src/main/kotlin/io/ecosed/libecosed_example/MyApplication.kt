@@ -19,7 +19,7 @@ class MyApplication : Application(), EcosedApplication, LibEcosedImpl by LibEcos
         override val getPluginEngine: PluginEngine
             get() = mEngine
 
-        override val getLibEcosed: LibEcosed?
+        override val getLibEcosed: LibEcosed
             get() = mLibEcosed
 
         override val getPluginList: ArrayList<EcosedPlugin>
