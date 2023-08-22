@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace = "io.ecosed.libecosed"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         minSdk = 24
@@ -149,12 +149,12 @@ dependencies {
     implementation(dependencyNotation = "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
     implementation(dependencyNotation = "androidx.activity:activity-compose:1.7.2")
     implementation(dependencyNotation = "com.google.android.gms:play-services-base:18.2.0")
-    implementation(dependencyNotation = "com.google.accompanist:accompanist-webview:0.30.1")
-    implementation(dependencyNotation = "com.google.accompanist:accompanist-systemuicontroller:0.30.1")
-    implementation(dependencyNotation = "com.google.accompanist:accompanist-adaptive:0.30.1")
-    implementation(dependencyNotation = "com.google.accompanist:accompanist-drawablepainter:0.30.1")
-    implementation(dependencyNotation = "androidx.navigation:navigation-compose:2.6.0")
-    implementation(dependencyNotation = "androidx.navigation:navigation-ui-ktx:2.6.0")
+    implementation(dependencyNotation = "com.google.accompanist:accompanist-webview:0.32.0")
+    implementation(dependencyNotation = "com.google.accompanist:accompanist-systemuicontroller:0.32.0")
+    implementation(dependencyNotation = "com.google.accompanist:accompanist-adaptive:0.32.0")
+    implementation(dependencyNotation = "com.google.accompanist:accompanist-drawablepainter:0.32.0")
+    implementation(dependencyNotation = "androidx.navigation:navigation-compose:2.7.0")
+    implementation(dependencyNotation = "androidx.navigation:navigation-ui-ktx:2.7.0")
     implementation(dependencyNotation = "androidx.core:core-ktx:1.10.1")
     implementation(dependencyNotation = "androidx.appcompat:appcompat:1.6.1")
     implementation(dependencyNotation = "com.google.android.material:material:1.9.0")
@@ -175,7 +175,7 @@ dependencies {
     androidTestImplementation(dependencyNotation = "androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation(dependencyNotation = platform(notation = "androidx.compose:compose-bom:2023.03.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
-    androidTestImplementation(dependencyNotation = "androidx.navigation:navigation-testing:2.6.0")
+    androidTestImplementation(dependencyNotation = "androidx.navigation:navigation-testing:2.7.0")
     debugImplementation(dependencyNotation = "androidx.compose.ui:ui-tooling")
     debugImplementation(dependencyNotation = "androidx.compose.ui:ui-test-manifest")
 }
