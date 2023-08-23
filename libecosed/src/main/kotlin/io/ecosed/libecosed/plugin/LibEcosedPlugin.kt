@@ -62,8 +62,8 @@ internal class LibEcosedPlugin : LibEcosed {
 
     override fun onEcosedMethodCall(call: PluginChannel.MethodCall, result: PluginChannel.Result) {
         when (call.method) {
-            getLaunchActivity -> result.success(mPluginChannel.getLaunchActivity(ecosed = this@LibEcosedPlugin))
-            getSettingsActivity -> result.success(mPluginChannel.getSettingsActivity(ecosed = this@LibEcosedPlugin))
+            getMainFragment -> result.success(mPluginChannel.getMainFragment(ecosed = this@LibEcosedPlugin))
+            getProductLogo -> result.success(mPluginChannel.getProductLogo(ecosed = this@LibEcosedPlugin))
             isDebug -> result.success(mPluginChannel.isDebug())
             else -> result.notImplemented()
         }
@@ -74,8 +74,8 @@ internal class LibEcosedPlugin : LibEcosed {
 
     companion object {
         const val channel: String = "libecosed"
-        const val getLaunchActivity: String = "launch_app"
-        const val getSettingsActivity: String = "app_settings"
+        const val getMainFragment: String = "fragment_main"
+        const val getProductLogo: String = "logo_product"
         const val isDebug: String = "is_debug"
     }
 }

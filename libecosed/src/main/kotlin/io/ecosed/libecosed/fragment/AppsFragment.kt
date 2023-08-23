@@ -114,4 +114,10 @@ internal class AppsFragment : Fragment() {
             )
         }
     }
+
+    companion object {
+        fun newInstance(): AppsFragment{
+            return AppsFragment()
+        }
+    }
 }

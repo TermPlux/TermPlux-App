@@ -1,20 +1,16 @@
 package io.ecosed.libecosed.activity
 
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.ComponentName
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.content.res.Resources
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.provider.CalendarContract
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.ActionBar
@@ -29,13 +25,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
-import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
+import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import androidx.window.layout.DisplayFeature
 import com.blankj.utilcode.util.AppUtils
 import com.google.accompanist.adaptive.calculateDisplayFeatures
-import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.internal.EdgeToEdgeUtils
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -44,7 +39,6 @@ import io.ecosed.libecosed.adapter.PagerAdapter
 import io.ecosed.libecosed.plugin.LibEcosedPlugin
 import io.ecosed.libecosed.ui.layout.ActivityMain
 import io.ecosed.libecosed.ui.theme.LibEcosedTheme
-import io.ecosed.libecosed.utils.PageTransformerUtils
 import io.ecosed.libecosed.utils.ThemeHelper
 import io.ecosed.plugin.PluginExecutor
 import rikka.core.res.isNight
@@ -77,20 +71,26 @@ internal class ManagerActivity : MaterialActivity() {
     }
 
 
-    private lateinit var mActivity: Activity
+    private lateinit var mMainFragment: Fragment
+    private lateinit var mProductLogo: Drawable
 
     private lateinit var mViewPager2: ViewPager2
-    private lateinit var mMaterialToolbar: MaterialToolbar
 
 
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        mActivity = PluginExecutor.execMethodCall(
+        mMainFragment = PluginExecutor.execMethodCall(
             activity = this@ManagerActivity,
             name = LibEcosedPlugin.channel,
-            method = LibEcosedPlugin.getLaunchActivity
-        ) as Activity
+            method = LibEcosedPlugin.getMainFragment
+        ) as Fragment
+
+        mProductLogo = PluginExecutor.execMethodCall(
+            activity = this@ManagerActivity,
+            name = LibEcosedPlugin.channel,
+            method = LibEcosedPlugin.getProductLogo
+        ) as Drawable
 
         mVisible = true
         title = AppUtils.getAppName()
@@ -99,27 +99,14 @@ internal class ManagerActivity : MaterialActivity() {
 
         val madapter = PagerAdapter(
             activity = this@ManagerActivity,
-            mainFragment = null,
-            settingsFragment = null
+            mainFragment = mMainFragment
         )
 
-
-
-//        mMaterialToolbar = MaterialToolbar(this@ManagerActivity).apply {
-//
-//
-//        }
         mViewPager2 = ViewPager2(this@ManagerActivity).apply {
             isUserInputEnabled = false
             orientation = ViewPager2.ORIENTATION_HORIZONTAL
-//            setPageTransformer(PageTransformerUtils())
             adapter = madapter
         }
-
- //       this@ManagerActivity.setSupportActionBar(mMaterialToolbar)
-
-
-
 
         setContent {
             val windowSize: WindowSizeClass = calculateWindowSizeClass(activity = this)
@@ -152,15 +139,6 @@ internal class ManagerActivity : MaterialActivity() {
 
     }
 
-//    private fun isLauncherEnabled(): Boolean {
-//        try {
-//            val component = ComponentName(this, this.javaClass)
-//            return this.packageManager.getComponentEnabledSetting(component) != PackageManager.COMPONENT_ENABLED_STATE_DISABLED
-//        } catch (ignored: Exception) {
-//        }
-//        return false
-//    }
-
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         intent.categories.forEach { category ->
@@ -181,7 +159,7 @@ internal class ManagerActivity : MaterialActivity() {
                         TabLayoutMediator(this, mViewPager2) { tab, position ->
                             tab.text = when (position) {
                                 0 -> "主页"
-                                1 -> "设置"
+                                1 -> "桌面"
                                 2 -> "设置"
                                 else -> "Error"
                             }
