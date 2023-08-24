@@ -2,13 +2,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.INTERNET" /> <!-- 完全的网络访问权限 -->
     <uses-permission
         android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" /> <!-- 获取所有软件包 -->
+
     <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" /> <!-- 删除软件包 -->
+
     <uses-permission android:name="android.permission.FAKE_PACKAGE_SIGNATURE" /> <!-- 虚拟签名欺骗 -->
+
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> <!-- 前台服务 -->
+
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" /> <!-- 弹出通知 -->
 
     <application>
@@ -18,7 +21,7 @@
             android:value="@string/fake_signature" />
 
         <activity
-            android:name=".activity.ManagerActivity"
+            android:name=".activity.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.LibEcosed">
             <meta-data
@@ -44,12 +47,12 @@
         <service
             android:name=".service.BillingService"
             android:enabled="true"
-            android:exported="false"/>
+            android:exported="false" />
 
         <service
             android:name=".service.LicensingService"
             android:enabled="true"
-            android:exported="false"/>
+            android:exported="false" />
 
         <service
             android:name=".service.LiveWallpaper"
@@ -88,6 +91,7 @@
             android:exported="true"
             android:multiprocess="false"
             android:permission="android.permission.INTERACT_ACROSS_USERS_FULL" />
+
     </application>
 
 </manifest>

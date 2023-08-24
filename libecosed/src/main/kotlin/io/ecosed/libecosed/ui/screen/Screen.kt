@@ -3,10 +3,14 @@ package io.ecosed.libecosed.ui.screen
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Android
+import androidx.compose.material.icons.twotone.AppSettingsAlt
+import androidx.compose.material.icons.twotone.Apps
+import androidx.compose.material.icons.twotone.Dashboard
 import androidx.compose.material.icons.twotone.FlutterDash
 import androidx.compose.material.icons.twotone.Home
 import androidx.compose.material.icons.twotone.Info
 import androidx.compose.material.icons.twotone.Settings
+import androidx.compose.material.icons.twotone.Star
 import androidx.compose.material.icons.twotone.Title
 import androidx.compose.ui.graphics.vector.ImageVector
 import io.ecosed.libecosed.R
@@ -34,7 +38,7 @@ internal sealed class Screen constructor(
         type = ScreenType.Compose,
         item = ItemType.Default,
         route = ScreenRoute.routeOverview,
-        imageVector = Icons.TwoTone.Home,
+        imageVector = Icons.TwoTone.Dashboard,
         title = R.string.menu_overview
     )
 
@@ -42,7 +46,7 @@ internal sealed class Screen constructor(
         type = ScreenType.Compose,
         item = ItemType.Default,
         route = ScreenRoute.routeHome,
-        imageVector = Icons.TwoTone.FlutterDash,
+        imageVector = Icons.TwoTone.Home,
         title = R.string.menu_home
     )
 
@@ -76,5 +80,29 @@ internal sealed class Screen constructor(
         route = ScreenRoute.Title,
         imageVector = Icons.TwoTone.Title,
         title = R.string.title_fragment
+    )
+
+    data object Main: Screen(
+        type = ScreenType.Fragment,
+        item = ItemType.Default,
+        route = "0",
+        imageVector = Icons.TwoTone.Home,
+        title = R.string.menu_home
+    )
+
+    data object Apps: Screen(
+        type = ScreenType.Fragment,
+        item = ItemType.Default,
+        route = "1",
+        imageVector = Icons.TwoTone.Apps,
+        title = R.string.menu_apps
+    )
+
+    data object Preference: Screen(
+        type = ScreenType.Fragment,
+        item = ItemType.Default,
+        route = "2",
+        imageVector = Icons.TwoTone.AppSettingsAlt,
+        title = R.string.menu_preference
     )
 }

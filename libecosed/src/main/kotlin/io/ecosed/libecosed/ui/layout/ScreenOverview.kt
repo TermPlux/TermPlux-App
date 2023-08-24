@@ -1,14 +1,12 @@
 package io.ecosed.libecosed.ui.layout
 
-import android.app.Activity
+import android.os.Build
 import android.system.Os
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -17,51 +15,30 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AppSettingsAlt
-import androidx.compose.material.icons.filled.Apps
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.OpenInNew
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.SelectAll
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.AppSettingsAlt
-import androidx.compose.material.icons.outlined.Apps
-import androidx.compose.material.icons.outlined.Category
 import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material.icons.outlined.KeyboardDoubleArrowRight
 import androidx.compose.material.icons.outlined.OpenInNew
 import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material.icons.twotone.AppSettingsAlt
-import androidx.compose.material.icons.twotone.Info
-import androidx.compose.material.icons.twotone.OpenInNew
-import androidx.compose.material.icons.twotone.Settings
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -77,6 +54,9 @@ import io.ecosed.libecosed.ui.preview.ScreenPreviews
 import io.ecosed.libecosed.ui.screen.Screen
 import io.ecosed.libecosed.ui.theme.LibEcosedTheme
 import io.ecosed.libecosed.ui.widget.TopActionBar
+import io.ecosed.libecosed.ui.window.NavigationType
+import kotlinx.coroutines.launch
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -85,6 +65,7 @@ internal fun ScreenOverview(
     topBarVisible: Boolean,
     drawerState: DrawerState,
     topBarUpdate: (MaterialToolbar) -> Unit,
+    current: (Int) -> Unit,
     shizukuVersion: String
 ) {
     val scrollState = rememberScrollState()
@@ -116,7 +97,21 @@ internal fun ScreenOverview(
                 ) {
                     Card(
                         onClick = {
-
+                            current(
+                                Screen.Main.route.toInt()
+                            ).also {
+                                navController.navigate(
+                                    route = Screen.Home.route
+                                ) {
+                                    popUpTo(
+                                        id = navController.graph.findStartDestination().id
+                                    ) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            }
                         },
                         modifier = Modifier
                             .fillMaxSize()
@@ -142,13 +137,37 @@ internal fun ScreenOverview(
                                 painter = rememberDrawablePainter(
                                     drawable = AppUtils.getAppIcon()
                                 ),
-                                contentDescription = null
+                                contentDescription = null,
+                                modifier = Modifier.fillMaxWidth(),
+                                alignment = Alignment.CenterStart
                             )
                             Box(
                                 modifier = Modifier.fillMaxSize(),
                                 contentAlignment = Alignment.CenterStart
                             ) {
-                                Text(text = "666")
+                                Column(
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Text(
+                                        text = AppUtils.getAppName(),
+                                        modifier = Modifier.fillMaxWidth(),
+                                        maxLines = 1,
+                                        style = MaterialTheme.typography.labelLarge
+                                    )
+                                    Spacer(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .height(
+                                                height = 8.dp
+                                            )
+                                    )
+                                    Text(
+                                        text = "by LibEcosed",
+                                        modifier = Modifier.fillMaxWidth(),
+                                        maxLines = 1,
+                                        style = MaterialTheme.typography.bodyMedium
+                                    )
+                                }
                             }
                         }
                     }
@@ -452,6 +471,75 @@ internal fun ScreenOverview(
             }
 
 
+//            OutlinedCard(
+//                onClick = {
+//
+//                },
+//                modifier = Modifier.padding(
+//                    start = 12.dp,
+//                    top = 6.dp,
+//                    end = 12.dp,
+//                    bottom = 6.dp
+//                )
+//            ) {
+//                Column(
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .padding(
+//                            all = 24.dp
+//                        )
+//                ) {
+//                    Text(
+//                        text = "Android 版本",
+//                        style = MaterialTheme.typography.bodyLarge
+//                    )
+//                    Text(
+//                        text = Build.VERSION.SDK_INT.toString(),
+//                        style = MaterialTheme.typography.bodyMedium
+//                    )
+//                    Spacer(
+//                        modifier = Modifier.height(
+//                            height = 16.dp
+//                        )
+//                    )
+//                    Text(
+//                        text = stringResource(id = R.string.kernel_version),
+//                        style = MaterialTheme.typography.bodyLarge
+//                    )
+//                    Text(
+//                        text = Os.uname().release,
+//                        style = MaterialTheme.typography.bodyMedium
+//                    )
+//                    Spacer(
+//                        modifier = Modifier.height(
+//                            height = 16.dp
+//                        )
+//                    )
+//                    Text(
+//                        text = stringResource(id = R.string.device_arch),
+//                        style = MaterialTheme.typography.bodyLarge
+//                    )
+//                    Text(
+//                        text = Os.uname().machine,
+//                        style = MaterialTheme.typography.bodyMedium
+//                    )
+//                    Spacer(
+//                        modifier = Modifier.height(
+//                            height = 16.dp
+//                        )
+//                    )
+//                    Text(
+//                        text = stringResource(id = R.string.shizuku_version),
+//                        style = MaterialTheme.typography.bodyLarge
+//                    )
+//                    Text(
+//                        text = shizukuVersion,
+//                        style = MaterialTheme.typography.bodyMedium
+//                    )
+//                }
+//            }
+
+
             Surface(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -469,7 +557,21 @@ internal fun ScreenOverview(
                     Row {
                         OutlinedIconButton(
                             onClick = {
-
+                                current(
+                                    Screen.Main.route.toInt()
+                                ).also {
+                                    navController.navigate(
+                                        route = Screen.Home.route
+                                    ) {
+                                        popUpTo(
+                                            id = navController.graph.findStartDestination().id
+                                        ) {
+                                            saveState = true
+                                        }
+                                        launchSingleTop = true
+                                        restoreState = true
+                                    }
+                                }
                             }
                         ) {
                             Icon(
@@ -484,7 +586,17 @@ internal fun ScreenOverview(
                         )
                         OutlinedIconButton(
                             onClick = {
-
+                                navController.navigate(
+                                    route = Screen.Settings.route
+                                ) {
+                                    popUpTo(
+                                        id = navController.graph.findStartDestination().id
+                                    ) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
                             }
                         ) {
                             Icon(
@@ -542,7 +654,6 @@ internal fun ScreenOverview(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @ScreenPreviews
 @Composable
 private fun ScreenOverviewPreview() {
@@ -554,6 +665,7 @@ private fun ScreenOverviewPreview() {
             drawerState = rememberDrawerState(
                 initialValue = DrawerValue.Closed
             ),
+            current = {},
             topBarUpdate = {}
         )
     }

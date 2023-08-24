@@ -3,5 +3,8 @@
 
     <style name="Theme.LibEcosed" parent="Theme.Material3.Light.NoActionBar" />
 
-    <style name="Theme.LibEcosed.Taskbar" parent="Theme.Material3.DynamicColors.Light" />
+    <style name="Theme.LibEcosed.Taskbar" parent="Theme.Material3.Light" />
+
+    <style name="Theme.LibEcosed.TaskbarDynamic" parent="Theme.Material3.DynamicColors.Light" />
+
 </resources>

@@ -12,6 +12,7 @@ import io.ecosed.plugin.EcosedHost
 import io.ecosed.plugin.EcosedPlugin
 import io.ecosed.plugin.LibEcosed
 import io.ecosed.plugin.PluginEngine
+import io.ecosed.plugin.PluginExecutor
 
 class MyApplication : Application(), EcosedApplication, LibEcosedImpl by LibEcosedBuilder {
 
@@ -51,6 +52,7 @@ class MyApplication : Application(), EcosedApplication, LibEcosedImpl by LibEcos
             isUseHiddenApi = true
         )
         mEngine.attach()
+
     }
 
     override fun onTerminate() {

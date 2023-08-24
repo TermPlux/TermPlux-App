@@ -1,6 +1,9 @@
 package io.ecosed.libecosed.plugin
 
 import android.app.Application
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.content.SharedPreferences
 import android.os.Build
 import androidx.compose.ui.graphics.Color
@@ -10,6 +13,7 @@ import com.farmerbb.taskbar.lib.Taskbar
 import com.google.android.material.color.DynamicColors
 import com.kongzue.dialogx.DialogX
 import com.kongzue.dialogx.style.IOSStyle
+import io.ecosed.libecosed.R
 import io.ecosed.libecosed.settings.EcosedSettings
 import io.ecosed.plugin.LibEcosed
 import io.ecosed.plugin.PluginBinding
@@ -18,7 +22,6 @@ import io.ecosed.plugin.PluginChannel
 internal class LibEcosedPlugin : LibEcosed {
 
     private lateinit var mPluginChannel: PluginChannel
-    private lateinit var mSharedPreferences: SharedPreferences
 
     override fun onEcosedAdded(binding: PluginBinding) {
         mPluginChannel = PluginChannel(binding = binding, channel = channel)
@@ -27,37 +30,6 @@ internal class LibEcosedPlugin : LibEcosed {
 
     override fun onEcosedRemoved(binding: PluginBinding) {
         mPluginChannel.setMethodCallHandler(handler = null)
-    }
-
-    override fun initSDK(application: Application) {
-        super.initSDK(application)
-
-        EcosedSettings.initialize(context = application)
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(application)
-
-        Taskbar.setEnabled(
-            application,
-            mSharedPreferences.getBoolean(
-                "desktop",
-                true
-            ) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
-        )
-        if (mSharedPreferences.getBoolean(
-                "dynamic_colors",
-                true
-            ) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
-        ) DynamicColors.applyToActivitiesIfAvailable(application)
-
-        DialogX.init(application)
-        DialogX.globalStyle = IOSStyle()
-        DialogX.globalTheme = DialogX.THEME.AUTO
-        DialogX.autoShowInputKeyboard = true
-        DialogX.onlyOnePopTip = false
-        DialogX.cancelable = true
-        DialogX.cancelableTipDialog = false
-        DialogX.bottomDialogNavbarColor = Color.Transparent.toArgb()
-        DialogX.autoRunOnUIThread = true
-        DialogX.useHaptic = true
     }
 
     override fun onEcosedMethodCall(call: PluginChannel.MethodCall, result: PluginChannel.Result) {
@@ -72,8 +44,59 @@ internal class LibEcosedPlugin : LibEcosed {
     override val getPluginChannel: PluginChannel
         get() = mPluginChannel
 
+    override fun initSDK(application: Application) {
+        super.initSDK(application)
+        // 创建通知通道
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(
+                notificationChannel,
+                application.getString(R.string.lib_name),
+                importance
+            ).apply {
+                description = application.getString(R.string.lib_description)
+            }
+            val notificationManager: NotificationManager =
+                application.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+        // 初始化首选项
+        EcosedSettings.initialize(context = application)
+        // 初始化任务栏
+        Taskbar.setEnabled(
+            application,
+            EcosedSettings.getPreferences().getBoolean(
+                EcosedSettings.settingsDesktop,
+                true
+            ) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
+        )
+        // 初始化动态取色
+        if (EcosedSettings.getPreferences().getBoolean(
+                EcosedSettings.settingsDynamicColor,
+                true
+            ) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+        ) DynamicColors.applyToActivitiesIfAvailable(application)
+
+
+
+        // 弃用
+        DialogX.init(application)
+        DialogX.globalStyle = IOSStyle()
+        DialogX.globalTheme = DialogX.THEME.AUTO
+        DialogX.autoShowInputKeyboard = true
+        DialogX.onlyOnePopTip = false
+        DialogX.cancelable = true
+        DialogX.cancelableTipDialog = false
+        DialogX.bottomDialogNavbarColor = Color.Transparent.toArgb()
+        DialogX.autoRunOnUIThread = true
+        DialogX.useHaptic = true
+    }
+
     companion object {
+        const val notificationChannel: String = "id"
+
         const val channel: String = "libecosed"
+
         const val getMainFragment: String = "fragment_main"
         const val getProductLogo: String = "logo_product"
         const val isDebug: String = "is_debug"

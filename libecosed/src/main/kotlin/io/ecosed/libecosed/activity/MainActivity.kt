@@ -3,7 +3,9 @@ package io.ecosed.libecosed.activity
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.Resources
+import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -16,6 +18,7 @@ import androidx.activity.compose.setContent
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
@@ -30,6 +33,7 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import androidx.window.layout.DisplayFeature
 import com.blankj.utilcode.util.AppUtils
+import com.farmerbb.taskbar.lib.Taskbar
 import com.google.accompanist.adaptive.calculateDisplayFeatures
 import com.google.android.material.internal.EdgeToEdgeUtils
 import com.google.android.material.tabs.TabLayout
@@ -45,7 +49,7 @@ import rikka.core.res.isNight
 import rikka.material.app.MaterialActivity
 
 
-internal class ManagerActivity : MaterialActivity() {
+internal class MainActivity : MaterialActivity() {
 
     private var mVisible: Boolean by mutableStateOf(value = true)
     private var actionBarVisible: Boolean by mutableStateOf(value = true)
@@ -71,8 +75,8 @@ internal class ManagerActivity : MaterialActivity() {
     }
 
 
-    private lateinit var mMainFragment: Fragment
-    private lateinit var mProductLogo: Drawable
+    private var mMainFragment: Fragment? = null
+    private var mProductLogo: Drawable? = null
 
     private lateinit var mViewPager2: ViewPager2
 
@@ -81,13 +85,13 @@ internal class ManagerActivity : MaterialActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         mMainFragment = PluginExecutor.execMethodCall(
-            activity = this@ManagerActivity,
+            activity = this@MainActivity,
             name = LibEcosedPlugin.channel,
             method = LibEcosedPlugin.getMainFragment
         ) as Fragment
 
         mProductLogo = PluginExecutor.execMethodCall(
-            activity = this@ManagerActivity,
+            activity = this@MainActivity,
             name = LibEcosedPlugin.channel,
             method = LibEcosedPlugin.getProductLogo
         ) as Drawable
@@ -98,11 +102,11 @@ internal class ManagerActivity : MaterialActivity() {
         super.onCreate(savedInstanceState)
 
         val madapter = PagerAdapter(
-            activity = this@ManagerActivity,
+            activity = this@MainActivity,
             mainFragment = mMainFragment
         )
 
-        mViewPager2 = ViewPager2(this@ManagerActivity).apply {
+        mViewPager2 = ViewPager2(this@MainActivity).apply {
             isUserInputEnabled = false
             orientation = ViewPager2.ORIENTATION_HORIZONTAL
             adapter = madapter
@@ -113,26 +117,44 @@ internal class ManagerActivity : MaterialActivity() {
             val displayFeatures: List<DisplayFeature> =
                 calculateDisplayFeatures(activity = this)
             LocalView.current.setOnTouchListener(delayHideTouchListener)
-            LibEcosedTheme {
+            LibEcosedTheme(
+                dynamicColor = ThemeHelper.isUsingSystemColor()
+            ) { dynamic ->
                 ActivityMain(
                     windowSize = windowSize,
                     displayFeatures = displayFeatures,
+                    productLogo = mProductLogo,
                     topBarVisible = actionBarVisible,
-                    topBarUpdate = {
-                                   this.setSupportActionBar(it)
+                    topBarUpdate = { toolbar ->
+                        setSupportActionBar(toolbar)
                     },
-
                     viewPager2 = mViewPager2,
-                    preferenceUpdate = { preference ->
-
-                    },
                     androidVersion = "13",
                     shizukuVersion = "13",
-                    current = {},
+                    current = {
+                        mViewPager2.currentItem = it
+                    },
                     toggle = {
                         toggle()
                     },
-                    taskbar = {}
+                    taskbar = {
+                        Taskbar.openSettings(
+                            this@MainActivity,
+                            getString(R.string.taskbar_title),
+                            when (dynamic){
+                                true -> R.style.Theme_LibEcosed_TaskbarDynamic
+                                false -> R.style.Theme_LibEcosed_Taskbar
+                            }
+                        )
+                    },
+                    customTabs = { url ->
+                        CustomTabsIntent.Builder()
+                            .build()
+                            .launchUrl(
+                                this@MainActivity,
+                                Uri.parse(url)
+                            )
+                    }
                 )
             }
         }
@@ -153,7 +175,7 @@ internal class ManagerActivity : MaterialActivity() {
             supportActionBar?.apply {
                 setDisplayShowCustomEnabled(true)
                 setCustomView(
-                    TabLayout(this@ManagerActivity).apply {
+                    TabLayout(this@MainActivity).apply {
                         setBackgroundColor(Color.Transparent.toArgb())
                         tabMode = TabLayout.MODE_AUTO
                         TabLayoutMediator(this, mViewPager2) { tab, position ->
@@ -177,7 +199,7 @@ internal class ManagerActivity : MaterialActivity() {
     override fun computeUserThemeKey(): String {
         super.computeUserThemeKey()
         return ThemeHelper.getTheme(
-            context = this@ManagerActivity
+            context = this@MainActivity
         ) + ThemeHelper.isUsingSystemColor()
     }
 
@@ -191,7 +213,7 @@ internal class ManagerActivity : MaterialActivity() {
             } else {
                 theme.applyStyle(R.style.ThemeOverlay_DynamicColors_Light, true)
             }.run {
-                theme.applyStyle(ThemeHelper.getThemeStyleRes(context = this@ManagerActivity), true)
+                theme.applyStyle(ThemeHelper.getThemeStyleRes(context = this@MainActivity), true)
             }
         }
     }
@@ -211,7 +233,7 @@ internal class ManagerActivity : MaterialActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_settings -> Toast.makeText(this@ManagerActivity, "设置", Toast.LENGTH_SHORT)
+            R.id.action_settings -> Toast.makeText(this@MainActivity, "设置", Toast.LENGTH_SHORT)
                 .show()
         }
         return super.onOptionsItemSelected(item)

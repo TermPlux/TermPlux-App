@@ -43,7 +43,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 internal fun ScreenSettings(
-    navControllerCompose: NavHostController,
+    navController: NavHostController,
     scope: CoroutineScope,
     snackBarHostState: SnackbarHostState,
     current: (Int) -> Unit,
@@ -77,16 +77,20 @@ internal fun ScreenSettings(
                     title = "首选项",
                     summary = "配置 Ecosed Framework"
                 ) {
-                    navControllerCompose.navigate(
-                        route = Screen.Home.route
-                    ) {
-                        popUpTo(
-                            id = navControllerCompose.graph.findStartDestination().id
+                    current(
+                        Screen.Preference.route.toInt()
+                    ).run {
+                        navController.navigate(
+                            route = Screen.Home.route
                         ) {
-                            saveState = true
+                            popUpTo(
+                                id = navController.graph.findStartDestination().id
+                            ) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
                         }
-                        launchSingleTop = true
-                        restoreState = true
                     }
                 }
                 // 关于
@@ -95,11 +99,11 @@ internal fun ScreenSettings(
                     title = stringResource(id = R.string.about_title),
                     summary = stringResource(id = R.string.about_summary)
                 ) {
-                    navControllerCompose.navigate(
+                    navController.navigate(
                         route = Screen.About.route
                     ) {
                         popUpTo(
-                            navControllerCompose.graph.findStartDestination().id
+                            navController.graph.findStartDestination().id
                         ) {
                             saveState = true
                         }
@@ -175,7 +179,7 @@ internal fun ScreenSettings(
 private fun ScreenSettingsPreview() {
     LibEcosedTheme {
         ScreenSettings(
-            navControllerCompose = rememberNavController(),
+            navController = rememberNavController(),
             scope = rememberCoroutineScope(),
             snackBarHostState = remember {
                 SnackbarHostState()

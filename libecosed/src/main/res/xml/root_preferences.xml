@@ -25,6 +25,8 @@
             android:summary="@string/desktop_summary"
             android:title="@string/desktop_title" />
 
+
+
     </PreferenceCategory>
 
 </PreferenceScreen>

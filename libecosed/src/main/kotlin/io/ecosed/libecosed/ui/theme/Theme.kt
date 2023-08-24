@@ -33,7 +33,7 @@ private val lightColorScheme: ColorScheme = lightColorScheme(
 @Composable
 internal fun LibEcosedTheme(
     dynamicColor: Boolean = true,
-    content: @Composable () -> Unit
+    content: @Composable (Boolean) -> Unit
 ) {
     // 获取系统是否处于深色模式
     val darkTheme: Boolean = isSystemInDarkTheme()
@@ -68,6 +68,8 @@ internal fun LibEcosedTheme(
         colorScheme = colorScheme,
         shapes = MaterialTheme.shapes,
         typography = Typography,
-        content = content
+        content = {
+            content(dynamicColor)
+        }
     )
 }

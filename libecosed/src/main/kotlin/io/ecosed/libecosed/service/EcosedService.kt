@@ -5,10 +5,12 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
+import android.app.UiModeManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
@@ -20,6 +22,7 @@ import com.kongzue.dialogx.dialogs.PopTip
 import io.ecosed.libecosed.BuildConfig
 import io.ecosed.libecosed.EcosedFramework
 import io.ecosed.libecosed.R
+import io.ecosed.libecosed.plugin.LibEcosedPlugin
 import io.ecosed.libecosed.utils.ChineseCaleUtils
 import io.ecosed.libecosed.utils.EnvironmentUtils
 import kotlinx.coroutines.CoroutineScope
@@ -45,7 +48,7 @@ internal class EcosedService : Service(), Shizuku.OnBinderReceivedListener,
 
     override fun onCreate() {
         super.onCreate()
-        setupNotificationChannel()
+     //   setupNotificationChannel()
         startForeground(notificationId, buildNotification())
     }
 
@@ -128,7 +131,7 @@ internal class EcosedService : Service(), Shizuku.OnBinderReceivedListener,
     }
 
     private fun watch(): Boolean {
-        return EnvironmentUtils.isWatch(this@EcosedService)
+        return EnvironmentUtils.isWatch(this)
     }
 
     private fun dynamicColors(): Boolean {
@@ -147,35 +150,40 @@ internal class EcosedService : Service(), Shizuku.OnBinderReceivedListener,
         }
     }
     private fun ecosedSettings() {
-        CoroutineScope(Dispatchers.Main).launch {
+        CoroutineScope(
+            context = Dispatchers.Main
+        ).launch {
 
         }
     }
 
-    // 创建通知渠道
-    private fun setupNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel(
-                channelId,
-                getString(R.string.lib_name),
-                importance
-            ).apply {
-                description = getString(R.string.lib_description)
-            }
-            val notificationManager: NotificationManager =
-                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
-        }
-    }
+//    // 创建通知渠道
+//    private fun setupNotificationChannel() {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            val importance = NotificationManager.IMPORTANCE_DEFAULT
+//            val channel = NotificationChannel(
+//                channelId,
+//                getString(R.string.lib_name),
+//                importance
+//            ).apply {
+//                description = getString(R.string.lib_description)
+//            }
+//            val notificationManager: NotificationManager =
+//                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+//            notificationManager.createNotificationChannel(channel)
+//        }
+//    }
 
     private fun buildNotification(): Notification {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             PermissionUtils.permission(Manifest.permission.POST_NOTIFICATIONS)
         }
 
-        val notification = NotificationCompat.Builder(this, channelId)
-            .setContentTitle(getString(R.string.lib_name))
+        val notification = NotificationCompat.Builder(
+            this@EcosedService,
+            LibEcosedPlugin.notificationChannel
+        )
+            .setContentTitle(AppUtils.getAppName())
             .setContentText("服务正在运行")
             .setSmallIcon(R.drawable.baseline_keyboard_command_key_24)
             .build()
@@ -186,7 +194,6 @@ internal class EcosedService : Service(), Shizuku.OnBinderReceivedListener,
     }
 
     companion object {
-        private const val channelId = "id"
         private const val notificationId = 1
     }
 }

@@ -138,6 +138,7 @@ dependencies {
     implementation(dependencyNotation = "androidx.lifecycle:lifecycle-livedata-ktx:2.6.1")
     implementation(dependencyNotation = "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
     implementation(dependencyNotation = "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
+    implementation(dependencyNotation = "androidx.browser:browser:1.6.0")
     implementation(dependencyNotation = "androidx.activity:activity-compose:1.7.2")
     implementation(dependencyNotation = "com.google.android.gms:play-services-base:18.2.0")
     implementation(dependencyNotation = "com.google.accompanist:accompanist-webview:0.32.0")

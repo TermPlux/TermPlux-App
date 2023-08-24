@@ -14,17 +14,15 @@ object ThemeHelper {
 
 
     private const val KEY_LIGHT_THEME = "light_theme"
-    private const val KEY_BLACK_NIGHT_THEME = "black_night_theme"
-    private const val KEY_USE_SYSTEM_COLOR = "use_system_color"
 
     fun isBlackNightTheme(context: Context): Boolean {
         return EcosedSettings.getPreferences()
-            .getBoolean(KEY_BLACK_NIGHT_THEME, EnvironmentUtils.isWatch(context))
+            .getBoolean(EcosedSettings.settingsBlackNight, EnvironmentUtils.isWatch(context))
     }
 
     fun isUsingSystemColor(): Boolean {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
-                EcosedSettings.getPreferences().getBoolean(KEY_USE_SYSTEM_COLOR, true)
+                EcosedSettings.getPreferences().getBoolean(EcosedSettings.settingsDynamicColor, true)
     }
 
     fun getTheme(context: Context): String {

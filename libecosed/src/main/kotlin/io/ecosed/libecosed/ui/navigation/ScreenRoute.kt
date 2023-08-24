@@ -10,9 +10,10 @@ object ScreenRoute {
 
 
     const val routeOverview: String = "overview"
-    const val routeHome: String = "flutter"
+    const val routeHome: String = "home"
     const val routeSettings: String = "settings"
     const val routeAbout: String = "about"
+
 
 
 

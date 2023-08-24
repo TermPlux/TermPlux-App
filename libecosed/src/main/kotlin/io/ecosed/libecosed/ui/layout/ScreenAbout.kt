@@ -55,7 +55,7 @@ internal fun ScreenAbout(
     snackBarHostState: SnackbarHostState,
     onEasterEgg: () -> Unit,
     onNotice: () -> Unit,
-    onSource: () -> Unit,
+    customTabs: (String) -> Unit,
 ) {
     val scrollState = rememberScrollState()
     val position: MutableState<Int> = remember {
@@ -308,7 +308,7 @@ internal fun ScreenAbout(
                                 min = 50.dp
                             )
                             .clickable {
-                                onSource()
+                                customTabs("https://github.com")
                             }
                             .padding(
                                 horizontal = 24.dp
@@ -339,7 +339,9 @@ internal fun ScreenAbout(
                 }
             }
             OutlinedCard(
-                onClick = {},
+                onClick = {
+                    customTabs("https://github.com/ecosed/libecosed")
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(
@@ -370,14 +372,16 @@ internal fun ScreenAbout(
                             )
                         )
                         Text(
-                            text = "Ecosed Framework 将保持免费和开源，向开发者捐赠以表示支持。",
+                            text = "LibEcosed 框架将保持免费和开源，向开发者捐赠以表示支持。",
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }
                 }
             }
             OutlinedCard(
-                onClick = {},
+                onClick = {
+                    customTabs("https://github.com/ecosed/libecosed")
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(
@@ -399,7 +403,7 @@ internal fun ScreenAbout(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(
-                            text = "了解 Ecosed Framework",
+                            text = "了解 LibEcosed",
                             style = MaterialTheme.typography.titleSmall
                         )
                         Spacer(
@@ -408,7 +412,7 @@ internal fun ScreenAbout(
                             )
                         )
                         Text(
-                            text = "了解如何使用 Ecosed Framework",
+                            text = "了解如何在已有工程中使用 LibEcosed 框架。",
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }
@@ -448,7 +452,7 @@ private fun ScreenAboutPreview() {
             },
             onEasterEgg = {},
             onNotice = {},
-            onSource = {}
+            customTabs = {}
         )
     }
 }

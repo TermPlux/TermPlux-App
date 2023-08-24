@@ -1,5 +1,6 @@
 package io.ecosed.libecosed.ui.layout
 
+import android.graphics.drawable.Drawable
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -11,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -72,6 +72,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.viewpager2.widget.ViewPager2
 import androidx.window.layout.DisplayFeature
 import androidx.window.layout.FoldingFeature
+import com.blankj.utilcode.util.AppUtils
+import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import com.google.android.material.appbar.MaterialToolbar
 import io.ecosed.libecosed.R
 import io.ecosed.libecosed.ui.navigation.ItemType
@@ -79,7 +81,6 @@ import io.ecosed.libecosed.ui.navigation.ScreenType
 import io.ecosed.libecosed.ui.preview.ScreenPreviews
 import io.ecosed.libecosed.ui.screen.Screen
 import io.ecosed.libecosed.ui.theme.LibEcosedTheme
-import io.ecosed.libecosed.ui.widget.TopActionBar
 import io.ecosed.libecosed.ui.window.ContentType
 import io.ecosed.libecosed.ui.window.DevicePosture
 import io.ecosed.libecosed.ui.window.NavigationType
@@ -92,16 +93,19 @@ import kotlinx.coroutines.launch
 internal fun ActivityMain(
     windowSize: WindowSizeClass,
     displayFeatures: List<DisplayFeature>,
+    productLogo: Drawable?,
     topBarVisible: Boolean,
     viewPager2: ViewPager2,
 
     topBarUpdate: (MaterialToolbar) -> Unit,
-    preferenceUpdate: (ViewPager2) -> Unit,
+
     androidVersion: String,
     shizukuVersion: String,
-    current: (item: Int) -> Unit,
+    current: (Int) -> Unit,
     toggle: () -> Unit,
-    taskbar: () -> Unit
+    taskbar: () -> Unit,
+    customTabs: (String) -> Unit,
+
 ) {
     val pages = listOf(
         Screen.ComposeTitle,
@@ -111,6 +115,9 @@ internal fun ActivityMain(
         Screen.About,
         Screen.Divider,
         Screen.FragmentTitle,
+        Screen.Main,
+        Screen.Apps,
+        Screen.Preference
     )
     val items = listOf(
         Screen.Overview,
@@ -395,12 +402,26 @@ internal fun ActivityMain(
                         navigationIcon = {
                             IconButton(
                                 onClick = {
-
+                                    current(
+                                        Screen.Main.route.toInt()
+                                    ).run {
+                                        navController.navigate(
+                                            route = Screen.Home.route
+                                        ) {
+                                            popUpTo(
+                                                id = navController.graph.findStartDestination().id
+                                            ) {
+                                                saveState = true
+                                            }
+                                            launchSingleTop = true
+                                            restoreState = true
+                                        }
+                                    }
                                 }
                             ) {
                                 Image(
-                                    painter = painterResource(
-                                        id = R.drawable.custom_ecosed_24
+                                    painter = rememberDrawablePainter(
+                                        drawable = productLogo
                                     ),
                                     contentDescription = null
                                 )
@@ -504,7 +525,7 @@ internal fun ActivityMain(
                                         )
                                     )
                                 },
-                                alwaysShowLabel = true
+                                alwaysShowLabel = false
                             )
                         }
                     }
@@ -537,6 +558,7 @@ internal fun ActivityMain(
                             drawerState = drawerState,
                             topBarUpdate = topBarUpdate,
                             navController = navController,
+                            current = current,
                             shizukuVersion = shizukuVersion
                         )
                     }
@@ -549,7 +571,7 @@ internal fun ActivityMain(
                         route = Screen.Settings.route
                     ) {
                         ScreenSettings(
-                            navControllerCompose = navController,
+                            navController = navController,
                             //  navControllerFragment = subNavController,
                             scope = scope,
                             snackBarHostState = snackBarHostState,
@@ -567,7 +589,7 @@ internal fun ActivityMain(
                             snackBarHostState = snackBarHostState,
                             onEasterEgg = {},
                             onNotice = {},
-                            onSource = {}
+                            customTabs = customTabs
                         )
                     }
                 }
@@ -612,8 +634,10 @@ internal fun ActivityMain(
 
                                 }
                             ) {
-                                Icon(
-                                    imageVector = Icons.Outlined.Terminal,
+                                Image(
+                                    painter = rememberDrawablePainter(
+                                        drawable = productLogo
+                                    ),
                                     contentDescription = null
                                 )
                             }
