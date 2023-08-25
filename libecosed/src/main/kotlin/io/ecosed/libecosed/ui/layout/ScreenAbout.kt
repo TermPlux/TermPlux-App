@@ -2,7 +2,6 @@ package io.ecosed.libecosed.ui.layout
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -32,7 +31,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -45,6 +43,7 @@ import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import io.ecosed.libecosed.R
 import io.ecosed.libecosed.ui.preview.ScreenPreviews
 import io.ecosed.libecosed.ui.theme.LibEcosedTheme
+import io.ecosed.libecosed.utils.EcosedUrl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -267,9 +266,7 @@ internal fun ScreenAbout(
                                 min = 50.dp
                             )
                             .clickable {
-                                scope.launch {
-                                    scrollState.animateScrollBy(10000f)
-                                }
+                                customTabs(EcosedUrl.developerGithub)
                             }
                             .padding(
                                 horizontal = 24.dp
@@ -308,7 +305,7 @@ internal fun ScreenAbout(
                                 min = 50.dp
                             )
                             .clickable {
-                                customTabs("https://github.com")
+                                customTabs(EcosedUrl.sourcesCode)
                             }
                             .padding(
                                 horizontal = 24.dp
@@ -340,7 +337,7 @@ internal fun ScreenAbout(
             }
             OutlinedCard(
                 onClick = {
-                    customTabs("https://github.com/ecosed/libecosed")
+                    customTabs(EcosedUrl.sourcesCode)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -380,7 +377,7 @@ internal fun ScreenAbout(
             }
             OutlinedCard(
                 onClick = {
-                    customTabs("https://github.com/ecosed/libecosed")
+                    customTabs(EcosedUrl.sourcesCode)
                 },
                 modifier = Modifier
                     .fillMaxWidth()

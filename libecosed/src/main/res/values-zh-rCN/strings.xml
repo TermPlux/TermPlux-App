@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="lib_name">LibEcosed</string>
+    <string name="lib_preview">PreviewName</string>
     <string name="lib_description">Ecosed Framework</string>
     <!-- 菜单 -->
     <string name="menu_overview">概览</string>
@@ -31,10 +32,9 @@
     <string name="dynamic_colors_title">使用系统主题颜色</string>
     <string name="dynamic_colors_summary">重启应用后生效。仅支持Android 12+</string>
     <string name="dynamic_colors_error">仅支持Android 12+</string>
+    <string name="preference_title">首选项</string>
     <string name="about_title">关于</string>
-    <string name="about_summary">关于 Ecosed Framework</string>
     <string name="uninstall_title">卸载</string>
-    <string name="uninstall_summary">卸载 Ecosed Framework</string>
     <string name="desktop_title">使用完整桌面模式</string>
     <string name="desktop_summary">重启应用后生效。仅支持Android 10+</string>
     <string name="desktop_error">仅支持Android 10+</string>

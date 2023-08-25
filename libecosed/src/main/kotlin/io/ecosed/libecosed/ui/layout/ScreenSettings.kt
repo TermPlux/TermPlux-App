@@ -74,8 +74,8 @@ internal fun ScreenSettings(
             ) {
                 SettingsItem(
                     icon = Icons.Filled.RoomPreferences,
-                    title = "首选项",
-                    summary = "配置 Ecosed Framework"
+                    title = stringResource(id = R.string.preference_title),
+                    summary = stringResource(id = R.string.preference_title)
                 ) {
                     current(
                         Screen.Preference.route.toInt()
@@ -97,7 +97,7 @@ internal fun ScreenSettings(
                 SettingsItem(
                     icon = Icons.Filled.Info,
                     title = stringResource(id = R.string.about_title),
-                    summary = stringResource(id = R.string.about_summary)
+                    summary = stringResource(id = R.string.about_title) + "\t" + AppUtils.getAppName()
                 ) {
                     navController.navigate(
                         route = Screen.About.route
@@ -115,7 +115,7 @@ internal fun ScreenSettings(
                 SettingsItem(
                     icon = Icons.Filled.Delete,
                     title = stringResource(id = R.string.uninstall_title),
-                    summary = stringResource(id = R.string.uninstall_summary)
+                    summary = stringResource(id = R.string.uninstall_title) + "\t" + AppUtils.getAppName()
                 ) {
                     AppUtils.uninstallApp(AppUtils.getAppPackageName())
                 }

@@ -1,9 +1,6 @@
 package io.ecosed.libecosed.ui.layout
 
-import android.os.Build
-import android.system.Os
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,7 +24,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -39,6 +35,8 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -46,7 +44,6 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.blankj.utilcode.util.AppUtils
-import com.blankj.utilcode.util.DeviceUtils
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import com.google.android.material.appbar.MaterialToolbar
 import io.ecosed.libecosed.R
@@ -54,9 +51,6 @@ import io.ecosed.libecosed.ui.preview.ScreenPreviews
 import io.ecosed.libecosed.ui.screen.Screen
 import io.ecosed.libecosed.ui.theme.LibEcosedTheme
 import io.ecosed.libecosed.ui.widget.TopActionBar
-import io.ecosed.libecosed.ui.window.NavigationType
-import kotlinx.coroutines.launch
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -120,10 +114,7 @@ internal fun ScreenOverview(
                                 top = 12.dp,
                                 end = 6.dp,
                                 bottom = 6.dp
-                            ),
-//                        colors = CardDefaults.elevatedCardColors(
-//                            containerColor = MaterialTheme.colorScheme.secondaryContainer
-//                        )
+                            )
                     ) {
                         Column(
                             modifier = Modifier
@@ -134,7 +125,11 @@ internal fun ScreenOverview(
                             horizontalAlignment = Alignment.Start
                         ) {
                             Image(
-                                painter = rememberDrawablePainter(
+                                painter = if (
+                                    LocalInspectionMode.current
+                                ) painterResource(
+                                    id = R.drawable.custom_ecosed_24
+                                ) else rememberDrawablePainter(
                                     drawable = AppUtils.getAppIcon()
                                 ),
                                 contentDescription = null,
@@ -149,7 +144,11 @@ internal fun ScreenOverview(
                                     modifier = Modifier.fillMaxWidth()
                                 ) {
                                     Text(
-                                        text = AppUtils.getAppName(),
+                                        text = if (
+                                            LocalInspectionMode.current
+                                        ) stringResource(
+                                            id = R.string.lib_name
+                                        ) else AppUtils.getAppName(),
                                         modifier = Modifier.fillMaxWidth(),
                                         maxLines = 1,
                                         style = MaterialTheme.typography.labelLarge
@@ -226,7 +225,11 @@ internal fun ScreenOverview(
                                         )
                                 )
                                 Text(
-                                    text = AppUtils.getAppName(),
+                                    text = if (
+                                        LocalInspectionMode.current
+                                    ) stringResource(
+                                        id = R.string.lib_name
+                                    ) else AppUtils.getAppName(),
                                     modifier = Modifier.fillMaxWidth(),
                                     textAlign = TextAlign.Start,
                                     maxLines = 1,
@@ -254,17 +257,13 @@ internal fun ScreenOverview(
                                     top = 6.dp,
                                     end = 12.dp,
                                     bottom = 6.dp
-                                ),
-//                            colors = CardDefaults.elevatedCardColors(
-//                                containerColor = MaterialTheme.colorScheme.secondaryContainer
-//                            )
+                                )
                         ) {
 
                         }
                     }
                 }
             }
-
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -273,10 +272,7 @@ internal fun ScreenOverview(
                         end = 12.dp,
                         top = 6.dp,
                         bottom = 6.dp
-                    ),
-//                colors = CardDefaults.elevatedCardColors(
-//                    containerColor = MaterialTheme.colorScheme.secondaryContainer
-//                )
+                    )
             ) {
                 TopActionBar(
                     navController = navController,
@@ -286,84 +282,6 @@ internal fun ScreenOverview(
                     update = topBarUpdate
                 )
             }
-//            Row(
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(
-//                        start = 12.dp,
-//                        top = 6.dp,
-//                        end = 12.dp,
-//                        bottom = 6.dp
-//                    )
-//                    .align(
-//                        alignment = Alignment.CenterHorizontally
-//                    )
-//                    .horizontalScroll(
-//                        state = rememberScrollState()
-//                    ),
-//                horizontalArrangement = Arrangement.Center
-//            ) {
-//                FilledIconButton(
-//                    onClick = { /*TODO*/ }
-//                ) {
-//                    Icon(
-//                        imageVector = Icons.Filled.Menu,
-//                        contentDescription = null
-//                    )
-//                }
-//                Spacer(
-//                    modifier = Modifier.size(
-//                        size = ButtonDefaults.IconSpacing
-//                    )
-//                )
-//                FilledIconButton(
-//                    onClick = { /*TODO*/ }
-//                ) {
-//                    Icon(
-//                        imageVector = Icons.Filled.MoreVert,
-//                        contentDescription = null
-//                    )
-//                }
-//                Spacer(
-//                    modifier = Modifier.size(
-//                        size = ButtonDefaults.IconSpacing
-//                    )
-//                )
-//                FilledIconButton(
-//                    onClick = { /*TODO*/ }
-//                ) {
-//                    Icon(
-//                        imageVector = Icons.Filled.Apps,
-//                        contentDescription = null
-//                    )
-//                }
-//                Spacer(
-//                    modifier = Modifier.size(
-//                        size = ButtonDefaults.IconSpacing
-//                    )
-//                )
-//                FilledIconButton(
-//                    onClick = { /*TODO*/ }
-//                ) {
-//                    Icon(
-//                        imageVector = Icons.Filled.Search,
-//                        contentDescription = null
-//                    )
-//                }
-//                Spacer(
-//                    modifier = Modifier.size(
-//                        size = ButtonDefaults.IconSpacing
-//                    )
-//                )
-//                FilledIconButton(
-//                    onClick = { /*TODO*/ }
-//                ) {
-//                    Icon(
-//                        imageVector = Icons.Filled.SelectAll,
-//                        contentDescription = null
-//                    )
-//                }
-//            }
             OutlinedCard(
                 onClick = {
                     navController.navigate(
@@ -393,9 +311,14 @@ internal fun ScreenOverview(
                         )
                 ) {
                     Text(
-                        text = AppUtils.getAppName(),
+                        text = if (
+                            LocalInspectionMode.current
+                        ) stringResource(
+                            id = R.string.lib_name
+                        ) else AppUtils.getAppName(),
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center,
+                        maxLines = 1,
                         style = MaterialTheme.typography.titleMedium
                     )
                     Spacer(
@@ -424,7 +347,11 @@ internal fun ScreenOverview(
                                 style = MaterialTheme.typography.titleMedium
                             )
                             Text(
-                                text = AppUtils.getAppVersionName(),
+                                text = if (LocalInspectionMode.current) {
+                                    0.toString()
+                                } else {
+                                    AppUtils.getAppVersionName()
+                                },
                                 style = MaterialTheme.typography.bodyMedium
                             )
                             Spacer(
@@ -437,7 +364,11 @@ internal fun ScreenOverview(
                                 style = MaterialTheme.typography.titleMedium
                             )
                             Text(
-                                text = AppUtils.getAppTargetSdkVersion().toString(),
+                                text = if (LocalInspectionMode.current) {
+                                    0.toString()
+                                } else {
+                                    AppUtils.getAppTargetSdkVersion().toString()
+                                },
                                 style = MaterialTheme.typography.bodyMedium
                             )
                         }
@@ -449,7 +380,11 @@ internal fun ScreenOverview(
                                 style = MaterialTheme.typography.titleMedium
                             )
                             Text(
-                                text = AppUtils.getAppVersionCode().toString(),
+                                text = if (LocalInspectionMode.current) {
+                                    0.toString()
+                                } else {
+                                    AppUtils.getAppVersionCode().toString()
+                                },
                                 style = MaterialTheme.typography.bodyMedium
                             )
                             Spacer(
@@ -462,84 +397,17 @@ internal fun ScreenOverview(
                                 style = MaterialTheme.typography.titleMedium
                             )
                             Text(
-                                text = AppUtils.getAppMinSdkVersion().toString(),
+                                text = if (LocalInspectionMode.current) {
+                                    0.toString()
+                                } else {
+                                    AppUtils.getAppMinSdkVersion().toString()
+                                },
                                 style = MaterialTheme.typography.bodyMedium
                             )
                         }
                     }
                 }
             }
-
-
-//            OutlinedCard(
-//                onClick = {
-//
-//                },
-//                modifier = Modifier.padding(
-//                    start = 12.dp,
-//                    top = 6.dp,
-//                    end = 12.dp,
-//                    bottom = 6.dp
-//                )
-//            ) {
-//                Column(
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .padding(
-//                            all = 24.dp
-//                        )
-//                ) {
-//                    Text(
-//                        text = "Android 版本",
-//                        style = MaterialTheme.typography.bodyLarge
-//                    )
-//                    Text(
-//                        text = Build.VERSION.SDK_INT.toString(),
-//                        style = MaterialTheme.typography.bodyMedium
-//                    )
-//                    Spacer(
-//                        modifier = Modifier.height(
-//                            height = 16.dp
-//                        )
-//                    )
-//                    Text(
-//                        text = stringResource(id = R.string.kernel_version),
-//                        style = MaterialTheme.typography.bodyLarge
-//                    )
-//                    Text(
-//                        text = Os.uname().release,
-//                        style = MaterialTheme.typography.bodyMedium
-//                    )
-//                    Spacer(
-//                        modifier = Modifier.height(
-//                            height = 16.dp
-//                        )
-//                    )
-//                    Text(
-//                        text = stringResource(id = R.string.device_arch),
-//                        style = MaterialTheme.typography.bodyLarge
-//                    )
-//                    Text(
-//                        text = Os.uname().machine,
-//                        style = MaterialTheme.typography.bodyMedium
-//                    )
-//                    Spacer(
-//                        modifier = Modifier.height(
-//                            height = 16.dp
-//                        )
-//                    )
-//                    Text(
-//                        text = stringResource(id = R.string.shizuku_version),
-//                        style = MaterialTheme.typography.bodyLarge
-//                    )
-//                    Text(
-//                        text = shizukuVersion,
-//                        style = MaterialTheme.typography.bodyMedium
-//                    )
-//                }
-//            }
-
-
             Surface(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -647,9 +515,6 @@ internal fun ScreenOverview(
                     }
                 }
             }
-
-
-
         }
     }
 }

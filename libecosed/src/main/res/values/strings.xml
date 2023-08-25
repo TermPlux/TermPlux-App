@@ -1,5 +1,6 @@
 <resources>
     <string name="lib_name">LibEcosed</string>
+    <string name="lib_preview">PreviewName</string>
     <string name="lib_description">Ecosed Framework</string>
 
     <string name="action_settings">Settings</string>
@@ -40,15 +41,17 @@
     <string name="dynamic_colors_title">Use the dynamic color</string>
     <string name="dynamic_colors_summary">This takes effect after you restart the app. Only Android 12+ is supported.</string>
     <string name="dynamic_colors_error">Only Android 12+ is supported.</string>
+
+    <string name="preference_title">Preference</string>
     <string name="about_title">About</string>
-    <string name="about_summary">About Ecosed Framework</string>
     <string name="uninstall_title">Delete</string>
-    <string name="uninstall_summary">Uninstall Ecosed Framework</string>
+
     <string name="desktop_title">Use full desktop mode</string>
     <string name="desktop_summary">This takes effect after you restart the app. Only Android 10+ is supported.</string>
     <string name="desktop_error">Only Android 10+ is supported.</string>
     <string name="taskbar_title">Desktop mode setting</string>
     <string name="taskbar_summary">Taskbar Settings</string>
+
     <string name="default_launcher_title">Select the default home screen application</string>
     <string name="default_launcher_summary">Set this application as the default home screen application to enable full desktop mode on the secondary screen</string>
     <string name="system_settings_title">System settings</string>
