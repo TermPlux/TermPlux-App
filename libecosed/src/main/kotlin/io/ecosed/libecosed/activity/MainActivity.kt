@@ -28,6 +28,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
+import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
@@ -43,6 +44,7 @@ import io.ecosed.libecosed.adapter.PagerAdapter
 import io.ecosed.libecosed.plugin.LibEcosedPlugin
 import io.ecosed.libecosed.ui.layout.ActivityMain
 import io.ecosed.libecosed.ui.theme.LibEcosedTheme
+import io.ecosed.libecosed.utils.PageTransformerUtils
 import io.ecosed.libecosed.utils.ThemeHelper
 import io.ecosed.plugin.PluginExecutor
 import kotlinx.coroutines.Runnable
@@ -108,7 +110,7 @@ internal class MainActivity : MaterialActivity(), Runnable {
         )
 
         mViewPager2 = ViewPager2(this@MainActivity).apply {
-            isUserInputEnabled = false
+            isUserInputEnabled = true
             orientation = ViewPager2.ORIENTATION_HORIZONTAL
             adapter = madapter
         }

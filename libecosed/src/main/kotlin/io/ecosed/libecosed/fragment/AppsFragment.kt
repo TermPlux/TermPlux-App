@@ -8,11 +8,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.AppUtils
+import io.ecosed.libecosed.R
 import io.ecosed.libecosed.adapter.AppsAdapter
 import io.ecosed.libecosed.model.AppsModel
 import io.ecosed.libecosed.receiver.AppsReceiver
@@ -40,6 +42,7 @@ internal class AppsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (view is RecyclerView) view.apply {
+            background = ContextCompat.getDrawable(requireContext(), R.drawable.custom_wallpaper_24)
             layoutManager = GridLayoutManager(
                 requireContext(),
                 4,

@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Terminal
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
@@ -46,6 +47,7 @@ import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
@@ -109,8 +111,9 @@ internal fun ActivityMain(
 ) {
     val pages = listOf(
         Screen.ComposeTitle,
-        Screen.Overview,
         Screen.Home,
+        Screen.Overview,
+
         Screen.Settings,
         Screen.About,
         Screen.Divider,
@@ -120,8 +123,9 @@ internal fun ActivityMain(
         Screen.Preference
     )
     val items = listOf(
-        Screen.Overview,
         Screen.Home,
+        Screen.Overview,
+
         Screen.Settings,
         Screen.About
     )
@@ -131,7 +135,7 @@ internal fun ActivityMain(
 
     val scope = rememberCoroutineScope()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val currentDestination = navBackStackEntry?.destination
 
     val snackBarHostState = remember {
@@ -387,73 +391,23 @@ internal fun ActivityMain(
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             topBar = {
-                AnimatedVisibility(
-                    visible = true
-                ) {
-                    LargeTopAppBar(
-                        title = {
-                            Text(
-                                text = stringResource(
-                                    id = R.string.lib_name
-                                )
+                TopAppBar(
+                    title = {
+                        Text(
+                            text = stringResource(
+                                id = R.string.lib_name
                             )
-                        },
-                        modifier = Modifier.fillMaxWidth(),
-                        navigationIcon = {
-                            IconButton(
-                                onClick = {
-                                    current(
-                                        Screen.Main.route.toInt()
-                                    ).run {
-                                        navController.navigate(
-                                            route = Screen.Home.route
-                                        ) {
-                                            popUpTo(
-                                                id = navController.graph.findStartDestination().id
-                                            ) {
-                                                saveState = true
-                                            }
-                                            launchSingleTop = true
-                                            restoreState = true
-                                        }
-                                    }
-                                }
-                            ) {
-                                Image(
-                                    painter = rememberDrawablePainter(
-                                        drawable = productLogo
-                                    ),
-                                    contentDescription = null
-                                )
-                            }
-                        },
-                        actions = {
-                            DropdownMenu(
-                                expanded = expanded.value,
-                                onDismissRequest = {
-                                    expanded.value = false
-                                }
-                            ) {
-                                DropdownMenuItem(
-                                    text = {
-                                        Text(text = "关于")
-                                    },
-                                    onClick = {
-
-                                    },
-                                    leadingIcon = {
-                                        Icon(
-                                            imageVector = Icons.Outlined.Info,
-                                            contentDescription = null
-                                        )
-                                    },
-                                    enabled = true
-                                )
-                            }
-                            IconButton(
-                                onClick = {
+                        )
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    navigationIcon = {
+                        IconButton(
+                            onClick = {
+                                current(
+                                    Screen.Main.route.toInt()
+                                ).run {
                                     navController.navigate(
-                                        route = Screen.Settings.route
+                                        route = Screen.Home.route
                                     ) {
                                         popUpTo(
                                             id = navController.graph.findStartDestination().id
@@ -464,27 +418,73 @@ internal fun ActivityMain(
                                         restoreState = true
                                     }
                                 }
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Outlined.Settings,
-                                    contentDescription = null
-                                )
                             }
-                            IconButton(
+                        ) {
+                            Image(
+                                painter = rememberDrawablePainter(
+                                    drawable = productLogo
+                                ),
+                                contentDescription = null
+                            )
+                        }
+                    },
+                    actions = {
+                        DropdownMenu(
+                            expanded = expanded.value,
+                            onDismissRequest = {
+                                expanded.value = false
+                            }
+                        ) {
+                            DropdownMenuItem(
+                                text = {
+                                    Text(text = "关于")
+                                },
                                 onClick = {
-                                    expanded.value = !expanded.value
+
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Outlined.Info,
+                                        contentDescription = null
+                                    )
+                                },
+                                enabled = true
+                            )
+                        }
+                        IconButton(
+                            onClick = {
+                                navController.navigate(
+                                    route = Screen.Settings.route
+                                ) {
+                                    popUpTo(
+                                        id = navController.graph.findStartDestination().id
+                                    ) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
                                 }
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.MoreVert,
-                                    contentDescription = null
-                                )
                             }
-                        },
-                        colors = TopAppBarDefaults.largeTopAppBarColors(),
-                        scrollBehavior = scrollBehavior
-                    )
-                }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.Settings,
+                                contentDescription = null
+                            )
+                        }
+                        IconButton(
+                            onClick = {
+                                expanded.value = !expanded.value
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.MoreVert,
+                                contentDescription = null
+                            )
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(),
+                    scrollBehavior = scrollBehavior
+                )
             },
             bottomBar = {
                 AnimatedVisibility(
@@ -540,7 +540,7 @@ internal fun ActivityMain(
         ) { innerPadding ->
             NavHost(
                 navController = navController,
-                startDestination = Screen.Overview.route,
+                startDestination = Screen.Home.route,
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(
@@ -565,7 +565,13 @@ internal fun ActivityMain(
                     composable(
                         route = Screen.Home.route
                     ) {
-                        ScreenHome(viewPager2 = viewPager2)
+                        ScreenHome(
+                            topBarVisible = topBarVisible,
+                            drawerState = drawerState,
+                            topBarUpdate = topBarUpdate,
+                            navController = navController,
+                            viewPager2 = viewPager2
+                        )
                     }
                     composable(
                         route = Screen.Settings.route
@@ -609,85 +615,92 @@ internal fun ActivityMain(
             content()
         }
 
-        NavigationType.NavigationRail,
-        NavigationType.BottomNavigation -> ModalNavigationDrawer(
-            drawerContent = {
-                ModalDrawerSheet {
-                    nav()
-                }
-            },
-            modifier = Modifier.fillMaxSize(),
-            drawerState = drawerState,
-            gesturesEnabled = true
-        ) {
-            Row(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                AnimatedVisibility(
-                    visible = navigationType == NavigationType.NavigationRail
-                ) {
-                    NavigationRail(
-                        modifier = Modifier.fillMaxHeight(),
-                        header = {
-                            FloatingActionButton(
-                                onClick = {
 
-                                }
-                            ) {
-                                Image(
-                                    painter = rememberDrawablePainter(
-                                        drawable = productLogo
-                                    ),
-                                    contentDescription = null
-                                )
+
+
+//        NavigationType.NavigationRail,
+//        NavigationType.BottomNavigation -> ModalNavigationDrawer(
+//            drawerContent = {
+//                ModalDrawerSheet {
+//                    nav()
+//                }
+//            },
+//            modifier = Modifier.fillMaxSize(),
+//            drawerState = drawerState,
+//            gesturesEnabled = true
+//        ) {
+//
+//        }
+
+
+        NavigationType.NavigationRail,
+        NavigationType.BottomNavigation -> Row(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            AnimatedVisibility(
+                visible = navigationType == NavigationType.NavigationRail
+            ) {
+                NavigationRail(
+                    modifier = Modifier.fillMaxHeight(),
+                    header = {
+                        FloatingActionButton(
+                            onClick = {
+
                             }
-                        }
-                    ) {
-                        Column(
-                            modifier = Modifier.verticalScroll(
-                                state = rememberScrollState()
-                            )
                         ) {
-                            items.forEach { item ->
-                                NavigationRailItem(
-                                    selected = currentDestination?.hierarchy?.any {
-                                        it.route == item.route
-                                    } == true,
-                                    onClick = {
-                                        if (item.type == ScreenType.Compose) navController.navigate(
-                                            route = item.route
+                            Image(
+                                painter = rememberDrawablePainter(
+                                    drawable = productLogo
+                                ),
+                                contentDescription = null
+                            )
+                        }
+                    }
+                ) {
+                    Column(
+                        modifier = Modifier.verticalScroll(
+                            state = rememberScrollState()
+                        )
+                    ) {
+                        items.forEach { item ->
+                            NavigationRailItem(
+                                selected = currentDestination?.hierarchy?.any {
+                                    it.route == item.route
+                                } == true,
+                                onClick = {
+                                    if (item.type == ScreenType.Compose) navController.navigate(
+                                        route = item.route
+                                    ) {
+                                        popUpTo(
+                                            id = navController.graph.findStartDestination().id
                                         ) {
-                                            popUpTo(
-                                                id = navController.graph.findStartDestination().id
-                                            ) {
-                                                saveState = true
-                                            }
-                                            launchSingleTop = true
-                                            restoreState = true
+                                            saveState = true
                                         }
-                                    },
-                                    icon = {
-                                        Icon(
-                                            imageVector = item.imageVector,
-                                            contentDescription = null
+                                        launchSingleTop = true
+                                        restoreState = true
+                                    }
+                                },
+                                icon = {
+                                    Icon(
+                                        imageVector = item.imageVector,
+                                        contentDescription = null
+                                    )
+                                },
+                                enabled = true,
+                                label = {
+                                    Text(
+                                        stringResource(
+                                            id = item.title
                                         )
-                                    },
-                                    enabled = true,
-                                    label = {
-                                        Text(
-                                            stringResource(
-                                                id = item.title
-                                            )
-                                        )
-                                    },
-                                    alwaysShowLabel = false
-                                )
-                            }
+                                    )
+                                },
+                                alwaysShowLabel = false
+                            )
                         }
                     }
                 }
-                content()
             }
+            content()
         }
     }
 }
