@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.LibEcosed" parent="Theme.Material3.Light.NoActionBar" />
+    <style name="Theme.LibEcosed" parent="Theme.Material3.Light.LibEcosed" />
 
-    <style name="Theme.LibEcosed.Taskbar" parent="Theme.Material3.Light" />
+    <style name="Theme.LibEcosed.Taskbar" parent="Theme.Material3.Light.Rikka">
+        <item name="android:actionBarStyle">@style/TaskbarActionBar</item>
+    </style>
 
-    <style name="Theme.LibEcosed.TaskbarDynamic" parent="Theme.Material3.DynamicColors.Light" />
+    <style name="Theme.LibEcosed.TaskbarDynamic" parent="Theme.Material3.DynamicColors.Light.Rikka">
+        <item name="android:actionBarStyle">@style/TaskbarActionBar</item>
+    </style>
 
 </resources>

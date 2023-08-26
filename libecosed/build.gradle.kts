@@ -3,6 +3,8 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.kapt")
     id("androidx.navigation.safeargs.kotlin")
+    id("dev.rikka.tools.refine")
+    id("dev.rikka.tools.materialthemebuilder")
     id("maven-publish")
 }
 
@@ -77,6 +79,21 @@ android {
     }
 }
 
+materialThemeBuilder {
+    themes {
+        create("LibEcosed"){
+            primaryColor = "#D0BCFF"
+            lightThemeFormat = "Theme.Material3.Light.%s"
+            lightThemeParent = "Theme.Material3.Light.NoActionBar"
+            darkThemeFormat = "Theme.Material3.Dark.%s"
+            darkThemeParent = "Theme.Material3.Dark.NoActionBar"
+        }
+    }
+    generatePalette = true
+    generatePaletteAttributes = true
+    generateTextColors = true
+}
+
 afterEvaluate {
     publishing {
         publications {
@@ -112,6 +129,10 @@ dependencies {
     implementation(dependencyNotation = "dev.rikka.shizuku:provider:13.1.4")
     // AndroidHiddenApiBypass: https://github.com/LSPosed/AndroidHiddenApiBypass
     implementation(dependencyNotation = "org.lsposed.hiddenapibypass:hiddenapibypass:4.3")
+    // HiddenApiRefinePlugin: https://github.com/RikkaApps/HiddenApiRefinePlugin
+    implementation(dependencyNotation = "dev.rikka.tools.refine:annotation:4.3.0")
+    implementation(dependencyNotation = "dev.rikka.tools.refine:runtime:4.3.0")
+    kapt(dependencyNotation = "dev.rikka.tools.refine:annotation-processor:4.3.0")
     // RikkaX: https://github.com/RikkaApps/RikkaX
     implementation(dependencyNotation = "dev.rikka.rikkax.appcompat:appcompat:1.6.1")
     implementation(dependencyNotation = "dev.rikka.rikkax.buildcompat:buildcompat:34.0.1")
@@ -145,8 +166,8 @@ dependencies {
     implementation(dependencyNotation = "com.google.accompanist:accompanist-systemuicontroller:0.32.0")
     implementation(dependencyNotation = "com.google.accompanist:accompanist-adaptive:0.32.0")
     implementation(dependencyNotation = "com.google.accompanist:accompanist-drawablepainter:0.32.0")
-    implementation(dependencyNotation = "androidx.navigation:navigation-compose:2.7.0")
-    implementation(dependencyNotation = "androidx.navigation:navigation-ui-ktx:2.7.0")
+    implementation(dependencyNotation = "androidx.navigation:navigation-compose:2.7.1")
+    implementation(dependencyNotation = "androidx.navigation:navigation-ui-ktx:2.7.1")
     implementation(dependencyNotation = "androidx.core:core-ktx:1.10.1")
     implementation(dependencyNotation = "androidx.appcompat:appcompat:1.6.1")
     implementation(dependencyNotation = "com.google.android.material:material:1.9.0")
@@ -167,7 +188,7 @@ dependencies {
     androidTestImplementation(dependencyNotation = "androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation(dependencyNotation = platform(notation = "androidx.compose:compose-bom:2023.03.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.5.0")
-    androidTestImplementation(dependencyNotation = "androidx.navigation:navigation-testing:2.7.0")
+    androidTestImplementation(dependencyNotation = "androidx.navigation:navigation-testing:2.7.1")
     debugImplementation(dependencyNotation = "androidx.compose.ui:ui-tooling:1.5.0")
     debugImplementation(dependencyNotation = "androidx.compose.ui:ui-test-manifest:1.5.0")
 }

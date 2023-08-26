@@ -3,9 +3,9 @@ package io.ecosed.libecosed.activity
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.Resources
-import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -45,11 +45,12 @@ import io.ecosed.libecosed.ui.layout.ActivityMain
 import io.ecosed.libecosed.ui.theme.LibEcosedTheme
 import io.ecosed.libecosed.utils.ThemeHelper
 import io.ecosed.plugin.PluginExecutor
+import kotlinx.coroutines.Runnable
 import rikka.core.res.isNight
+import rikka.core.res.resolveColor
 import rikka.material.app.MaterialActivity
 
-
-internal class MainActivity : MaterialActivity() {
+internal class MainActivity : MaterialActivity(), Runnable {
 
     private var mVisible: Boolean by mutableStateOf(value = true)
     private var actionBarVisible: Boolean by mutableStateOf(value = true)
@@ -208,19 +209,36 @@ internal class MainActivity : MaterialActivity() {
             theme = theme,
             isDecorView = isDecorView
         ).run {
-            if (ThemeHelper.isUsingSystemColor()) if (resources.configuration.isNight()) {
-                theme.applyStyle(R.style.ThemeOverlay_DynamicColors_Dark, true)
-            } else {
-                theme.applyStyle(R.style.ThemeOverlay_DynamicColors_Light, true)
-            }.run {
-                theme.applyStyle(ThemeHelper.getThemeStyleRes(context = this@MainActivity), true)
+            if (ThemeHelper.isUsingSystemColor()) {
+                theme.applyStyle(R.style.ThemeOverlay_LibEcosed_DynamicColors, true)
             }
+            theme.applyStyle(ThemeHelper.getThemeStyleRes(context = this@MainActivity), true)
         }
     }
 
     @SuppressLint("RestrictedApi")
     override fun onApplyTranslucentSystemBars() {
         super.onApplyTranslucentSystemBars()
+//        val window = window
+//        val theme = theme
+//
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            window?.decorView?.post {
+//                if (window.decorView.rootWindowInsets?.systemWindowInsetBottom ?: 0 >= Resources.getSystem().displayMetrics.density * 40) {
+//                    window.navigationBarColor =
+//                        theme.resolveColor(android.R.attr.navigationBarColor) and 0x00ffffff or -0x20000000
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+//                        window.isNavigationBarContrastEnforced = false
+//                    }
+//                } else {
+//                    window.navigationBarColor = Color.Transparent.toArgb()
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+//                        window.isNavigationBarContrastEnforced = true
+//                    }
+//                }
+//            }
+//        }
+
         EdgeToEdgeUtils.applyEdgeToEdge(window, true)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
@@ -237,6 +255,10 @@ internal class MainActivity : MaterialActivity() {
                 .show()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun run() {
+
     }
 
     private fun toggle() {
@@ -277,6 +299,4 @@ internal class MainActivity : MaterialActivity() {
 
 
     }
-
-
 }

@@ -4,13 +4,15 @@ import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
-import android.content.SharedPreferences
 import android.os.Build
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import androidx.preference.PreferenceManager
 import com.farmerbb.taskbar.lib.Taskbar
 import com.google.android.material.color.DynamicColors
+import com.google.android.material.color.DynamicColorsOptions
+import com.google.android.material.color.HarmonizedColorAttributes
+import com.google.android.material.color.HarmonizedColors
+import com.google.android.material.color.HarmonizedColorsOptions
 import com.kongzue.dialogx.DialogX
 import com.kongzue.dialogx.style.IOSStyle
 import io.ecosed.libecosed.R
@@ -68,16 +70,32 @@ internal class LibEcosedPlugin : LibEcosed {
             EcosedSettings.getPreferences().getBoolean(
                 EcosedSettings.settingsDesktop,
                 true
-            ) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
+            ) and (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
         )
         // 初始化动态取色
         if (EcosedSettings.getPreferences().getBoolean(
                 EcosedSettings.settingsDynamicColor,
                 true
-            ) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
-        ) DynamicColors.applyToActivitiesIfAvailable(application)
-
-
+            ) and (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+        ) {
+            DynamicColors.applyToActivitiesIfAvailable(
+                application,
+                DynamicColorsOptions.Builder()
+                    .setThemeOverlay(R.style.ThemeOverlay_LibEcosed_DynamicColors)
+                    .build()
+            )
+            HarmonizedColors.applyToContextIfAvailable(
+                application,
+                HarmonizedColorsOptions.Builder()
+                    .setColorAttributeToHarmonizeWith(android.R.attr.colorPrimary)
+                    .setColorAttributes(
+                        HarmonizedColorAttributes.create(
+                            HarmonizedColorAttributes.createMaterialDefaults().attributes
+                        )
+                    )
+                    .build()
+            )
+        }
 
         // 弃用
         DialogX.init(application)

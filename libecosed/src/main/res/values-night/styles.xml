@@ -10,7 +10,7 @@
         <item name="colorSurface">@android:color/black</item>
     </style>
 
-    <style name="ThemeOverlay.LibEcosed.DynamicColors" parent="ThemeOverlay.Material3.DynamicColors.Light.Rikka" />
+    <style name="ThemeOverlay.LibEcosed.DynamicColors" parent="ThemeOverlay.Material3.DynamicColors.Dark.Rikka" />
 
     <style name="TaskbarActionBar" parent="Widget.Material3.ActionBar.Solid">
         <item name="android:background">@color/transparent</item>
