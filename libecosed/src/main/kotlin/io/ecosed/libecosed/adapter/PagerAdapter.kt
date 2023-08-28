@@ -15,15 +15,21 @@ internal class PagerAdapter(
     private val mMainFragment: Fragment? = mainFragment
 
     override fun getItemCount(): Int {
-        return 3
+        return arrayListOf(main, apps, settings).size
     }
 
     override fun createFragment(position: Int): Fragment {
         return when (position){
-            0 -> mMainFragment ?: EmptyFragment.newInstance()
-            1 -> AppsFragment.newInstance()
-            2 -> SettingsFragment.newInstance()
+            main -> mMainFragment ?: EmptyFragment.newInstance()
+            apps -> AppsFragment.newInstance()
+            settings -> SettingsFragment.newInstance()
             else -> EmptyFragment.newInstance()
         }
+    }
+
+    companion object {
+        const val main: Int = 0
+        const val apps: Int = 1
+        const val settings: Int = 2
     }
 }

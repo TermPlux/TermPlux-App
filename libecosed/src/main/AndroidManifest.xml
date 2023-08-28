@@ -73,7 +73,6 @@
             android:enabled="true"
             android:exported="true"
             android:icon="@drawable/baseline_keyboard_command_key_24"
-            android:label="@string/lib_name"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <meta-data
                 android:name="android.service.quicksettings.ACTIVE_TILE"

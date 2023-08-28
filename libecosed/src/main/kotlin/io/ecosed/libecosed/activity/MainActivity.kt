@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.res.Resources
 import android.graphics.drawable.Drawable
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -28,9 +27,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
-import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.viewpager2.widget.ViewPager2
 import androidx.window.layout.DisplayFeature
 import com.blankj.utilcode.util.AppUtils
@@ -44,15 +44,13 @@ import io.ecosed.libecosed.adapter.PagerAdapter
 import io.ecosed.libecosed.plugin.LibEcosedPlugin
 import io.ecosed.libecosed.ui.layout.ActivityMain
 import io.ecosed.libecosed.ui.theme.LibEcosedTheme
-import io.ecosed.libecosed.utils.PageTransformerUtils
 import io.ecosed.libecosed.utils.ThemeHelper
 import io.ecosed.plugin.PluginExecutor
 import kotlinx.coroutines.Runnable
-import rikka.core.res.isNight
-import rikka.core.res.resolveColor
+import rikka.core.ktx.unsafeLazy
 import rikka.material.app.MaterialActivity
 
-internal class MainActivity : MaterialActivity(), Runnable {
+internal class MainActivity : MaterialActivity(), DefaultLifecycleObserver, Runnable {
 
     private var mVisible: Boolean by mutableStateOf(value = true)
     private var actionBarVisible: Boolean by mutableStateOf(value = true)
@@ -77,24 +75,35 @@ internal class MainActivity : MaterialActivity(), Runnable {
         false
     }
 
-
     private var mMainFragment: Fragment? = null
     private var mProductLogo: Drawable? = null
 
-    private lateinit var mViewPager2: ViewPager2
+    private val mViewPager2: ViewPager2 by unsafeLazy {
+        ViewPager2(this@MainActivity).apply {
+            isUserInputEnabled = true
+            orientation = ViewPager2.ORIENTATION_HORIZONTAL
+            adapter = PagerAdapter(
+                activity = this@MainActivity,
+                mainFragment = mMainFragment
+            )
+            offscreenPageLimit = (adapter as PagerAdapter).itemCount
+        }
+    }
 
+    private lateinit var mActivity: MainActivity
 
-    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
 
+        mActivity = this@MainActivity
+
         mMainFragment = PluginExecutor.execMethodCall(
-            activity = this@MainActivity,
+            activity = mActivity,
             name = LibEcosedPlugin.channel,
             method = LibEcosedPlugin.getMainFragment
         ) as Fragment
 
         mProductLogo = PluginExecutor.execMethodCall(
-            activity = this@MainActivity,
+            activity = mActivity,
             name = LibEcosedPlugin.channel,
             method = LibEcosedPlugin.getProductLogo
         ) as Drawable
@@ -102,34 +111,114 @@ internal class MainActivity : MaterialActivity(), Runnable {
         mVisible = true
         title = AppUtils.getAppName()
 
-        super.onCreate(savedInstanceState)
+        super<MaterialActivity>.onCreate(savedInstanceState)
+        lifecycle.addObserver(mActivity)
 
-        val madapter = PagerAdapter(
-            activity = this@MainActivity,
-            mainFragment = mMainFragment
-        )
 
-        mViewPager2 = ViewPager2(this@MainActivity).apply {
-            isUserInputEnabled = true
-            orientation = ViewPager2.ORIENTATION_HORIZONTAL
-            adapter = madapter
+    }
+
+
+
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+        intent.categories.forEach { category ->
+            if (category != Intent.CATEGORY_HOME) {
+                super.onBackPressed()
+            }
         }
+    }
 
+    override fun setSupportActionBar(toolbar: Toolbar?) {
+        super.setSupportActionBar(toolbar).let {
+            supportActionBar?.apply {
+                setDisplayShowCustomEnabled(true)
+                setCustomView(
+                    TabLayout(mActivity).apply {
+                        setBackgroundColor(Color.Transparent.toArgb())
+                        tabMode = TabLayout.MODE_AUTO
+                        TabLayoutMediator(this, mViewPager2) { tab, position ->
+                            tab.text = when (position) {
+                                0 -> "主页"
+                                1 -> "桌面"
+                                2 -> "设置"
+                                else -> "Error"
+                            }
+                        }.attach()
+                    },
+                    ActionBar.LayoutParams(
+                        ActionBar.LayoutParams.MATCH_PARENT,
+                        ActionBar.LayoutParams.MATCH_PARENT
+                    )
+                )
+            }
+        }
+    }
+
+    override fun computeUserThemeKey(): String {
+//        return super.computeUserThemeKey().let {
+//            ThemeHelper.getTheme(
+//                context = this@MainActivity
+//            ) + ThemeHelper.isUsingSystemColor()
+//        }
+        return ThemeHelper.getTheme(
+            context = this@MainActivity
+        ) + ThemeHelper.isUsingSystemColor()
+    }
+
+    override fun onApplyUserThemeResource(theme: Resources.Theme, isDecorView: Boolean) {
+        super.onApplyUserThemeResource(
+            theme = theme,
+            isDecorView = isDecorView
+        ).run {
+            if (ThemeHelper.isUsingSystemColor()) {
+                theme.applyStyle(R.style.ThemeOverlay_LibEcosed_DynamicColors, true)
+            }
+            theme.applyStyle(ThemeHelper.getThemeStyleRes(context = this@MainActivity), true)
+        }
+    }
+
+    @SuppressLint("RestrictedApi")
+    override fun onApplyTranslucentSystemBars() {
+        super.onApplyTranslucentSystemBars()
+        EdgeToEdgeUtils.applyEdgeToEdge(window, true)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_settings -> Toast.makeText(this@MainActivity, "设置", Toast.LENGTH_SHORT)
+                .show()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
+    override fun onCreate(owner: LifecycleOwner) {
+        super<DefaultLifecycleObserver>.onCreate(owner)
         setContent {
-            val windowSize: WindowSizeClass = calculateWindowSizeClass(activity = this)
-            val displayFeatures: List<DisplayFeature> =
-                calculateDisplayFeatures(activity = this)
             LocalView.current.setOnTouchListener(delayHideTouchListener)
             LibEcosedTheme(
                 dynamicColor = ThemeHelper.isUsingSystemColor()
             ) { dynamic ->
                 ActivityMain(
-                    windowSize = windowSize,
-                    displayFeatures = displayFeatures,
+                    windowSize = calculateWindowSizeClass(
+                        activity = this@MainActivity
+                    ),
+                    displayFeatures = calculateDisplayFeatures(
+                        activity = this@MainActivity
+                    ),
                     productLogo = mProductLogo,
                     topBarVisible = actionBarVisible,
                     topBarUpdate = { toolbar ->
-                        setSupportActionBar(toolbar)
+                        setSupportActionBar(
+                            toolbar = toolbar
+                        )
                     },
                     viewPager2 = mViewPager2,
                     androidVersion = "13",
@@ -161,102 +250,26 @@ internal class MainActivity : MaterialActivity(), Runnable {
                 )
             }
         }
-
     }
 
-    @Deprecated("Deprecated in Java")
-    override fun onBackPressed() {
-        intent.categories.forEach { category ->
-            if (category != Intent.CATEGORY_HOME) {
-                super.onBackPressed()
-            }
-        }
+    override fun onStart(owner: LifecycleOwner) {
+        super<DefaultLifecycleObserver>.onStart(owner)
     }
 
-    override fun setSupportActionBar(toolbar: Toolbar?) {
-        super.setSupportActionBar(toolbar).let {
-            supportActionBar?.apply {
-                setDisplayShowCustomEnabled(true)
-                setCustomView(
-                    TabLayout(this@MainActivity).apply {
-                        setBackgroundColor(Color.Transparent.toArgb())
-                        tabMode = TabLayout.MODE_AUTO
-                        TabLayoutMediator(this, mViewPager2) { tab, position ->
-                            tab.text = when (position) {
-                                0 -> "主页"
-                                1 -> "桌面"
-                                2 -> "设置"
-                                else -> "Error"
-                            }
-                        }.attach()
-                    },
-                    ActionBar.LayoutParams(
-                        ActionBar.LayoutParams.MATCH_PARENT,
-                        ActionBar.LayoutParams.MATCH_PARENT
-                    )
-                )
-            }
-        }
+    override fun onResume(owner: LifecycleOwner) {
+        super<DefaultLifecycleObserver>.onResume(owner)
     }
 
-    override fun computeUserThemeKey(): String {
-        super.computeUserThemeKey()
-        return ThemeHelper.getTheme(
-            context = this@MainActivity
-        ) + ThemeHelper.isUsingSystemColor()
+    override fun onPause(owner: LifecycleOwner) {
+        super<DefaultLifecycleObserver>.onPause(owner)
     }
 
-    override fun onApplyUserThemeResource(theme: Resources.Theme, isDecorView: Boolean) {
-        super.onApplyUserThemeResource(
-            theme = theme,
-            isDecorView = isDecorView
-        ).run {
-            if (ThemeHelper.isUsingSystemColor()) {
-                theme.applyStyle(R.style.ThemeOverlay_LibEcosed_DynamicColors, true)
-            }
-            theme.applyStyle(ThemeHelper.getThemeStyleRes(context = this@MainActivity), true)
-        }
+    override fun onStop(owner: LifecycleOwner) {
+        super<DefaultLifecycleObserver>.onStop(owner)
     }
 
-    @SuppressLint("RestrictedApi")
-    override fun onApplyTranslucentSystemBars() {
-        super.onApplyTranslucentSystemBars()
-//        val window = window
-//        val theme = theme
-//
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            window?.decorView?.post {
-//                if (window.decorView.rootWindowInsets?.systemWindowInsetBottom ?: 0 >= Resources.getSystem().displayMetrics.density * 40) {
-//                    window.navigationBarColor =
-//                        theme.resolveColor(android.R.attr.navigationBarColor) and 0x00ffffff or -0x20000000
-//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-//                        window.isNavigationBarContrastEnforced = false
-//                    }
-//                } else {
-//                    window.navigationBarColor = Color.Transparent.toArgb()
-//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-//                        window.isNavigationBarContrastEnforced = true
-//                    }
-//                }
-//            }
-//        }
-
-        EdgeToEdgeUtils.applyEdgeToEdge(window, true)
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_settings -> Toast.makeText(this@MainActivity, "设置", Toast.LENGTH_SHORT)
-                .show()
-        }
-        return super.onOptionsItemSelected(item)
+    override fun onDestroy(owner: LifecycleOwner) {
+        super<DefaultLifecycleObserver>.onDestroy(owner)
     }
 
     override fun run() {
