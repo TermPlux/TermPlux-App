@@ -7,6 +7,7 @@ import android.content.Context
 import android.os.Build
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.core.content.ContextCompat
 import com.farmerbb.taskbar.lib.Taskbar
 import com.google.android.material.color.DynamicColors
 import com.google.android.material.color.DynamicColorsOptions
@@ -36,9 +37,25 @@ internal class LibEcosedPlugin : LibEcosed {
 
     override fun onEcosedMethodCall(call: PluginChannel.MethodCall, result: PluginChannel.Result) {
         when (call.method) {
-            getMainFragment -> result.success(mPluginChannel.getMainFragment(ecosed = this@LibEcosedPlugin))
-            getProductLogo -> result.success(mPluginChannel.getProductLogo(ecosed = this@LibEcosedPlugin))
-            isDebug -> result.success(mPluginChannel.isDebug())
+            getMainFragment -> result.success(
+                mPluginChannel.getMainFragment(
+                    ecosed = this@LibEcosedPlugin
+                )
+            )
+            getProductLogo -> result.success(
+                mPluginChannel.getProductLogo(
+                    ecosed = this@LibEcosedPlugin
+                )
+            )
+            isDebug -> result.success(
+                mPluginChannel.isDebug()
+            )
+            getWallpaper -> result.success(
+                ContextCompat.getDrawable(
+                    mPluginChannel.getContext()!!,
+                    R.drawable.custom_wallpaper_24
+                )
+            )
             else -> result.notImplemented()
         }
     }
@@ -118,5 +135,6 @@ internal class LibEcosedPlugin : LibEcosed {
         const val getMainFragment: String = "fragment_main"
         const val getProductLogo: String = "logo_product"
         const val isDebug: String = "is_debug"
+        const val getWallpaper: String = "wallpaper_drawable"
     }
 }

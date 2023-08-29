@@ -221,14 +221,14 @@ internal class AppsAdapter constructor(
         }
 
         holder.itemView.setOnClickListener { view ->
-//            if (mApplicationList[
-//                    holder.absoluteAdapterPosition
-//                ].pkgName != BuildConfig.APPLICATION_ID
-//            ) {
-//                openApp(view = view, position = position)
-//            } else {
-//                navToHome()
-//            }
+            if (mApplicationList[
+                    holder.absoluteAdapterPosition
+                ].pkgName != AppUtils.getAppPackageName()
+            ) {
+                openApp(view = view, position = position)
+            } else {
+                navToHome()
+            }
         }
     }
 
