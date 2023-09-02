@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.LifecycleOwner
 import io.ecosed.libecosed.LibEcosedBuilder
 import io.ecosed.libecosed.LibEcosedImpl
 import io.ecosed.plugin.EcosedClient
@@ -15,11 +14,6 @@ import io.ecosed.plugin.EcosedPlugin
 import io.ecosed.plugin.LibEcosed
 
 class MyClient : EcosedClient(), LibEcosedImpl by LibEcosedBuilder {
-
-    override fun onCreate(owner: LifecycleOwner) {
-        super.onCreate(owner)
-        setContentView(R.layout.main)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

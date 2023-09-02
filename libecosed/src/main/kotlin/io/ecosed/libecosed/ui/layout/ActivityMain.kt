@@ -111,9 +111,8 @@ internal fun ActivityMain(
 ) {
     val pages = listOf(
         Screen.ComposeTitle,
-        Screen.Home,
         Screen.Overview,
-
+        Screen.Home,
         Screen.Settings,
         Screen.About,
         Screen.Divider,
@@ -123,9 +122,8 @@ internal fun ActivityMain(
         Screen.Preference
     )
     val items = listOf(
-        Screen.Home,
         Screen.Overview,
-
+        Screen.Home,
         Screen.Settings,
         Screen.About
     )
