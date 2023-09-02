@@ -58,7 +58,7 @@ configurations.all {
 }
 
 dependencies {
-    implementation(dependencyNotation = "com.github.ecosed:plugin:5.0.0")
+    implementation(dependencyNotation = "com.github.ecosed:plugin:6.1.0")
     implementation(dependencyNotation = project(path = ":libecosed"))
     implementation(dependencyNotation = "androidx.core:core-ktx:1.10.1")
     implementation(dependencyNotation = "androidx.appcompat:appcompat:1.6.1")

@@ -48,22 +48,20 @@ internal class MediatorUtils constructor(
                 }
             }
             true
-        }.also {
-            mViewPager.registerOnPageChangeCallback(
-                object : ViewPager2.OnPageChangeCallback() {
-                    override fun onPageSelected(position: Int) {
-                        super.onPageSelected(position)
-                        mBottomNavigationView.selectedItemId =
-                            mBottomNavigationView.menu[position].itemId
-                    }
-                }
-            )
-        }.also {
-            TabLayoutMediator(
-                mTabLayout, mViewPager
-            ) { tab: TabLayout.Tab, position: Int ->
-                mConfig(mViewPager, tab, position)
-            }.attach()
         }
+        mViewPager.registerOnPageChangeCallback(
+            object : ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    super.onPageSelected(position)
+                    mBottomNavigationView.selectedItemId =
+                        mBottomNavigationView.menu[position].itemId
+                }
+            }
+        )
+        TabLayoutMediator(
+            mTabLayout, mViewPager
+        ) { tab: TabLayout.Tab, position: Int ->
+            mConfig(mViewPager, tab, position)
+        }.attach()
     }
 }

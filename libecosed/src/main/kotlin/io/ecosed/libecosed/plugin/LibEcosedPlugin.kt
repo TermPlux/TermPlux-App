@@ -5,6 +5,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.content.ContextCompat
@@ -21,50 +22,22 @@ import io.ecosed.libecosed.settings.EcosedSettings
 import io.ecosed.plugin.LibEcosed
 import io.ecosed.plugin.PluginBinding
 import io.ecosed.plugin.PluginChannel
+import io.ecosed.plugin.PluginEngine
+import org.lsposed.hiddenapibypass.HiddenApiBypass
 
-internal class LibEcosedPlugin : LibEcosed {
+internal class LibEcosedPlugin : LibEcosed() {
 
     private lateinit var mPluginChannel: PluginChannel
 
-    override fun onEcosedAdded(binding: PluginBinding) {
-        mPluginChannel = PluginChannel(binding = binding, channel = channel)
-        mPluginChannel.setMethodCallHandler(handler = this@LibEcosedPlugin)
+    override fun init() {
+
     }
 
-    override fun onEcosedRemoved(binding: PluginBinding) {
-        mPluginChannel.setMethodCallHandler(handler = null)
-    }
-
-    override fun onEcosedMethodCall(call: PluginChannel.MethodCall, result: PluginChannel.Result) {
-        when (call.method) {
-            getMainFragment -> result.success(
-                mPluginChannel.getMainFragment(
-                    ecosed = this@LibEcosedPlugin
-                )
-            )
-            getProductLogo -> result.success(
-                mPluginChannel.getProductLogo(
-                    ecosed = this@LibEcosedPlugin
-                )
-            )
-            isDebug -> result.success(
-                mPluginChannel.isDebug()
-            )
-            getWallpaper -> result.success(
-                ContextCompat.getDrawable(
-                    mPluginChannel.getContext()!!,
-                    R.drawable.custom_wallpaper_24
-                )
-            )
-            else -> result.notImplemented()
+    override fun initSDKs(application: Application) {
+        super.initSDKs(application)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            HiddenApiBypass.addHiddenApiExemptions("L")
         }
-    }
-
-    override val getPluginChannel: PluginChannel
-        get() = mPluginChannel
-
-    override fun initSDK(application: Application) {
-        super.initSDK(application)
         // 创建通知通道
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val importance = NotificationManager.IMPORTANCE_DEFAULT
@@ -127,11 +100,51 @@ internal class LibEcosedPlugin : LibEcosed {
         DialogX.useHaptic = true
     }
 
-    companion object {
+    override fun initSDKInitialized() {
+        super.initSDKInitialized()
+
+    }
+
+    override fun onEcosedAdded(binding: PluginBinding) {
+        mPluginChannel = PluginChannel(binding = binding, channel = channel)
+        mPluginChannel.setMethodCallHandler(handler = this@LibEcosedPlugin)
+    }
+
+    override fun onEcosedMethodCall(call: PluginChannel.MethodCall, result: PluginChannel.Result) {
+        when (call.method) {
+            getClient -> result.success(mPluginChannel.getClient(ecosed = this@LibEcosedPlugin))
+            getMainFragment -> result.success(
+//                mPluginChannel.getMainFragment(
+//                    ecosed = this@LibEcosedPlugin
+//                )
+                null
+            )
+            getProductLogo -> result.success(
+                mPluginChannel.getProductLogo(
+                    ecosed = this@LibEcosedPlugin
+                )
+            )
+            isDebug -> result.success(
+                mPluginChannel.isDebug()
+            )
+            getWallpaper -> result.success(
+                ContextCompat.getDrawable(
+                    mPluginChannel.getContext()!!,
+                    R.drawable.custom_wallpaper_24
+                )
+            )
+            else -> result.notImplemented()
+        }
+    }
+
+    override val getPluginChannel: PluginChannel
+        get() = mPluginChannel
+
+    internal companion object {
         const val notificationChannel: String = "id"
 
         const val channel: String = "libecosed"
-
+        const val getClient: String = "ecosed_client"
         const val getMainFragment: String = "fragment_main"
         const val getProductLogo: String = "logo_product"
         const val isDebug: String = "is_debug"

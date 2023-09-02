@@ -4,7 +4,6 @@ import androidx.window.layout.FoldingFeature
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
-
 @OptIn(ExperimentalContracts::class)
 fun isBookPosture(
     foldFeature: FoldingFeature?

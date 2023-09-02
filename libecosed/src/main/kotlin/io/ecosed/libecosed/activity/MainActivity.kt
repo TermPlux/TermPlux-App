@@ -1,13 +1,18 @@
 package io.ecosed.libecosed.activity
 
 import android.annotation.SuppressLint
+import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
 import android.content.res.Resources
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.os.IBinder
 import android.os.Looper
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
@@ -19,7 +24,6 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
-import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,16 +36,17 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.viewpager2.widget.ViewPager2
-import androidx.window.layout.DisplayFeature
 import com.blankj.utilcode.util.AppUtils
 import com.farmerbb.taskbar.lib.Taskbar
 import com.google.accompanist.adaptive.calculateDisplayFeatures
 import com.google.android.material.internal.EdgeToEdgeUtils
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import io.ecosed.libecosed.EcosedFramework
 import io.ecosed.libecosed.R
 import io.ecosed.libecosed.adapter.PagerAdapter
 import io.ecosed.libecosed.plugin.LibEcosedPlugin
+import io.ecosed.libecosed.service.EcosedService
 import io.ecosed.libecosed.ui.layout.ActivityMain
 import io.ecosed.libecosed.ui.theme.LibEcosedTheme
 import io.ecosed.libecosed.utils.ThemeHelper
@@ -50,7 +55,7 @@ import kotlinx.coroutines.Runnable
 import rikka.core.ktx.unsafeLazy
 import rikka.material.app.MaterialActivity
 
-internal class MainActivity : MaterialActivity(), DefaultLifecycleObserver, Runnable {
+internal class MainActivity : MaterialActivity(), ServiceConnection, DefaultLifecycleObserver, Runnable {
 
     private var mVisible: Boolean by mutableStateOf(value = true)
     private var actionBarVisible: Boolean by mutableStateOf(value = true)
@@ -87,10 +92,14 @@ internal class MainActivity : MaterialActivity(), DefaultLifecycleObserver, Runn
                 mainFragment = mMainFragment
             )
             offscreenPageLimit = (adapter as PagerAdapter).itemCount
+          //  setPageTransformer(PageTransformerUtils())
         }
     }
 
     private lateinit var mActivity: MainActivity
+
+    private lateinit var mEcosed: Intent
+    private var mFramework: EcosedFramework? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -99,25 +108,50 @@ internal class MainActivity : MaterialActivity(), DefaultLifecycleObserver, Runn
         mMainFragment = PluginExecutor.execMethodCall(
             activity = mActivity,
             name = LibEcosedPlugin.channel,
-            method = LibEcosedPlugin.getMainFragment
+            method = LibEcosedPlugin.getMainFragment,
+            null
         ) as Fragment
 
         mProductLogo = PluginExecutor.execMethodCall(
             activity = mActivity,
             name = LibEcosedPlugin.channel,
-            method = LibEcosedPlugin.getProductLogo
+            method = LibEcosedPlugin.getProductLogo,
+            null
         ) as Drawable
+
+        mEcosed = Intent(this@MainActivity, EcosedService().javaClass)
+        startService(mEcosed)
+        bindService(mEcosed, this@MainActivity, Context.BIND_AUTO_CREATE)
 
         mVisible = true
         title = AppUtils.getAppName()
 
         super<MaterialActivity>.onCreate(savedInstanceState)
+
+
+
         lifecycle.addObserver(mActivity)
 
 
     }
 
+    override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+        Log.i(tag, "服务端绑定成功")
 
+        mFramework = EcosedFramework.Stub.asInterface(service)
+    }
+
+    override fun onServiceDisconnected(name: ComponentName?) {
+
+    }
+
+    override fun onBindingDied(name: ComponentName?) {
+        super.onBindingDied(name)
+    }
+
+    override fun onNullBinding(name: ComponentName?) {
+        super.onNullBinding(name)
+    }
 
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
@@ -133,10 +167,10 @@ internal class MainActivity : MaterialActivity(), DefaultLifecycleObserver, Runn
             supportActionBar?.apply {
                 setDisplayShowCustomEnabled(true)
                 setCustomView(
-                    TabLayout(mActivity).apply {
-                        setBackgroundColor(Color.Transparent.toArgb())
-                        tabMode = TabLayout.MODE_AUTO
-                        TabLayoutMediator(this, mViewPager2) { tab, position ->
+                    TabLayout(mActivity).also {
+                        it.setBackgroundColor(Color.Transparent.toArgb())
+                        it.tabMode = TabLayout.MODE_AUTO
+                        TabLayoutMediator(it, mViewPager2) { tab, position ->
                             tab.text = when (position) {
                                 0 -> "主页"
                                 1 -> "桌面"
@@ -302,6 +336,7 @@ internal class MainActivity : MaterialActivity(), DefaultLifecycleObserver, Runn
 
     companion object {
 
+        const val tag: String = "MainActivity"
 
         /** 操作栏是否应该在[autoHideDelayMillis]毫秒后自动隐藏。*/
         const val autoHide = false
@@ -314,4 +349,6 @@ internal class MainActivity : MaterialActivity(), DefaultLifecycleObserver, Runn
 
 
     }
+
+
 }

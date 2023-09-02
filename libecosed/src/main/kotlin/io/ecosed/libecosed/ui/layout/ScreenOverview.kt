@@ -274,13 +274,13 @@ internal fun ScreenOverview(
                         bottom = 6.dp
                     )
             ) {
-//                TopActionBar(
-//                    navController = navController,
-//                    modifier = Modifier.fillMaxWidth(),
-//                    visible = topBarVisible,
-//                    drawerState = drawerState,
-//                    update = topBarUpdate
-//                )
+                TopActionBar(
+                    navController = navController,
+                    modifier = Modifier.fillMaxWidth(),
+                    visible = topBarVisible,
+                    drawerState = drawerState,
+                    update = topBarUpdate
+                )
             }
             OutlinedCard(
                 onClick = {

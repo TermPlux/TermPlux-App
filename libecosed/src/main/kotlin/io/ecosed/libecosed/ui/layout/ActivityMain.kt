@@ -540,7 +540,7 @@ internal fun ActivityMain(
         ) { innerPadding ->
             NavHost(
                 navController = navController,
-                startDestination = Screen.Home.route,
+                startDestination = Screen.Overview.route,
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(
@@ -618,90 +618,157 @@ internal fun ActivityMain(
 
 
 
-//        NavigationType.NavigationRail,
-//        NavigationType.BottomNavigation -> ModalNavigationDrawer(
-//            drawerContent = {
-//                ModalDrawerSheet {
-//                    nav()
-//                }
-//            },
-//            modifier = Modifier.fillMaxSize(),
-//            drawerState = drawerState,
-//            gesturesEnabled = true
-//        ) {
-//
-//        }
-
-
         NavigationType.NavigationRail,
-        NavigationType.BottomNavigation -> Row(
-            modifier = Modifier.fillMaxSize()
+        NavigationType.BottomNavigation -> ModalNavigationDrawer(
+            drawerContent = {
+                ModalDrawerSheet {
+                    nav()
+                }
+            },
+            modifier = Modifier.fillMaxSize(),
+            drawerState = drawerState,
+            gesturesEnabled = true
         ) {
-            AnimatedVisibility(
-                visible = navigationType == NavigationType.NavigationRail
+            Row(
+                modifier = Modifier.fillMaxSize()
             ) {
-                NavigationRail(
-                    modifier = Modifier.fillMaxHeight(),
-                    header = {
-                        FloatingActionButton(
-                            onClick = {
-
-                            }
-                        ) {
-                            Image(
-                                painter = rememberDrawablePainter(
-                                    drawable = productLogo
-                                ),
-                                contentDescription = null
-                            )
-                        }
-                    }
+                AnimatedVisibility(
+                    visible = navigationType == NavigationType.NavigationRail
                 ) {
-                    Column(
-                        modifier = Modifier.verticalScroll(
-                            state = rememberScrollState()
-                        )
-                    ) {
-                        items.forEach { item ->
-                            NavigationRailItem(
-                                selected = currentDestination?.hierarchy?.any {
-                                    it.route == item.route
-                                } == true,
+                    NavigationRail(
+                        modifier = Modifier.fillMaxHeight(),
+                        header = {
+                            FloatingActionButton(
                                 onClick = {
-                                    if (item.type == ScreenType.Compose) navController.navigate(
-                                        route = item.route
-                                    ) {
-                                        popUpTo(
-                                            id = navController.graph.findStartDestination().id
-                                        ) {
-                                            saveState = true
-                                        }
-                                        launchSingleTop = true
-                                        restoreState = true
-                                    }
-                                },
-                                icon = {
-                                    Icon(
-                                        imageVector = item.imageVector,
-                                        contentDescription = null
-                                    )
-                                },
-                                enabled = true,
-                                label = {
-                                    Text(
-                                        stringResource(
-                                            id = item.title
-                                        )
-                                    )
-                                },
-                                alwaysShowLabel = false
+
+                                }
+                            ) {
+                                Image(
+                                    painter = rememberDrawablePainter(
+                                        drawable = productLogo
+                                    ),
+                                    contentDescription = null
+                                )
+                            }
+                        }
+                    ) {
+                        Column(
+                            modifier = Modifier.verticalScroll(
+                                state = rememberScrollState()
                             )
+                        ) {
+                            items.forEach { item ->
+                                NavigationRailItem(
+                                    selected = currentDestination?.hierarchy?.any {
+                                        it.route == item.route
+                                    } == true,
+                                    onClick = {
+                                        if (item.type == ScreenType.Compose) navController.navigate(
+                                            route = item.route
+                                        ) {
+                                            popUpTo(
+                                                id = navController.graph.findStartDestination().id
+                                            ) {
+                                                saveState = true
+                                            }
+                                            launchSingleTop = true
+                                            restoreState = true
+                                        }
+                                    },
+                                    icon = {
+                                        Icon(
+                                            imageVector = item.imageVector,
+                                            contentDescription = null
+                                        )
+                                    },
+                                    enabled = true,
+                                    label = {
+                                        Text(
+                                            stringResource(
+                                                id = item.title
+                                            )
+                                        )
+                                    },
+                                    alwaysShowLabel = false
+                                )
+                            }
                         }
                     }
                 }
+                content()
             }
-            content()
         }
+
+
+//        NavigationType.NavigationRail,
+//        NavigationType.BottomNavigation -> Row(
+//            modifier = Modifier.fillMaxSize()
+//        ) {
+//            AnimatedVisibility(
+//                visible = navigationType == NavigationType.NavigationRail
+//            ) {
+//                NavigationRail(
+//                    modifier = Modifier.fillMaxHeight(),
+//                    header = {
+//                        FloatingActionButton(
+//                            onClick = {
+//
+//                            }
+//                        ) {
+//                            Image(
+//                                painter = rememberDrawablePainter(
+//                                    drawable = productLogo
+//                                ),
+//                                contentDescription = null
+//                            )
+//                        }
+//                    }
+//                ) {
+//                    Column(
+//                        modifier = Modifier.verticalScroll(
+//                            state = rememberScrollState()
+//                        )
+//                    ) {
+//                        items.forEach { item ->
+//                            NavigationRailItem(
+//                                selected = currentDestination?.hierarchy?.any {
+//                                    it.route == item.route
+//                                } == true,
+//                                onClick = {
+//                                    if (item.type == ScreenType.Compose) navController.navigate(
+//                                        route = item.route
+//                                    ) {
+//                                        popUpTo(
+//                                            id = navController.graph.findStartDestination().id
+//                                        ) {
+//                                            saveState = true
+//                                        }
+//                                        launchSingleTop = true
+//                                        restoreState = true
+//                                    }
+//                                },
+//                                icon = {
+//                                    Icon(
+//                                        imageVector = item.imageVector,
+//                                        contentDescription = null
+//                                    )
+//                                },
+//                                enabled = true,
+//                                label = {
+//                                    Text(
+//                                        stringResource(
+//                                            id = item.title
+//                                        )
+//                                    )
+//                                },
+//                                alwaysShowLabel = false
+//                            )
+//                        }
+//                    }
+//                }
+//            }
+//            content()
+//        }
     }
 }
 

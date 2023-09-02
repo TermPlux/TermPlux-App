@@ -38,19 +38,23 @@ internal fun ScreenHome(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
-        Column(modifier = Modifier.fillMaxSize()) {
-            TopActionBar(
-                navController = navController,
-                modifier = Modifier.fillMaxWidth(),
-                visible = topBarVisible,
-                drawerState = drawerState,
-                update = topBarUpdate
-            )
-            Pager(
-                modifier = Modifier.fillMaxSize(),
-                viewPager2 = viewPager2
-            )
-        }
+        Pager(
+            modifier = Modifier.fillMaxSize(),
+            viewPager2 = viewPager2
+        )
+//        Column(modifier = Modifier.fillMaxSize()) {
+//            TopActionBar(
+//                navController = navController,
+//                modifier = Modifier.fillMaxWidth(),
+//                visible = topBarVisible,
+//                drawerState = drawerState,
+//                update = topBarUpdate
+//            )
+//            Pager(
+//                modifier = Modifier.fillMaxSize(),
+//                viewPager2 = viewPager2
+//            )
+//        }
 //        Box(modifier = Modifier.fillMaxSize()) {
 //            Image(
 //                painter = painterResource(

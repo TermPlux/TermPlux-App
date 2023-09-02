@@ -42,7 +42,6 @@ internal class AppsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (view is RecyclerView) view.apply {
-            background = ContextCompat.getDrawable(requireContext(), R.drawable.custom_wallpaper_24)
             layoutManager = GridLayoutManager(
                 requireContext(),
                 4,

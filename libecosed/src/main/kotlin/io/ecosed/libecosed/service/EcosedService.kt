@@ -2,18 +2,17 @@ package io.ecosed.libecosed.service
 
 import android.Manifest
 import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.app.Service
-import android.app.UiModeManager
 import android.content.ComponentName
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.res.Configuration
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.core.app.NotificationCompat
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.PermissionUtils
@@ -25,6 +24,7 @@ import io.ecosed.libecosed.R
 import io.ecosed.libecosed.plugin.LibEcosedPlugin
 import io.ecosed.libecosed.utils.ChineseCaleUtils
 import io.ecosed.libecosed.utils.EnvironmentUtils
+import io.ecosed.plugin.PluginExecutor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -33,23 +33,45 @@ import rikka.shizuku.Shizuku
 internal class EcosedService : Service(), Shizuku.OnBinderReceivedListener,
     Shizuku.OnBinderDeadListener, Shizuku.OnRequestPermissionResultListener {
 
-    private val poem: ArrayList<String> = arrayListOf(
-        "不向焦虑与抑郁投降，这个世界终会有我们存在的地方。",
-        "把喜欢的一切留在身边，这便是努力的意义。",
-        "治愈、温暖，这就是我们最终幸福的结局。",
-        "我有一个梦，也许有一天，灿烂的阳光能照进黑暗森林。",
-        "如果必须要失去，那么不如一开始就不曾拥有。",
-        "我们的终点就是与幸福同在。",
-        "孤独的人不会伤害别人，只会不断地伤害自己罢了。",
-        "如果你能记住我的名字，如果你们都能记住我的名字，也许我或者我们，终有一天能自由地生存着。",
-        "对于所有生命来说，不会死亡的绝望，是最可怕的审判。",
-        "我不曾活着，又何必害怕死亡。"
-    )
+    private lateinit var mService: EcosedService
+    private var isDebug: Boolean by mutableStateOf(value = false)
+    private lateinit var mProductLogo: Drawable
+    private lateinit var poem: ArrayList<String>
 
     override fun onCreate() {
         super.onCreate()
-     //   setupNotificationChannel()
-        startForeground(notificationId, buildNotification())
+        mService = this@EcosedService
+
+
+
+        isDebug = PluginExecutor.execMethodCall(
+            service = mService,
+            name = LibEcosedPlugin.channel,
+            method = LibEcosedPlugin.isDebug,
+            null
+        ) as Boolean
+        mProductLogo = PluginExecutor.execMethodCall(
+            service = mService,
+            name = LibEcosedPlugin.channel,
+            method = LibEcosedPlugin.getProductLogo,
+            null
+        ) as Drawable
+
+        poem = arrayListOf()
+        poem.add("不向焦虑与抑郁投降，这个世界终会有我们存在的地方。")
+        poem.add("把喜欢的一切留在身边，这便是努力的意义。")
+        poem.add("治愈、温暖，这就是我们最终幸福的结局。")
+        poem.add("我有一个梦，也许有一天，灿烂的阳光能照进黑暗森林。")
+        poem.add("如果必须要失去，那么不如一开始就不曾拥有。")
+        poem.add("我们的终点就是与幸福同在。")
+        poem.add("孤独的人不会伤害别人，只会不断地伤害自己罢了。")
+        poem.add("如果你能记住我的名字，如果你们都能记住我的名字，也许我或者我们，终有一天能自由地生存着。")
+        poem.add("对于所有生命来说，不会死亡的绝望，是最可怕的审判。")
+        poem.add("我不曾活着，又何必害怕死亡。")
+
+
+        val notification = buildNotification()
+        startForeground(notificationId, notification)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -67,6 +89,11 @@ internal class EcosedService : Service(), Shizuku.OnBinderReceivedListener,
             override fun openDesktopSettings() = taskbarSettings()
             override fun openEcosedSettings() = ecosedSettings()
         }
+    }
+
+    override fun onRebind(intent: Intent?) {
+        super.onRebind(intent)
+
     }
 
     override fun onUnbind(intent: Intent?): Boolean {
@@ -91,7 +118,7 @@ internal class EcosedService : Service(), Shizuku.OnBinderReceivedListener,
     }
 
     private val mUserServiceArgs = Shizuku.UserServiceArgs(
-        ComponentName(packageName, UserService().javaClass.name)
+        ComponentName(AppUtils.getAppPackageName(), UserService().javaClass.name)
     )
         .daemon(false)
         .processNameSuffix("service")
@@ -157,23 +184,6 @@ internal class EcosedService : Service(), Shizuku.OnBinderReceivedListener,
         }
     }
 
-//    // 创建通知渠道
-//    private fun setupNotificationChannel() {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            val importance = NotificationManager.IMPORTANCE_DEFAULT
-//            val channel = NotificationChannel(
-//                channelId,
-//                getString(R.string.lib_name),
-//                importance
-//            ).apply {
-//                description = getString(R.string.lib_description)
-//            }
-//            val notificationManager: NotificationManager =
-//                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-//            notificationManager.createNotificationChannel(channel)
-//        }
-//    }
-
     private fun buildNotification(): Notification {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             PermissionUtils.permission(Manifest.permission.POST_NOTIFICATIONS)
@@ -194,6 +204,6 @@ internal class EcosedService : Service(), Shizuku.OnBinderReceivedListener,
     }
 
     companion object {
-        private const val notificationId = 1
+        const val notificationId = 1
     }
 }

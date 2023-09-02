@@ -4,7 +4,7 @@ import android.graphics.Rect
 import androidx.window.layout.FoldingFeature
 
 sealed interface DevicePosture {
-    object NormalPosture : DevicePosture
+    data object NormalPosture : DevicePosture
 
     data class BookPosture(
         val hingePosition: Rect
