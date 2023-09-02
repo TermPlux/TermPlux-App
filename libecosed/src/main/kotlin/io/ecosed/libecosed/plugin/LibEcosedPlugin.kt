@@ -5,7 +5,6 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
-import android.util.Log
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.content.ContextCompat
@@ -22,7 +21,6 @@ import io.ecosed.libecosed.settings.EcosedSettings
 import io.ecosed.plugin.LibEcosed
 import io.ecosed.plugin.PluginBinding
 import io.ecosed.plugin.PluginChannel
-import io.ecosed.plugin.PluginEngine
 import org.lsposed.hiddenapibypass.HiddenApiBypass
 
 internal class LibEcosedPlugin : LibEcosed() {
@@ -112,7 +110,11 @@ internal class LibEcosedPlugin : LibEcosed() {
 
     override fun onEcosedMethodCall(call: PluginChannel.MethodCall, result: PluginChannel.Result) {
         when (call.method) {
-            getClient -> result.success(mPluginChannel.getClient(ecosed = this@LibEcosedPlugin))
+            getClient -> result.success(
+                mPluginChannel.getClient(
+                    ecosed = this@LibEcosedPlugin
+                )
+            )
             getMainFragment -> result.success(
 //                mPluginChannel.getMainFragment(
 //                    ecosed = this@LibEcosedPlugin

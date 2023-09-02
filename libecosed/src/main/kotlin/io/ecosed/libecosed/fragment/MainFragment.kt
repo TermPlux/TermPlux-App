@@ -37,23 +37,19 @@ class MainFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return mClient.onCreateView(
-            inflater = inflater,
-            container = container,
-            savedInstanceState = savedInstanceState
-        ) ?: super.onCreateView(
-            inflater,
-            container,
-            savedInstanceState
-        )
+        super.onCreateView(inflater, container, savedInstanceState)
+        return mClient.onCreateView(inflater, container, savedInstanceState)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState).run {
-            mClient.onViewCreated(
-                view = view,
-                savedInstanceState = savedInstanceState
-            )
+        super.onViewCreated(view, savedInstanceState)
+        mClient.onViewCreated(view, savedInstanceState)
+    }
+
+    companion object {
+
+        fun newInstance(): MainFragment{
+            return MainFragment()
         }
     }
 }

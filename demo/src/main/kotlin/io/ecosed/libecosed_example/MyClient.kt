@@ -2,7 +2,10 @@ package io.ecosed.libecosed_example
 
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import io.ecosed.libecosed.LibEcosedBuilder
@@ -15,12 +18,22 @@ class MyClient : EcosedClient(), LibEcosedImpl by LibEcosedBuilder {
 
     override fun onCreate(owner: LifecycleOwner) {
         super.onCreate(owner)
+        setContentView(R.layout.main)
+    }
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        super.onCreateView(inflater, container, savedInstanceState)
+        return TextView(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        (view as TextView).text = "Hello World!"
     }
 
     override fun getPluginList(): ArrayList<EcosedPlugin> {

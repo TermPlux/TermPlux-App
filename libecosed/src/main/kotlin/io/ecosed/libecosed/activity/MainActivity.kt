@@ -80,21 +80,9 @@ internal class MainActivity : MaterialActivity(), ServiceConnection, DefaultLife
         false
     }
 
-    private var mMainFragment: Fragment? = null
     private var mProductLogo: Drawable? = null
 
-    private val mViewPager2: ViewPager2 by unsafeLazy {
-        ViewPager2(this@MainActivity).apply {
-            isUserInputEnabled = true
-            orientation = ViewPager2.ORIENTATION_HORIZONTAL
-            adapter = PagerAdapter(
-                activity = this@MainActivity,
-                mainFragment = mMainFragment
-            )
-            offscreenPageLimit = (adapter as PagerAdapter).itemCount
-          //  setPageTransformer(PageTransformerUtils())
-        }
-    }
+    private lateinit var mViewPager2: ViewPager2
 
     private lateinit var mActivity: MainActivity
 
@@ -105,12 +93,13 @@ internal class MainActivity : MaterialActivity(), ServiceConnection, DefaultLife
 
         mActivity = this@MainActivity
 
-        mMainFragment = PluginExecutor.execMethodCall(
-            activity = mActivity,
-            name = LibEcosedPlugin.channel,
-            method = LibEcosedPlugin.getMainFragment,
-            null
-        ) as Fragment
+        mViewPager2 = ViewPager2(this@MainActivity).apply {
+            isUserInputEnabled = true
+            orientation = ViewPager2.ORIENTATION_HORIZONTAL
+            adapter = PagerAdapter(activity = this@MainActivity)
+            offscreenPageLimit = (adapter as PagerAdapter).itemCount
+            //  setPageTransformer(PageTransformerUtils())
+        }
 
         mProductLogo = PluginExecutor.execMethodCall(
             activity = mActivity,

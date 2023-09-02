@@ -5,14 +5,12 @@ import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import io.ecosed.libecosed.fragment.AppsFragment
 import io.ecosed.libecosed.fragment.EmptyFragment
+import io.ecosed.libecosed.fragment.MainFragment
 import io.ecosed.libecosed.fragment.SettingsFragment
 
 internal class PagerAdapter(
-    activity: FragmentActivity,
-    mainFragment: Fragment?,
+    activity: FragmentActivity
 ) : FragmentStateAdapter(activity) {
-
-    private val mMainFragment: Fragment? = mainFragment
 
     override fun getItemCount(): Int {
         return arrayListOf(main, apps, settings).size
@@ -20,7 +18,7 @@ internal class PagerAdapter(
 
     override fun createFragment(position: Int): Fragment {
         return when (position){
-            main -> mMainFragment ?: EmptyFragment.newInstance()
+            main -> MainFragment.newInstance()
             apps -> AppsFragment.newInstance()
             settings -> SettingsFragment.newInstance()
             else -> EmptyFragment.newInstance()
