@@ -16,12 +16,17 @@ import com.google.android.material.color.HarmonizedColors
 import com.google.android.material.color.HarmonizedColorsOptions
 import com.kongzue.dialogx.DialogX
 import com.kongzue.dialogx.style.IOSStyle
+import com.taobao.weex.InitConfig
+import com.taobao.weex.WXEnvironment
+import com.taobao.weex.WXSDKEngine
+import com.taobao.weex.bridge.WXBridgeManager
 import io.ecosed.libecosed.R
 import io.ecosed.libecosed.settings.EcosedSettings
 import io.ecosed.plugin.LibEcosed
 import io.ecosed.plugin.PluginBinding
 import io.ecosed.plugin.PluginChannel
 import org.lsposed.hiddenapibypass.HiddenApiBypass
+
 
 internal class LibEcosedPlugin : LibEcosed() {
 
@@ -52,14 +57,6 @@ internal class LibEcosedPlugin : LibEcosed() {
         }
         // 初始化首选项
         EcosedSettings.initialize(context = application)
-        // 初始化任务栏
-        Taskbar.setEnabled(
-            application,
-            EcosedSettings.getPreferences().getBoolean(
-                EcosedSettings.settingsDesktop,
-                true
-            ) and (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
-        )
         // 初始化动态取色
         if (EcosedSettings.getPreferences().getBoolean(
                 EcosedSettings.settingsDynamicColor,
@@ -84,6 +81,23 @@ internal class LibEcosedPlugin : LibEcosed() {
                     .build()
             )
         }
+//        // 初始化Weex
+//        WXBridgeManager.updateGlobalConfig("wson_on")
+//        WXEnvironment.setOpenDebugLog(true)
+//        WXEnvironment.setApkDebugable(true)
+//        WXSDKEngine.addCustomOptions("appName", "WXSample")
+//        WXSDKEngine.addCustomOptions("appGroup", "WXApp")
+//        val builder = InitConfig.Builder()
+//        WXSDKEngine.initialize(application, builder.build())
+        // 初始化任务栏
+        Taskbar.setEnabled(
+            application,
+            EcosedSettings.getPreferences().getBoolean(
+                EcosedSettings.settingsDesktop,
+                true
+            ) and (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+        )
+
 
         // 弃用
         DialogX.init(application)
