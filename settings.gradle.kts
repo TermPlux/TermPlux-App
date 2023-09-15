@@ -18,6 +18,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "LibEcosed"
-include(":demo")
-include(":libecosed")
+rootProject.name = "EcosedDroid"
+include(":demo", ":ecosed-droid")

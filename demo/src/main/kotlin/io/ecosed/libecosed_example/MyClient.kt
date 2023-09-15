@@ -8,11 +8,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
-import io.ecosed.libecosed.LibEcosedBuilder
-import io.ecosed.libecosed.LibEcosedImpl
-import io.ecosed.libecosed.plugin.EcosedClient
-import io.ecosed.libecosed.plugin.EcosedPlugin
-import io.ecosed.libecosed.plugin.LibEcosed
+import io.ecosed.droid.LibEcosedBuilder
+import io.ecosed.droid.LibEcosedImpl
+import io.ecosed.droid.plugin.EcosedClient
+import io.ecosed.droid.EcosedPlugin
+import io.ecosed.droid.plugin.LibEcosed
 
 class MyClient : EcosedClient(), LibEcosedImpl by LibEcosedBuilder {
 

@@ -1,10 +1,10 @@
 package io.ecosed.libecosed_example
 
 import android.app.Application
-import io.ecosed.libecosed.EcosedDroidAppImpl
-import io.ecosed.libecosed.EcosedDroidAppUtils
-import io.ecosed.libecosed.plugin.EcosedClient
-import io.ecosed.libecosed.plugin.PluginEngine
+import io.ecosed.droid.EcosedDroidAppImpl
+import io.ecosed.droid.EcosedDroidAppUtils
+import io.ecosed.droid.plugin.EcosedClient
+import io.ecosed.droid.plugin.PluginEngine
 
 class MyApplication : Application(), EcosedDroidAppImpl by EcosedDroidAppUtils<MyApplication>() {
 
