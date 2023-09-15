@@ -80,7 +80,7 @@ android {
 
 materialThemeBuilder {
     themes {
-        create("LibEcosed"){
+        create("EcosedDroid"){
             primaryColor = "#D0BCFF"
             lightThemeFormat = "Theme.Material3.Light.%s"
             lightThemeParent = "Theme.Material3.Light.NoActionBar"

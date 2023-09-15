@@ -9,19 +9,7 @@ import android.widget.Toast
 import io.ecosed.droid.plugin.EcosedClient
 import io.ecosed.droid.plugin.PluginEngine
 
-interface EcosedDroidAppImpl : EcosedApplication {
-
-    fun attachUtils(application: Application)
-
-    val engine: PluginEngine
-
-
-
-    fun toast(obj: Any)
-    fun log(obj: Any)
-}
-
-open class EcosedDroidAppUtils<YourApp : Application> : ContextWrapper(null), EcosedDroidAppImpl {
+class EcosedAppUtils<YourApp : Application> : ContextWrapper(null), EcosedAppImpl {
 
     private val mainHandler = Handler(Looper.getMainLooper())
 
@@ -29,19 +17,23 @@ open class EcosedDroidAppUtils<YourApp : Application> : ContextWrapper(null), Ec
 
     private lateinit var mEngine: PluginEngine
 
-    var mme: YourApp? = null
+    private lateinit var mME: YourApp
 
 
     override val engine: PluginEngine
         get() = mEngine
 
 
-    override fun attachUtils(application: Application) {
+    override fun Application.attachUtils(application: Application) {
+        // 附加基本上下文
         attachBaseContext(application.baseContext)
+        // 获取应用程序全局类
         mApplication = application
+        // 获取mME
         @Suppress("UNCHECKED_CAST")
-        mme = mApplication as YourApp
-        mEngine = PluginEngine.create(application = mApplication)
+        mME = mApplication as YourApp
+        // 初始化引擎
+        mEngine = PluginEngine.create(application = mME)
 
 //        object : Thread() {
 //            override fun run() {
@@ -59,15 +51,14 @@ open class EcosedDroidAppUtils<YourApp : Application> : ContextWrapper(null), Ec
     }
 
     private var toast: Toast? = null
-    private val mNull = ""
 
-    override fun toast(obj: Any) {
+    override fun Application.toast(obj: Any) {
         try {
             mainHandler.post {
                 log(obj.toString())
                 if (toast == null) {
                     toast = Toast.makeText(
-                        this@EcosedDroidAppUtils,
+                        this@EcosedAppUtils,
                         mNull,
                         Toast.LENGTH_SHORT
                     )
@@ -80,7 +71,7 @@ open class EcosedDroidAppUtils<YourApp : Application> : ContextWrapper(null), Ec
         }
     }
 
-    override fun log(obj: Any) {
+    override fun Application.log(obj: Any) {
         Log.i(tag, obj.toString())
     }
 
@@ -94,5 +85,6 @@ open class EcosedDroidAppUtils<YourApp : Application> : ContextWrapper(null), Ec
 
     companion object {
         const val tag: String = "tag"
+        const val mNull: String = ""
     }
 }
