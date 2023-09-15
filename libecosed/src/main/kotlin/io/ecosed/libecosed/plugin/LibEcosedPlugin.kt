@@ -16,15 +16,8 @@ import com.google.android.material.color.HarmonizedColors
 import com.google.android.material.color.HarmonizedColorsOptions
 import com.kongzue.dialogx.DialogX
 import com.kongzue.dialogx.style.IOSStyle
-import com.taobao.weex.InitConfig
-import com.taobao.weex.WXEnvironment
-import com.taobao.weex.WXSDKEngine
-import com.taobao.weex.bridge.WXBridgeManager
 import io.ecosed.libecosed.R
 import io.ecosed.libecosed.settings.EcosedSettings
-import io.ecosed.plugin.LibEcosed
-import io.ecosed.plugin.PluginBinding
-import io.ecosed.plugin.PluginChannel
 import org.lsposed.hiddenapibypass.HiddenApiBypass
 
 

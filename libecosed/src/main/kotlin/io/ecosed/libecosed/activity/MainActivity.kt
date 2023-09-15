@@ -32,7 +32,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.viewpager2.widget.ViewPager2
@@ -50,9 +49,8 @@ import io.ecosed.libecosed.service.EcosedService
 import io.ecosed.libecosed.ui.layout.ActivityMain
 import io.ecosed.libecosed.ui.theme.LibEcosedTheme
 import io.ecosed.libecosed.utils.ThemeHelper
-import io.ecosed.plugin.PluginExecutor
+import io.ecosed.libecosed.plugin.PluginExecutor
 import kotlinx.coroutines.Runnable
-import rikka.core.ktx.unsafeLazy
 import rikka.material.app.MaterialActivity
 
 internal class MainActivity : MaterialActivity(), ServiceConnection, DefaultLifecycleObserver, Runnable {
@@ -101,12 +99,12 @@ internal class MainActivity : MaterialActivity(), ServiceConnection, DefaultLife
             //  setPageTransformer(PageTransformerUtils())
         }
 
-        mProductLogo = PluginExecutor.execMethodCall(
+        mProductLogo = PluginExecutor.execMethodCall<Drawable>(
             activity = mActivity,
             name = LibEcosedPlugin.channel,
             method = LibEcosedPlugin.getProductLogo,
             null
-        ) as Drawable
+        )
 
         mEcosed = Intent(this@MainActivity, EcosedService().javaClass)
         startService(mEcosed)

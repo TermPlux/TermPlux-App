@@ -24,7 +24,7 @@ import io.ecosed.libecosed.R
 import io.ecosed.libecosed.plugin.LibEcosedPlugin
 import io.ecosed.libecosed.utils.ChineseCaleUtils
 import io.ecosed.libecosed.utils.EnvironmentUtils
-import io.ecosed.plugin.PluginExecutor
+import io.ecosed.libecosed.plugin.PluginExecutor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -44,18 +44,18 @@ internal class EcosedService : Service(), Shizuku.OnBinderReceivedListener,
 
 
 
-        isDebug = PluginExecutor.execMethodCall(
+        isDebug = PluginExecutor.execMethodCall<Boolean>(
             service = mService,
             name = LibEcosedPlugin.channel,
             method = LibEcosedPlugin.isDebug,
             null
-        ) as Boolean
-        mProductLogo = PluginExecutor.execMethodCall(
+        )!!
+        mProductLogo = PluginExecutor.execMethodCall<Drawable>(
             service = mService,
             name = LibEcosedPlugin.channel,
             method = LibEcosedPlugin.getProductLogo,
             null
-        ) as Drawable
+        )!!
 
         poem = arrayListOf()
         poem.add("不向焦虑与抑郁投降，这个世界终会有我们存在的地方。")

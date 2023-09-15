@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import io.ecosed.libecosed.plugin.LibEcosedPlugin
-import io.ecosed.plugin.EcosedClient
-import io.ecosed.plugin.PluginExecutor
+import io.ecosed.libecosed.plugin.EcosedClient
+import io.ecosed.libecosed.plugin.PluginExecutor
 
 class MainFragment : Fragment() {
 
@@ -15,12 +15,12 @@ class MainFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mClient = PluginExecutor.execMethodCall(
+        mClient = PluginExecutor.execMethodCall<EcosedClient>(
             fragment = this@MainFragment,
             name = LibEcosedPlugin.channel,
             method = LibEcosedPlugin.getClient,
             bundle = null
-        ) as EcosedClient
+        )!!
         mClient.secondAttach(
             activity = requireActivity(),
             application = requireActivity().application,
