@@ -27,24 +27,24 @@
             android:name="fake-signature"
             android:value="@string/fake_signature" />
 
-        <activity
-            android:name=".activity.MainActivity"
-            android:exported="true"
-            android:theme="@style/Theme.LibEcosed">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="libecosed" />
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <action android:name="android.intent.action.APPLICATION_PREFERENCES" />
+<!--        <activity-->
+<!--            android:name=".activity.MainActivity"-->
+<!--            android:exported="true"-->
+<!--            android:theme="@style/Theme.LibEcosed">-->
+<!--            <meta-data-->
+<!--                android:name="android.app.lib_name"-->
+<!--                android:value="libecosed" />-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+<!--                <action android:name="android.intent.action.APPLICATION_PREFERENCES" />-->
 
-                <category android:name="android.intent.category.HOME" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.MONKEY" />
+<!--                <category android:name="android.intent.category.HOME" />-->
+<!--                <category android:name="android.intent.category.DEFAULT" />-->
+<!--                <category android:name="android.intent.category.MONKEY" />-->
 <!--                <category android:name="android.intent.category.LAUNCHER" />-->
-                <category android:name="android.intent.category.LAUNCHER_APP" />
-            </intent-filter>
-        </activity>
+<!--                <category android:name="android.intent.category.LAUNCHER_APP" />-->
+<!--            </intent-filter>-->
+<!--        </activity>-->
 
         <service
             android:name=".service.EcosedService"

@@ -11,7 +11,7 @@ import androidx.lifecycle.LifecycleOwner
 import io.ecosed.droid.LibEcosedBuilder
 import io.ecosed.droid.LibEcosedImpl
 import io.ecosed.droid.plugin.EcosedClient
-import io.ecosed.droid.EcosedPlugin
+import io.ecosed.droid.app.EcosedPlugin
 import io.ecosed.droid.plugin.LibEcosed
 
 class MyClient : EcosedClient(), LibEcosedImpl by LibEcosedBuilder {

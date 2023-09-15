@@ -124,8 +124,6 @@ dependencies {
     // Shizuku-API: https://github.com/RikkaApps/Shizuku-API
     implementation(dependencyNotation = "dev.rikka.shizuku:api:13.1.4")
     implementation(dependencyNotation = "dev.rikka.shizuku:provider:13.1.4")
-    // Weex: https://github.com/alibaba/weex
-    implementation(dependencyNotation = "io.weex:weex_sdk:0.30.2")
     // AndroidHiddenApiBypass: https://github.com/LSPosed/AndroidHiddenApiBypass
     implementation(dependencyNotation = "org.lsposed.hiddenapibypass:hiddenapibypass:4.3")
     // HiddenApiRefinePlugin: https://github.com/RikkaApps/HiddenApiRefinePlugin

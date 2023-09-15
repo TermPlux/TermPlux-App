@@ -89,6 +89,8 @@ internal class MainActivity : MaterialActivity(), ServiceConnection, DefaultLife
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
+
+
         mActivity = this@MainActivity
 
         mViewPager2 = ViewPager2(this@MainActivity).apply {

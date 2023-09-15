@@ -1,4 +1,4 @@
-package io.ecosed.droid
+package io.ecosed.droid.app
 
 import android.app.Application
 import android.content.ContextWrapper
@@ -33,20 +33,50 @@ class EcosedAppUtils<YourApp : Application> : ContextWrapper(null), EcosedAppImp
         @Suppress("UNCHECKED_CAST")
         mME = mApplication as YourApp
         // 初始化引擎
-        mEngine = PluginEngine.create(application = mME)
+        mEngine = PluginEngine.create(
+            application = mME
+        )
 
-//        object : Thread() {
-//            override fun run() {
-//                synchronized(mme!!) {
-//                    initSDKs()
-//                    if (onSDKInitializedCallBack != null) {
-//                        mainHandler.post {
-//                            initSDKInitialized()
-//                        }
-//                    }
-//                }
-//            }
-//        }.start()
+
+        if (mME is EcosedAppImpl){
+            (mME as EcosedAppImpl).apply {
+                this@EcosedAppUtils.init()
+                this@apply.init()
+            }
+        }
+
+        object : Thread() {
+            override fun run() {
+                if (mME is EcosedAppImpl){
+                    (mME as EcosedAppImpl).apply {
+                        synchronized(mME) {
+                            this@EcosedAppUtils.initSDKs()
+                            this@apply.initSDKs()
+                            mainHandler.post {
+                                this@EcosedAppUtils.initSDKInitialized()
+                                this@apply.initSDKInitialized()
+                            }
+                        }
+                    }
+                }
+            }
+        }.start()
+    }
+
+
+    fun runOnMain(runnable: Runnable) {
+        mainHandler.post { runnable.run() }
+    }
+
+    override fun init() {
+
+    }
+
+    override fun initSDKs() {
+
+    }
+
+    override fun initSDKInitialized() {
 
     }
 

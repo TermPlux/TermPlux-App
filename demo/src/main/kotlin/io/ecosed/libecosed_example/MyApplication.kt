@@ -1,8 +1,8 @@
 package io.ecosed.libecosed_example
 
 import android.app.Application
-import io.ecosed.droid.EcosedAppImpl
-import io.ecosed.droid.EcosedAppUtils
+import io.ecosed.droid.app.EcosedAppImpl
+import io.ecosed.droid.app.EcosedAppUtils
 import io.ecosed.droid.plugin.EcosedClient
 import io.ecosed.droid.plugin.PluginEngine
 
@@ -13,6 +13,18 @@ class MyApplication : Application(), EcosedAppImpl by EcosedAppUtils<MyApplicati
         attachUtils(
             application = this@MyApplication
         )
+    }
+
+    override fun init() {
+        log("init")
+    }
+
+    override fun initSDKs() {
+        log("initSDKs")
+    }
+
+    override fun initSDKInitialized() {
+        log("initSDKInitialized")
     }
 
     override fun getPluginEngine(): PluginEngine {

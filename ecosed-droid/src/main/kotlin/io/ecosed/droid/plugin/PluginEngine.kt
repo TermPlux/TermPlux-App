@@ -4,8 +4,8 @@ import android.app.Application
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import io.ecosed.droid.EcosedApplication
-import io.ecosed.droid.EcosedPlugin
+import io.ecosed.droid.app.EcosedAppImpl
+import io.ecosed.droid.app.EcosedPlugin
 
 /**
  * 作者: wyq0918dev
@@ -214,7 +214,7 @@ class PluginEngine {
             application: Application
         ): PluginEngine = PluginEngine().let { engine ->
             return@let engine.apply {
-                if (application is EcosedApplication) {
+                if (application is EcosedAppImpl) {
                     application.apply {
                         mApp = application
                         mBase = baseContext

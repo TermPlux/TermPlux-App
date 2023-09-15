@@ -2,10 +2,12 @@ package io.ecosed.libecosed_example
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import io.ecosed.droid.EcosedActivityImpl
-import io.ecosed.droid.EcosedActivityUtils
+import io.ecosed.droid.app.EcosedActivityImpl
+import io.ecosed.droid.app.EcosedActivityUtils
+import io.ecosed.droid.app.EcosedDroidLauncher
 
-class MyActivity : AppCompatActivity(), EcosedActivityImpl by EcosedActivityUtils() {
+@EcosedDroidLauncher
+class MyActivity : AppCompatActivity(), EcosedActivityImpl by EcosedActivityUtils<MyActivity>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -13,8 +15,6 @@ class MyActivity : AppCompatActivity(), EcosedActivityImpl by EcosedActivityUtil
             activity = this@MyActivity,
             lifecycle = lifecycle
         )
-
-        setLayout()
     }
 
     override fun onDestroy() {

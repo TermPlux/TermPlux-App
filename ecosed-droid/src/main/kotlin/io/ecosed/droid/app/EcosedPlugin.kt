@@ -1,4 +1,4 @@
-package io.ecosed.droid
+package io.ecosed.droid.app
 
 import io.ecosed.droid.plugin.PluginBinding
 import io.ecosed.droid.plugin.PluginChannel

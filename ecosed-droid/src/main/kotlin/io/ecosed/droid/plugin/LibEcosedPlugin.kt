@@ -11,9 +11,6 @@ import androidx.core.content.ContextCompat
 import com.farmerbb.taskbar.lib.Taskbar
 import com.google.android.material.color.DynamicColors
 import com.google.android.material.color.DynamicColorsOptions
-import com.google.android.material.color.HarmonizedColorAttributes
-import com.google.android.material.color.HarmonizedColors
-import com.google.android.material.color.HarmonizedColorsOptions
 import com.kongzue.dialogx.DialogX
 import com.kongzue.dialogx.style.IOSStyle
 import io.ecosed.droid.R
@@ -62,17 +59,17 @@ internal class LibEcosedPlugin : LibEcosed() {
                     .setThemeOverlay(R.style.ThemeOverlay_LibEcosed_DynamicColors)
                     .build()
             )
-            HarmonizedColors.applyToContextIfAvailable(
-                application,
-                HarmonizedColorsOptions.Builder()
-                    .setColorAttributeToHarmonizeWith(android.R.attr.colorPrimary)
-                    .setColorAttributes(
-                        HarmonizedColorAttributes.create(
-                            HarmonizedColorAttributes.createMaterialDefaults().attributes
-                        )
-                    )
-                    .build()
-            )
+//            HarmonizedColors.applyToContextIfAvailable(
+//                application,
+//                HarmonizedColorsOptions.Builder()
+//                    .setColorAttributeToHarmonizeWith(android.R.attr.colorPrimary)
+//                    .setColorAttributes(
+//                        HarmonizedColorAttributes.create(
+//                            HarmonizedColorAttributes.createMaterialDefaults().attributes
+//                        )
+//                    )
+//                    .build()
+//            )
         }
 //        // 初始化Weex
 //        WXBridgeManager.updateGlobalConfig("wson_on")

@@ -14,8 +14,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.DefaultLifecycleObserver
-import io.ecosed.droid.EcosedApplication
-import io.ecosed.droid.EcosedPlugin
+import io.ecosed.droid.app.EcosedAppImpl
+import io.ecosed.droid.app.EcosedPlugin
 
 /**
  * 作者: wyq0918dev
@@ -185,8 +185,8 @@ abstract class EcosedClient : ContextThemeWrapper(), DefaultLifecycleObserver, E
         method: String,
         bundle: Bundle?
     ): T? {
-        if (getApplication() is EcosedApplication) {
-            (getApplication() as EcosedApplication).apply {
+        if (getApplication() is EcosedAppImpl) {
+            (getApplication() as EcosedAppImpl).apply {
                 return getPluginEngine().execMethodCall<T>(
                     name = name,
                     method = method,

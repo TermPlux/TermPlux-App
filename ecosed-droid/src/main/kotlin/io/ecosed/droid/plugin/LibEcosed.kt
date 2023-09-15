@@ -3,7 +3,7 @@ package io.ecosed.droid.plugin
 import android.app.Application
 import android.content.Context
 import android.content.ContextWrapper
-import io.ecosed.droid.EcosedPlugin
+import io.ecosed.droid.app.EcosedPlugin
 
 /**
  * 作者: wyq0918dev
