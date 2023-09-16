@@ -98,6 +98,9 @@ internal class MainActivity : MaterialActivity(), ServiceConnection, DefaultLife
             orientation = ViewPager2.ORIENTATION_HORIZONTAL
             adapter = PagerAdapter(activity = this@MainActivity)
             offscreenPageLimit = (adapter as PagerAdapter).itemCount
+
+
+
             //  setPageTransformer(PageTransformerUtils())
         }
 

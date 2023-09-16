@@ -5,7 +5,7 @@ import android.app.Application
 import android.app.Service
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import io.ecosed.droid.app.EcosedAppImpl
+import io.ecosed.droid.app.EcosedApplicationImpl
 
 /**
  * 作者: wyq0918dev
@@ -103,8 +103,8 @@ internal class PluginExecutor {
             method: String,
             bundle: Bundle?
         ): T? {
-            if (activity.application is EcosedAppImpl) {
-                (activity.application as EcosedAppImpl).apply {
+            if (activity.application is EcosedApplicationImpl) {
+                (activity.application as EcosedApplicationImpl).apply {
                     return getPluginEngine().execMethodCall<T>(
                         name = name,
                         method = method,
@@ -130,8 +130,8 @@ internal class PluginExecutor {
             method: String,
             bundle: Bundle?
         ): T? {
-            if (fragment.requireActivity().application is EcosedAppImpl) {
-                (fragment.requireActivity().application as EcosedAppImpl).apply {
+            if (fragment.requireActivity().application is EcosedApplicationImpl) {
+                (fragment.requireActivity().application as EcosedApplicationImpl).apply {
                     return getPluginEngine().execMethodCall<T>(
                         name = name,
                         method = method,
@@ -157,8 +157,8 @@ internal class PluginExecutor {
             method: String,
             bundle: Bundle?
         ): T? {
-            if (service.application is EcosedAppImpl) {
-                (service.application as EcosedAppImpl).apply {
+            if (service.application is EcosedApplicationImpl) {
+                (service.application as EcosedApplicationImpl).apply {
                     return getPluginEngine().execMethodCall<T>(
                         name = name,
                         method = method,
@@ -184,8 +184,8 @@ internal class PluginExecutor {
             method: String,
             bundle: Bundle?
         ): T? {
-            if (application is EcosedAppImpl) {
-                (application as EcosedAppImpl).apply {
+            if (application is EcosedApplicationImpl) {
+                (application as EcosedApplicationImpl).apply {
                     return getPluginEngine().execMethodCall<T>(
                         name = name,
                         method = method,

@@ -4,7 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import io.ecosed.droid.app.EcosedAppImpl
+import io.ecosed.droid.app.EcosedApplicationImpl
 import io.ecosed.droid.app.EcosedPlugin
 
 /**
@@ -214,7 +214,7 @@ class EcosedEngine {
             application: Application
         ): EcosedEngine = EcosedEngine().let { engine ->
             return@let engine.apply {
-                if (application is EcosedAppImpl) {
+                if (application is EcosedApplicationImpl) {
                     application.apply {
                         mApp = application
                         mBase = baseContext

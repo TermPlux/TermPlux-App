@@ -6,8 +6,8 @@ import androidx.lifecycle.Lifecycle
 
 interface EcosedActivityImpl {
 
-    fun Activity.attachUtils(activity: Activity, lifecycle: Lifecycle)
-    fun Activity.detachUtils(lifecycle: Lifecycle)
+    fun Activity.attachEcosed(activity: Activity, lifecycle: Lifecycle)
+    fun Activity.detachEcosed(lifecycle: Lifecycle)
 
     /**
      * 调用插件代码的方法.

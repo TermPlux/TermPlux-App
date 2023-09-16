@@ -17,7 +17,7 @@ import io.ecosed.droid.adapter.AppsAdapter
 import io.ecosed.droid.model.AppsModel
 import io.ecosed.droid.receiver.AppsReceiver
 
-internal class AppsFragment : Fragment() {
+internal class AppsFragment private constructor() : Fragment() {
 
     private lateinit var appReceiver: AppsReceiver
 
@@ -31,7 +31,7 @@ internal class AppsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
         return RecyclerView(requireContext())
@@ -75,8 +75,6 @@ internal class AppsFragment : Fragment() {
         val applicationList: MutableList<AppsModel> = ArrayList()
 
 
-
-
         // 添加自己
         pack?.let { me ->
             applicationList.add(
@@ -116,7 +114,7 @@ internal class AppsFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance(): AppsFragment{
+        fun newInstance(): AppsFragment {
             return AppsFragment()
         }
     }

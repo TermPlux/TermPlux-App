@@ -9,7 +9,7 @@ import io.ecosed.droid.plugin.LibEcosedPlugin
 import io.ecosed.droid.plugin.EcosedClient
 import io.ecosed.droid.plugin.PluginExecutor
 
-class MainFragment : Fragment() {
+class MainFragment private constructor() : Fragment() {
 
     private lateinit var mClient: EcosedClient
 

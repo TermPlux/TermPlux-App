@@ -1,3 +1,18 @@
+/**
+ * Copyright EcosedDroid
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.ecosed.droid.app
 
 import android.annotation.SuppressLint
@@ -7,17 +22,28 @@ import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
+import androidx.activity.compose.setContent
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
+import androidx.viewpager2.widget.ViewPager2
 import com.blankj.utilcode.util.AppUtils
+import com.farmerbb.taskbar.lib.Taskbar
+import com.google.accompanist.adaptive.calculateDisplayFeatures
+import com.google.android.material.color.DynamicColors
+import io.ecosed.droid.R
 import io.ecosed.droid.plugin.LibEcosedPlugin
 import io.ecosed.droid.plugin.PluginExecutor
+import io.ecosed.droid.ui.layout.ActivityMain
+import io.ecosed.droid.ui.theme.LibEcosedTheme
+import io.ecosed.droid.utils.ThemeHelper
 
-class EcosedActivityUtils<YourActivity : Activity> : ContextWrapper(null), EcosedActivityImpl,
+class EcosedActivity<YourActivity : Activity> : ContextWrapper(null), EcosedActivityImpl,
     DefaultLifecycleObserver {
 
     private lateinit var mActivity: Activity
@@ -26,16 +52,16 @@ class EcosedActivityUtils<YourActivity : Activity> : ContextWrapper(null), Ecose
 
     private lateinit var mME: YourActivity
 
-    override fun Activity.attachUtils(activity: Activity, lifecycle: Lifecycle) {
+    override fun Activity.attachEcosed(activity: Activity, lifecycle: Lifecycle) {
         attachBaseContext(activity.baseContext)
         mActivity = activity
         @Suppress("UNCHECKED_CAST")
         mME = mActivity as YourActivity
-        lifecycle.addObserver(observer = this@EcosedActivityUtils)
+        lifecycle.addObserver(observer = this@EcosedActivity)
     }
 
-    override fun Activity.detachUtils(lifecycle: Lifecycle) {
-        lifecycle.removeObserver(observer = this@EcosedActivityUtils)
+    override fun Activity.detachEcosed(lifecycle: Lifecycle) {
+        lifecycle.removeObserver(observer = this@EcosedActivity)
     }
 
     override fun <T> Activity.execMethodCall(
@@ -51,15 +77,19 @@ class EcosedActivityUtils<YourActivity : Activity> : ContextWrapper(null), Ecose
         )
     }
 
+    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(owner: LifecycleOwner) = lifecycleUnit(
         superUnit = { content ->
-            super.onCreate(owner = owner)
-            content()
+            super.onCreate(
+                owner = owner
+            ).apply {
+                content()
+            }
         }
     ) {
-
         when {
             isLaunchMode() -> if (this@lifecycleUnit is AppCompatActivity) {
+
                 when {
                     execMethodCall<Boolean>(
                         name = LibEcosedPlugin.channel,
@@ -68,7 +98,67 @@ class EcosedActivityUtils<YourActivity : Activity> : ContextWrapper(null), Ecose
                     ) == true -> isDebug = true
                 }
 
-                if (isDebug) AlertDialog.Builder(mActivity).apply {
+                setTheme(R.style.Theme_LibEcosed)
+                DynamicColors.applyToActivityIfAvailable(this)
+
+
+
+
+                setContent {
+                    LibEcosedTheme(
+                        dynamicColor = ThemeHelper.isUsingSystemColor()
+                    ) { dynamic ->
+                        ActivityMain(
+                            windowSize = calculateWindowSizeClass(
+                                activity = this@lifecycleUnit
+                            ),
+                            displayFeatures = calculateDisplayFeatures(
+                                activity = this@lifecycleUnit
+                            ),
+                            productLogo = execMethodCall<Drawable>(
+                                name = LibEcosedPlugin.channel,
+                                method = LibEcosedPlugin.getProductLogo,
+                                bundle = null
+                            ),
+                            topBarVisible = true,
+                            topBarUpdate = { toolbar ->
+                                setSupportActionBar(
+                                    toolbar
+                                )
+                            },
+                            viewPager2 = ViewPager2(this),
+                            androidVersion = "13",
+                            shizukuVersion = "13",
+                            current = {
+                                //mViewPager2.currentItem = it
+                            },
+                            toggle = {
+                                //toggle()
+                            },
+                            taskbar = {
+                                Taskbar.openSettings(
+                                    this@lifecycleUnit,
+                                    getString(R.string.taskbar_title),
+                                    when (dynamic){
+                                        true -> R.style.Theme_LibEcosed_TaskbarDynamic
+                                        false -> R.style.Theme_LibEcosed_Taskbar
+                                    }
+                                )
+                            },
+                            customTabs = { url ->
+                                CustomTabsIntent.Builder()
+                                    .build()
+                                    .launchUrl(
+                                        this@lifecycleUnit,
+                                        Uri.parse(url)
+                                    )
+                            }
+                        )
+                    }
+                }
+
+
+                if (isDebug) AlertDialog.Builder(this@lifecycleUnit).apply {
 
                     setIcon(
                         execMethodCall<Drawable>(
@@ -95,16 +185,19 @@ class EcosedActivityUtils<YourActivity : Activity> : ContextWrapper(null), Ecose
 
             else -> {
                 setLayout()
+
+
             }
         }
-
-
     }
 
     override fun onStart(owner: LifecycleOwner) = lifecycleUnit(
         superUnit = { content ->
-            super.onStart(owner = owner)
-            content()
+            super.onStart(
+                owner = owner
+            ).apply {
+                content()
+            }
         }
     ) {
 
@@ -112,8 +205,11 @@ class EcosedActivityUtils<YourActivity : Activity> : ContextWrapper(null), Ecose
 
     override fun onResume(owner: LifecycleOwner) = lifecycleUnit(
         superUnit = { content ->
-            super.onResume(owner = owner)
-            content()
+            super.onResume(
+                owner = owner
+            ).apply {
+                content()
+            }
         }
     ) {
 
@@ -121,8 +217,11 @@ class EcosedActivityUtils<YourActivity : Activity> : ContextWrapper(null), Ecose
 
     override fun onPause(owner: LifecycleOwner) = lifecycleUnit(
         superUnit = { content ->
-            super.onPause(owner = owner)
-            content()
+            super.onPause(
+                owner = owner
+            ).apply {
+                content()
+            }
         }
     ) {
 
@@ -130,8 +229,11 @@ class EcosedActivityUtils<YourActivity : Activity> : ContextWrapper(null), Ecose
 
     override fun onStop(owner: LifecycleOwner) = lifecycleUnit(
         superUnit = { content ->
-            super.onStop(owner = owner)
-            content()
+            super.onStop(
+                owner = owner
+            ).apply {
+                content()
+            }
         }
     ) {
 
@@ -139,12 +241,19 @@ class EcosedActivityUtils<YourActivity : Activity> : ContextWrapper(null), Ecose
 
     override fun onDestroy(owner: LifecycleOwner) = lifecycleUnit(
         superUnit = { content ->
-            super.onDestroy(owner = owner)
-            content()
+            super.onDestroy(
+                owner = owner
+            ).apply {
+                content()
+            }
         }
     ) {
 
     }
+
+    private val KEY_MIUI_VERSION_CODE = "ro.miui.ui.version.code"
+    private val KEY_MIUI_VERSION_NAME = "ro.miui.ui.version.name"
+    private val KEY_MIUI_INTERNAL_STORAGE = "ro.miui.internal.storage"
 
     private fun lifecycleUnit(
         superUnit: (() -> Unit) -> Unit,
@@ -176,7 +285,7 @@ class EcosedActivityUtils<YourActivity : Activity> : ContextWrapper(null), Ecose
     private fun isLaunchMode(): Boolean = defaultUnit {
         try {
             val isLauncher = javaClass.getAnnotation(EcosedLauncher::class.java)
-            return@defaultUnit isLauncher != null
+            return@defaultUnit isLauncher != null && isLauncher.isLauncher
         } catch (e: Exception) {
             e.printStackTrace()
         }

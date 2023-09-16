@@ -4,7 +4,7 @@ import android.app.Application
 import io.ecosed.droid.plugin.EcosedClient
 import io.ecosed.droid.plugin.EcosedEngine
 
-interface EcosedAppImpl {
+interface EcosedApplicationImpl {
 
     fun Application.attachUtils(application: Application)
 

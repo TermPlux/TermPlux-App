@@ -7,7 +7,7 @@ import androidx.preference.PreferenceFragmentCompat
 import io.ecosed.droid.R
 import io.ecosed.droid.settings.EcosedSettings
 
-internal class SettingsFragment : PreferenceFragmentCompat() {
+internal class SettingsFragment private constructor() : PreferenceFragmentCompat() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         preferenceManager.setStorageDeviceProtected()

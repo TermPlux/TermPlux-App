@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.google.android.material.textview.MaterialTextView
 
-class EmptyFragment : Fragment() {
+class EmptyFragment private constructor() : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater,

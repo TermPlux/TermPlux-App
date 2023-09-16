@@ -9,7 +9,7 @@ import android.widget.Toast
 import io.ecosed.droid.plugin.EcosedClient
 import io.ecosed.droid.plugin.EcosedEngine
 
-class EcosedAppUtils<YourApp : Application> : ContextWrapper(null), EcosedAppImpl {
+class EcosedApplication<YourApp : Application> : ContextWrapper(null), EcosedApplicationImpl {
 
     private val mainHandler = Handler(Looper.getMainLooper())
 
@@ -38,22 +38,22 @@ class EcosedAppUtils<YourApp : Application> : ContextWrapper(null), EcosedAppImp
         )
 
 
-        if (mME is EcosedAppImpl){
-            (mME as EcosedAppImpl).apply {
-                this@EcosedAppUtils.init()
+        if (mME is EcosedApplicationImpl){
+            (mME as EcosedApplicationImpl).apply {
+                this@EcosedApplication.init()
                 this@apply.init()
             }
         }
 
         object : Thread() {
             override fun run() {
-                if (mME is EcosedAppImpl){
-                    (mME as EcosedAppImpl).apply {
+                if (mME is EcosedApplicationImpl){
+                    (mME as EcosedApplicationImpl).apply {
                         synchronized(mME) {
-                            this@EcosedAppUtils.initSDKs()
+                            this@EcosedApplication.initSDKs()
                             this@apply.initSDKs()
                             mainHandler.post {
-                                this@EcosedAppUtils.initSDKInitialized()
+                                this@EcosedApplication.initSDKInitialized()
                                 this@apply.initSDKInitialized()
                             }
                         }
@@ -88,7 +88,7 @@ class EcosedAppUtils<YourApp : Application> : ContextWrapper(null), EcosedAppImp
                 log(obj.toString())
                 if (toast == null) {
                     toast = Toast.makeText(
-                        this@EcosedAppUtils,
+                        this@EcosedApplication,
                         mNull,
                         Toast.LENGTH_SHORT
                     )
