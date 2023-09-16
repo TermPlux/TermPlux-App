@@ -4,15 +4,13 @@ import android.app.Application
 import io.ecosed.droid.app.EcosedAppImpl
 import io.ecosed.droid.app.EcosedAppUtils
 import io.ecosed.droid.plugin.EcosedClient
-import io.ecosed.droid.plugin.PluginEngine
+import io.ecosed.droid.plugin.EcosedEngine
 
 class MyApplication : Application(), EcosedAppImpl by EcosedAppUtils<MyApplication>() {
 
     override fun onCreate() {
         super.onCreate()
-        attachUtils(
-            application = this@MyApplication
-        )
+        attachUtils(application = this@MyApplication)
     }
 
     override fun init() {
@@ -27,7 +25,7 @@ class MyApplication : Application(), EcosedAppImpl by EcosedAppUtils<MyApplicati
         log("initSDKInitialized")
     }
 
-    override fun getPluginEngine(): PluginEngine {
+    override fun getPluginEngine(): EcosedEngine {
         return engine
     }
 

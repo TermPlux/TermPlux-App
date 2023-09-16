@@ -2,7 +2,7 @@ package io.ecosed.droid.app
 
 import android.app.Application
 import io.ecosed.droid.plugin.EcosedClient
-import io.ecosed.droid.plugin.PluginEngine
+import io.ecosed.droid.plugin.EcosedEngine
 
 interface EcosedAppImpl {
 
@@ -13,12 +13,12 @@ interface EcosedAppImpl {
     fun initSDKInitialized()
 
     /** 获取插件引擎. */
-    fun getPluginEngine(): PluginEngine
+    fun getPluginEngine(): EcosedEngine
 
     /** 获取应用程序主机. */
     fun getEcosedClient(): EcosedClient
 
-    val engine: PluginEngine
+    val engine: EcosedEngine
 
     fun Application.toast(obj: Any)
     fun Application.log(obj: Any)

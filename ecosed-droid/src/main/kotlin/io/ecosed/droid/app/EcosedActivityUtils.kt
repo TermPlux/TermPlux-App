@@ -5,8 +5,6 @@ import android.app.Activity
 import android.content.ContextWrapper
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -45,7 +43,7 @@ class EcosedActivityUtils<YourActivity : Activity> : ContextWrapper(null), Ecose
 
     private fun isLaunchMode(): Boolean {
         try {
-            val iss = mActivity.javaClass.getAnnotation(EcosedDroidLauncher::class.java)
+            val iss = mActivity.javaClass.getAnnotation(EcosedLauncher::class.java)
             return iss != null
         } catch (e: Exception) {
             e.printStackTrace()

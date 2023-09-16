@@ -10,4 +10,4 @@ package io.ecosed.droid.app
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)
 @MustBeDocumented
-annotation class EcosedDroidLauncher
+annotation class EcosedLauncher

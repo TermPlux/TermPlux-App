@@ -7,7 +7,7 @@ import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import io.ecosed.droid.plugin.EcosedClient
-import io.ecosed.droid.plugin.PluginEngine
+import io.ecosed.droid.plugin.EcosedEngine
 
 class EcosedAppUtils<YourApp : Application> : ContextWrapper(null), EcosedAppImpl {
 
@@ -15,12 +15,12 @@ class EcosedAppUtils<YourApp : Application> : ContextWrapper(null), EcosedAppImp
 
     private lateinit var mApplication: Application
 
-    private lateinit var mEngine: PluginEngine
+    private lateinit var mEngine: EcosedEngine
 
     private lateinit var mME: YourApp
 
 
-    override val engine: PluginEngine
+    override val engine: EcosedEngine
         get() = mEngine
 
 
@@ -33,7 +33,7 @@ class EcosedAppUtils<YourApp : Application> : ContextWrapper(null), EcosedAppImp
         @Suppress("UNCHECKED_CAST")
         mME = mApplication as YourApp
         // 初始化引擎
-        mEngine = PluginEngine.create(
+        mEngine = EcosedEngine.create(
             application = mME
         )
 
@@ -105,7 +105,7 @@ class EcosedAppUtils<YourApp : Application> : ContextWrapper(null), EcosedAppImp
         Log.i(tag, obj.toString())
     }
 
-    override fun getPluginEngine(): PluginEngine {
+    override fun getPluginEngine(): EcosedEngine {
         return mEngine
     }
 

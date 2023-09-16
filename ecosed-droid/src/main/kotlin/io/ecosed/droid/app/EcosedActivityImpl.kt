@@ -2,18 +2,12 @@ package io.ecosed.droid.app
 
 import android.app.Activity
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.runtime.Composable
 import androidx.lifecycle.Lifecycle
 
 interface EcosedActivityImpl {
 
     fun Activity.attachUtils(activity: Activity, lifecycle: Lifecycle)
     fun Activity.detachUtils(lifecycle: Lifecycle)
-
-//    @Composable
-//    fun Content()
 
     /**
      * 调用插件代码的方法.

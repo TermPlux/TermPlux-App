@@ -14,7 +14,7 @@ import io.ecosed.droid.app.EcosedPlugin
  * 描述: 插件引擎
  * 文档: https://github.com/ecosed/plugin/blob/master/README.md
  */
-class PluginEngine {
+class EcosedEngine {
 
     /** 应用程序全局类. */
     private lateinit var mApp: Application
@@ -197,7 +197,7 @@ class PluginEngine {
          * @param application 传入Application.
          * @return 返回已构建的引擎.
          */
-        fun create(application: Application): PluginEngine
+        fun create(application: Application): EcosedEngine
     }
 
     companion object : Builder {
@@ -212,7 +212,7 @@ class PluginEngine {
          */
         override fun create(
             application: Application
-        ): PluginEngine = PluginEngine().let { engine ->
+        ): EcosedEngine = EcosedEngine().let { engine ->
             return@let engine.apply {
                 if (application is EcosedAppImpl) {
                     application.apply {
