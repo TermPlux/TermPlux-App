@@ -1,14 +1,17 @@
 package io.ecosed.droid.ui.layout
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Surface
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.viewpager2.widget.ViewPager2
@@ -29,10 +32,15 @@ internal fun ScreenHome(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
-        Pager(
-            modifier = Modifier.fillMaxSize(),
-            viewPager2 = viewPager2
-        )
+        OutlinedCard(
+            modifier = Modifier.fillMaxSize().padding(all = 12.dp)
+        ) {
+            Pager(
+                modifier = Modifier.fillMaxSize(),
+                viewPager2 = viewPager2
+            )
+        }
+
 //        Column(modifier = Modifier.fillMaxSize()) {
 //            TopActionBar(
 //                navController = navController,
