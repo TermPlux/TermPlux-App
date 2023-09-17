@@ -2,7 +2,7 @@ package io.ecosed.droid.app
 
 import android.app.Application
 import io.ecosed.droid.plugin.EcosedClient
-import io.ecosed.droid.plugin.EcosedEngine
+import io.ecosed.droid.engine.EcosedEngine
 
 interface EcosedApplicationImpl {
 

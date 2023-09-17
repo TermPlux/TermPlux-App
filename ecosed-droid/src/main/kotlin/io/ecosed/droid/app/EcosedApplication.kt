@@ -7,7 +7,7 @@ import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import io.ecosed.droid.plugin.EcosedClient
-import io.ecosed.droid.plugin.EcosedEngine
+import io.ecosed.droid.engine.EcosedEngine
 
 class EcosedApplication<YourApp : Application> : ContextWrapper(null), EcosedApplicationImpl {
 

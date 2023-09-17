@@ -1,4 +1,4 @@
-package io.ecosed.droid.plugin
+package io.ecosed.droid.engine
 
 import android.app.Application
 import android.content.Context
@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.util.Log
 import io.ecosed.droid.app.EcosedApplicationImpl
 import io.ecosed.droid.app.EcosedPlugin
+import io.ecosed.droid.plugin.EcosedClient
+import io.ecosed.droid.plugin.PluginBinding
 
 /**
  * 作者: wyq0918dev

@@ -19,7 +19,7 @@ import android.app.Application
 import io.ecosed.droid.app.EcosedApplicationImpl
 import io.ecosed.droid.app.EcosedApplication
 import io.ecosed.droid.plugin.EcosedClient
-import io.ecosed.droid.plugin.EcosedEngine
+import io.ecosed.droid.engine.EcosedEngine
 
 class MyApplication : Application(), EcosedApplicationImpl by EcosedApplication<MyApplication>() {
 
