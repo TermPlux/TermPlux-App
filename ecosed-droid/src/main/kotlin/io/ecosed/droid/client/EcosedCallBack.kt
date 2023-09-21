@@ -1,6 +1,7 @@
 package io.ecosed.droid.client
 
 internal interface EcosedCallBack {
+
     /** 在服务绑定成功时回调 */
     fun onEcosedConnected()
 

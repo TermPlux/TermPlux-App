@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "io.ecosed.libecosed_example"
+    namespace = "io.ecosed.ecosed_droid_example"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "io.ecosed.libecosed_example"
+        applicationId = "io.ecosed.ecosed_droid_example"
         minSdk = 24
         targetSdk = 34
         versionCode = 1

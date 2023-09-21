@@ -369,7 +369,7 @@ internal fun ScreenAbout(
                             )
                         )
                         Text(
-                            text = "LibEcosed 框架将保持免费和开源，向开发者捐赠以表示支持。",
+                            text = "EcosedDroid 框架将保持免费和开源，向开发者捐赠以表示支持。",
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }
@@ -400,7 +400,7 @@ internal fun ScreenAbout(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(
-                            text = "了解 LibEcosed",
+                            text = "了解 EcosedDroid",
                             style = MaterialTheme.typography.titleSmall
                         )
                         Spacer(
@@ -409,7 +409,7 @@ internal fun ScreenAbout(
                             )
                         )
                         Text(
-                            text = "了解如何在已有工程中使用 LibEcosed 框架。",
+                            text = "了解如何在已有工程中使用 EcosedDroid 框架。",
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }
@@ -427,7 +427,7 @@ internal fun ScreenAbout(
             ) {
                 Column {
                     Text(
-                        text = "Powered by LibEcosed",
+                        text = "Powered by EcosedDroid",
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.titleSmall

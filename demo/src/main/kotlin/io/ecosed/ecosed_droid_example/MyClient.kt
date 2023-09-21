@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.ecosed.libecosed_example
+package io.ecosed.ecosed_droid_example
 
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -47,7 +47,7 @@ class MyClient : EcosedClient(), LibEcosedImpl by LibEcosedBuilder {
     }
 
     override fun getPluginList(): ArrayList<EcosedPlugin> {
-        return arrayListOf()
+        return arrayListOf(MyPlugin())
     }
 
     override fun getLibEcosed(): LibEcosed {

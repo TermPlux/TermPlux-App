@@ -1,4 +1,4 @@
-package io.ecosed.libecosed_example
+package io.ecosed.ecosed_droid_example
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

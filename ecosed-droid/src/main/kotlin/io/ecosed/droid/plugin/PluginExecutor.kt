@@ -5,7 +5,7 @@ import android.app.Application
 import android.app.Service
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import io.ecosed.droid.app.EcosedApplicationImpl
+import io.ecosed.droid.app.IEcosedApplication
 
 /**
  * 作者: wyq0918dev
@@ -103,9 +103,9 @@ internal class PluginExecutor {
             method: String,
             bundle: Bundle?
         ): T? {
-            if (activity.application is EcosedApplicationImpl) {
-                (activity.application as EcosedApplicationImpl).apply {
-                    return getPluginEngine().execMethodCall<T>(
+            if (activity.application is IEcosedApplication) {
+                (activity.application as IEcosedApplication).apply {
+                    return engine.execMethodCall<T>(
                         name = name,
                         method = method,
                         bundle = bundle
@@ -130,9 +130,9 @@ internal class PluginExecutor {
             method: String,
             bundle: Bundle?
         ): T? {
-            if (fragment.requireActivity().application is EcosedApplicationImpl) {
-                (fragment.requireActivity().application as EcosedApplicationImpl).apply {
-                    return getPluginEngine().execMethodCall<T>(
+            if (fragment.requireActivity().application is IEcosedApplication) {
+                (fragment.requireActivity().application as IEcosedApplication).apply {
+                    return engine.execMethodCall<T>(
                         name = name,
                         method = method,
                         bundle = bundle
@@ -157,9 +157,9 @@ internal class PluginExecutor {
             method: String,
             bundle: Bundle?
         ): T? {
-            if (service.application is EcosedApplicationImpl) {
-                (service.application as EcosedApplicationImpl).apply {
-                    return getPluginEngine().execMethodCall<T>(
+            if (service.application is IEcosedApplication) {
+                (service.application as IEcosedApplication).apply {
+                    return engine.execMethodCall<T>(
                         name = name,
                         method = method,
                         bundle = bundle
@@ -184,9 +184,9 @@ internal class PluginExecutor {
             method: String,
             bundle: Bundle?
         ): T? {
-            if (application is EcosedApplicationImpl) {
-                (application as EcosedApplicationImpl).apply {
-                    return getPluginEngine().execMethodCall<T>(
+            if (application is IEcosedApplication) {
+                (application as IEcosedApplication).apply {
+                    return engine.execMethodCall<T>(
                         name = name,
                         method = method,
                         bundle = bundle

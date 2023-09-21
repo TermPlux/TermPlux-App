@@ -13,19 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.ecosed.libecosed_example
+package io.ecosed.ecosed_droid_example
 
 import android.app.Application
-import io.ecosed.droid.app.EcosedApplicationImpl
+import io.ecosed.droid.app.IEcosedApplication
 import io.ecosed.droid.app.EcosedApplication
+import io.ecosed.droid.app.EcosedHost
 import io.ecosed.droid.plugin.EcosedClient
-import io.ecosed.droid.engine.EcosedEngine
 
-class MyApplication : Application(), EcosedApplicationImpl by EcosedApplication<MyApplication>() {
+class MyApplication : Application(), IEcosedApplication by EcosedApplication<MyApplication>() {
 
     override fun onCreate() {
         super.onCreate()
-        attachUtils(application = this@MyApplication)
+
+        attachUtils(
+            application = this@MyApplication,
+            host = object : EcosedHost {
+
+                override fun isDebug(): Boolean {
+                    return BuildConfig.DEBUG
+                }
+
+            }
+        )
+
     }
 
     override fun init() {
@@ -38,10 +49,6 @@ class MyApplication : Application(), EcosedApplicationImpl by EcosedApplication<
 
     override fun initSDKInitialized() {
         log("initSDKInitialized")
-    }
-
-    override fun getPluginEngine(): EcosedEngine {
-        return engine
     }
 
     override fun getEcosedClient(): EcosedClient {

@@ -4,7 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import io.ecosed.droid.app.EcosedApplicationImpl
+import io.ecosed.droid.app.IEcosedApplication
 import io.ecosed.droid.app.EcosedPlugin
 import io.ecosed.droid.plugin.EcosedClient
 import io.ecosed.droid.plugin.PluginBinding
@@ -16,7 +16,7 @@ import io.ecosed.droid.plugin.PluginBinding
  * 描述: 插件引擎
  * 文档: https://github.com/ecosed/plugin/blob/master/README.md
  */
-class EcosedEngine {
+class EcosedEngine private constructor() {
 
     /** 应用程序全局类. */
     private lateinit var mApp: Application
@@ -216,7 +216,7 @@ class EcosedEngine {
             application: Application
         ): EcosedEngine = EcosedEngine().let { engine ->
             return@let engine.apply {
-                if (application is EcosedApplicationImpl) {
+                if (application is IEcosedApplication) {
                     application.apply {
                         mApp = application
                         mBase = baseContext

@@ -265,7 +265,7 @@ internal class MainActivity : MaterialActivity(), ServiceConnection, DefaultLife
                             }
                         )
                     },
-                    customTabs = { url ->
+                    launchUrl = { url ->
                         CustomTabsIntent.Builder()
                             .build()
                             .launchUrl(

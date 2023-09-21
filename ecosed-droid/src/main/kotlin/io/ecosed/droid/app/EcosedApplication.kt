@@ -9,7 +9,7 @@ import android.widget.Toast
 import io.ecosed.droid.plugin.EcosedClient
 import io.ecosed.droid.engine.EcosedEngine
 
-class EcosedApplication<YourApp : Application> : ContextWrapper(null), EcosedApplicationImpl {
+class EcosedApplication<YourApp : Application> : ContextWrapper(null), IEcosedApplication {
 
     private val mainHandler = Handler(Looper.getMainLooper())
 
@@ -24,7 +24,7 @@ class EcosedApplication<YourApp : Application> : ContextWrapper(null), EcosedApp
         get() = mEngine
 
 
-    override fun Application.attachUtils(application: Application) {
+    override fun Application.attachUtils(application: Application, host: EcosedHost) {
         // 附加基本上下文
         attachBaseContext(application.baseContext)
         // 获取应用程序全局类
@@ -38,8 +38,8 @@ class EcosedApplication<YourApp : Application> : ContextWrapper(null), EcosedApp
         )
 
 
-        if (mME is EcosedApplicationImpl){
-            (mME as EcosedApplicationImpl).apply {
+        if (mME is IEcosedApplication){
+            (mME as IEcosedApplication).apply {
                 this@EcosedApplication.init()
                 this@apply.init()
             }
@@ -47,8 +47,8 @@ class EcosedApplication<YourApp : Application> : ContextWrapper(null), EcosedApp
 
         object : Thread() {
             override fun run() {
-                if (mME is EcosedApplicationImpl){
-                    (mME as EcosedApplicationImpl).apply {
+                if (mME is IEcosedApplication){
+                    (mME as IEcosedApplication).apply {
                         synchronized(mME) {
                             this@EcosedApplication.initSDKs()
                             this@apply.initSDKs()
@@ -105,9 +105,9 @@ class EcosedApplication<YourApp : Application> : ContextWrapper(null), EcosedApp
         Log.i(tag, obj.toString())
     }
 
-    override fun getPluginEngine(): EcosedEngine {
-        return mEngine
-    }
+//    override fun getPluginEngine(): EcosedEngine {
+//        return mEngine
+//    }
 
     override fun getEcosedClient(): EcosedClient {
         TODO("Not yet implemented")

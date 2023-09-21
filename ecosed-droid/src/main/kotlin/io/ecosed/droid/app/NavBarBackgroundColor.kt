@@ -25,7 +25,7 @@ import androidx.annotation.ColorInt
  * 描述: 导航栏着色注解
  * 文档: https://github.com/ecosed/EcosedDroid/blob/master/README.md
  */
+@MustBeDocumented
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)
-@MustBeDocumented
 annotation class NavBarBackgroundColor(@ColorInt val color: Int = Color.TRANSPARENT)

@@ -1,4 +1,4 @@
-package io.ecosed.libecosed_example
+package io.ecosed.ecosed_droid_example
 
 import org.junit.Test
 

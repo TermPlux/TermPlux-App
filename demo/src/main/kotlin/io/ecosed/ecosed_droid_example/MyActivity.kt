@@ -13,27 +13,46 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.ecosed.libecosed_example
+package io.ecosed.ecosed_droid_example
 
 import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import io.ecosed.droid.app.EcosedActivity
-import io.ecosed.droid.app.EcosedActivityImpl
 import io.ecosed.droid.app.EcosedLauncher
+import io.ecosed.droid.app.EdgeToEdge
+import io.ecosed.droid.app.IEcosedActivity
 import io.ecosed.droid.app.NavBarBackgroundColor
 
 @EcosedLauncher(isLauncher = true)
 @NavBarBackgroundColor(color = Color.TRANSPARENT)
-class MyActivity : AppCompatActivity(), EcosedActivityImpl by EcosedActivity<MyActivity>() {
+@EdgeToEdge(edge = true)
+class MyActivity : AppCompatActivity(), IEcosedActivity by EcosedActivity<MyActivity>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        attachEcosed(activity = this@MyActivity, lifecycle = lifecycle)
+        attachEcosed(
+            activity = this,
+            lifecycle = lifecycle
+        )
     }
+
+    @Deprecated(
+        message = "Deprecated in Java",
+        replaceWith = ReplaceWith(
+            expression = "onBack { super.onBackPressed() }",
+            "androidx.appcompat.app.AppCompatActivity"
+        )
+    )
+    override fun onBackPressed() {
+        onBack {
+            super.onBackPressed()
+        }
+    }
+
 
     override fun onDestroy() {
         super.onDestroy()
-        detachEcosed(lifecycle = lifecycle)
+        detachEcosed()
     }
 }

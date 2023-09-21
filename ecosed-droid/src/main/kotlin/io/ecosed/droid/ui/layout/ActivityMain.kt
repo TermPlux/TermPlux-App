@@ -15,10 +15,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Android
 import androidx.compose.material.icons.filled.MenuOpen
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
@@ -42,22 +45,28 @@ import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -68,6 +77,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.viewpager2.widget.ViewPager2
 import androidx.window.layout.DisplayFeature
 import androidx.window.layout.FoldingFeature
+import com.blankj.utilcode.util.AppUtils
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import com.google.android.material.appbar.MaterialToolbar
 import io.ecosed.droid.R
@@ -81,10 +91,11 @@ import io.ecosed.droid.ui.window.DevicePosture
 import io.ecosed.droid.ui.window.NavigationType
 import io.ecosed.droid.ui.window.isBookPosture
 import io.ecosed.droid.ui.window.isSeparating
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
+@OptIn(ExperimentalMaterial3Api::class)
 internal fun ActivityMain(
     windowSize: WindowSizeClass,
     displayFeatures: List<DisplayFeature>,
@@ -99,10 +110,12 @@ internal fun ActivityMain(
     current: (Int) -> Unit,
     toggle: () -> Unit,
     taskbar: () -> Unit,
-    customTabs: (String) -> Unit,
+    launchUrl: (String) -> Unit,
 
-) {
-    val pages = listOf(
+    ) {
+
+
+    val pages: ArrayList<Screen> = arrayListOf(
         Screen.ComposeTitle,
         Screen.Overview,
         Screen.Home,
@@ -114,7 +127,7 @@ internal fun ActivityMain(
         Screen.Apps,
         Screen.Preference
     )
-    val items = listOf(
+    val items: ArrayList<Screen> = arrayListOf(
         Screen.Overview,
         Screen.Home,
         Screen.Settings,
@@ -124,12 +137,12 @@ internal fun ActivityMain(
     val navController: NavHostController = rememberNavController()
 
 
-    val scope = rememberCoroutineScope()
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    val currentDestination = navBackStackEntry?.destination
+    val scope: CoroutineScope = rememberCoroutineScope()
+    val navBackStackEntry: NavBackStackEntry? by navController.currentBackStackEntryAsState()
+    val scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    val currentDestination: NavDestination? = navBackStackEntry?.destination
 
-    val snackBarHostState = remember {
+    val snackBarHostState: SnackbarHostState = remember {
         SnackbarHostState()
     }
 
@@ -137,8 +150,11 @@ internal fun ActivityMain(
         initialValue = DrawerValue.Closed
     )
 
-    val expanded = remember {
+    val expanded: MutableState<Boolean> = remember {
         mutableStateOf(value = false)
+    }
+    val tipDialog: MutableState<Boolean> = remember {
+        mutableStateOf(value = true)
     }
 
     val navigationType: NavigationType
@@ -385,9 +401,8 @@ internal fun ActivityMain(
                 TopAppBar(
                     title = {
                         Text(
-                            text = stringResource(
-                                id = R.string.lib_name
-                            )
+                            text = AppUtils.getAppName(),
+                            maxLines = 1
                         )
                     },
                     modifier = Modifier.fillMaxWidth(),
@@ -586,13 +601,66 @@ internal fun ActivityMain(
                             snackBarHostState = snackBarHostState,
                             onEasterEgg = {},
                             onNotice = {},
-                            customTabs = customTabs
+                            customTabs = launchUrl
                         )
                     }
                 }
             )
+            if (tipDialog.value) {
+                AlertDialog(
+                    onDismissRequest = {
+                        tipDialog.value = false
+                    },
+                    icon = {
+                        Icon(
+                            painter = rememberDrawablePainter(
+                                drawable = productLogo
+                            ),
+                            contentDescription = null
+                        )
+                    },
+                    title = {
+                        Text(
+                            text = AppUtils.getAppName()
+                        )
+                    },
+                    text = {
+                        Text(
+                            text = "请在标记为EcosedLauncher的Activity的AndroidManifest中添加HOME属性。本提示仅在DEBUG模式中弹出，不影响应用发布之后正常使用。"
+                        )
+                    },
+                    confirmButton = {
+                        TextButton(
+                            onClick = {
+                                tipDialog.value = false
+                                launchUrl("https://github.com/ecosed/EcosedDroid/wiki")
+                            }
+                        ) {
+                            Text(
+                                text = "查看文档"
+                            )
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(
+                            onClick = {
+                                tipDialog.value = false
+                            }
+                        ) {
+                            Text(
+                                text = "我知道了"
+                            )
+                        }
+                    }
+                )
+            }
         }
     }
+
+
+
+
+
 
     when (navigationType) {
         NavigationType.PermanentNavigationDrawer -> PermanentNavigationDrawer(
@@ -606,93 +674,9 @@ internal fun ActivityMain(
             content()
         }
 
-
-
-
-//        NavigationType.NavigationRail,
-//        NavigationType.BottomNavigation -> ModalNavigationDrawer(
-//            drawerContent = {
-//                ModalDrawerSheet {
-//                    nav()
-//                }
-//            },
-//            modifier = Modifier.fillMaxSize(),
-//            drawerState = drawerState,
-//            gesturesEnabled = true
-//        ) {
-//            Row(
-//                modifier = Modifier.fillMaxSize()
-//            ) {
-//                AnimatedVisibility(
-//                    visible = navigationType == NavigationType.NavigationRail
-//                ) {
-//                    NavigationRail(
-//                        modifier = Modifier.fillMaxHeight(),
-//                        header = {
-//                            FloatingActionButton(
-//                                onClick = {
-//
-//                                }
-//                            ) {
-//                                Image(
-//                                    painter = rememberDrawablePainter(
-//                                        drawable = productLogo
-//                                    ),
-//                                    contentDescription = null
-//                                )
-//                            }
-//                        }
-//                    ) {
-//                        Column(
-//                            modifier = Modifier.verticalScroll(
-//                                state = rememberScrollState()
-//                            )
-//                        ) {
-//                            items.forEach { item ->
-//                                NavigationRailItem(
-//                                    selected = currentDestination?.hierarchy?.any {
-//                                        it.route == item.route
-//                                    } == true,
-//                                    onClick = {
-//                                        if (item.type == ScreenType.Compose) navController.navigate(
-//                                            route = item.route
-//                                        ) {
-//                                            popUpTo(
-//                                                id = navController.graph.findStartDestination().id
-//                                            ) {
-//                                                saveState = true
-//                                            }
-//                                            launchSingleTop = true
-//                                            restoreState = true
-//                                        }
-//                                    },
-//                                    icon = {
-//                                        Icon(
-//                                            imageVector = item.imageVector,
-//                                            contentDescription = null
-//                                        )
-//                                    },
-//                                    enabled = true,
-//                                    label = {
-//                                        Text(
-//                                            stringResource(
-//                                                id = item.title
-//                                            )
-//                                        )
-//                                    },
-//                                    alwaysShowLabel = false
-//                                )
-//                            }
-//                        }
-//                    }
-//                }
-//                content()
-//            }
-//        }
-
-
         NavigationType.NavigationRail,
-        NavigationType.BottomNavigation -> Row(
+        NavigationType.BottomNavigation,
+        -> Row(
             modifier = Modifier.fillMaxSize()
         ) {
             AnimatedVisibility(
@@ -763,8 +747,8 @@ internal fun ActivityMain(
     }
 }
 
-@ScreenPreviews
 @Composable
+@ScreenPreviews
 private fun ActivityMainPreview() {
     LibEcosedTheme {
 

@@ -30,6 +30,10 @@ class MainFragment private constructor() : Fragment() {
             windowManager = requireActivity().windowManager
         )
         lifecycle.addObserver(mClient)
+
+
+
+
     }
 
     override fun onCreateView(
