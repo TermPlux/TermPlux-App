@@ -17,7 +17,7 @@ package io.ecosed.ecosed_droid_example
 
 import android.graphics.Color
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.ComponentActivity
 import io.ecosed.droid.app.EcosedActivity
 import io.ecosed.droid.app.EcosedLauncher
 import io.ecosed.droid.app.EdgeToEdge
@@ -27,29 +27,18 @@ import io.ecosed.droid.app.NavBarBackgroundColor
 @EcosedLauncher(isLauncher = true)
 @NavBarBackgroundColor(color = Color.TRANSPARENT)
 @EdgeToEdge(edge = true)
-class MyActivity : AppCompatActivity(), IEcosedActivity by EcosedActivity<MyActivity>() {
+class MyActivity : ComponentActivity(), IEcosedActivity by EcosedActivity<MyApplication, MyActivity>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         attachEcosed(
-            activity = this,
+            activity = this@MyActivity,
             lifecycle = lifecycle
         )
-    }
+        setContentComposable {
 
-    @Deprecated(
-        message = "Deprecated in Java",
-        replaceWith = ReplaceWith(
-            expression = "onBack { super.onBackPressed() }",
-            "androidx.appcompat.app.AppCompatActivity"
-        )
-    )
-    override fun onBackPressed() {
-        onBack {
-            super.onBackPressed()
         }
     }
-
 
     override fun onDestroy() {
         super.onDestroy()

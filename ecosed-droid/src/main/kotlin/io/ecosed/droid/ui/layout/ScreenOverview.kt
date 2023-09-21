@@ -161,7 +161,7 @@ internal fun ScreenOverview(
                                             )
                                     )
                                     Text(
-                                        text = "by LibEcosed",
+                                        text = "by EcosedDroid",
                                         modifier = Modifier.fillMaxWidth(),
                                         maxLines = 1,
                                         style = MaterialTheme.typography.bodyMedium

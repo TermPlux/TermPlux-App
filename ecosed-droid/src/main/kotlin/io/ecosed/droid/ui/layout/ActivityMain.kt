@@ -606,54 +606,54 @@ internal fun ActivityMain(
                     }
                 }
             )
-            if (tipDialog.value) {
-                AlertDialog(
-                    onDismissRequest = {
-                        tipDialog.value = false
-                    },
-                    icon = {
-                        Icon(
-                            painter = rememberDrawablePainter(
-                                drawable = productLogo
-                            ),
-                            contentDescription = null
-                        )
-                    },
-                    title = {
-                        Text(
-                            text = AppUtils.getAppName()
-                        )
-                    },
-                    text = {
-                        Text(
-                            text = "请在标记为EcosedLauncher的Activity的AndroidManifest中添加HOME属性。本提示仅在DEBUG模式中弹出，不影响应用发布之后正常使用。"
-                        )
-                    },
-                    confirmButton = {
-                        TextButton(
-                            onClick = {
-                                tipDialog.value = false
-                                launchUrl("https://github.com/ecosed/EcosedDroid/wiki")
-                            }
-                        ) {
-                            Text(
-                                text = "查看文档"
-                            )
-                        }
-                    },
-                    dismissButton = {
-                        TextButton(
-                            onClick = {
-                                tipDialog.value = false
-                            }
-                        ) {
-                            Text(
-                                text = "我知道了"
-                            )
-                        }
-                    }
-                )
-            }
+//            if (tipDialog.value) {
+//                AlertDialog(
+//                    onDismissRequest = {
+//                        tipDialog.value = false
+//                    },
+//                    icon = {
+//                        Icon(
+//                            painter = rememberDrawablePainter(
+//                                drawable = productLogo
+//                            ),
+//                            contentDescription = null
+//                        )
+//                    },
+//                    title = {
+//                        Text(
+//                            text = AppUtils.getAppName()
+//                        )
+//                    },
+//                    text = {
+//                        Text(
+//                            text = "请在标记为EcosedLauncher的Activity的AndroidManifest中添加HOME属性。本提示仅在DEBUG模式中弹出，不影响应用发布之后正常使用。"
+//                        )
+//                    },
+//                    confirmButton = {
+//                        TextButton(
+//                            onClick = {
+//                                tipDialog.value = false
+//                                launchUrl("https://github.com/ecosed/EcosedDroid/wiki")
+//                            }
+//                        ) {
+//                            Text(
+//                                text = "查看文档"
+//                            )
+//                        }
+//                    },
+//                    dismissButton = {
+//                        TextButton(
+//                            onClick = {
+//                                tipDialog.value = false
+//                            }
+//                        ) {
+//                            Text(
+//                                text = "我知道了"
+//                            )
+//                        }
+//                    }
+//                )
+//            }
         }
     }
 

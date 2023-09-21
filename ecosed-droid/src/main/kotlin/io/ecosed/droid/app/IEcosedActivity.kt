@@ -1,6 +1,5 @@
 package io.ecosed.droid.app
 
-import android.app.Activity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.compose.runtime.Composable
@@ -13,19 +12,16 @@ interface IEcosedActivity {
      * @param activity 要附加的Activity
      * @param lifecycle Activity的生命周期
      */
-    fun Activity.attachEcosed(
-        activity: Activity,
+    fun IEcosedActivity.attachEcosed(
+        activity: ComponentActivity,
         lifecycle: Lifecycle
     )
 
-    fun Activity.onBack(
-        back: () -> Unit
-    )
 
-    fun Activity.detachEcosed()
+    fun IEcosedActivity.detachEcosed()
 
 
-    fun ComponentActivity.setContentComposable(content: @Composable () -> Unit)
+    fun IEcosedActivity.setContentComposable(content: @Composable () -> Unit)
 
 
 
@@ -36,9 +32,13 @@ interface IEcosedActivity {
      * @param bundle 通过Bundle传递参数.
      * @return 返回方法执行后的返回值.
      */
-    fun <T> Activity.execMethodCall(
+    fun <T> IEcosedActivity.execMethodCall(
         name: String,
         method: String,
         bundle: Bundle?
     ): T?
+
+    fun IEcosedActivity.toast(obj: Any)
+    fun IEcosedActivity.log(obj: Any)
+
 }

@@ -10,6 +10,8 @@ import androidx.compose.runtime.setValue
 
 internal class TopAppBarUtils private constructor() {
 
+
+
     private var mVisible: Boolean by mutableStateOf(value = true)
     private var topAppBarVisible: Boolean by mutableStateOf(value = true)
 

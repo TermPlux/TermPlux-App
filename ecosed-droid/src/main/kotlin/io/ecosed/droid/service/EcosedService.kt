@@ -171,8 +171,7 @@ internal class EcosedService : Service(), Shizuku.OnBinderReceivedListener,
         ).launch {
             Taskbar.openSettings(
                 this@EcosedService,
-                "任务栏设置",
-                R.style.Theme_LibEcosed_Taskbar
+                "任务栏设置"
             )
         }
     }

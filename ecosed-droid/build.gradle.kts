@@ -2,10 +2,7 @@ plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.kapt")
-//    id("com.google.devtools.ksp")
-    id("androidx.navigation.safeargs.kotlin")
     id("dev.rikka.tools.refine")
-    id("dev.rikka.tools.materialthemebuilder")
     id("maven-publish")
 }
 
@@ -66,7 +63,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.0"
+        kotlinCompilerExtensionVersion = "1.5.1"
     }
 
     packaging {
@@ -79,21 +76,6 @@ android {
     }
 }
 
-materialThemeBuilder {
-    themes {
-        create("EcosedDroid"){
-            primaryColor = "#D0BCFF"
-            lightThemeFormat = "Theme.Material3.Light.%s"
-            lightThemeParent = "Theme.Material3.Light.NoActionBar"
-            darkThemeFormat = "Theme.Material3.Dark.%s"
-            darkThemeParent = "Theme.Material3.Dark.NoActionBar"
-        }
-    }
-    generatePalette = true
-    generatePaletteAttributes = true
-    generateTextColors = true
-}
-
 afterEvaluate {
     publishing {
         publications {
@@ -104,22 +86,21 @@ afterEvaluate {
     }
 }
 
-configurations.all {
-    exclude(
-        group = "androidx.appcompat",
-        module = "appcompat"
-    )
-}
-
 dependencies {
     // 第三方库
     // AndroidUtilCode: https://github.com/Blankj/AndroidUtilCode
     implementation(dependencyNotation = "com.blankj:utilcodex:1.31.1")
+
+
     // LibTaskbar: https://github.com/farmerbb/libtaskbar
     implementation(dependencyNotation = "com.github.farmerbb:libtaskbar:2.2.0")
     // DialogX: https://github.com/kongzue/DialogX
     implementation(dependencyNotation = "com.kongzue.dialogx:DialogX:0.0.48")
     implementation(dependencyNotation = "com.kongzue.dialogx.style:DialogXIOSStyle:0.0.48")
+
+
+
+
     // LicensesDialog: https://github.com/PSDev/LicensesDialog
     implementation(dependencyNotation = "de.psdev.licensesdialog:licensesdialog:2.2.0")
     // Shizuku-API: https://github.com/RikkaApps/Shizuku-API
@@ -131,52 +112,45 @@ dependencies {
     implementation(dependencyNotation = "dev.rikka.tools.refine:annotation:4.3.0")
     implementation(dependencyNotation = "dev.rikka.tools.refine:runtime:4.3.0")
     kapt(dependencyNotation = "dev.rikka.tools.refine:annotation-processor:4.3.0")
-    // RikkaX: https://github.com/RikkaApps/RikkaX
-    implementation(dependencyNotation = "dev.rikka.rikkax.appcompat:appcompat:1.6.1")
-    implementation(dependencyNotation = "dev.rikka.rikkax.buildcompat:buildcompat:34.0.1")
-    implementation(dependencyNotation = "dev.rikka.rikkax.core:core-ktx:1.4.1")
-    implementation(dependencyNotation = "dev.rikka.rikkax.insets:insets:1.3.0")
-    implementation(dependencyNotation = "dev.rikka.rikkax.layoutinflater:layoutinflater:1.3.0")
-    implementation(dependencyNotation = "dev.rikka.rikkax.material:material:2.7.0")
-    implementation(dependencyNotation = "dev.rikka.rikkax.material:material-preference:2.0.0")
-    implementation(dependencyNotation = "dev.rikka.rikkax.parcelablelist:parcelablelist:2.0.1")
-    implementation(dependencyNotation = "dev.rikka.rikkax.recyclerview:recyclerview-ktx:1.3.1")
-    implementation(dependencyNotation = "dev.rikka.rikkax.widget:borderview:1.1.0")
-    implementation(dependencyNotation = "dev.rikka.rikkax.widget:mainswitchbar:1.0.2")
     // JetBrains 官方库
-    implementation(dependencyNotation = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.0")
-    implementation(dependencyNotation = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.0")
+    implementation(dependencyNotation = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.10")
+    implementation(dependencyNotation = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.10")
     // Google 官方库
     implementation(dependencyNotation = "androidx.core:core-ktx:1.12.0")
+    implementation(dependencyNotation = "androidx.appcompat:appcompat:1.6.1")
+
     implementation(dependencyNotation = "androidx.annotation:annotation:1.7.0")
     implementation(dependencyNotation = "androidx.fragment:fragment-ktx:1.6.1")
     implementation(dependencyNotation = "androidx.preference:preference-ktx:1.2.1")
     implementation(dependencyNotation = "androidx.viewpager2:viewpager2:1.0.0")
     implementation(dependencyNotation = "androidx.recyclerview:recyclerview:1.3.1")
-    implementation(dependencyNotation = "androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
-    implementation(dependencyNotation = "androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
+
     implementation(dependencyNotation = "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation(dependencyNotation = "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+
     implementation(dependencyNotation = "androidx.browser:browser:1.6.0")
     implementation(dependencyNotation = "androidx.activity:activity-compose:1.7.2")
+
+    implementation(dependencyNotation = "com.google.android.material:material:1.9.0")
+
+
     implementation(dependencyNotation = "com.google.android.gms:play-services-base:18.2.0")
-    implementation(dependencyNotation = "com.google.accompanist:accompanist-webview:0.32.0")
     implementation(dependencyNotation = "com.google.accompanist:accompanist-systemuicontroller:0.32.0")
     implementation(dependencyNotation = "com.google.accompanist:accompanist-adaptive:0.32.0")
     implementation(dependencyNotation = "com.google.accompanist:accompanist-drawablepainter:0.32.0")
     implementation(dependencyNotation = "androidx.navigation:navigation-compose:2.7.2")
     implementation(dependencyNotation = "androidx.navigation:navigation-ui-ktx:2.7.2")
-    implementation(dependencyNotation = "androidx.core:core-ktx:1.12.0")
-    implementation(dependencyNotation = "androidx.appcompat:appcompat:1.6.1")
-    implementation(dependencyNotation = "com.google.android.material:material:1.9.0")
+
+
+
     implementation(dependencyNotation = "androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
     implementation(dependencyNotation = "androidx.activity:activity-compose:1.7.2")
     implementation(dependencyNotation = platform(notation = "androidx.compose:compose-bom:2023.03.00"))
     implementation(dependencyNotation = "androidx.compose.ui:ui:1.5.1")
     implementation(dependencyNotation = "androidx.compose.ui:ui-graphics:1.5.1")
     implementation(dependencyNotation = "androidx.compose.ui:ui-tooling-preview:1.5.1")
-    implementation(dependencyNotation = "androidx.compose.material3:material3:1.1.1")
-    implementation(dependencyNotation = "androidx.compose.material3:material3-window-size-class:1.1.1")
+    implementation(dependencyNotation = "androidx.compose.material3:material3:1.1.2")
+    implementation(dependencyNotation = "androidx.compose.material3:material3-window-size-class:1.1.2")
     implementation(dependencyNotation = "androidx.compose.material:material-icons-core:1.5.1")
     implementation(dependencyNotation = "androidx.compose.material:material-icons-extended:1.5.1")
     // 测试和调试

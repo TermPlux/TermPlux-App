@@ -25,7 +25,6 @@ class MyApplication : Application(), IEcosedApplication by EcosedApplication<MyA
 
     override fun onCreate() {
         super.onCreate()
-
         attachUtils(
             application = this@MyApplication,
             host = object : EcosedHost {
@@ -36,7 +35,6 @@ class MyApplication : Application(), IEcosedApplication by EcosedApplication<MyA
 
             }
         )
-
     }
 
     override fun init() {

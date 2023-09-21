@@ -55,9 +55,7 @@ internal class LibEcosedPlugin : LibEcosed() {
         ) {
             DynamicColors.applyToActivitiesIfAvailable(
                 application,
-                DynamicColorsOptions.Builder()
-                    .setThemeOverlay(R.style.ThemeOverlay_LibEcosed_DynamicColors)
-                    .build()
+                DynamicColorsOptions.Builder().build()
             )
 //            HarmonizedColors.applyToContextIfAvailable(
 //                application,

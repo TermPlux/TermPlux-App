@@ -17,26 +17,24 @@ package io.ecosed.droid.app
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.Application
 import android.content.ContextWrapper
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.browser.customtabs.CustomTabsIntent
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.DefaultLifecycleObserver
@@ -47,77 +45,97 @@ import com.farmerbb.taskbar.lib.Taskbar
 import com.google.accompanist.adaptive.calculateDisplayFeatures
 import com.google.android.material.internal.EdgeToEdgeUtils
 import io.ecosed.droid.R
+import io.ecosed.droid.engine.EcosedEngine
 import io.ecosed.droid.plugin.LibEcosedPlugin
-import io.ecosed.droid.plugin.PluginExecutor
 import io.ecosed.droid.ui.layout.ActivityMain
 import io.ecosed.droid.ui.theme.LibEcosedTheme
 import io.ecosed.droid.utils.ThemeHelper
 import io.ecosed.droid.utils.TopAppBarUtils
 
-class EcosedActivity<YourActivity : Activity> : ContextWrapper(null), IEcosedActivity,
-    LifecycleOwner, DefaultLifecycleObserver {
+class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcosedActivity> :
+    ContextWrapper(null), IEcosedActivity, LifecycleOwner, DefaultLifecycleObserver {
 
     private lateinit var mActivity: Activity
+    private lateinit var mApplication: Application
+    private lateinit var mLifecycle: Lifecycle
+
+    private lateinit var mME: YourActivity
+    private lateinit var mAPP: YourApplication
+
+
     private var layoutResId = -1
+
     private var isDebug = false
+    private var isLaunch = false
+    private lateinit var mProductLogo: Drawable
 
 
     private lateinit var mViewPager2: ViewPager2
 
-
-    private lateinit var mME: YourActivity
-
-    private lateinit var mLifecycle: Lifecycle
     private lateinit var delayHideTouchListener: View.OnTouchListener
     private lateinit var toggle: () -> Unit
-    private var actionBarVisible: Boolean by mutableStateOf(value = true)
+    private var isVisible: Boolean by mutableStateOf(value = true)
+    private val content = mutableStateOf<(@Composable () -> Unit)?>(value = null)
 
 
     @Suppress(names = ["UNCHECKED_CAST"])
-    override fun Activity.attachEcosed(
-        activity: Activity,
-        lifecycle: Lifecycle
+    override fun IEcosedActivity.attachEcosed(
+        activity: ComponentActivity,
+        lifecycle: Lifecycle,
     ) {
         attachBaseContext(activity.baseContext)
         mActivity = activity
+        mApplication = activity.application
         mLifecycle = lifecycle
         mME = mActivity as YourActivity
+        mAPP = mApplication as YourApplication
         this@EcosedActivity.lifecycle.addObserver(observer = this@EcosedActivity)
     }
 
-
-
-    override fun Activity.detachEcosed() {
+    override fun IEcosedActivity.detachEcosed() {
         this@EcosedActivity.lifecycle.removeObserver(observer = this@EcosedActivity)
     }
 
-    override fun ComponentActivity.setContentComposable(
-        content: @Composable () -> Unit
-    ) {
-
-    }
-
-    override fun Activity.onBack(
-        back: () -> Unit
+    override fun IEcosedActivity.setContentComposable(
+        content: @Composable () -> Unit,
     ) = defaultUnit {
-        if (!isDefaultHome()) {
-            back()
+        if (isLaunch) {
+            this@EcosedActivity.content.value = content
         } else {
-            // 切换到应用页
+            setContent(content = content)
         }
     }
 
-    override fun <T> Activity.execMethodCall(
+    override fun <T> IEcosedActivity.execMethodCall(
         name: String,
         method: String,
         bundle: Bundle?,
-    ): T? {
-        return PluginExecutor.execMethodCall<T>(
-            activity = mME,
-            name = name,
-            method = method,
-            bundle = bundle
-        )
+    ): T? = defaultUnit {
+        return@defaultUnit engineUnit {
+            return@engineUnit execMethodCall<T>(
+                name = name,
+                method = method,
+                bundle = bundle
+            )
+        }
+    }
+
+    override fun IEcosedActivity.toast(obj: Any) = defaultUnit {
+        try {
+            runOnUiThread {
+                Toast.makeText(
+                    this@EcosedActivity,
+                    obj.toString(),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    override fun IEcosedActivity.log(obj: Any) = defaultUnit {
+
     }
 
     override val lifecycle: Lifecycle
@@ -134,22 +152,44 @@ class EcosedActivity<YourActivity : Activity> : ContextWrapper(null), IEcosedAct
             }
         }
     ) {
+
+        execMethodCall<Boolean>(
+            name = LibEcosedPlugin.channel,
+            method = LibEcosedPlugin.isDebug,
+            bundle = null
+        )?.let { debug ->
+            isDebug = debug
+        }
+
+        execMethodCall<Drawable>(
+            name = LibEcosedPlugin.channel,
+            method = LibEcosedPlugin.getProductLogo,
+            bundle = null
+        )?.let { logo ->
+            mProductLogo = logo
+        }
+
+        isLaunch = isLaunchMode()
+
+
+
+
         when {
-            isLaunchMode() -> when (this@hasSuperUnit) {
-                is ComponentActivity -> (this@hasSuperUnit as ComponentActivity).apply {
-                    // 设置主题
-                    setTheme(R.style.Theme_LibEcosed)
-                    // 启用边倒边
-                    EdgeToEdgeUtils.applyEdgeToEdge(window, true)
-                    WindowCompat.setDecorFitsSystemWindows(window, false)
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+            isLaunch -> {
+                // 设置主题
+                setTheme(R.style.Theme_LibEcosed)
+                // 启用边倒边
+                EdgeToEdgeUtils.applyEdgeToEdge(window, true)
+                WindowCompat.setDecorFitsSystemWindows(window, false)
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
 
 
-                    TopAppBarUtils.newInstance().attach { visible, onTouchListener, function ->
-                        actionBarVisible = visible
-                        delayHideTouchListener = onTouchListener
-                        toggle = function
-                    }
+                TopAppBarUtils.newInstance().attach { visible, onTouchListener, function ->
+                    isVisible = visible
+                    delayHideTouchListener = onTouchListener
+                    toggle = function
+                }
+
 
 //                    mViewPager2 = ViewPager2(this).apply {
 //                        isUserInputEnabled = true
@@ -161,73 +201,51 @@ class EcosedActivity<YourActivity : Activity> : ContextWrapper(null), IEcosedAct
 //                        //  setPageTransformer(PageTransformerUtils())
 //                    }
 
-                    when {
-                        execMethodCall<Boolean>(
-                            name = LibEcosedPlugin.channel,
-                            method = LibEcosedPlugin.isDebug,
-                            bundle = null
-                        ) == true -> isDebug = true
-                    }
 
+                setContent {
+//                        content.value?.invoke()
+                    LocalView.current.setOnTouchListener(delayHideTouchListener)
+                    LibEcosedTheme(
+                        dynamicColor = ThemeHelper.isUsingSystemColor()
+                    ) { dynamic ->
+                        ActivityMain(
+                            windowSize = calculateWindowSizeClass(
+                                activity = this@hasSuperUnit
+                            ),
+                            displayFeatures = calculateDisplayFeatures(
+                                activity = this@hasSuperUnit
+                            ),
+                            productLogo = mProductLogo,
+                            topBarVisible = isVisible,
+                            topBarUpdate = { toolbar ->
 
-
-
-                    setContent {
-                        LocalView.current.setOnTouchListener(delayHideTouchListener)
-                        LibEcosedTheme(
-                            dynamicColor = ThemeHelper.isUsingSystemColor()
-                        ) { dynamic ->
-                            ActivityMain(
-                                windowSize = calculateWindowSizeClass(
-                                    activity = this@hasSuperUnit
-                                ),
-                                displayFeatures = calculateDisplayFeatures(
-                                    activity = this@hasSuperUnit
-                                ),
-                                productLogo = execMethodCall<Drawable>(
-                                    name = LibEcosedPlugin.channel,
-                                    method = LibEcosedPlugin.getProductLogo,
-                                    bundle = null
-                                ),
-                                topBarVisible = actionBarVisible,
-                                topBarUpdate = { toolbar ->
-
-                                },
-                                viewPager2 = ViewPager2(this),
-                                androidVersion = "13",
-                                shizukuVersion = "13",
-                                current = {
-                                    //mViewPager2.currentItem = it
-                                },
-                                toggle = {
-                                    toggle()
-                                },
-                                taskbar = {
-                                    Taskbar.openSettings(
+                            },
+                            viewPager2 = ViewPager2(this),
+                            androidVersion = "13",
+                            shizukuVersion = "13",
+                            current = {
+                                //mViewPager2.currentItem = it
+                            },
+                            toggle = {
+                                toggle()
+                            },
+                            taskbar = {
+                                Taskbar.openSettings(
+                                    this@hasSuperUnit,
+                                    getString(R.string.taskbar_title),
+                                )
+                            },
+                            launchUrl = { url ->
+                                CustomTabsIntent.Builder()
+                                    .build()
+                                    .launchUrl(
                                         this@hasSuperUnit,
-                                        getString(R.string.taskbar_title),
-                                        when (dynamic) {
-                                            true -> R.style.Theme_LibEcosed_TaskbarDynamic
-                                            false -> R.style.Theme_LibEcosed_Taskbar
-                                        }
+                                        Uri.parse(url)
                                     )
-                                },
-                                launchUrl = { url ->
-                                    CustomTabsIntent.Builder()
-                                        .build()
-                                        .launchUrl(
-                                            this@hasSuperUnit,
-                                            Uri.parse(url)
-                                        )
-                                }
-                            )
-                        }
+                            }
+                        )
                     }
                 }
-
-                else -> error(
-                    message = "错误: @EcosedLauncher需要继承ComponentActivity或其子类!"
-                )
             }
 
 
@@ -301,15 +319,31 @@ class EcosedActivity<YourActivity : Activity> : ContextWrapper(null), IEcosedAct
 
     private fun hasSuperUnit(
         superUnit: (() -> Unit) -> Unit,
-        content: YourActivity.() -> Unit,
+        content: ComponentActivity.() -> Unit,
     ): Unit = superUnit {
-        mME.content()
+        when (mME) {
+            is ComponentActivity -> {
+                (mME as ComponentActivity).content()
+            }
+
+            else -> error(message = errorActCls)
+        }
     }
 
-    private fun <T> defaultUnit(
-        content: YourActivity.() -> T,
-    ): T = mME.content()
+    // 为了不将引擎暴露通过上下文包装器传递需要重定义为引擎
+    private fun <T> engineUnit(
+        content: EcosedEngine.() -> T,
+    ): T? = (mAPP.engine as EcosedEngine).content()
 
+    private fun <T> defaultUnit(
+        content: ComponentActivity.() -> T,
+    ): T = when (mME) {
+        is ComponentActivity -> {
+            (mME as ComponentActivity).content()
+        }
+
+        else -> error(message = errorActCls)
+    }
 
     private fun isDefaultHome(): Boolean = defaultUnit {
         var isHome = false
@@ -352,13 +386,7 @@ class EcosedActivity<YourActivity : Activity> : ContextWrapper(null), IEcosedAct
     private companion object {
         const val tag: String = "EcosedActivity"
 
-        /** 操作栏是否应该在[autoHideDelayMillis]毫秒后自动隐藏。*/
-        const val autoHide = false
+        const val errorActCls: String = "错误: Activity需要继承ComponentActivity或其子类!"
 
-        /** 如果设置了[autoHide]，则在用户交互后隐藏操作栏之前等待的毫秒数。*/
-        const val autoHideDelayMillis = 3000
-
-        /** 一些较老的设备需要在小部件更新和状态和导航栏更改之间有一个小的延迟。*/
-        const val uiAnimatorDelay = 300
     }
 }

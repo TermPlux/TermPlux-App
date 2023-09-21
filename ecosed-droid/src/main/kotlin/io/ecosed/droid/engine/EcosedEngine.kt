@@ -2,6 +2,7 @@ package io.ecosed.droid.engine
 
 import android.app.Application
 import android.content.Context
+import android.content.ContextWrapper
 import android.os.Bundle
 import android.util.Log
 import io.ecosed.droid.app.IEcosedApplication
@@ -16,7 +17,7 @@ import io.ecosed.droid.plugin.PluginBinding
  * 描述: 插件引擎
  * 文档: https://github.com/ecosed/plugin/blob/master/README.md
  */
-class EcosedEngine private constructor() {
+internal class EcosedEngine private constructor() : ContextWrapper(null) {
 
     /** 应用程序全局类. */
     private lateinit var mApp: Application
@@ -36,12 +37,15 @@ class EcosedEngine private constructor() {
     /** 插件列表. */
     private var mPluginList: ArrayList<EcosedPlugin>? = null
 
+
+
     /**
      * 将引擎附加到应用.
      */
     private fun attach() {
         when {
             (mPluginList == null) or (mBinding == null) -> apply {
+                attachBaseContext(mBase)
                 // 客户端组件第一次初始化, 附加基本上下文.
                 mClient.firstAttach(base = mBase)
                 // 初始化插件绑定器.
@@ -155,7 +159,7 @@ class EcosedEngine private constructor() {
     internal fun <T> execMethodCall(
         name: String,
         method: String,
-        bundle: Bundle?
+        bundle: Bundle?,
     ): T? {
         var result: T? = null
         try {
@@ -213,7 +217,7 @@ class EcosedEngine private constructor() {
          * @return 返回已构建的引擎.
          */
         override fun create(
-            application: Application
+            application: Application,
         ): EcosedEngine = EcosedEngine().let { engine ->
             return@let engine.apply {
                 if (application is IEcosedApplication) {

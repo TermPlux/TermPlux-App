@@ -16,6 +16,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.DefaultLifecycleObserver
 import io.ecosed.droid.app.IEcosedApplication
 import io.ecosed.droid.app.EcosedPlugin
+import io.ecosed.droid.engine.EcosedEngine
 
 /**
  * 作者: wyq0918dev
@@ -187,7 +188,7 @@ abstract class EcosedClient : ContextThemeWrapper(), DefaultLifecycleObserver, E
     ): T? {
         if (getApplication() is IEcosedApplication) {
             (getApplication() as IEcosedApplication).apply {
-                return engine.execMethodCall<T>(
+                return (engine as EcosedEngine).execMethodCall<T>(
                     name = name,
                     method = method,
                     bundle = bundle

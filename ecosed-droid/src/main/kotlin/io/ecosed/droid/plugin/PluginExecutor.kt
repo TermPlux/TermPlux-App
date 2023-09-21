@@ -6,6 +6,7 @@ import android.app.Service
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import io.ecosed.droid.app.IEcosedApplication
+import io.ecosed.droid.engine.EcosedEngine
 
 /**
  * 作者: wyq0918dev
@@ -105,7 +106,7 @@ internal class PluginExecutor {
         ): T? {
             if (activity.application is IEcosedApplication) {
                 (activity.application as IEcosedApplication).apply {
-                    return engine.execMethodCall<T>(
+                    return (engine as EcosedEngine).execMethodCall<T>(
                         name = name,
                         method = method,
                         bundle = bundle
@@ -132,7 +133,7 @@ internal class PluginExecutor {
         ): T? {
             if (fragment.requireActivity().application is IEcosedApplication) {
                 (fragment.requireActivity().application as IEcosedApplication).apply {
-                    return engine.execMethodCall<T>(
+                    return (engine as EcosedEngine).execMethodCall<T>(
                         name = name,
                         method = method,
                         bundle = bundle
@@ -159,7 +160,7 @@ internal class PluginExecutor {
         ): T? {
             if (service.application is IEcosedApplication) {
                 (service.application as IEcosedApplication).apply {
-                    return engine.execMethodCall<T>(
+                    return (engine as EcosedEngine).execMethodCall<T>(
                         name = name,
                         method = method,
                         bundle = bundle
@@ -186,7 +187,7 @@ internal class PluginExecutor {
         ): T? {
             if (application is IEcosedApplication) {
                 (application as IEcosedApplication).apply {
-                    return engine.execMethodCall<T>(
+                    return (engine as EcosedEngine).execMethodCall<T>(
                         name = name,
                         method = method,
                         bundle = bundle

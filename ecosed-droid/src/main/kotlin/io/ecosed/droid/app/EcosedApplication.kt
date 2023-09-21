@@ -20,7 +20,7 @@ class EcosedApplication<YourApp : Application> : ContextWrapper(null), IEcosedAp
     private lateinit var mME: YourApp
 
 
-    override val engine: EcosedEngine
+    override val engine: ContextWrapper
         get() = mEngine
 
 
