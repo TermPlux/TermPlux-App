@@ -1,9 +1,6 @@
 package io.ecosed.droid.utils
 
-import android.content.Context
-import androidx.annotation.StyleRes
 import android.os.Build
-import io.ecosed.droid.R
 import io.ecosed.droid.settings.EcosedSettings
 
 

@@ -20,25 +20,6 @@
             android:name="fake-signature"
             android:value="@string/fake_signature" />
 
-<!--        <activity-->
-<!--            android:name=".activity.MainActivity"-->
-<!--            android:exported="true"-->
-<!--            android:theme="@style/Theme.LibEcosed">-->
-<!--            <meta-data-->
-<!--                android:name="android.app.lib_name"-->
-<!--                android:value="libecosed" />-->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-<!--                <action android:name="android.intent.action.APPLICATION_PREFERENCES" />-->
-
-<!--                <category android:name="android.intent.category.HOME" />-->
-<!--                <category android:name="android.intent.category.DEFAULT" />-->
-<!--                <category android:name="android.intent.category.MONKEY" />-->
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--                <category android:name="android.intent.category.LAUNCHER_APP" />-->
-<!--            </intent-filter>-->
-<!--        </activity>-->
-
         <service
             android:name=".service.EcosedService"
             android:enabled="true"
@@ -54,34 +35,19 @@
             android:enabled="true"
             android:exported="false" />
 
-        <service
-            android:name=".service.LiveWallpaper"
-            android:enabled="true"
-            android:exported="true"
-            android:permission="android.permission.BIND_WALLPAPER">
-            <intent-filter>
-                <action android:name="android.service.wallpaper.WallpaperService" />
-            </intent-filter>
+<!--        <service-->
+<!--            android:name=".service.LiveWallpaper"-->
+<!--            android:enabled="true"-->
+<!--            android:exported="true"-->
+<!--            android:permission="android.permission.BIND_WALLPAPER">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.service.wallpaper.WallpaperService" />-->
+<!--            </intent-filter>-->
 
-            <meta-data
-                android:name="android.service.wallpaper"
-                android:resource="@xml/live_wallpaper" />
-        </service>
-
-        <service
-            android:name=".service.EcosedTile"
-            android:enabled="true"
-            android:exported="true"
-            android:icon="@drawable/baseline_keyboard_command_key_24"
-            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
-            <meta-data
-                android:name="android.service.quicksettings.ACTIVE_TILE"
-                android:value="true" />
-
-            <intent-filter>
-                <action android:name="android.service.quicksettings.action.QS_TILE" />
-            </intent-filter>
-        </service>
+<!--            <meta-data-->
+<!--                android:name="android.service.wallpaper"-->
+<!--                android:resource="@xml/live_wallpaper" />-->
+<!--        </service>-->
 
         <provider
             android:name=".provider.EcosedProvider"
