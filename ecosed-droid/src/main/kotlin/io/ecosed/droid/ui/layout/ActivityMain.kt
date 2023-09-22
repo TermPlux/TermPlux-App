@@ -101,6 +101,7 @@ internal fun ActivityMain(
     displayFeatures: List<DisplayFeature>,
     productLogo: Drawable?,
     topBarVisible: Boolean,
+    content: @Composable () -> Unit,
     viewPager2: ViewPager2,
 
     topBarUpdate: (MaterialToolbar) -> Unit,
@@ -571,13 +572,7 @@ internal fun ActivityMain(
                     composable(
                         route = Screen.Home.route
                     ) {
-                        ScreenHome(
-                            topBarVisible = topBarVisible,
-                            drawerState = drawerState,
-                            topBarUpdate = topBarUpdate,
-                            navController = navController,
-                            viewPager2 = viewPager2
-                        )
+                        ScreenHome(content = content)
                     }
                     composable(
                         route = Screen.Settings.route

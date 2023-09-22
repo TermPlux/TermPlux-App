@@ -12,9 +12,7 @@ import android.graphics.drawable.Drawable
  */
 class PluginBinding constructor(
     context: Context?,
-    client: EcosedClient,
     debug: Boolean,
-    libEcosed: LibEcosed?,
     logo: Drawable?
 ) {
 
@@ -22,13 +20,13 @@ class PluginBinding constructor(
     private val mContext: Context? = context
 
     /** 客户端组件. */
-    private val mClient: EcosedClient = client
+
 
     /** 是否调试模式. */
     private val mDebug: Boolean = debug
 
     /** LibEcosed. */
-    private val mLibEcosed: LibEcosed? = libEcosed
+
 
     /** 产品图标. */
     private val mLogo: Drawable? = logo
@@ -49,17 +47,17 @@ class PluginBinding constructor(
         return mDebug
     }
 
-    /**
-     * 获取客户端组件 - LibEcosed框架专用接口.
-     * @param ecosed 用于判断是否是LibEcosed.
-     * @return EcosedClient?.
-     */
-    internal fun getClient(ecosed: LibEcosed): EcosedClient? {
-        return when (ecosed.javaClass) {
-            mLibEcosed?.javaClass -> mClient
-            else -> null
-        }
-    }
+//    /**
+//     * 获取客户端组件 - LibEcosed框架专用接口.
+//     * @param ecosed 用于判断是否是LibEcosed.
+//     * @return EcosedClient?.
+//     */
+//    internal fun getClient(ecosed: LibEcosed): EcosedClient? {
+//        return when (ecosed.javaClass) {
+//            mLibEcosed?.javaClass -> mClient
+//            else -> null
+//        }
+//    }
 
     /**
      * 获取产品图标 - LibEcosed框架专用接口.
@@ -67,9 +65,10 @@ class PluginBinding constructor(
      * @return Drawable?.
      */
     internal fun getProductLogo(ecosed: LibEcosed): Drawable? {
-        return when (ecosed.javaClass) {
-            mLibEcosed?.javaClass -> mLogo
-            else -> null
-        }
+        return mLogo
+//        return when (ecosed.javaClass) {
+//            mLibEcosed?.javaClass -> mLogo
+//            else -> null
+//        }
     }
 }

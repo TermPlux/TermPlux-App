@@ -16,8 +16,6 @@ import androidx.compose.runtime.setValue
 import androidx.core.app.NotificationCompat
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.PermissionUtils
-import com.farmerbb.taskbar.lib.Taskbar
-import com.kongzue.dialogx.dialogs.PopTip
 import io.ecosed.droid.BuildConfig
 import io.ecosed.droid.EcosedFramework
 import io.ecosed.droid.R
@@ -132,7 +130,7 @@ internal class EcosedService : Service(), Shizuku.OnBinderReceivedListener,
             }
         } catch (e: Exception) {
             if (e.javaClass == IllegalStateException().javaClass) {
-                PopTip.show("Shizuku未激活")
+                //PopTip.show("Shizuku未激活")
             }
         }
     }
@@ -169,10 +167,7 @@ internal class EcosedService : Service(), Shizuku.OnBinderReceivedListener,
         CoroutineScope(
             context = Dispatchers.Main
         ).launch {
-            Taskbar.openSettings(
-                this@EcosedService,
-                "任务栏设置"
-            )
+
         }
     }
     private fun ecosedSettings() {

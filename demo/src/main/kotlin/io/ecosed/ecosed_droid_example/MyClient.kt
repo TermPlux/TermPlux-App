@@ -47,7 +47,7 @@ class MyClient : EcosedClient(), LibEcosedImpl by LibEcosedBuilder {
     }
 
     override fun getPluginList(): ArrayList<EcosedPlugin> {
-        return arrayListOf(MyPlugin())
+        return arrayListOf(DemoPlugin())
     }
 
     override fun getLibEcosed(): LibEcosed {

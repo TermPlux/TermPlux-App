@@ -16,12 +16,6 @@ internal class SettingsFragment private constructor() : PreferenceFragmentCompat
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        view.apply {
-         //   background = ContextCompat.getDrawable(requireContext(), R.drawable.custom_wallpaper_24)
-        }
-    }
 
     companion object {
         fun newInstance(): SettingsFragment{

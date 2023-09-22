@@ -16,40 +16,38 @@
 package io.ecosed.ecosed_droid_example
 
 import android.app.Application
-import io.ecosed.droid.app.IEcosedApplication
+import android.graphics.drawable.Drawable
+import androidx.core.content.ContextCompat
 import io.ecosed.droid.app.EcosedApplication
 import io.ecosed.droid.app.EcosedHost
-import io.ecosed.droid.plugin.EcosedClient
+import io.ecosed.droid.app.EcosedPlugin
+import io.ecosed.droid.app.IEcosedApplication
 
-class MyApplication : Application(), IEcosedApplication by EcosedApplication<MyApplication>() {
+class DemoApplication : Application(), IEcosedApplication by EcosedApplication<DemoApplication>() {
 
     override fun onCreate() {
         super.onCreate()
-        attachUtils(
-            application = this@MyApplication,
+        attachEcosed(
+            application = this@DemoApplication,
             host = object : EcosedHost {
 
                 override fun isDebug(): Boolean {
                     return BuildConfig.DEBUG
                 }
 
+                override fun getProductLogo(): Drawable? {
+                    return ContextCompat.getDrawable(
+                        this@DemoApplication,
+                        R.drawable.baseline_keyboard_command_key_24
+                    )
+                }
+
+                override fun getPluginList(): ArrayList<EcosedPlugin> {
+                    val list = arrayListOf<EcosedPlugin>()
+                    list.add(DemoPlugin())
+                    return list
+                }
             }
         )
-    }
-
-    override fun init() {
-        log("init")
-    }
-
-    override fun initSDKs() {
-        log("initSDKs")
-    }
-
-    override fun initSDKInitialized() {
-        log("initSDKInitialized")
-    }
-
-    override fun getEcosedClient(): EcosedClient {
-        return MyClient()
     }
 }

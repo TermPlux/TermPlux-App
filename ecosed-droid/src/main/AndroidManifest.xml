@@ -1,53 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-permission
-        android:name="android.permission.QUERY_ALL_PACKAGES"
-        tools:ignore="QueryAllPackagesPermission" /> <!-- 获取所有软件包 -->
-
-    <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" /> <!-- 删除软件包 -->
-
-    <uses-permission android:name="android.permission.FAKE_PACKAGE_SIGNATURE" /> <!-- 虚拟签名欺骗 -->
-
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> <!-- 前台服务 -->
-
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" /> <!-- 弹出通知 -->
+    <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application>
-
-        <meta-data
-            android:name="fake-signature"
-            android:value="@string/fake_signature" />
-
         <service
             android:name=".service.EcosedService"
             android:enabled="true"
             android:exported="false" />
-
-        <service
-            android:name=".service.BillingService"
-            android:enabled="true"
-            android:exported="false" />
-
-        <service
-            android:name=".service.LicensingService"
-            android:enabled="true"
-            android:exported="false" />
-
-<!--        <service-->
-<!--            android:name=".service.LiveWallpaper"-->
-<!--            android:enabled="true"-->
-<!--            android:exported="true"-->
-<!--            android:permission="android.permission.BIND_WALLPAPER">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.service.wallpaper.WallpaperService" />-->
-<!--            </intent-filter>-->
-
-<!--            <meta-data-->
-<!--                android:name="android.service.wallpaper"-->
-<!--                android:resource="@xml/live_wallpaper" />-->
-<!--        </service>-->
 
         <provider
             android:name=".provider.EcosedProvider"
@@ -56,7 +18,6 @@
             android:exported="true"
             android:multiprocess="false"
             android:permission="android.permission.INTERACT_ACROSS_USERS_FULL" />
-
     </application>
 
 </manifest>

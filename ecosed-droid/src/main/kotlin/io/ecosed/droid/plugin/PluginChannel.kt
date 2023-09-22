@@ -55,14 +55,14 @@ class PluginChannel constructor(binding: PluginBinding, channel: String) {
         return mBinding.isDebug()
     }
 
-    /**
-     * 获取客户端组件 - LibEcosed框架专用接口.
-     * @param ecosed 用于判断是否是LibEcosed.
-     * @return EcosedClient?.
-     */
-    fun getClient(ecosed: LibEcosed): EcosedClient? {
-        return mBinding.getClient(ecosed = ecosed)
-    }
+//    /**
+//     * 获取客户端组件 - LibEcosed框架专用接口.
+//     * @param ecosed 用于判断是否是LibEcosed.
+//     * @return EcosedClient?.
+//     */
+//    fun getClient(ecosed: LibEcosed): EcosedClient? {
+//        return mBinding.getClient(ecosed = ecosed)
+//    }
 
     /**
      * 获取产品标志 - LibEcosed框架专用接口.

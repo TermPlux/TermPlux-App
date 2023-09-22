@@ -4,13 +4,13 @@ import io.ecosed.droid.app.EcosedPlugin
 import io.ecosed.droid.plugin.PluginBinding
 import io.ecosed.droid.plugin.PluginChannel
 
-class MyPlugin : EcosedPlugin, PluginChannel.MethodCallHandler {
+class DemoPlugin : EcosedPlugin, PluginChannel.MethodCallHandler {
 
     private lateinit var pluginChannel: PluginChannel
 
     override fun onEcosedAdded(binding: PluginBinding) {
         pluginChannel = PluginChannel(binding = binding, channel = channel)
-        pluginChannel.setMethodCallHandler(handler = this@MyPlugin)
+        pluginChannel.setMethodCallHandler(handler = this@DemoPlugin)
     }
 
     override fun onEcosedMethodCall(call: PluginChannel.MethodCall, result: PluginChannel.Result) {

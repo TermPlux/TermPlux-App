@@ -90,17 +90,6 @@ dependencies {
     // 第三方库
     // AndroidUtilCode: https://github.com/Blankj/AndroidUtilCode
     implementation(dependencyNotation = "com.blankj:utilcodex:1.31.1")
-
-
-    // LibTaskbar: https://github.com/farmerbb/libtaskbar
-    implementation(dependencyNotation = "com.github.farmerbb:libtaskbar:2.2.0")
-    // DialogX: https://github.com/kongzue/DialogX
-    implementation(dependencyNotation = "com.kongzue.dialogx:DialogX:0.0.48")
-    implementation(dependencyNotation = "com.kongzue.dialogx.style:DialogXIOSStyle:0.0.48")
-
-
-
-
     // LicensesDialog: https://github.com/PSDev/LicensesDialog
     implementation(dependencyNotation = "de.psdev.licensesdialog:licensesdialog:2.2.0")
     // Shizuku-API: https://github.com/RikkaApps/Shizuku-API
@@ -118,13 +107,13 @@ dependencies {
     // Google 官方库
     implementation(dependencyNotation = "androidx.core:core-ktx:1.12.0")
     implementation(dependencyNotation = "androidx.appcompat:appcompat:1.6.1")
-
     implementation(dependencyNotation = "androidx.annotation:annotation:1.7.0")
+
+
     implementation(dependencyNotation = "androidx.fragment:fragment-ktx:1.6.1")
     implementation(dependencyNotation = "androidx.preference:preference-ktx:1.2.1")
-    implementation(dependencyNotation = "androidx.viewpager2:viewpager2:1.0.0")
-    implementation(dependencyNotation = "androidx.recyclerview:recyclerview:1.3.1")
 
+    implementation(dependencyNotation = "androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
     implementation(dependencyNotation = "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation(dependencyNotation = "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
 
@@ -135,16 +124,20 @@ dependencies {
 
 
     implementation(dependencyNotation = "com.google.android.gms:play-services-base:18.2.0")
+
+
     implementation(dependencyNotation = "com.google.accompanist:accompanist-systemuicontroller:0.32.0")
     implementation(dependencyNotation = "com.google.accompanist:accompanist-adaptive:0.32.0")
     implementation(dependencyNotation = "com.google.accompanist:accompanist-drawablepainter:0.32.0")
+
+
     implementation(dependencyNotation = "androidx.navigation:navigation-compose:2.7.2")
     implementation(dependencyNotation = "androidx.navigation:navigation-ui-ktx:2.7.2")
 
 
 
-    implementation(dependencyNotation = "androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
-    implementation(dependencyNotation = "androidx.activity:activity-compose:1.7.2")
+
+
     implementation(dependencyNotation = platform(notation = "androidx.compose:compose-bom:2023.03.00"))
     implementation(dependencyNotation = "androidx.compose.ui:ui:1.5.1")
     implementation(dependencyNotation = "androidx.compose.ui:ui-graphics:1.5.1")
@@ -153,6 +146,8 @@ dependencies {
     implementation(dependencyNotation = "androidx.compose.material3:material3-window-size-class:1.1.2")
     implementation(dependencyNotation = "androidx.compose.material:material-icons-core:1.5.1")
     implementation(dependencyNotation = "androidx.compose.material:material-icons-extended:1.5.1")
+
+
     // 测试和调试
     testImplementation(dependencyNotation = "junit:junit:4.13.2")
     androidTestImplementation(dependencyNotation = "androidx.test.ext:junit:1.1.5")

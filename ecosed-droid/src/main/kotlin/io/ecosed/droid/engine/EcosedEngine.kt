@@ -5,9 +5,11 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.os.Bundle
 import android.util.Log
+import io.ecosed.droid.app.EcosedHost
 import io.ecosed.droid.app.IEcosedApplication
 import io.ecosed.droid.app.EcosedPlugin
 import io.ecosed.droid.plugin.EcosedClient
+import io.ecosed.droid.plugin.LibEcosedPlugin
 import io.ecosed.droid.plugin.PluginBinding
 
 /**
@@ -26,7 +28,7 @@ internal class EcosedEngine private constructor() : ContextWrapper(null) {
     private lateinit var mBase: Context
 
     /** 客户端组件. */
-    private lateinit var mClient: EcosedClient
+    private lateinit var mHost: EcosedHost
 
     /** 应用程序全局上下文, 非UI上下文. */
     private lateinit var mContext: Context
@@ -46,87 +48,83 @@ internal class EcosedEngine private constructor() : ContextWrapper(null) {
         when {
             (mPluginList == null) or (mBinding == null) -> apply {
                 attachBaseContext(mBase)
-                // 客户端组件第一次初始化, 附加基本上下文.
-                mClient.firstAttach(base = mBase)
                 // 初始化插件绑定器.
                 mBinding = PluginBinding(
                     context = mContext,
-                    client = mClient,
-                    debug = mClient.isDebug(),
-                    libEcosed = mClient.getLibEcosed(),
-                    logo = mClient.getProductLogo()
+                    debug = mHost.isDebug(),
+                    logo = mHost.getProductLogo()
                 )
                 // 初始化插件列表.
                 mPluginList = arrayListOf()
-                // 加载客户端组件
-                mBinding?.let { binding ->
-                    mClient.apply {
-                        try {
-                            onEcosedAdded(binding = binding)
-                            if (mClient.isDebug()) {
-                                Log.d(tag, "客户端组件已加载")
-                            }
-                        } catch (e: Exception) {
-                            if (mClient.isDebug()) {
-                                Log.e(tag, "客户端组件加载失败!", e)
-                            }
-                        }
-                    }
-                }.run {
-                    mPluginList?.add(element = mClient)
-                    if (mClient.isDebug()) {
-                        Log.d(tag, "客户端组件已添加到插件列表")
-                    }
-                }
+//                // 加载客户端组件
+//                mBinding?.let { binding ->
+//                    mClient.apply {
+//                        try {
+//                            onEcosedAdded(binding = binding)
+//                            if (mClient.isDebug()) {
+//                                Log.d(tag, "客户端组件已加载")
+//                            }
+//                        } catch (e: Exception) {
+//                            if (mClient.isDebug()) {
+//                                Log.e(tag, "客户端组件加载失败!", e)
+//                            }
+//                        }
+//                    }
+//                }.run {
+//                    mPluginList?.add(element = mClient)
+//                    if (mClient.isDebug()) {
+//                        Log.d(tag, "客户端组件已添加到插件列表")
+//                    }
+//                }
                 // 加载LibEcosed框架 (如果使用了的话).
-                mClient.getLibEcosed()?.let { ecosed ->
+                LibEcosedPlugin()?.let { ecosed ->
                     mBinding?.let { binding ->
                         ecosed.apply {
                             try {
                                 attach(base = mBase)
-                                if (mClient.isDebug()) {
+                                if (mHost.isDebug()) {
                                     Log.d(tag, "LibEcosed框架已附加基本上下文")
                                 }
                                 init()
-                                if (mClient.isDebug()) {
+                                if (mHost.isDebug()) {
                                     Log.d(tag, "LibEcosed框架已初始化")
                                 }
                                 synchronized(ecosed) {
                                     initSDKs(application = mApp)
                                     initSDKInitialized()
                                 }
-                                if (mClient.isDebug()) {
+                                if (mHost.isDebug()) {
                                     Log.d(tag, "LibEcosed框架已初始化SDK")
                                 }
                                 onEcosedAdded(binding = binding)
-                                if (mClient.isDebug()) {
+                                if (mHost.isDebug()) {
                                     Log.d(tag, "LibEcosed框架已加载")
                                 }
                             } catch (e: Exception) {
-                                if (mClient.isDebug()) {
+                                if (mHost.isDebug()) {
                                     Log.e(tag, "LibEcosed框架加载失败!", e)
                                 }
                             }
                         }
                     }.run {
                         mPluginList?.add(element = ecosed)
-                        if (mClient.isDebug()) {
+                        if (mHost.isDebug()) {
                             Log.d(tag, "LibEcosed框架已添加到插件列表")
                         }
                     }
                 }
                 // 添加所有插件.
-                mClient.getPluginList()?.let { plugins ->
+                mHost.getPluginList()?.let { plugins ->
                     mBinding?.let { binding ->
                         plugins.forEach { plugin ->
                             plugin.apply {
                                 try {
                                     onEcosedAdded(binding = binding)
-                                    if (mClient.isDebug()) {
+                                    if (mHost.isDebug()) {
                                         Log.d(tag, "插件${plugin.javaClass.name}已加载")
                                     }
                                 } catch (e: Exception) {
-                                    if (mClient.isDebug()) {
+                                    if (mHost.isDebug()) {
                                         Log.e(tag, "插件添加失败!", e)
                                     }
                                 }
@@ -135,7 +133,7 @@ internal class EcosedEngine private constructor() : ContextWrapper(null) {
                     }.run {
                         plugins.forEach { plugin ->
                             mPluginList?.add(element = plugin)
-                            if (mClient.isDebug()) {
+                            if (mHost.isDebug()) {
                                 Log.d(tag, "插件${plugin.javaClass.name}已添加到插件列表")
                             }
                         }
@@ -143,7 +141,7 @@ internal class EcosedEngine private constructor() : ContextWrapper(null) {
                 }
             }
 
-            else -> if (mClient.isDebug()) {
+            else -> if (mHost.isDebug()) {
                 Log.e(tag, "请勿重复执行attach!")
             }
         }
@@ -172,7 +170,7 @@ internal class EcosedEngine private constructor() : ContextWrapper(null) {
                                 method = method,
                                 bundle = bundle
                             )
-                            if (mClient.isDebug()) {
+                            if (mHost.isDebug()) {
                                 Log.d(
                                     tag,
                                     "插件代码调用成功!\n" +
@@ -186,7 +184,7 @@ internal class EcosedEngine private constructor() : ContextWrapper(null) {
                 }
             }
         } catch (e: Exception) {
-            if (mClient.isDebug()) {
+            if (mHost.isDebug()) {
                 Log.e(tag, "插件代码调用失败!", e)
             }
         }
@@ -225,7 +223,7 @@ internal class EcosedEngine private constructor() : ContextWrapper(null) {
                         mApp = application
                         mBase = baseContext
                         mContext = applicationContext
-                        mClient = getEcosedClient()
+                        mHost = host
                     }.run {
                         attach()
                     }

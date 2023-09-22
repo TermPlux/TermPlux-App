@@ -10,8 +10,6 @@ import androidx.compose.runtime.setValue
 
 internal class TopAppBarUtils private constructor() {
 
-
-
     private var mVisible: Boolean by mutableStateOf(value = true)
     private var topAppBarVisible: Boolean by mutableStateOf(value = true)
 
@@ -27,13 +25,14 @@ internal class TopAppBarUtils private constructor() {
         hide()
     }
 
-    private val delayHideTouchListener: View.OnTouchListener = View.OnTouchListener { view, motionEvent ->
-        when (motionEvent.action) {
-            MotionEvent.ACTION_DOWN -> if (autoHide) delayedHide()
-            MotionEvent.ACTION_UP -> view.performClick()
+    private val delayHideTouchListener: View.OnTouchListener =
+        View.OnTouchListener { view, motionEvent ->
+            when (motionEvent.action) {
+                MotionEvent.ACTION_DOWN -> if (autoHide) delayedHide()
+                MotionEvent.ACTION_UP -> view.performClick()
+            }
+            false
         }
-        false
-    }
 
     internal fun attach(attach: (Boolean, View.OnTouchListener, () -> Unit) -> Unit): TopAppBarUtils {
         mVisible = true
@@ -78,7 +77,7 @@ internal class TopAppBarUtils private constructor() {
         /** 一些较老的设备需要在小部件更新和状态和导航栏更改之间有一个小的延迟。*/
         private const val uiAnimatorDelay = 300
 
-        internal fun newInstance(): TopAppBarUtils{
+        internal fun newInstance(): TopAppBarUtils {
             return TopAppBarUtils()
         }
     }

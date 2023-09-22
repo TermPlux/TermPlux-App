@@ -19,7 +19,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Application
 import android.content.ContextWrapper
-import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
@@ -29,19 +28,23 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.viewpager2.widget.ViewPager2
-import com.farmerbb.taskbar.lib.Taskbar
 import com.google.accompanist.adaptive.calculateDisplayFeatures
 import com.google.android.material.internal.EdgeToEdgeUtils
 import io.ecosed.droid.R
@@ -58,25 +61,33 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
     private lateinit var mActivity: Activity
     private lateinit var mApplication: Application
     private lateinit var mLifecycle: Lifecycle
+    private lateinit var mYourActivity: YourActivity
+    private lateinit var mYourApplication: YourApplication
 
-    private lateinit var mME: YourActivity
-    private lateinit var mAPP: YourApplication
-
-
-    private var layoutResId = -1
 
     private var isDebug = false
     private var isLaunch = false
+
+
     private lateinit var mProductLogo: Drawable
 
-
-    private lateinit var mViewPager2: ViewPager2
 
     private lateinit var delayHideTouchListener: View.OnTouchListener
     private lateinit var toggle: () -> Unit
     private var isVisible: Boolean by mutableStateOf(value = true)
-    private val content = mutableStateOf<(@Composable () -> Unit)?>(value = null)
 
+    private val mContent = mutableStateOf<(@Composable () -> Unit)>(
+        value = {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "页面为空"
+                )
+            }
+        }
+    )
 
     @Suppress(names = ["UNCHECKED_CAST"])
     override fun IEcosedActivity.attachEcosed(
@@ -87,8 +98,8 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
         mActivity = activity
         mApplication = activity.application
         mLifecycle = lifecycle
-        mME = mActivity as YourActivity
-        mAPP = mApplication as YourApplication
+        mYourActivity = mActivity as YourActivity
+        mYourApplication = mApplication as YourApplication
         this@EcosedActivity.lifecycle.addObserver(observer = this@EcosedActivity)
     }
 
@@ -100,7 +111,7 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
         content: @Composable () -> Unit,
     ) = defaultUnit {
         if (isLaunch) {
-            this@EcosedActivity.content.value = content
+            mContent.value = content
         } else {
             setContent(content = content)
         }
@@ -191,19 +202,7 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
                 }
 
 
-//                    mViewPager2 = ViewPager2(this).apply {
-//                        isUserInputEnabled = true
-//                        orientation = ViewPager2.ORIENTATION_HORIZONTAL
-//                  //      adapter = PagerAdapter(activity = this)
-//                        offscreenPageLimit = (adapter as PagerAdapter).itemCount
-//
-//
-//                        //  setPageTransformer(PageTransformerUtils())
-//                    }
-
-
                 setContent {
-//                        content.value?.invoke()
                     LocalView.current.setOnTouchListener(delayHideTouchListener)
                     LibEcosedTheme(
                         dynamicColor = ThemeHelper.isUsingSystemColor()
@@ -220,6 +219,7 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
                             topBarUpdate = { toolbar ->
 
                             },
+                            content = mContent.value,
                             viewPager2 = ViewPager2(this),
                             androidVersion = "13",
                             shizukuVersion = "13",
@@ -230,10 +230,7 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
                                 toggle()
                             },
                             taskbar = {
-                                Taskbar.openSettings(
-                                    this@hasSuperUnit,
-                                    getString(R.string.taskbar_title),
-                                )
+
                             },
                             launchUrl = { url ->
                                 CustomTabsIntent.Builder()
@@ -250,7 +247,7 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
 
 
             else -> {
-                setLayout()
+                // setLayout()
 
 
             }
@@ -321,38 +318,32 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
         superUnit: (() -> Unit) -> Unit,
         content: ComponentActivity.() -> Unit,
     ): Unit = superUnit {
-        when (mME) {
+        when (mYourActivity) {
             is ComponentActivity -> {
-                (mME as ComponentActivity).content()
+                (mYourActivity as ComponentActivity).content()
             }
 
-            else -> error(message = errorActCls)
+            else -> error(
+                message = errorActivityExtends
+            )
         }
     }
 
     // 为了不将引擎暴露通过上下文包装器传递需要重定义为引擎
     private fun <T> engineUnit(
         content: EcosedEngine.() -> T,
-    ): T? = (mAPP.engine as EcosedEngine).content()
+    ): T? = (mYourApplication.engine as EcosedEngine).content()
 
     private fun <T> defaultUnit(
         content: ComponentActivity.() -> T,
-    ): T = when (mME) {
+    ): T = when (mYourActivity) {
         is ComponentActivity -> {
-            (mME as ComponentActivity).content()
+            (mYourActivity as ComponentActivity).content()
         }
 
-        else -> error(message = errorActCls)
-    }
-
-    private fun isDefaultHome(): Boolean = defaultUnit {
-        var isHome = false
-        intent.categories.forEach {
-            if (it == Intent.CATEGORY_HOME) {
-                isHome = true
-            }
-        }
-        return@defaultUnit isHome
+        else -> error(
+            message = errorActivityExtends
+        )
     }
 
     private fun isLaunchMode(): Boolean = defaultUnit {
@@ -365,28 +356,10 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
         return@defaultUnit false
     }
 
-    @SuppressLint("DiscouragedApi")
-    private fun setLayout() = defaultUnit {
-        layoutResId = resources.getIdentifier(guessNameOfLayoutResId(), "layout", packageName)
-        if (layoutResId != 0) setContentView(layoutResId)
-    }
-
-    private fun guessNameOfLayoutResId(): String = defaultUnit {
-        val words = javaClass.simpleName.split("(?<!^)(?=[A-Z])".toRegex()).dropLastWhile {
-            it.isEmpty()
-        }.toTypedArray()
-        val stringBuffer = StringBuffer(words.size)
-        for (i in words.indices.reversed()) {
-            stringBuffer.append(words[i].lowercase())
-            if (i != 0) stringBuffer.append("_")
-        }
-        return@defaultUnit stringBuffer.toString()
-    }
-
     private companion object {
         const val tag: String = "EcosedActivity"
 
-        const val errorActCls: String = "错误: Activity需要继承ComponentActivity或其子类!"
+        const val errorActivityExtends: String = "错误: Activity需要继承ComponentActivity或其子类!"
 
     }
 }

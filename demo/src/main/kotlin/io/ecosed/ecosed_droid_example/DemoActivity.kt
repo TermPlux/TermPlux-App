@@ -18,6 +18,12 @@ package io.ecosed.ecosed_droid_example
 import android.graphics.Color
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import io.ecosed.droid.app.EcosedActivity
 import io.ecosed.droid.app.EcosedLauncher
 import io.ecosed.droid.app.EdgeToEdge
@@ -27,17 +33,30 @@ import io.ecosed.droid.app.NavBarBackgroundColor
 @EcosedLauncher(isLauncher = true)
 @NavBarBackgroundColor(color = Color.TRANSPARENT)
 @EdgeToEdge(edge = true)
-class MyActivity : ComponentActivity(), IEcosedActivity by EcosedActivity<MyApplication, MyActivity>() {
+class DemoActivity : ComponentActivity(), IEcosedActivity by EcosedActivity<DemoApplication, DemoActivity>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         attachEcosed(
-            activity = this@MyActivity,
+            activity = this@DemoActivity,
             lifecycle = lifecycle
         )
-        setContentComposable {
 
+        setContentComposable {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+
+                Text(text = "666")
+
+            }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+
     }
 
     override fun onDestroy() {
