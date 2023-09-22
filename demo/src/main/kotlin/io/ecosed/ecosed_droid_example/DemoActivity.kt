@@ -41,8 +41,10 @@ class DemoActivity : ComponentActivity(), IEcosedActivity by EcosedActivity<Demo
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // 将EcosedDroid附加到此Activity
         attachEcosed(activity = this@DemoActivity)
 
+        // 设置布局，EcosedLauncher标记为true则设置主页布局，false为整个Activity的布局
         setContentComposable {
             EDExampleTheme {
                 // A surface container using the 'background' color from the theme
@@ -58,26 +60,27 @@ class DemoActivity : ComponentActivity(), IEcosedActivity by EcosedActivity<Demo
 
     override fun onDestroy() {
         super.onDestroy()
+        // 将EcosedDroid与此Activity分离
         detachEcosed()
     }
-}
 
-@Composable
-fun Greeting(name: String) {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = "Hello $name!"
-        )
+    @Composable
+    private fun Greeting(name: String) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "Hello $name!"
+            )
+        }
     }
-}
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    EDExampleTheme {
-        Greeting(name = "EcosedDroid")
+    @Preview(showBackground = true)
+    @Composable
+    private fun GreetingPreview() {
+        EDExampleTheme {
+            Greeting(name = "EcosedDroid")
+        }
     }
 }

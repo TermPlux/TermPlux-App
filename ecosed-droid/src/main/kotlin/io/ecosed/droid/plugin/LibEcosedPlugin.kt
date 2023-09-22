@@ -22,9 +22,7 @@ internal class LibEcosedPlugin : LibEcosed() {
 
     override fun initSDKs(application: Application) {
         super.initSDKs(application)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            HiddenApiBypass.addHiddenApiExemptions("L")
-        }
+
         // 创建通知通道
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val importance = NotificationManager.IMPORTANCE_DEFAULT
@@ -79,11 +77,11 @@ internal class LibEcosedPlugin : LibEcosed() {
                 null
             )
 
-            getProductLogo -> result.success(
-                mPluginChannel.getProductLogo(
-                    ecosed = this@LibEcosedPlugin
-                )
-            )
+//            getProductLogo -> result.success(
+//                mPluginChannel.getProductLogo(
+//                    ecosed = this@LibEcosedPlugin
+//                )
+//            )
 
             isDebug -> result.success(
                 mPluginChannel.isDebug()
@@ -102,7 +100,7 @@ internal class LibEcosedPlugin : LibEcosed() {
         const val channel: String = "libecosed"
       //  const val getClient: String = "ecosed_client"
         const val getMainFragment: String = "fragment_main"
-        const val getProductLogo: String = "logo_product"
+        //const val getProductLogo: String = "logo_product"
         const val isDebug: String = "is_debug"
     }
 }

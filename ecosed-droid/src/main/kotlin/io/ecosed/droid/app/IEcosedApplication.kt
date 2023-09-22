@@ -7,7 +7,7 @@ interface IEcosedApplication {
 
     fun IEcosedApplication.attachEcosed(
         application: Application,
-        host: EcosedHost
+        host: EcosedHost,
     )
 
 //    fun init()

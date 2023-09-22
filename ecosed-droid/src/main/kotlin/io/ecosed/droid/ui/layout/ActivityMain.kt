@@ -1,8 +1,6 @@
 package io.ecosed.droid.ui.layout
 
-import android.graphics.drawable.Drawable
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,13 +13,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Android
 import androidx.compose.material.icons.filled.MenuOpen
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.KeyboardCommandKey
 import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
@@ -45,7 +41,6 @@ import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -58,7 +53,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -74,11 +68,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.viewpager2.widget.ViewPager2
 import androidx.window.layout.DisplayFeature
 import androidx.window.layout.FoldingFeature
 import com.blankj.utilcode.util.AppUtils
-import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import com.google.android.material.appbar.MaterialToolbar
 import io.ecosed.droid.R
 import io.ecosed.droid.ui.navigation.ItemType
@@ -99,10 +91,8 @@ import kotlinx.coroutines.launch
 internal fun ActivityMain(
     windowSize: WindowSizeClass,
     displayFeatures: List<DisplayFeature>,
-    productLogo: Drawable?,
     topBarVisible: Boolean,
     content: @Composable () -> Unit,
-    viewPager2: ViewPager2,
 
     topBarUpdate: (MaterialToolbar) -> Unit,
 
@@ -111,9 +101,8 @@ internal fun ActivityMain(
     current: (Int) -> Unit,
     toggle: () -> Unit,
     taskbar: () -> Unit,
-    launchUrl: (String) -> Unit,
-
-    ) {
+    launchUrl: (String) -> Unit
+) {
 
 
     val pages: ArrayList<Screen> = arrayListOf(
@@ -427,10 +416,8 @@ internal fun ActivityMain(
                                 }
                             }
                         ) {
-                            Image(
-                                painter = rememberDrawablePainter(
-                                    drawable = productLogo
-                                ),
+                            Icon(
+                                imageVector = Icons.Outlined.KeyboardCommandKey,
                                 contentDescription = null
                             )
                         }
@@ -685,12 +672,12 @@ internal fun ActivityMain(
 
                             }
                         ) {
-                            Image(
-                                painter = rememberDrawablePainter(
-                                    drawable = productLogo
-                                ),
-                                contentDescription = null
-                            )
+//                            Image(
+//                                painter = rememberDrawablePainter(
+//                                    drawable = productLogo
+//                                ),
+//                                contentDescription = null
+//                            )
                         }
                     }
                 ) {

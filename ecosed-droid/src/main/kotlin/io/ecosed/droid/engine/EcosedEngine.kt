@@ -51,30 +51,10 @@ internal class EcosedEngine private constructor() : ContextWrapper(null) {
                 mBinding = PluginBinding(
                     context = mContext,
                     debug = mHost.isDebug(),
-                    logo = mHost.getProductLogo()
+                   // logo = mHost.getProductLogo()
                 )
                 // 初始化插件列表.
                 mPluginList = arrayListOf()
-//                // 加载客户端组件
-//                mBinding?.let { binding ->
-//                    mClient.apply {
-//                        try {
-//                            onEcosedAdded(binding = binding)
-//                            if (mClient.isDebug()) {
-//                                Log.d(tag, "客户端组件已加载")
-//                            }
-//                        } catch (e: Exception) {
-//                            if (mClient.isDebug()) {
-//                                Log.e(tag, "客户端组件加载失败!", e)
-//                            }
-//                        }
-//                    }
-//                }.run {
-//                    mPluginList?.add(element = mClient)
-//                    if (mClient.isDebug()) {
-//                        Log.d(tag, "客户端组件已添加到插件列表")
-//                    }
-//                }
                 // 加载LibEcosed框架 (如果使用了的话).
                 LibEcosedPlugin()?.let { ecosed ->
                     mBinding?.let { binding ->

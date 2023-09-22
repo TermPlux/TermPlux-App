@@ -19,11 +19,8 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Application
 import android.content.ContextWrapper
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -46,7 +43,6 @@ import androidx.core.view.WindowCompat
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
-import androidx.viewpager2.widget.ViewPager2
 import com.blankj.utilcode.util.AppUtils
 import com.google.accompanist.adaptive.calculateDisplayFeatures
 import com.google.android.material.internal.EdgeToEdgeUtils
@@ -72,7 +68,7 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
     private var isLaunch = false
 
 
-    private lateinit var mProductLogo: Drawable
+    //private lateinit var mProductLogo: Drawable
 
 
     private lateinit var delayHideTouchListener: View.OnTouchListener
@@ -94,18 +90,16 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
         }
     )
 
-    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
-    @SuppressLint("RestrictedApi")
-    @Suppress(names = ["UNCHECKED_CAST"])
-    override fun IEcosedActivity.attachEcosed(activity: ComponentActivity) {
+    private fun attach(activity: ComponentActivity) {
         attachBaseContext(activity.baseContext)
         mActivity = activity
         mApplication = activity.application
         mLifecycle = activity.lifecycle
+
+        @Suppress("UNCHECKED_CAST")
         mYourActivity = mActivity as YourActivity
+        @Suppress("UNCHECKED_CAST")
         mYourApplication = mApplication as YourApplication
-
-
 
         isLaunch = isLaunchMode()
 
@@ -117,19 +111,22 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
             isDebug = debug
         }
 
-        execMethodCall<Drawable>(
-            name = LibEcosedPlugin.channel,
-            method = LibEcosedPlugin.getProductLogo,
-            bundle = null
-        )?.let { logo ->
-            mProductLogo = logo
-        }
 
+    }
+
+    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
+    @SuppressLint("RestrictedApi")
+
+    override fun IEcosedActivity.attachEcosed(activity: ComponentActivity) {
 
 
         hasSuperUnit(
             superUnit = { content ->
-                content()
+                attach(
+                    activity = activity
+                ).apply {
+                    content()
+                }
             }
         ) {
 
@@ -169,13 +166,12 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
                                 displayFeatures = calculateDisplayFeatures(
                                     activity = this@hasSuperUnit
                                 ),
-                                productLogo = mProductLogo,
+                                //productLogo = mProductLogo,
                                 topBarVisible = isVisible,
                                 topBarUpdate = { toolbar ->
 
                                 },
                                 content = mContent.value,
-                                viewPager2 = ViewPager2(this),
                                 androidVersion = "13",
                                 shizukuVersion = "13",
                                 current = {

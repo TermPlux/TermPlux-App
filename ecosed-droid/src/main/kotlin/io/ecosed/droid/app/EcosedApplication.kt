@@ -3,11 +3,13 @@ package io.ecosed.droid.app
 import android.app.Application
 import android.content.Context
 import android.content.ContextWrapper
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import io.ecosed.droid.engine.EcosedEngine
+import org.lsposed.hiddenapibypass.HiddenApiBypass
 
 class EcosedApplication<YourApplication : IEcosedApplication> : ContextWrapper(null), IEcosedApplication {
 
@@ -24,7 +26,9 @@ class EcosedApplication<YourApplication : IEcosedApplication> : ContextWrapper(n
 
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            HiddenApiBypass.addHiddenApiExemptions("L")
+        }
     }
 
 
@@ -42,7 +46,7 @@ class EcosedApplication<YourApplication : IEcosedApplication> : ContextWrapper(n
         host: EcosedHost
     ) {
         // 附加基本上下文
-        attachBaseContext(application.baseContext)
+        attachBaseContext(base = application.baseContext)
         // 获取应用程序全局类
         mApplication = application
         // 获取mME

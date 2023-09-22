@@ -33,7 +33,7 @@ internal class EcosedService : Service(), Shizuku.OnBinderReceivedListener,
 
     private lateinit var mService: EcosedService
     private var isDebug: Boolean by mutableStateOf(value = false)
-    private lateinit var mProductLogo: Drawable
+   // private lateinit var mProductLogo: Drawable
     private lateinit var poem: ArrayList<String>
 
     override fun onCreate() {
@@ -48,12 +48,12 @@ internal class EcosedService : Service(), Shizuku.OnBinderReceivedListener,
             method = LibEcosedPlugin.isDebug,
             null
         )!!
-        mProductLogo = PluginExecutor.execMethodCall<Drawable>(
-            service = mService,
-            name = LibEcosedPlugin.channel,
-            method = LibEcosedPlugin.getProductLogo,
-            null
-        )!!
+//        mProductLogo = PluginExecutor.execMethodCall<Drawable>(
+//            service = mService,
+//            name = LibEcosedPlugin.channel,
+//            method = LibEcosedPlugin.getProductLogo,
+//            null
+//        )!!
 
         poem = arrayListOf()
         poem.add("不向焦虑与抑郁投降，这个世界终会有我们存在的地方。")

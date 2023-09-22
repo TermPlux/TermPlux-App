@@ -3,7 +3,6 @@ package io.ecosed.droid.app
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.Lifecycle
 
 interface IEcosedActivity {
 
@@ -13,11 +12,16 @@ interface IEcosedActivity {
      */
     fun IEcosedActivity.attachEcosed(activity: ComponentActivity)
 
+    /**
+     * 将EcosedDroid与Activity分离
+     */
     fun IEcosedActivity.detachEcosed()
 
+    /**
+     * 设置布局,EcosedLauncher标记为true则设置主页布局,false为整个Activity的布局.
+     * @param content 页面布局
+     */
     fun IEcosedActivity.setContentComposable(content: @Composable () -> Unit)
-
-
 
     /**
      * 调用插件代码的方法.

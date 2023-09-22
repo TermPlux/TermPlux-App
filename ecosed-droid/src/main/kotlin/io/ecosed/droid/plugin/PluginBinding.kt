@@ -13,7 +13,7 @@ import android.graphics.drawable.Drawable
 class PluginBinding constructor(
     context: Context?,
     debug: Boolean,
-    logo: Drawable?
+  //  logo: Drawable?
 ) {
 
     /** 应用程序全局上下文. */
@@ -29,7 +29,7 @@ class PluginBinding constructor(
 
 
     /** 产品图标. */
-    private val mLogo: Drawable? = logo
+    //private val mLogo: Drawable? = logo
 
     /**
      * 获取上下文.
@@ -59,16 +59,16 @@ class PluginBinding constructor(
 //        }
 //    }
 
-    /**
-     * 获取产品图标 - LibEcosed框架专用接口.
-     * @param ecosed 用于判断是否是LibEcosed.
-     * @return Drawable?.
-     */
-    internal fun getProductLogo(ecosed: LibEcosed): Drawable? {
-        return mLogo
-//        return when (ecosed.javaClass) {
-//            mLibEcosed?.javaClass -> mLogo
-//            else -> null
-//        }
-    }
+//    /**
+//     * 获取产品图标 - LibEcosed框架专用接口.
+//     * @param ecosed 用于判断是否是LibEcosed.
+//     * @return Drawable?.
+//     */
+//    internal fun getProductLogo(ecosed: LibEcosed): Drawable? {
+//        return mLogo
+////        return when (ecosed.javaClass) {
+////            mLibEcosed?.javaClass -> mLogo
+////            else -> null
+////        }
+//    }
 }
