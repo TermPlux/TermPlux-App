@@ -20,10 +20,14 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import io.ecosed.ecosed_droid_example.ui.theme.EDExampleTheme
 import io.ecosed.droid.app.EcosedActivity
 import io.ecosed.droid.app.EcosedLauncher
 import io.ecosed.droid.app.EdgeToEdge
@@ -37,30 +41,43 @@ class DemoActivity : ComponentActivity(), IEcosedActivity by EcosedActivity<Demo
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        attachEcosed(
-            activity = this@DemoActivity,
-            lifecycle = lifecycle
-        )
+        attachEcosed(activity = this@DemoActivity)
 
         setContentComposable {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-
-                Text(text = "666")
-
+            EDExampleTheme {
+                // A surface container using the 'background' color from the theme
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    Greeting(name = "EcosedDroid")
+                }
             }
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-
     }
 
     override fun onDestroy() {
         super.onDestroy()
         detachEcosed()
+    }
+}
+
+@Composable
+fun Greeting(name: String) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "Hello $name!"
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun GreetingPreview() {
+    EDExampleTheme {
+        Greeting(name = "EcosedDroid")
     }
 }

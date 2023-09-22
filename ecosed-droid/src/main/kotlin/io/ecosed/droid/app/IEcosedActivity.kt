@@ -10,16 +10,10 @@ interface IEcosedActivity {
     /**
      * 将EcosedDroid附加到Activity
      * @param activity 要附加的Activity
-     * @param lifecycle Activity的生命周期
      */
-    fun IEcosedActivity.attachEcosed(
-        activity: ComponentActivity,
-        lifecycle: Lifecycle
-    )
-
+    fun IEcosedActivity.attachEcosed(activity: ComponentActivity)
 
     fun IEcosedActivity.detachEcosed()
-
 
     fun IEcosedActivity.setContentComposable(content: @Composable () -> Unit)
 
@@ -40,5 +34,8 @@ interface IEcosedActivity {
 
     fun IEcosedActivity.toast(obj: Any)
     fun IEcosedActivity.log(obj: Any)
+    fun IEcosedActivity.openUrl(url: String)
+    fun IEcosedActivity.openApp(packageName: String)
+    fun IEcosedActivity.isInstallApp(packageName: String): Boolean
 
 }

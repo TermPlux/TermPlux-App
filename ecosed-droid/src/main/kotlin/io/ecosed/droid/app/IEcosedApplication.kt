@@ -2,7 +2,6 @@ package io.ecosed.droid.app
 
 import android.app.Application
 import android.content.ContextWrapper
-import io.ecosed.droid.plugin.EcosedClient
 
 interface IEcosedApplication {
 

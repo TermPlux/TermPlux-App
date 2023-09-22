@@ -22,6 +22,8 @@ import android.content.ContextWrapper
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -45,6 +47,7 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.viewpager2.widget.ViewPager2
+import com.blankj.utilcode.util.AppUtils
 import com.google.accompanist.adaptive.calculateDisplayFeatures
 import com.google.android.material.internal.EdgeToEdgeUtils
 import io.ecosed.droid.R
@@ -76,6 +79,8 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
     private lateinit var toggle: () -> Unit
     private var isVisible: Boolean by mutableStateOf(value = true)
 
+    private var canSetComposable = false
+
     private val mContent = mutableStateOf<(@Composable () -> Unit)>(
         value = {
             Box(
@@ -89,31 +94,141 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
         }
     )
 
+    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
+    @SuppressLint("RestrictedApi")
     @Suppress(names = ["UNCHECKED_CAST"])
-    override fun IEcosedActivity.attachEcosed(
-        activity: ComponentActivity,
-        lifecycle: Lifecycle,
-    ) {
+    override fun IEcosedActivity.attachEcosed(activity: ComponentActivity) {
         attachBaseContext(activity.baseContext)
         mActivity = activity
         mApplication = activity.application
-        mLifecycle = lifecycle
+        mLifecycle = activity.lifecycle
         mYourActivity = mActivity as YourActivity
         mYourApplication = mApplication as YourApplication
-        this@EcosedActivity.lifecycle.addObserver(observer = this@EcosedActivity)
+
+
+
+        isLaunch = isLaunchMode()
+
+        execMethodCall<Boolean>(
+            name = LibEcosedPlugin.channel,
+            method = LibEcosedPlugin.isDebug,
+            bundle = null
+        )?.let { debug ->
+            isDebug = debug
+        }
+
+        execMethodCall<Drawable>(
+            name = LibEcosedPlugin.channel,
+            method = LibEcosedPlugin.getProductLogo,
+            bundle = null
+        )?.let { logo ->
+            mProductLogo = logo
+        }
+
+
+
+        hasSuperUnit(
+            superUnit = { content ->
+                content()
+            }
+        ) {
+
+
+
+
+
+
+
+
+            when {
+                isLaunch -> {
+                    // 设置主题
+                    setTheme(R.style.Theme_LibEcosed)
+                    // 启用边倒边
+                    EdgeToEdgeUtils.applyEdgeToEdge(window, true)
+                    WindowCompat.setDecorFitsSystemWindows(window, false)
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+
+
+                    TopAppBarUtils.newInstance().attach { visible, onTouchListener, function ->
+                        isVisible = visible
+                        delayHideTouchListener = onTouchListener
+                        toggle = function
+                    }
+
+
+                    setContent {
+                        LocalView.current.setOnTouchListener(delayHideTouchListener)
+                        LibEcosedTheme(
+                            dynamicColor = ThemeHelper.isUsingSystemColor()
+                        ) { dynamic ->
+                            ActivityMain(
+                                windowSize = calculateWindowSizeClass(
+                                    activity = this@hasSuperUnit
+                                ),
+                                displayFeatures = calculateDisplayFeatures(
+                                    activity = this@hasSuperUnit
+                                ),
+                                productLogo = mProductLogo,
+                                topBarVisible = isVisible,
+                                topBarUpdate = { toolbar ->
+
+                                },
+                                content = mContent.value,
+                                viewPager2 = ViewPager2(this),
+                                androidVersion = "13",
+                                shizukuVersion = "13",
+                                current = {
+                                    //mViewPager2.currentItem = it
+                                },
+                                toggle = {
+                                    toggle()
+                                },
+                                taskbar = {
+
+                                },
+                                launchUrl = { url ->
+                                    CustomTabsIntent.Builder()
+                                        .build()
+                                        .launchUrl(
+                                            this@hasSuperUnit,
+                                            Uri.parse(url)
+                                        )
+                                }
+                            )
+                        }
+                    }
+
+                }
+
+
+                else -> {
+                    // setLayout()
+
+
+                }
+            }
+        }
+
+
+
+
+
+        lifecycle.addObserver(observer = this@EcosedActivity)
     }
 
     override fun IEcosedActivity.detachEcosed() {
-        this@EcosedActivity.lifecycle.removeObserver(observer = this@EcosedActivity)
+        lifecycle.removeObserver(observer = this@EcosedActivity)
     }
 
     override fun IEcosedActivity.setContentComposable(
         content: @Composable () -> Unit,
     ) = defaultUnit {
-        if (isLaunch) {
-            mContent.value = content
-        } else {
-            setContent(content = content)
+        runOnUiThread {
+            when {
+                isLaunch -> mContent.value = content
+                else -> setContent(content = content)
+            }
         }
     }
 
@@ -149,6 +264,23 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
 
     }
 
+    override fun IEcosedActivity.openUrl(url: String) = defaultUnit {
+        CustomTabsIntent.Builder()
+            .build()
+            .launchUrl(
+                this@defaultUnit,
+                Uri.parse(url)
+            )
+    }
+
+    override fun IEcosedActivity.openApp(packageName: String) = defaultUnit {
+        AppUtils.launchApp(packageName)
+    }
+
+    override fun IEcosedActivity.isInstallApp(packageName: String): Boolean = defaultUnit {
+        return@defaultUnit AppUtils.isAppInstalled(packageName)
+    }
+
     override val lifecycle: Lifecycle
         get() = mLifecycle
 
@@ -164,94 +296,6 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
         }
     ) {
 
-        execMethodCall<Boolean>(
-            name = LibEcosedPlugin.channel,
-            method = LibEcosedPlugin.isDebug,
-            bundle = null
-        )?.let { debug ->
-            isDebug = debug
-        }
-
-        execMethodCall<Drawable>(
-            name = LibEcosedPlugin.channel,
-            method = LibEcosedPlugin.getProductLogo,
-            bundle = null
-        )?.let { logo ->
-            mProductLogo = logo
-        }
-
-        isLaunch = isLaunchMode()
-
-
-
-
-        when {
-            isLaunch -> {
-                // 设置主题
-                setTheme(R.style.Theme_LibEcosed)
-                // 启用边倒边
-                EdgeToEdgeUtils.applyEdgeToEdge(window, true)
-                WindowCompat.setDecorFitsSystemWindows(window, false)
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-
-
-                TopAppBarUtils.newInstance().attach { visible, onTouchListener, function ->
-                    isVisible = visible
-                    delayHideTouchListener = onTouchListener
-                    toggle = function
-                }
-
-
-                setContent {
-                    LocalView.current.setOnTouchListener(delayHideTouchListener)
-                    LibEcosedTheme(
-                        dynamicColor = ThemeHelper.isUsingSystemColor()
-                    ) { dynamic ->
-                        ActivityMain(
-                            windowSize = calculateWindowSizeClass(
-                                activity = this@hasSuperUnit
-                            ),
-                            displayFeatures = calculateDisplayFeatures(
-                                activity = this@hasSuperUnit
-                            ),
-                            productLogo = mProductLogo,
-                            topBarVisible = isVisible,
-                            topBarUpdate = { toolbar ->
-
-                            },
-                            content = mContent.value,
-                            viewPager2 = ViewPager2(this),
-                            androidVersion = "13",
-                            shizukuVersion = "13",
-                            current = {
-                                //mViewPager2.currentItem = it
-                            },
-                            toggle = {
-                                toggle()
-                            },
-                            taskbar = {
-
-                            },
-                            launchUrl = { url ->
-                                CustomTabsIntent.Builder()
-                                    .build()
-                                    .launchUrl(
-                                        this@hasSuperUnit,
-                                        Uri.parse(url)
-                                    )
-                            }
-                        )
-                    }
-                }
-            }
-
-
-            else -> {
-                // setLayout()
-
-
-            }
-        }
     }
 
     override fun onStart(owner: LifecycleOwner) = hasSuperUnit(

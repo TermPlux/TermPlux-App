@@ -8,7 +8,6 @@ import android.util.Log
 import io.ecosed.droid.app.EcosedHost
 import io.ecosed.droid.app.IEcosedApplication
 import io.ecosed.droid.app.EcosedPlugin
-import io.ecosed.droid.plugin.EcosedClient
 import io.ecosed.droid.plugin.LibEcosedPlugin
 import io.ecosed.droid.plugin.PluginBinding
 
