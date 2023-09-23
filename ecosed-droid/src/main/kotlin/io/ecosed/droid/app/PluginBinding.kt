@@ -15,18 +15,39 @@
  */
 package io.ecosed.droid.app
 
+import android.content.Context
+
 /**
  * 作者: wyq0918dev
  * 仓库: https://github.com/ecosed/plugin
  * 时间: 2023/09/02
- * 描述: 插件接口
+ * 描述: 插件绑定器
  * 文档: https://github.com/ecosed/plugin/blob/master/README.md
  */
-interface EcosedPlugin {
+class PluginBinding constructor(
+    context: Context?,
+    debug: Boolean,
+) {
 
-    /** 插件被添加时执行. */
-    fun onEcosedAdded(binding: PluginBinding)
+    /** 应用程序全局上下文. */
+    private val mContext: Context? = context
 
-    /** 获取插件通信通道. */
-    val getPluginChannel: PluginChannel
+    /** 是否调试模式. */
+    private val mDebug: Boolean = debug
+
+    /**
+     * 获取上下文.
+     * @return Context.
+     */
+    internal fun getContext(): Context? {
+        return mContext
+    }
+
+    /**
+     * 是否调试模式.
+     * @return Boolean.
+     */
+    internal fun isDebug(): Boolean {
+        return mDebug
+    }
 }

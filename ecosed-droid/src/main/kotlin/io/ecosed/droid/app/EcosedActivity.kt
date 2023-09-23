@@ -95,14 +95,11 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
         mActivity = activity
         mApplication = activity.application
         mLifecycle = activity.lifecycle
-
         @Suppress("UNCHECKED_CAST")
         mYourActivity = mActivity as YourActivity
         @Suppress("UNCHECKED_CAST")
         mYourApplication = mApplication as YourApplication
-
         isLaunch = isLaunchMode()
-
         execMethodCall<Boolean>(
             name = LibEcosedPlugin.channel,
             method = LibEcosedPlugin.isDebug,
@@ -110,8 +107,6 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
         )?.let { debug ->
             isDebug = debug
         }
-
-
     }
 
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)

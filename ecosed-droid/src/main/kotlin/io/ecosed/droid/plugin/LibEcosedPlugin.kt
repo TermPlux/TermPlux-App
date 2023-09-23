@@ -8,8 +8,9 @@ import android.os.Build
 import com.google.android.material.color.DynamicColors
 import com.google.android.material.color.DynamicColorsOptions
 import io.ecosed.droid.R
+import io.ecosed.droid.app.PluginBinding
+import io.ecosed.droid.app.PluginChannel
 import io.ecosed.droid.settings.EcosedSettings
-import org.lsposed.hiddenapibypass.HiddenApiBypass
 
 
 internal class LibEcosedPlugin : LibEcosed() {

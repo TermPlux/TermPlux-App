@@ -1,8 +1,8 @@
 package io.ecosed.ecosed_droid_example
 
 import io.ecosed.droid.app.EcosedPlugin
-import io.ecosed.droid.plugin.PluginBinding
-import io.ecosed.droid.plugin.PluginChannel
+import io.ecosed.droid.app.PluginBinding
+import io.ecosed.droid.app.PluginChannel
 
 class DemoPlugin : EcosedPlugin, PluginChannel.MethodCallHandler {
 

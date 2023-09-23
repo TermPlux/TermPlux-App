@@ -9,7 +9,7 @@ import io.ecosed.droid.app.EcosedHost
 import io.ecosed.droid.app.IEcosedApplication
 import io.ecosed.droid.app.EcosedPlugin
 import io.ecosed.droid.plugin.LibEcosedPlugin
-import io.ecosed.droid.plugin.PluginBinding
+import io.ecosed.droid.app.PluginBinding
 
 /**
  * 作者: wyq0918dev

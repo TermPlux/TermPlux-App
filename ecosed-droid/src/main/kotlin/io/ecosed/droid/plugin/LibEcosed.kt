@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.content.ContextWrapper
 import io.ecosed.droid.app.EcosedPlugin
+import io.ecosed.droid.app.PluginChannel
 
 /**
  * 作者: wyq0918dev
