@@ -27,31 +27,35 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import io.ecosed.droid.app.EcosedActivity
-import io.ecosed.droid.app.EcosedLauncher
 import io.ecosed.droid.app.IEcosedActivity
 import io.ecosed.ecosed_droid_example.ui.theme.EDExampleTheme
 
-@EcosedLauncher(isLauncher = true)
 class DemoActivity : ComponentActivity(), IEcosedActivity by EcosedActivity<DemoApplication, DemoActivity>() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        attachEcosed(activity = this@DemoActivity)
-        setContentComposable {
-            EDExampleTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Greeting()
+    override fun onCreate(savedInstanceState: Bundle?) = onAttachEcosed(
+        activity = this@DemoActivity
+    ) {
+        parent = { super.onCreate(savedInstanceState) }
+        isLauncher = true
+        body = {
+            setContentComposable {
+                EDExampleTheme {
+                    Surface(
+                        modifier = Modifier.fillMaxSize(),
+                        color = MaterialTheme.colorScheme.background
+                    ) {
+                        Greeting()
+                    }
                 }
             }
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        detachEcosed()
+    override fun onDestroy() = onDetachEcosed{
+        parent = { super.onDestroy() }
+        body = {
+
+        }
     }
 
     @Composable

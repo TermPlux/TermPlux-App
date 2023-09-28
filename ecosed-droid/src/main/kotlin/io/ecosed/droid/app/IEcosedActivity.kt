@@ -25,12 +25,17 @@ interface IEcosedActivity {
      * 将EcosedDroid附加到Activity
      * @param activity 要附加的Activity
      */
-    fun IEcosedActivity.attachEcosed(activity: ComponentActivity)
+    fun IEcosedActivity.onAttachEcosed(
+        activity: ComponentActivity,
+        content: EcosedActivityContent.() -> Unit
+    )
 
     /**
      * 将EcosedDroid与Activity分离
      */
-    fun IEcosedActivity.detachEcosed()
+    fun IEcosedActivity.onDetachEcosed(
+        content: EcosedActivityContent.() -> Unit
+    )
 
     /**
      * 设置布局,EcosedLauncher标记为true则设置主页布局,false为整个Activity的布局.
@@ -48,7 +53,7 @@ interface IEcosedActivity {
     fun <T> IEcosedActivity.execMethodCall(
         name: String,
         method: String,
-        bundle: Bundle?
+        bundle: Bundle? = null
     ): T?
 
     fun IEcosedActivity.toast(obj: Any)
@@ -56,5 +61,6 @@ interface IEcosedActivity {
     fun IEcosedActivity.openUrl(url: String)
     fun IEcosedActivity.openApp(packageName: String)
     fun IEcosedActivity.isInstallApp(packageName: String): Boolean
+
 
 }

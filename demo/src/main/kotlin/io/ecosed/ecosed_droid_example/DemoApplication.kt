@@ -16,25 +16,52 @@
 package io.ecosed.ecosed_droid_example
 
 import android.app.Application
-import io.ecosed.droid.app.EcosedApplication
-import io.ecosed.droid.app.EcosedHost
+import io.ecosed.droid.app.EcosedApp
+import io.ecosed.droid.app.EcosedAppHost
+import io.ecosed.droid.app.EcosedAppInitialize
 import io.ecosed.droid.app.EcosedPlugin
-import io.ecosed.droid.app.IEcosedApplication
+import io.ecosed.droid.app.IEcosedApp
 
-class DemoApplication : Application(), IEcosedApplication by EcosedApplication<DemoApplication>() {
+class DemoApplication : Application(), IEcosedApp by EcosedApp<DemoApplication>() {
 
-    private val mHost: EcosedHost = object : EcosedHost {
-        override fun isDebug(): Boolean {
-            return BuildConfig.DEBUG
+    override fun onCreate() = onAttachEcosed(
+        application = this@DemoApplication
+    ) {
+
+        parent = {
+            super.onCreate()
         }
 
-        override fun getPluginList(): ArrayList<EcosedPlugin> {
-            return arrayListOf(DemoPlugin())
-        }
-    }
+        host = object : EcosedAppHost {
 
-    override fun onCreate() {
-        super.onCreate()
-        attachEcosed(application = this@DemoApplication, host = mHost)
+            override fun isDebug(): Boolean {
+                return BuildConfig.DEBUG
+            }
+
+            override fun getPluginList(): ArrayList<EcosedPlugin> {
+                return arrayListOf(DemoPlugin())
+            }
+
+        }
+
+        initialize = object : EcosedAppInitialize {
+
+            override fun init() {
+                toast("init")
+            }
+
+            override fun initSDKs() {
+                Thread.sleep(8000)
+            }
+
+            override fun initSDKInitialized() {
+                toast("SDK已加载完毕")
+            }
+
+        }
+
+        body = {
+
+        }
     }
 }

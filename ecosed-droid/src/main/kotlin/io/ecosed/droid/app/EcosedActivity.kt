@@ -18,9 +18,11 @@ package io.ecosed.droid.app
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Application
+import android.content.Context
 import android.content.ContextWrapper
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -54,8 +56,8 @@ import io.ecosed.droid.ui.theme.LibEcosedTheme
 import io.ecosed.droid.utils.ThemeHelper
 import io.ecosed.droid.utils.TopAppBarUtils
 
-class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcosedActivity> :
-    ContextWrapper(null), IEcosedActivity, LifecycleOwner, DefaultLifecycleObserver {
+class EcosedActivity<YourApplication : IEcosedApp, YourActivity : IEcosedActivity> :
+    ContextWrapper(null), IEcosedActivity, EcosedActivityContent, LifecycleOwner {
 
     private lateinit var mActivity: Activity
     private lateinit var mApplication: Application
@@ -67,15 +69,44 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
     private var isDebug = false
     private var isLaunch = false
 
+    private var mParent: () -> Unit = {}
+    private var mBody: () -> Unit = {}
 
-    //private lateinit var mProductLogo: Drawable
+    override var parent: (() -> Unit)?
+        get() = null
+        set(value) {
+            value?.let {
+                mParent = it
+            }
+        }
+
+    override var isLauncher: Boolean?
+        get() = null
+        set(value) {
+            value?.let {
+                isLaunch = it
+            }
+        }
+
+    override var body: (() -> Unit)?
+        get() = null
+        set(value) {
+            value?.let {
+                mBody = it
+            }
+        }
+
+    override fun attachBaseContext(base: Context?) {
+        super.attachBaseContext(base)
+    }
+
+
 
 
     private lateinit var delayHideTouchListener: View.OnTouchListener
     private lateinit var toggle: () -> Unit
     private var isVisible: Boolean by mutableStateOf(value = true)
 
-    private var canSetComposable = false
 
     private val mContent = mutableStateOf<(@Composable () -> Unit)>(
         value = {
@@ -90,41 +121,41 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
         }
     )
 
-    private fun attach(activity: ComponentActivity) {
-        attachBaseContext(activity.baseContext)
-        mActivity = activity
-        mApplication = activity.application
-        mLifecycle = activity.lifecycle
-        @Suppress("UNCHECKED_CAST")
-        mYourActivity = mActivity as YourActivity
-        @Suppress("UNCHECKED_CAST")
-        mYourApplication = mApplication as YourApplication
-        isLaunch = isLaunchMode()
-        execMethodCall<Boolean>(
-            name = LibEcosedPlugin.channel,
-            method = LibEcosedPlugin.isDebug,
-            bundle = null
-        )?.let { debug ->
-            isDebug = debug
-        }
-    }
 
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     @SuppressLint("RestrictedApi")
-
-    override fun IEcosedActivity.attachEcosed(activity: ComponentActivity) {
+    override fun IEcosedActivity.onAttachEcosed(
+        activity: ComponentActivity,
+        content: EcosedActivityContent.() -> Unit
+    ) {
 
 
         hasSuperUnit(
-            superUnit = { content ->
-                attach(
-                    activity = activity
-                ).apply {
-                    content()
+            superUnit = { sub ->
+
+
+                attachBaseContext(base = activity.baseContext)
+                mActivity = activity
+                mApplication = activity.application
+                mLifecycle = activity.lifecycle
+                @Suppress("UNCHECKED_CAST")
+                mYourActivity = mActivity as YourActivity
+                @Suppress("UNCHECKED_CAST")
+                mYourApplication = mApplication as YourApplication
+                execMethodCall<Boolean>(
+                    name = LibEcosedPlugin.channel,
+                    method = LibEcosedPlugin.isDebug,
+                    bundle = null
+                )?.let { debug ->
+                    isDebug = debug
                 }
+                content.invoke(this@EcosedActivity)
+
+
+                sub()
+
             }
         ) {
-
 
 
 
@@ -179,12 +210,7 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
 
                                 },
                                 launchUrl = { url ->
-                                    CustomTabsIntent.Builder()
-                                        .build()
-                                        .launchUrl(
-                                            this@hasSuperUnit,
-                                            Uri.parse(url)
-                                        )
+                                    openUrl(url = url)
                                 }
                             )
                         }
@@ -205,11 +231,15 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
 
 
 
-        lifecycle.addObserver(observer = this@EcosedActivity)
+
     }
 
-    override fun IEcosedActivity.detachEcosed() {
-        lifecycle.removeObserver(observer = this@EcosedActivity)
+    override fun IEcosedActivity.onDetachEcosed(
+        content: EcosedActivityContent.() -> Unit
+    ) {
+        content.invoke(this@EcosedActivity)
+        mParent()
+        mBody()
     }
 
     override fun IEcosedActivity.setContentComposable(
@@ -251,8 +281,8 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
         }
     }
 
-    override fun IEcosedActivity.log(obj: Any) = defaultUnit {
-
+    override fun IEcosedActivity.log(obj: Any) = defaultUnit<Unit> {
+        Log.i(tag, obj.toString())
     }
 
     override fun IEcosedActivity.openUrl(url: String) = defaultUnit {
@@ -275,80 +305,6 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
     override val lifecycle: Lifecycle
         get() = mLifecycle
 
-    @SuppressLint(value = ["RestrictedApi"])
-    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
-    override fun onCreate(owner: LifecycleOwner) = hasSuperUnit(
-        superUnit = { content ->
-            super.onCreate(
-                owner = owner
-            ).apply {
-                content()
-            }
-        }
-    ) {
-
-    }
-
-    override fun onStart(owner: LifecycleOwner) = hasSuperUnit(
-        superUnit = { content ->
-            super.onStart(
-                owner = owner
-            ).apply {
-                content()
-            }
-        }
-    ) {
-
-    }
-
-    override fun onResume(owner: LifecycleOwner) = hasSuperUnit(
-        superUnit = { content ->
-            super.onResume(
-                owner = owner
-            ).apply {
-                content()
-            }
-        }
-    ) {
-
-    }
-
-    override fun onPause(owner: LifecycleOwner) = hasSuperUnit(
-        superUnit = { content ->
-            super.onPause(
-                owner = owner
-            ).apply {
-                content()
-            }
-        }
-    ) {
-
-    }
-
-    override fun onStop(owner: LifecycleOwner) = hasSuperUnit(
-        superUnit = { content ->
-            super.onStop(
-                owner = owner
-            ).apply {
-                content()
-            }
-        }
-    ) {
-
-    }
-
-    override fun onDestroy(owner: LifecycleOwner) = hasSuperUnit(
-        superUnit = { content ->
-            super.onDestroy(
-                owner = owner
-            ).apply {
-                content()
-            }
-        }
-    ) {
-
-    }
-
     private fun hasSuperUnit(
         superUnit: (() -> Unit) -> Unit,
         content: ComponentActivity.() -> Unit,
@@ -366,7 +322,7 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
 
     private fun <T> engineUnit(
         content: EcosedEngine.() -> T,
-    ): T? = (mYourApplication.engine as EcosedEngine).content()
+    ): T? = (mYourApplication.getEngine as EcosedEngine).content()
 
     private fun <T> defaultUnit(
         content: ComponentActivity.() -> T,
@@ -380,15 +336,15 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
         )
     }
 
-    private fun isLaunchMode(): Boolean = defaultUnit {
-        try {
-            val isLauncher = javaClass.getAnnotation(EcosedLauncher::class.java)
-            return@defaultUnit isLauncher != null && isLauncher.isLauncher
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return@defaultUnit false
-    }
+//    private fun isLaunchMode(): Boolean = defaultUnit {
+//        try {
+//            val isLauncher = javaClass.getAnnotation(EcosedLauncher::class.java)
+//            return@defaultUnit isLauncher != null && isLauncher.isLauncher
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//        }
+//        return@defaultUnit false
+//    }
 
     private companion object {
         const val tag: String = "EcosedActivity"

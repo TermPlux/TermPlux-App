@@ -5,8 +5,8 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.os.Bundle
 import android.util.Log
-import io.ecosed.droid.app.EcosedHost
-import io.ecosed.droid.app.IEcosedApplication
+import io.ecosed.droid.app.EcosedAppHost
+import io.ecosed.droid.app.IEcosedApp
 import io.ecosed.droid.app.EcosedPlugin
 import io.ecosed.droid.plugin.LibEcosedPlugin
 import io.ecosed.droid.app.PluginBinding
@@ -27,7 +27,7 @@ internal class EcosedEngine private constructor() : ContextWrapper(null) {
     private lateinit var mBase: Context
 
     /** 客户端组件. */
-    private lateinit var mHost: EcosedHost
+    private lateinit var mHost: EcosedAppHost
 
     /** 应用程序全局上下文, 非UI上下文. */
     private lateinit var mContext: Context
@@ -197,12 +197,12 @@ internal class EcosedEngine private constructor() : ContextWrapper(null) {
             application: Application,
         ): EcosedEngine = EcosedEngine().let { engine ->
             return@let engine.apply {
-                if (application is IEcosedApplication) {
+                if (application is IEcosedApp) {
                     application.apply {
                         mApp = application
                         mBase = baseContext
                         mContext = applicationContext
-                        mHost = host as EcosedHost
+                        mHost = getHost as EcosedAppHost
                     }.run {
                         attach()
                     }

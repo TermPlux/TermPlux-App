@@ -15,7 +15,7 @@
  */
 package io.ecosed.droid.app
 
-interface EcosedHost {
+interface EcosedAppHost {
     fun isDebug(): Boolean
     fun getPluginList(): ArrayList<EcosedPlugin>?
 }

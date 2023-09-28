@@ -16,23 +16,22 @@
 package io.ecosed.droid.app
 
 import android.app.Application
-import android.content.ContextWrapper
 import android.os.Bundle
 
-interface IEcosedApplication {
+interface IEcosedApp {
 
     /** 内部接口 */
-    val engine: Any
+    val getEngine: Any
 
     /** 内部接口 */
-    val host: Any
+    val getHost: Any
 
     /**
      *
      */
-    fun IEcosedApplication.attachEcosed(
+    fun IEcosedApp.onAttachEcosed(
         application: Application,
-        host: Any,
+        content: EcosedAppContent.() -> Unit,
     )
 
     /**
@@ -42,12 +41,12 @@ interface IEcosedApplication {
      * @param bundle 通过Bundle传递参数.
      * @return 返回方法执行后的返回值.
      */
-    fun <T> IEcosedApplication.execMethodCall(
+    fun <T> IEcosedApp.execMethodCall(
         name: String,
         method: String,
-        bundle: Bundle?,
+        bundle: Bundle? = null,
     ): T?
 
-    fun IEcosedApplication.toast(obj: Any)
-    fun IEcosedApplication.log(obj: Any)
+    fun IEcosedApp.toast(obj: Any)
+    fun IEcosedApp.log(obj: Any)
 }
