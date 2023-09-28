@@ -133,7 +133,7 @@ class EcosedActivity<YourApplication : IEcosedApp, YourActivity : IEcosedActivit
         hasSuperUnit(
             superUnit = { sub ->
 
-
+                content.invoke(this@EcosedActivity)
                 attachBaseContext(base = activity.baseContext)
                 mActivity = activity
                 mApplication = activity.application
@@ -149,11 +149,11 @@ class EcosedActivity<YourApplication : IEcosedApp, YourActivity : IEcosedActivit
                 )?.let { debug ->
                     isDebug = debug
                 }
-                content.invoke(this@EcosedActivity)
 
+                mParent()
 
                 sub()
-
+                mBody()
             }
         ) {
 
