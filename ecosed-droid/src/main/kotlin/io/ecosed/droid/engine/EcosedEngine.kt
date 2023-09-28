@@ -202,7 +202,7 @@ internal class EcosedEngine private constructor() : ContextWrapper(null) {
                         mApp = application
                         mBase = baseContext
                         mContext = applicationContext
-                        mHost = host
+                        mHost = host as EcosedHost
                     }.run {
                         attach()
                     }

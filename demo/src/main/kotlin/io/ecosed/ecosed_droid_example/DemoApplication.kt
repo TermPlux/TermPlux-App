@@ -23,22 +23,18 @@ import io.ecosed.droid.app.IEcosedApplication
 
 class DemoApplication : Application(), IEcosedApplication by EcosedApplication<DemoApplication>() {
 
+    private val mHost: EcosedHost = object : EcosedHost {
+        override fun isDebug(): Boolean {
+            return BuildConfig.DEBUG
+        }
+
+        override fun getPluginList(): ArrayList<EcosedPlugin> {
+            return arrayListOf(DemoPlugin())
+        }
+    }
+
     override fun onCreate() {
         super.onCreate()
-        attachEcosed(
-            application = this@DemoApplication,
-            host = object : EcosedHost {
-
-                override fun isDebug(): Boolean {
-                    return BuildConfig.DEBUG
-                }
-
-                override fun getPluginList(): ArrayList<EcosedPlugin> {
-                    val list = arrayListOf<EcosedPlugin>()
-                    list.add(DemoPlugin())
-                    return list
-                }
-            }
-        )
+        attachEcosed(application = this@DemoApplication, host = mHost)
     }
 }

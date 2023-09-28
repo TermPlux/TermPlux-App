@@ -364,7 +364,6 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
         }
     }
 
-    // 为了不将引擎暴露通过上下文包装器传递需要重定义为引擎
     private fun <T> engineUnit(
         content: EcosedEngine.() -> T,
     ): T? = (mYourApplication.engine as EcosedEngine).content()

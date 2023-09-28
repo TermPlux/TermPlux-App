@@ -19,6 +19,7 @@ import android.app.Application
 import android.content.Context
 import android.content.ContextWrapper
 import android.os.Build
+import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -48,17 +49,34 @@ class EcosedApplication<YourApplication : IEcosedApplication> : ContextWrapper(n
 
 
 
-    override val engine: ContextWrapper
+    override val engine: Any
         get() = mEngine
 
-    override val host: EcosedHost
+    override val host: Any
         get() = mHost
+
+    override fun <T> IEcosedApplication.execMethodCall(
+        name: String,
+        method: String,
+        bundle: Bundle?,
+    ): T? = engineUnit {
+        return@engineUnit execMethodCall<T>(
+            name = name,
+            method = method,
+            bundle = bundle
+        )
+    }
+
+    // 为了不将引擎暴露通过上下文包装器传递需要重定义为引擎
+    private fun <T> engineUnit(
+        content: EcosedEngine.() -> T,
+    ): T? = (engine as EcosedEngine).content()
 
 
     @Suppress("UNCHECKED_CAST")
     override fun IEcosedApplication.attachEcosed(
         application: Application,
-        host: EcosedHost
+        host: Any
     ) {
         // 附加基本上下文
         attachBaseContext(base = application.baseContext)
@@ -68,7 +86,7 @@ class EcosedApplication<YourApplication : IEcosedApplication> : ContextWrapper(n
         mYourApplication = mApplication as YourApplication
 
 
-        mHost = host
+        mHost = host as EcosedHost
         // 初始化引擎
         mEngine = EcosedEngine.create(
             application = mApplication
@@ -76,29 +94,25 @@ class EcosedApplication<YourApplication : IEcosedApplication> : ContextWrapper(n
 
 
 
-//        if (mYourApplication is IEcosedApplication){
-//            (mYourApplication as IEcosedApplication).apply {
-//                this@EcosedApplication.init()
-//                this@apply.init()
-//            }
-//        }
-//
-//        object : Thread() {
-//            override fun run() {
-//                if (mYourApplication is IEcosedApplication){
-//                    (mYourApplication as IEcosedApplication).apply {
-//                        synchronized(mYourApplication) {
-//                            this@EcosedApplication.initSDKs()
-//                            this@apply.initSDKs()
-//                            mainHandler.post {
-//                                this@EcosedApplication.initSDKInitialized()
-//                                this@apply.initSDKInitialized()
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }.start()
+        mYourApplication.apply {
+//            this@EcosedApplication.init()
+//            this@apply.init()
+        }
+
+        object : Thread() {
+            override fun run() {
+                mYourApplication.apply {
+                    synchronized(this@apply) {
+//                        this@EcosedApplication.initSDKs()
+//                        this@apply.initSDKs()
+                        mainHandler.post {
+//                            this@EcosedApplication.initSDKInitialized()
+//                            this@apply.initSDKInitialized()
+                        }
+                    }
+                }
+            }
+        }.start()
     }
 
 
@@ -132,10 +146,6 @@ class EcosedApplication<YourApplication : IEcosedApplication> : ContextWrapper(n
     override fun IEcosedApplication.log(obj: Any) {
         Log.i(tag, obj.toString())
     }
-
-//    override fun getEcosedClient(): EcosedClient {
-//        TODO("Not yet implemented")
-//    }
 
     companion object {
         const val tag: String = "tag"

@@ -65,29 +65,9 @@ internal class LibEcosedPlugin : LibEcosed() {
 
     override fun onEcosedMethodCall(call: PluginChannel.MethodCall, result: PluginChannel.Result) {
         when (call.method) {
-//            getClient -> result.success(
-//                mPluginChannel.getClient(
-//                    ecosed = this@LibEcosedPlugin
-//                )
-//            )
-
-            getMainFragment -> result.success(
-//                mPluginChannel.getMainFragment(
-//                    ecosed = this@LibEcosedPlugin
-//                )
-                null
-            )
-
-//            getProductLogo -> result.success(
-//                mPluginChannel.getProductLogo(
-//                    ecosed = this@LibEcosedPlugin
-//                )
-//            )
-
             isDebug -> result.success(
                 mPluginChannel.isDebug()
             )
-
             else -> result.notImplemented()
         }
     }
@@ -99,9 +79,7 @@ internal class LibEcosedPlugin : LibEcosed() {
         const val notificationChannel: String = "id"
 
         const val channel: String = "libecosed"
-      //  const val getClient: String = "ecosed_client"
-        const val getMainFragment: String = "fragment_main"
-        //const val getProductLogo: String = "logo_product"
+
         const val isDebug: String = "is_debug"
     }
 }
