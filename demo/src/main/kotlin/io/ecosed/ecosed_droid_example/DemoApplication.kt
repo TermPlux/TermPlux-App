@@ -27,13 +27,8 @@ class DemoApplication : Application(), IEcosedApp by EcosedApp<DemoApplication>(
     override fun onCreate() = onAttachEcosed(
         application = this@DemoApplication
     ) {
-
-        parent = {
-            super.onCreate()
-        }
-
+        parent = { super.onCreate() }
         host = object : EcosedAppHost {
-
             override fun isDebug(): Boolean {
                 return BuildConfig.DEBUG
             }
@@ -41,11 +36,8 @@ class DemoApplication : Application(), IEcosedApp by EcosedApp<DemoApplication>(
             override fun getPluginList(): ArrayList<EcosedPlugin> {
                 return arrayListOf(DemoPlugin())
             }
-
         }
-
         initialize = object : EcosedAppInitialize {
-
             override fun init() {
                 toast("init")
             }
@@ -57,9 +49,7 @@ class DemoApplication : Application(), IEcosedApp by EcosedApp<DemoApplication>(
             override fun initSDKInitialized() {
                 toast("SDK已加载完毕")
             }
-
         }
-
         body = {
 
         }

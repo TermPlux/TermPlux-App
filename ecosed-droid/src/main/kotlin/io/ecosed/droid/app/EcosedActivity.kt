@@ -29,12 +29,14 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -57,7 +59,12 @@ import io.ecosed.droid.utils.ThemeHelper
 import io.ecosed.droid.utils.TopAppBarUtils
 
 class EcosedActivity<YourApplication : IEcosedApp, YourActivity : IEcosedActivity> :
-    ContextWrapper(null), IEcosedActivity, EcosedActivityContent, LifecycleOwner {
+    ContextWrapper(null), IEcosedActivity, EcosedActivityContent, LifecycleOwner, DefaultLifecycleObserver {
+
+
+
+
+
 
     private lateinit var mActivity: Activity
     private lateinit var mApplication: Application
@@ -72,43 +79,14 @@ class EcosedActivity<YourApplication : IEcosedApp, YourActivity : IEcosedActivit
     private var mParent: () -> Unit = {}
     private var mBody: () -> Unit = {}
 
-    override var parent: (() -> Unit)?
-        get() = null
-        set(value) {
-            value?.let {
-                mParent = it
-            }
-        }
 
-    override var isLauncher: Boolean?
-        get() = null
-        set(value) {
-            value?.let {
-                isLaunch = it
-            }
-        }
-
-    override var body: (() -> Unit)?
-        get() = null
-        set(value) {
-            value?.let {
-                mBody = it
-            }
-        }
-
-    override fun attachBaseContext(base: Context?) {
-        super.attachBaseContext(base)
-    }
-
-
-
-
-    private lateinit var delayHideTouchListener: View.OnTouchListener
     private lateinit var toggle: () -> Unit
     private var isVisible: Boolean by mutableStateOf(value = true)
 
 
-    private val mContent = mutableStateOf<(@Composable () -> Unit)>(
+    private var mShowUi: Boolean by mutableStateOf(value = false)
+
+    private val mContent: MutableState<@Composable () -> Unit> = mutableStateOf<(@Composable () -> Unit)>(
         value = {
             Box(
                 modifier = Modifier.fillMaxSize(),
@@ -122,6 +100,20 @@ class EcosedActivity<YourApplication : IEcosedApp, YourActivity : IEcosedActivit
     )
 
 
+    override fun onResume(owner: LifecycleOwner) {
+        super.onResume(owner)
+        mShowUi = !mShowUi
+    }
+
+
+
+
+
+
+    override fun attachBaseContext(base: Context?) {
+        super.attachBaseContext(base)
+    }
+
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     @SuppressLint("RestrictedApi")
     override fun IEcosedActivity.onAttachEcosed(
@@ -132,9 +124,8 @@ class EcosedActivity<YourApplication : IEcosedApp, YourActivity : IEcosedActivit
 
         hasSuperUnit(
             superUnit = { sub ->
-
-                content.invoke(this@EcosedActivity)
                 attachBaseContext(base = activity.baseContext)
+                content.invoke(this@EcosedActivity)
                 mActivity = activity
                 mApplication = activity.application
                 mLifecycle = activity.lifecycle
@@ -142,18 +133,14 @@ class EcosedActivity<YourApplication : IEcosedApp, YourActivity : IEcosedActivit
                 mYourActivity = mActivity as YourActivity
                 @Suppress("UNCHECKED_CAST")
                 mYourApplication = mApplication as YourApplication
-                execMethodCall<Boolean>(
-                    name = LibEcosedPlugin.channel,
-                    method = LibEcosedPlugin.isDebug,
-                    bundle = null
-                )?.let { debug ->
-                    isDebug = debug
-                }
-
+                isDebug()?.let { isDebug = it }
                 mParent()
-
                 sub()
                 mBody()
+                mParent = {}
+                mBody = {}
+
+                lifecycle.addObserver(this@EcosedActivity)
             }
         ) {
 
@@ -173,15 +160,16 @@ class EcosedActivity<YourApplication : IEcosedApp, YourActivity : IEcosedActivit
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
 
 
-                    TopAppBarUtils.newInstance().attach { visible, onTouchListener, function ->
-                        isVisible = visible
-                        delayHideTouchListener = onTouchListener
-                        toggle = function
-                    }
+
 
 
                     setContent {
-                        LocalView.current.setOnTouchListener(delayHideTouchListener)
+                        val view = LocalView.current
+                        TopAppBarUtils.build().attach { visible, onTouchListener, function ->
+                            isVisible = visible
+                            view.setOnTouchListener(onTouchListener)
+                            toggle = function
+                        }
                         LibEcosedTheme(
                             dynamicColor = ThemeHelper.isUsingSystemColor()
                         ) { dynamic ->
@@ -192,8 +180,8 @@ class EcosedActivity<YourApplication : IEcosedApp, YourActivity : IEcosedActivit
                                 displayFeatures = calculateDisplayFeatures(
                                     activity = this@hasSuperUnit
                                 ),
-                                //productLogo = mProductLogo,
                                 topBarVisible = isVisible,
+                                uiVisible = mShowUi,
                                 topBarUpdate = { toolbar ->
 
                                 },
@@ -201,7 +189,6 @@ class EcosedActivity<YourApplication : IEcosedApp, YourActivity : IEcosedActivit
                                 androidVersion = "13",
                                 shizukuVersion = "13",
                                 current = {
-                                    //mViewPager2.currentItem = it
                                 },
                                 toggle = {
                                     toggle()
@@ -240,6 +227,8 @@ class EcosedActivity<YourApplication : IEcosedApp, YourActivity : IEcosedActivit
         content.invoke(this@EcosedActivity)
         mParent()
         mBody()
+        mParent = {}
+        mBody = {}
     }
 
     override fun IEcosedActivity.setContentComposable(
@@ -302,8 +291,49 @@ class EcosedActivity<YourApplication : IEcosedApp, YourActivity : IEcosedActivit
         return@defaultUnit AppUtils.isAppInstalled(packageName)
     }
 
+    override var parent: (() -> Unit)?
+        get() = null
+        set(value) {
+            value?.let {
+                mParent = it
+            }
+        }
+
+    override var isLauncher: Boolean?
+        get() = isLaunch
+        set(value) {
+            value?.let {
+                isLaunch = it
+            }
+        }
+
+    override var body: (() -> Unit)?
+        get() = null
+        set(value) {
+            value?.let {
+                mBody = it
+            }
+        }
+
     override val lifecycle: Lifecycle
         get() = mLifecycle
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    private fun isDebug(): Boolean? = hostUnit {
+        return@hostUnit isDebug()
+    }
 
     private fun hasSuperUnit(
         superUnit: (() -> Unit) -> Unit,
@@ -320,8 +350,12 @@ class EcosedActivity<YourApplication : IEcosedApp, YourActivity : IEcosedActivit
         }
     }
 
+    private fun <T> hostUnit(
+        content: EcosedAppHost.() -> T
+    ): T? = (mYourApplication.getHost as EcosedAppHost).content()
+
     private fun <T> engineUnit(
-        content: EcosedEngine.() -> T,
+        content: EcosedEngine.() -> T
     ): T? = (mYourApplication.getEngine as EcosedEngine).content()
 
     private fun <T> defaultUnit(
@@ -331,20 +365,11 @@ class EcosedActivity<YourApplication : IEcosedApp, YourActivity : IEcosedActivit
             (mYourActivity as ComponentActivity).content()
         }
 
+
         else -> error(
             message = errorActivityExtends
         )
     }
-
-//    private fun isLaunchMode(): Boolean = defaultUnit {
-//        try {
-//            val isLauncher = javaClass.getAnnotation(EcosedLauncher::class.java)
-//            return@defaultUnit isLauncher != null && isLauncher.isLauncher
-//        } catch (e: Exception) {
-//            e.printStackTrace()
-//        }
-//        return@defaultUnit false
-//    }
 
     private companion object {
         const val tag: String = "EcosedActivity"

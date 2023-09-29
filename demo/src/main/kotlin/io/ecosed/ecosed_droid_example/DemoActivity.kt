@@ -54,7 +54,7 @@ class DemoActivity : ComponentActivity(), IEcosedActivity by EcosedActivity<Demo
     override fun onDestroy() = onDetachEcosed{
         parent = { super.onDestroy() }
         body = {
-
+            toast("onDestroy")
         }
     }
 

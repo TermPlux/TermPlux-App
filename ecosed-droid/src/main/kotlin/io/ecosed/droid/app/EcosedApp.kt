@@ -211,15 +211,16 @@ class EcosedApp<YourApplication : IEcosedApp> : ContextWrapper(null),
         }
 
     override var parent: (() -> Unit)?
-        get() = {}
+        get() = null
         set(value) {
             value?.let {
                 mParent = it
             }
         }
 
+
     override var body: (() -> Unit)?
-        get() = {}
+        get() = null
         set(value) {
             value?.let {
                 mBody = it

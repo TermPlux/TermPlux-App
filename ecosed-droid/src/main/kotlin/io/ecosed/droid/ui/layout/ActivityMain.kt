@@ -1,6 +1,8 @@
 package io.ecosed.droid.ui.layout
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -92,6 +94,7 @@ internal fun ActivityMain(
     windowSize: WindowSizeClass,
     displayFeatures: List<DisplayFeature>,
     topBarVisible: Boolean,
+    uiVisible: Boolean,
     content: @Composable () -> Unit,
 
     topBarUpdate: (MaterialToolbar) -> Unit,
@@ -101,7 +104,7 @@ internal fun ActivityMain(
     current: (Int) -> Unit,
     toggle: () -> Unit,
     taskbar: () -> Unit,
-    launchUrl: (String) -> Unit
+    launchUrl: (String) -> Unit,
 ) {
 
 
@@ -384,26 +387,76 @@ internal fun ActivityMain(
     }
 
     @Composable
-    fun content() {
+    fun contents() {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             topBar = {
-                TopAppBar(
-                    title = {
-                        Text(
-                            text = AppUtils.getAppName(),
-                            maxLines = 1
-                        )
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    navigationIcon = {
-                        IconButton(
-                            onClick = {
-                                current(
-                                    Screen.Main.route.toInt()
-                                ).run {
+                AnimatedVisibility(
+                    visible = uiVisible,
+                    enter = slideInVertically(),
+                    exit = slideOutVertically()
+                ) {
+                    TopAppBar(
+                        title = {
+                            Text(
+                                text = AppUtils.getAppName(),
+                                maxLines = 1
+                            )
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        navigationIcon = {
+                            IconButton(
+                                onClick = {
+                                    current(
+                                        Screen.Main.route.toInt()
+                                    ).run {
+                                        navController.navigate(
+                                            route = Screen.Home.route
+                                        ) {
+                                            popUpTo(
+                                                id = navController.graph.findStartDestination().id
+                                            ) {
+                                                saveState = true
+                                            }
+                                            launchSingleTop = true
+                                            restoreState = true
+                                        }
+                                    }
+                                }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Outlined.KeyboardCommandKey,
+                                    contentDescription = null
+                                )
+                            }
+                        },
+                        actions = {
+                            DropdownMenu(
+                                expanded = expanded.value,
+                                onDismissRequest = {
+                                    expanded.value = false
+                                }
+                            ) {
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(text = "关于")
+                                    },
+                                    onClick = {
+
+                                    },
+                                    leadingIcon = {
+                                        Icon(
+                                            imageVector = Icons.Outlined.Info,
+                                            contentDescription = null
+                                        )
+                                    },
+                                    enabled = true
+                                )
+                            }
+                            IconButton(
+                                onClick = {
                                     navController.navigate(
-                                        route = Screen.Home.route
+                                        route = Screen.Settings.route
                                     ) {
                                         popUpTo(
                                             id = navController.graph.findStartDestination().id
@@ -414,75 +467,34 @@ internal fun ActivityMain(
                                         restoreState = true
                                     }
                                 }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Settings,
+                                    contentDescription = null
+                                )
                             }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Outlined.KeyboardCommandKey,
-                                contentDescription = null
-                            )
-                        }
-                    },
-                    actions = {
-                        DropdownMenu(
-                            expanded = expanded.value,
-                            onDismissRequest = {
-                                expanded.value = false
-                            }
-                        ) {
-                            DropdownMenuItem(
-                                text = {
-                                    Text(text = "关于")
-                                },
+                            IconButton(
                                 onClick = {
-
-                                },
-                                leadingIcon = {
-                                    Icon(
-                                        imageVector = Icons.Outlined.Info,
-                                        contentDescription = null
-                                    )
-                                },
-                                enabled = true
-                            )
-                        }
-                        IconButton(
-                            onClick = {
-                                navController.navigate(
-                                    route = Screen.Settings.route
-                                ) {
-                                    popUpTo(
-                                        id = navController.graph.findStartDestination().id
-                                    ) {
-                                        saveState = true
-                                    }
-                                    launchSingleTop = true
-                                    restoreState = true
+                                    expanded.value = !expanded.value
                                 }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.MoreVert,
+                                    contentDescription = null
+                                )
                             }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Outlined.Settings,
-                                contentDescription = null
-                            )
-                        }
-                        IconButton(
-                            onClick = {
-                                expanded.value = !expanded.value
-                            }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.MoreVert,
-                                contentDescription = null
-                            )
-                        }
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(),
-                    scrollBehavior = scrollBehavior
-                )
+                        },
+                        colors = TopAppBarDefaults.topAppBarColors(),
+                        scrollBehavior = scrollBehavior
+                    )
+                }
+
             },
             bottomBar = {
                 AnimatedVisibility(
-                    visible = (navigationType == NavigationType.BottomNavigation)
+                    visible = (navigationType == NavigationType.BottomNavigation) && uiVisible,
+                    enter = slideInVertically(initialOffsetY = { it / 2 }),
+                    exit = slideOutVertically(targetOffsetY = { it / 2 })
                 ) {
                     NavigationBar(
                         modifier = Modifier.fillMaxWidth()
@@ -534,7 +546,7 @@ internal fun ActivityMain(
         ) { innerPadding ->
             NavHost(
                 navController = navController,
-                startDestination = Screen.Overview.route,
+                startDestination = Screen.Home.route,
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(
@@ -559,7 +571,7 @@ internal fun ActivityMain(
                     composable(
                         route = Screen.Home.route
                     ) {
-                        ScreenHome(content = content)
+                        content()
                     }
                     composable(
                         route = Screen.Settings.route
@@ -653,7 +665,7 @@ internal fun ActivityMain(
             },
             modifier = Modifier.fillMaxSize()
         ) {
-            content()
+            contents()
         }
 
         NavigationType.NavigationRail,
@@ -724,7 +736,7 @@ internal fun ActivityMain(
                     }
                 }
             }
-            content()
+            contents()
         }
     }
 }

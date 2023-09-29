@@ -77,7 +77,7 @@ internal class TopAppBarUtils private constructor() {
         /** 一些较老的设备需要在小部件更新和状态和导航栏更改之间有一个小的延迟。*/
         private const val uiAnimatorDelay = 300
 
-        internal fun newInstance(): TopAppBarUtils {
+        internal fun build(): TopAppBarUtils {
             return TopAppBarUtils()
         }
     }
