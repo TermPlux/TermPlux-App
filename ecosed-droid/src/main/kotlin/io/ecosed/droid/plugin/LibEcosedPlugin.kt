@@ -23,26 +23,10 @@ internal class LibEcosedPlugin : LibEcosed() {
 
     override fun initSDKs(application: Application) {
         super.initSDKs(application)
-
-
-//        // 初始化首选项
-//        EcosedSettings.initialize(context = application)
-//        // 初始化动态取色
-//        if (EcosedSettings.getPreferences().getBoolean(
-//                EcosedSettings.settingsDynamicColor,
-//                true
-//            ) and (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-//        ) {
-//            DynamicColors.applyToActivitiesIfAvailable(
-//                application,
-//                DynamicColorsOptions.Builder().build()
-//            )
-//        }
     }
 
     override fun initSDKInitialized() {
         super.initSDKInitialized()
-
     }
 
     override fun onEcosedAdded(binding: PluginBinding) {
