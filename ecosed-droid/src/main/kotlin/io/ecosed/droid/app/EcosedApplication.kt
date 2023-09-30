@@ -28,11 +28,9 @@ import android.util.Log
 import android.widget.Toast
 import io.ecosed.droid.R
 import io.ecosed.droid.engine.EcosedEngine
-import io.ecosed.droid.plugin.LibEcosedPlugin
 import org.lsposed.hiddenapibypass.HiddenApiBypass
 
-class EcosedApplication<YourApplication : IEcosedApplication> : ContextWrapper(null),
-    IEcosedApplication, EcosedAppContent {
+class EcosedApplication<YourApplication : IEcosedApplication> : ContextWrapper(null), IEcosedApplication {
 
     private val mainHandler = Handler(Looper.getMainLooper())
 
@@ -42,13 +40,8 @@ class EcosedApplication<YourApplication : IEcosedApplication> : ContextWrapper(n
 
     private lateinit var mYourApplication: YourApplication
 
-    private lateinit var mHost: EcosedAppHost
+    private lateinit var mHost: EcosedHost
 
-    private var mParent: () -> Unit = {}
-    private var mBody: () -> Unit = {}
-    private var mInit: () -> Unit = {}
-    private var mInitSDKs: () -> Unit = {}
-    private var mInitSDKInitialized: () -> Unit = {}
 
     private var mToast: Toast? = null
 
@@ -70,12 +63,12 @@ class EcosedApplication<YourApplication : IEcosedApplication> : ContextWrapper(n
         get() = mHost
 
     override fun <T> IEcosedApplication.execMethodCall(
-        name: String,
+        channel: String,
         method: String,
         bundle: Bundle?,
     ): T? = engineUnit {
         return@engineUnit execMethodCall<T>(
-            name = name,
+            channel = channel,
             method = method,
             bundle = bundle
         )
@@ -86,10 +79,7 @@ class EcosedApplication<YourApplication : IEcosedApplication> : ContextWrapper(n
 
 
     @Suppress("UNCHECKED_CAST")
-    override fun IEcosedApplication.onAttachEcosed(
-        application: Application,
-        content: EcosedAppContent.() -> Unit
-    ) {
+    override fun IEcosedApplication.attachEcosed(application: Application, host: EcosedHost) {
         // 附加基本上下文
         attachBaseContext(base = application.baseContext)
         // 获取应用程序全局类
@@ -97,9 +87,11 @@ class EcosedApplication<YourApplication : IEcosedApplication> : ContextWrapper(n
         // 获取mME
         mYourApplication = mApplication as YourApplication
 
-        content.invoke(this@EcosedApplication)
 
-        mParent()
+
+
+
+        mHost = host
 
         // 初始化引擎
         mEngine = EcosedEngine.create(
@@ -121,14 +113,14 @@ class EcosedApplication<YourApplication : IEcosedApplication> : ContextWrapper(n
             notificationManager.createNotificationChannel(channel)
         }
 
-        mInit()
+
         object : Thread() {
             override fun run() {
                 mYourApplication.apply {
-                    mInitSDKs()
+
                     synchronized(mYourApplication) {
                         mainHandler.post {
-                            mInitSDKInitialized()
+
                         }
                     }
                 }
@@ -136,8 +128,6 @@ class EcosedApplication<YourApplication : IEcosedApplication> : ContextWrapper(n
         }.start()
 
 
-
-        mBody()
     }
 
     private fun initialize(initialize: EcosedAppInitialize?) = defaultUnit<Unit> {
@@ -171,7 +161,7 @@ class EcosedApplication<YourApplication : IEcosedApplication> : ContextWrapper(n
         }
 
         else -> error(
-            message = "给我在Application类里用奥你小子"
+            message = "错误: EcosedApplication只能在Application中使用!"
         )
     }
 
@@ -206,45 +196,6 @@ class EcosedApplication<YourApplication : IEcosedApplication> : ContextWrapper(n
     override fun IEcosedApplication.log(obj: Any) {
         Log.i(tag, obj.toString())
     }
-
-    override var initialize: EcosedAppInitialize?
-        get() = null
-        set(value) {
-            mInit = {
-                value?.init()
-            }
-            mInitSDKs = {
-                value?.initSDKs()
-            }
-            mInitSDKInitialized = {
-                value?.initSDKInitialized()
-            }
-        }
-
-    override var host: EcosedAppHost?
-        get() = null
-        set(value) = defaultUnit {
-            value?.let {
-                mHost = it
-            }
-        }
-
-    override var parent: (() -> Unit)?
-        get() = null
-        set(value) {
-            value?.let {
-                mParent = it
-            }
-        }
-
-
-    override var body: (() -> Unit)?
-        get() = null
-        set(value) {
-            value?.let {
-                mBody = it
-            }
-        }
 
     companion object {
         const val notificationChannel: String = "id"

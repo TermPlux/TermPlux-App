@@ -5,11 +5,11 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.os.Bundle
 import android.util.Log
-import io.ecosed.droid.app.EcosedAppHost
+import io.ecosed.droid.app.EcosedHost
 import io.ecosed.droid.app.IEcosedApplication
-import io.ecosed.droid.app.EcosedPlugin
-import io.ecosed.droid.plugin.LibEcosedPlugin
-import io.ecosed.droid.app.PluginBinding
+import io.ecosed.droid.client.EcosedClient
+import io.ecosed.droid.plugin.BasePlugin
+import io.ecosed.droid.plugin.PluginBinding
 
 /**
  * 作者: wyq0918dev
@@ -27,7 +27,7 @@ internal class EcosedEngine private constructor() : ContextWrapper(null) {
     private lateinit var mBase: Context
 
     /** 客户端组件. */
-    private lateinit var mHost: EcosedAppHost
+    private lateinit var mHost: EcosedHost
 
     /** 应用程序全局上下文, 非UI上下文. */
     private lateinit var mContext: Context
@@ -36,9 +36,11 @@ internal class EcosedEngine private constructor() : ContextWrapper(null) {
     private var mBinding: PluginBinding? = null
 
     /** 插件列表. */
-    private var mPluginList: ArrayList<EcosedPlugin>? = null
+    private var mPluginList: ArrayList<BasePlugin>? = null
 
-
+    override fun attachBaseContext(base: Context?) {
+        super.attachBaseContext(base)
+    }
 
     /**
      * 将引擎附加到应用.
@@ -46,49 +48,36 @@ internal class EcosedEngine private constructor() : ContextWrapper(null) {
     private fun attach() {
         when {
             (mPluginList == null) or (mBinding == null) -> apply {
-                attachBaseContext(mBase)
+                attachBaseContext(
+                    base = mBase
+                )
+                val client = EcosedClient.newInstance()
                 // 初始化插件绑定器.
                 mBinding = PluginBinding(
                     context = mContext,
-                    debug = mHost.isDebug(),
-                   // logo = mHost.getProductLogo()
+                    debug = mHost.isDebug()
                 )
                 // 初始化插件列表.
                 mPluginList = arrayListOf()
                 // 加载LibEcosed框架 (如果使用了的话).
-                LibEcosedPlugin()?.let { ecosed ->
+                client.let { ecosed ->
                     mBinding?.let { binding ->
                         ecosed.apply {
                             try {
-                                attach(base = mBase)
-                                if (mHost.isDebug()) {
-                                    Log.d(tag, "LibEcosed框架已附加基本上下文")
-                                }
-                                init()
-                                if (mHost.isDebug()) {
-                                    Log.d(tag, "LibEcosed框架已初始化")
-                                }
-                                synchronized(ecosed) {
-                                    initSDKs(application = mApp)
-                                    initSDKInitialized()
-                                }
-                                if (mHost.isDebug()) {
-                                    Log.d(tag, "LibEcosed框架已初始化SDK")
-                                }
                                 onEcosedAdded(binding = binding)
                                 if (mHost.isDebug()) {
-                                    Log.d(tag, "LibEcosed框架已加载")
+                                    Log.d(tag, "框架已加载")
                                 }
                             } catch (e: Exception) {
                                 if (mHost.isDebug()) {
-                                    Log.e(tag, "LibEcosed框架加载失败!", e)
+                                    Log.e(tag, "框架加载失败!", e)
                                 }
                             }
                         }
                     }.run {
                         mPluginList?.add(element = ecosed)
                         if (mHost.isDebug()) {
-                            Log.d(tag, "LibEcosed框架已添加到插件列表")
+                            Log.d(tag, "框架已添加到插件列表")
                         }
                     }
                 }
@@ -134,18 +123,18 @@ internal class EcosedEngine private constructor() : ContextWrapper(null) {
      * @return 返回方法执行后的返回值,类型为Any?.
      */
     internal fun <T> execMethodCall(
-        name: String,
+        channel: String,
         method: String,
         bundle: Bundle?,
     ): T? {
         var result: T? = null
         try {
             mPluginList?.forEach { plugin ->
-                plugin.getPluginChannel.let { channel ->
-                    when (channel.getChannel()) {
-                        name -> {
-                            result = channel.execMethodCall<T>(
-                                name = name,
+                plugin.getPluginChannel.let { pluginChannel ->
+                    when (pluginChannel.getChannel()) {
+                        channel -> {
+                            result = pluginChannel.execMethodCall<T>(
+                                name = channel,
                                 method = method,
                                 bundle = bundle
                             )
@@ -153,7 +142,7 @@ internal class EcosedEngine private constructor() : ContextWrapper(null) {
                                 Log.d(
                                     tag,
                                     "插件代码调用成功!\n" +
-                                            "通道名称:${name}.\n" +
+                                            "通道名称:${channel}.\n" +
                                             "方法名称:${method}.\n" +
                                             "返回结果:${result}."
                                 )
@@ -183,7 +172,7 @@ internal class EcosedEngine private constructor() : ContextWrapper(null) {
         fun create(application: Application): EcosedEngine
     }
 
-    companion object : Builder {
+    internal companion object : Builder {
 
         /** 用于打印日志的标签. */
         private const val tag: String = "PluginEngine"
@@ -202,7 +191,7 @@ internal class EcosedEngine private constructor() : ContextWrapper(null) {
                         mApp = application
                         mBase = baseContext
                         mContext = applicationContext
-                        mHost = getHost as EcosedAppHost
+                        mHost = getHost as EcosedHost
                     }.run {
                         attach()
                     }

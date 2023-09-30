@@ -13,34 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.ecosed.droid.client
+package io.ecosed.droid.app
 
-import android.content.Context
+import android.os.Bundle
 
-internal class EcosedBuilder {
-
-    /** 上下文 */
-    private lateinit var mContext: Context
-
-    /**
-     * 传入上下文
-     * @param context 上下文
-     */
-    internal fun init(
-        context: Context?
-    ): EcosedBuilder {
-        context?.let {
-            mContext = it
-        }
-        return this@EcosedBuilder
-    }
+/**
+ * 用于调用方法的接口.
+ */
+interface EcosedMethodCall {
 
     /**
-     * 构建API
+     * 要调用的方法名.
      */
-    internal fun build(
-        content: EcosedClient.() -> Unit
-    ) {
-        content(EcosedClient(context = mContext))
-    }
+    val method: String?
+
+    /**
+     * 要传入的参数.
+     */
+    val bundle: Bundle?
 }

@@ -34,10 +34,6 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
     ContextWrapper(null), IEcosedActivity, LifecycleOwner, DefaultLifecycleObserver {
 
 
-
-
-
-
     private lateinit var mActivity: Activity
     private lateinit var mApplication: Application
     private lateinit var mLifecycle: Lifecycle
@@ -49,15 +45,10 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
     private var isLaunch = false
 
 
-
     override fun onResume(owner: LifecycleOwner) {
         super.onResume(owner)
 
     }
-
-
-
-
 
 
     override fun attachBaseContext(base: Context?) {
@@ -65,130 +56,38 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
     }
 
 
-    override fun IEcosedActivity.onAttachEcosed(
+    override fun IEcosedActivity.attachEcosed(
         activity: Activity,
-        lifecycle: Lifecycle
+        lifecycle: Lifecycle,
     ) {
 
-
-        hasSuperUnit(
-            superUnit = { sub ->
-                attachBaseContext(base = activity.baseContext)
-                mActivity = activity
-                mApplication = activity.application
-                mLifecycle = lifecycle
-                @Suppress("UNCHECKED_CAST")
-                mYourActivity = mActivity as YourActivity
-                @Suppress("UNCHECKED_CAST")
-                mYourApplication = mApplication as YourApplication
-                isDebug()?.let { isDebug = it }
-                sub()
+        attachBaseContext(base = activity)
+        mActivity = activity
+        mApplication = activity.application
+        mLifecycle = lifecycle
+        @Suppress("UNCHECKED_CAST")
+        mYourActivity = mActivity as YourActivity
+        @Suppress("UNCHECKED_CAST")
+        mYourApplication = mApplication as YourApplication
+        isDebug()?.let { isDebug = it }
 
 
-                this@EcosedActivity.lifecycle.addObserver(this@EcosedActivity)
-            }
-        ) {
-
-
-
-
-
-
-
-//            when {
-//                isLaunch -> {
-//                    // 设置主题
-//                    setTheme(R.style.Theme_LibEcosed)
-//                    // 启用边倒边
-//                    EdgeToEdgeUtils.applyEdgeToEdge(window, true)
-//                    WindowCompat.setDecorFitsSystemWindows(window, false)
-//                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-//
-//
-//
-//
-//
-//                    setContent {
-//                        val view = LocalView.current
-//                        TopAppBarUtils.build().attach { visible, onTouchListener, function ->
-//                            isVisible = visible
-//                            view.setOnTouchListener(onTouchListener)
-//                            toggle = function
-//                        }
-//                        LibEcosedTheme(
-//                            dynamicColor = ThemeHelper.isUsingSystemColor()
-//                        ) { dynamic ->
-//                            ActivityMain(
-//                                windowSize = calculateWindowSizeClass(
-//                                    activity = this@hasSuperUnit
-//                                ),
-//                                displayFeatures = calculateDisplayFeatures(
-//                                    activity = this@hasSuperUnit
-//                                ),
-//                                topBarVisible = isVisible,
-//                                uiVisible = mShowUi,
-//                                topBarUpdate = { toolbar ->
-//
-//                                },
-//                                content = mContent.value,
-//                                androidVersion = "13",
-//                                shizukuVersion = "13",
-//                                current = {
-//                                },
-//                                toggle = {
-//                                    toggle()
-//                                },
-//                                taskbar = {
-//
-//                                },
-//                                launchUrl = { url ->
-//                                    openUrl(url = url)
-//                                }
-//                            )
-//                        }
-//                    }
-//
-//                }
-//
-//
-//                else -> {
-//                    // setLayout()
-//
-//
-//                }
-//            }
-        }
-
-
-
-
-
+        this@EcosedActivity.lifecycle.addObserver(this@EcosedActivity)
 
     }
 
-    override fun IEcosedActivity.onDetachEcosed() {
+    override fun IEcosedActivity.detachEcosed() {
 
     }
-
-//    override fun IEcosedActivity.setContentComposable(
-//        content: @Composable () -> Unit,
-//    ) = defaultUnit {
-//        runOnUiThread {
-//            when {
-//                isLaunch -> mContent.value = content
-//                else -> setContent(content = content)
-//            }
-//        }
-//    }
 
     override fun <T> IEcosedActivity.execMethodCall(
-        name: String,
+        channel: String,
         method: String,
         bundle: Bundle?,
     ): T? = defaultUnit {
         return@defaultUnit engineUnit {
             return@engineUnit execMethodCall<T>(
-                name = name,
+                channel = channel,
                 method = method,
                 bundle = bundle
             )
@@ -234,18 +133,6 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
         get() = mLifecycle
 
 
-
-
-
-
-
-
-
-
-
-
-
-
     private fun isDebug(): Boolean? = hostUnit {
         return@hostUnit isDebug()
     }
@@ -266,11 +153,11 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
     }
 
     private fun <T> hostUnit(
-        content: EcosedAppHost.() -> T
-    ): T? = (mYourApplication.getHost as EcosedAppHost).content()
+        content: EcosedHost.() -> T,
+    ): T? = (mYourApplication.getHost as EcosedHost).content()
 
     private fun <T> engineUnit(
-        content: EcosedEngine.() -> T
+        content: EcosedEngine.() -> T,
     ): T? = (mYourApplication.getEngine as EcosedEngine).content()
 
     private fun <T> defaultUnit(

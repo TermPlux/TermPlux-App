@@ -43,10 +43,7 @@ class DemoActivity : ComponentActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        onAttachEcosed(
-            activity = this@DemoActivity,
-            lifecycle = lifecycle
-        )
+        attachEcosed(this@DemoActivity, lifecycle)
         setContent {
             EDExampleTheme {
                 Greeting()
@@ -56,7 +53,7 @@ class DemoActivity : ComponentActivity(),
 
     override fun onDestroy() {
         super.onDestroy()
-        onDetachEcosed()
+        detachEcosed()
     }
 
     @OptIn(ExperimentalMaterial3Api::class)

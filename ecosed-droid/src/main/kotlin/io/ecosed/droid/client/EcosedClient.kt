@@ -16,13 +16,24 @@
 package io.ecosed.droid.client
 
 import android.content.ComponentName
-import android.content.Context
 import android.content.ServiceConnection
 import android.os.IBinder
+import io.ecosed.droid.app.EcosedMethodCall
+import io.ecosed.droid.app.EcosedResult
+import io.ecosed.droid.plugin.BasePlugin
 
-internal class EcosedClient constructor(
-    context: Context
-): ServiceConnection, EcosedCallBack {
+internal class EcosedClient private constructor(): BasePlugin(), ServiceConnection, EcosedCallBack {
+
+    override val channel: String
+        get() = mChannel
+
+    override fun onEcosedMethodCall(call: EcosedMethodCall, result: EcosedResult) {
+        super.onEcosedMethodCall(call, result)
+        when(call.method) {
+            "" -> result.success("")
+            else -> result.notImplemented()
+        }
+    }
 
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
 
@@ -54,5 +65,13 @@ internal class EcosedClient constructor(
 
     override fun onEcosedUnbind() {
 
+    }
+
+    internal companion object {
+        internal const val mChannel: String = ""
+
+        internal fun newInstance(): EcosedClient{
+            return EcosedClient()
+        }
     }
 }

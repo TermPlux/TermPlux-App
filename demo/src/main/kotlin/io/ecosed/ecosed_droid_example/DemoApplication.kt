@@ -17,14 +17,14 @@ package io.ecosed.ecosed_droid_example
 
 import android.app.Application
 import io.ecosed.droid.app.EcosedApplication
-import io.ecosed.droid.app.EcosedAppHost
+import io.ecosed.droid.app.EcosedHost
 import io.ecosed.droid.app.EcosedAppInitialize
 import io.ecosed.droid.app.EcosedPlugin
 import io.ecosed.droid.app.IEcosedApplication
 
 class DemoApplication : Application(), IEcosedApplication by EcosedApplication<DemoApplication>() {
 
-    private val mHost: EcosedAppHost = object : EcosedAppHost {
+    private val mHost: EcosedHost = object : EcosedHost {
         override fun isDebug(): Boolean {
             return BuildConfig.DEBUG
         }
@@ -48,14 +48,11 @@ class DemoApplication : Application(), IEcosedApplication by EcosedApplication<D
         }
     }
 
-    override fun onCreate() = onAttachEcosed(
-        application = this@DemoApplication
-    ) {
-        parent = { super.onCreate() }
-        host = mHost
-        initialize = mInitialize
-        body = {
-
-        }
+    override fun onCreate() {
+        super.onCreate()
+        attachEcosed(
+            application = this@DemoApplication,
+            host = mHost
+        )
     }
 }

@@ -103,9 +103,7 @@ dependencies {
     kapt(dependencyNotation = "dev.rikka.tools.refine:annotation-processor:4.3.0")
     // Google 官方库
     implementation(dependencyNotation = "androidx.core:core-ktx:1.12.0")
-    implementation(dependencyNotation = "androidx.appcompat:appcompat:1.6.1")
     implementation(dependencyNotation = "androidx.annotation:annotation:1.7.0")
-    implementation(dependencyNotation = "androidx.fragment:fragment-ktx:1.6.1")
     implementation(dependencyNotation = "androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
     implementation(dependencyNotation = "androidx.browser:browser:1.6.0")
     implementation(dependencyNotation = "com.google.android.material:material:1.9.0")

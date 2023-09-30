@@ -4,8 +4,13 @@
     <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.FAKE_PACKAGE_SIGNATURE" />
 
     <application>
+        <meta-data
+            android:name="fake-signature"
+            android:value="@string/fake_signature" />
+
         <service
             android:name=".service.EcosedService"
             android:enabled="true"

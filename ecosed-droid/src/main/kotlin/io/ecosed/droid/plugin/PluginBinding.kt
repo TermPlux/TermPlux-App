@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.ecosed.droid.app
+package io.ecosed.droid.plugin
 
 import android.content.Context
 
@@ -24,13 +24,13 @@ import android.content.Context
  * 描述: 插件绑定器
  * 文档: https://github.com/ecosed/plugin/blob/master/README.md
  */
-class PluginBinding constructor(
-    context: Context?,
+internal class PluginBinding constructor(
+    context: Context,
     debug: Boolean,
 ) {
 
     /** 应用程序全局上下文. */
-    private val mContext: Context? = context
+    private val mContext: Context = context
 
     /** 是否调试模式. */
     private val mDebug: Boolean = debug
@@ -39,7 +39,7 @@ class PluginBinding constructor(
      * 获取上下文.
      * @return Context.
      */
-    internal fun getContext(): Context? {
+    internal fun getContext(): Context {
         return mContext
     }
 

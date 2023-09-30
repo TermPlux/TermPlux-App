@@ -16,10 +16,8 @@ import io.ecosed.droid.BuildConfig
 import io.ecosed.droid.EcosedFramework
 import io.ecosed.droid.R
 import io.ecosed.droid.app.EcosedApplication
-import io.ecosed.droid.plugin.LibEcosedPlugin
 import io.ecosed.droid.utils.ChineseCaleUtils
 import io.ecosed.droid.utils.EnvironmentUtils
-import io.ecosed.droid.plugin.PluginExecutor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -39,12 +37,15 @@ internal class EcosedService : Service(), Shizuku.OnBinderReceivedListener,
 
 
 
-        isDebug = PluginExecutor.execMethodCall<Boolean>(
-            service = mService,
-            name = LibEcosedPlugin.channel,
-            method = LibEcosedPlugin.isDebug,
-            null
-        )!!
+//        isDebug = PluginExecutor.execMethodCall<Boolean>(
+//            service = mService,
+//            name = EcosedDroid.channel,
+//            method = EcosedDroid.isDebug,
+//            null
+//        )!!
+
+
+
 //        mProductLogo = PluginExecutor.execMethodCall<Drawable>(
 //            service = mService,
 //            name = LibEcosedPlugin.channel,

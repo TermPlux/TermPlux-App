@@ -13,10 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.ecosed.droid.app
+package io.ecosed.droid.plugin
 
 import android.content.Context
 import android.os.Bundle
+import io.ecosed.droid.app.EcosedMethodCall
+import io.ecosed.droid.app.EcosedResult
 
 /**
  * 作者: wyq0918dev
@@ -25,7 +27,7 @@ import android.os.Bundle
  * 描述: 插件通信通道
  * 文档: https://github.com/ecosed/plugin/blob/master/README.md
  */
-class PluginChannel constructor(binding: PluginBinding, channel: String) {
+internal class PluginChannel constructor(binding: PluginBinding, channel: String) {
 
     /** 插件绑定器. */
     private var mBinding: PluginBinding = binding
@@ -34,7 +36,7 @@ class PluginChannel constructor(binding: PluginBinding, channel: String) {
     private var mChannel: String = channel
 
     /** 方法调用处理接口. */
-    private var mHandler: MethodCallHandler? = null
+    private var mPlugin: BasePlugin? = null
 
     /** 方法名. */
     private var mMethod: String? = null
@@ -49,15 +51,15 @@ class PluginChannel constructor(binding: PluginBinding, channel: String) {
      * 设置方法调用.
      * @param handler 执行方法时调用EcosedMethodCallHandler.
      */
-    fun setMethodCallHandler(handler: MethodCallHandler) {
-        mHandler = handler
+    internal fun setMethodCallHandler(handler: BasePlugin) {
+        mPlugin = handler
     }
 
     /**
      * 获取上下文.
      * @return Context.
      */
-    fun getContext(): Context? {
+    internal fun getContext(): Context {
         return mBinding.getContext()
     }
 
@@ -88,7 +90,7 @@ class PluginChannel constructor(binding: PluginBinding, channel: String) {
         mMethod = method
         mBundle = bundle
         if (name == mChannel) {
-            mHandler?.onEcosedMethodCall(
+            mPlugin?.onEcosedMethodCall(
                 call = call,
                 result = result
             )
@@ -97,7 +99,7 @@ class PluginChannel constructor(binding: PluginBinding, channel: String) {
     }
 
     /** 用于调用方法的接口. */
-    private val call: MethodCall = object : MethodCall {
+    private val call: EcosedMethodCall = object : EcosedMethodCall {
 
         /**
          * 要调用的方法名.
@@ -113,7 +115,7 @@ class PluginChannel constructor(binding: PluginBinding, channel: String) {
     }
 
     /** 方法调用结果回调. */
-    private val result: Result = object : Result {
+    private val result: EcosedResult = object : EcosedResult {
 
         /**
          * 处理成功结果.
@@ -143,21 +145,21 @@ class PluginChannel constructor(binding: PluginBinding, channel: String) {
         }
     }
 
-    /**
-     * 用于调用方法的接口.
-     */
-    interface MethodCall {
-
-        /**
-         * 要调用的方法名.
-         */
-        val method: String?
-
-        /**
-         * 要传入的参数.
-         */
-        val bundle: Bundle?
-    }
+//    /**
+//     * 用于调用方法的接口.
+//     */
+//    interface MethodCall {
+//
+//        /**
+//         * 要调用的方法名.
+//         */
+//        val method: String?
+//
+//        /**
+//         * 要传入的参数.
+//         */
+//        val bundle: Bundle?
+//    }
 
     /**
      * 方法调用处理接口.
@@ -169,35 +171,35 @@ class PluginChannel constructor(binding: PluginBinding, channel: String) {
          * @param call 指定调用的方法.
          * @param result 方法调用结果回调.
          */
-        fun onEcosedMethodCall(call: MethodCall, result: Result)
+        fun onEcosedMethodCall(call: EcosedMethodCall, result: EcosedResult)
     }
 
-    /**
-     * 方法调用结果回调.
-     */
-    interface Result {
-
-        /**
-         * 处理成功结果.
-         * @param result 处理成功结果,注意可能为空.
-         */
-        fun success(result: Any?)
-
-        /**
-         * 处理错误结果.
-         * @param errorCode 错误代码.
-         * @param errorMessage 错误消息,注意可能为空.
-         * @param errorDetails 详细信息,注意可能为空.
-         */
-        fun error(
-            errorCode: String,
-            errorMessage: String?,
-            errorDetails: Any?
-        ): Nothing
-
-        /**
-         * 处理对未实现方法的调用.
-         */
-        fun notImplemented()
-    }
+//    /**
+//     * 方法调用结果回调.
+//     */
+//    interface Result {
+//
+//        /**
+//         * 处理成功结果.
+//         * @param result 处理成功结果,注意可能为空.
+//         */
+//        fun success(result: Any?)
+//
+//        /**
+//         * 处理错误结果.
+//         * @param errorCode 错误代码.
+//         * @param errorMessage 错误消息,注意可能为空.
+//         * @param errorDetails 详细信息,注意可能为空.
+//         */
+//        fun error(
+//            errorCode: String,
+//            errorMessage: String?,
+//            errorDetails: Any?
+//        ): Nothing
+//
+//        /**
+//         * 处理对未实现方法的调用.
+//         */
+//        fun notImplemented()
+//    }
 }
