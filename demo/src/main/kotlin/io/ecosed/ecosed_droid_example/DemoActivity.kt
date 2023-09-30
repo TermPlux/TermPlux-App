@@ -17,56 +17,80 @@ package io.ecosed.ecosed_droid_example
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import io.ecosed.droid.app.EcosedActivity
 import io.ecosed.droid.app.IEcosedActivity
 import io.ecosed.ecosed_droid_example.ui.theme.EDExampleTheme
 
-class DemoActivity : ComponentActivity(), IEcosedActivity by EcosedActivity<DemoApplication, DemoActivity>() {
+class DemoActivity : ComponentActivity(),
+    IEcosedActivity by EcosedActivity<DemoApplication, DemoActivity>() {
 
-    override fun onCreate(savedInstanceState: Bundle?) = onAttachEcosed(
-        activity = this@DemoActivity
-    ) {
-        parent = { super.onCreate(savedInstanceState) }
-        isLauncher = true
-        body = {
-            setContentComposable {
-                EDExampleTheme {
-                    Surface(
-                        modifier = Modifier.fillMaxSize(),
-                        color = MaterialTheme.colorScheme.background
-                    ) {
-                        Greeting()
-                    }
-                }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        onAttachEcosed(
+            activity = this@DemoActivity,
+            lifecycle = lifecycle
+        )
+        setContent {
+            EDExampleTheme {
+                Greeting()
             }
         }
     }
 
-    override fun onDestroy() = onDetachEcosed{
-        parent = { super.onDestroy() }
-        body = {
-            toast("onDestroy")
-        }
+    override fun onDestroy() {
+        super.onDestroy()
+        onDetachEcosed()
     }
 
+    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     private fun Greeting() {
-        Box(
+        Scaffold(
             modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = "Hello EcosedDroid!"
-            )
+            topBar = {
+                CenterAlignedTopAppBar(
+                    title = {
+                        Text(
+                            text = stringResource(
+                                id = R.string.app_name
+                            )
+                        )
+                    }
+                )
+            }
+        ) { innerPadding ->
+            Surface(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(
+                        paddingValues = innerPadding
+                    ),
+                color = MaterialTheme.colorScheme.background
+            ) {
+                Column {
+                    Button(onClick = { /*TODO*/ }) {
+                        Text(text = "Button")
+                    }
+                }
+
+            }
         }
     }
 

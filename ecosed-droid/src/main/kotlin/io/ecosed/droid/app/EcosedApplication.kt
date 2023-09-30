@@ -16,6 +16,8 @@
 package io.ecosed.droid.app
 
 import android.app.Application
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import android.content.ContextWrapper
 import android.os.Build
@@ -24,11 +26,13 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.widget.Toast
+import io.ecosed.droid.R
 import io.ecosed.droid.engine.EcosedEngine
+import io.ecosed.droid.plugin.LibEcosedPlugin
 import org.lsposed.hiddenapibypass.HiddenApiBypass
 
-class EcosedApp<YourApplication : IEcosedApp> : ContextWrapper(null),
-    IEcosedApp, EcosedAppContent {
+class EcosedApplication<YourApplication : IEcosedApplication> : ContextWrapper(null),
+    IEcosedApplication, EcosedAppContent {
 
     private val mainHandler = Handler(Looper.getMainLooper())
 
@@ -65,7 +69,7 @@ class EcosedApp<YourApplication : IEcosedApp> : ContextWrapper(null),
     override val getHost: Any
         get() = mHost
 
-    override fun <T> IEcosedApp.execMethodCall(
+    override fun <T> IEcosedApplication.execMethodCall(
         name: String,
         method: String,
         bundle: Bundle?,
@@ -82,7 +86,7 @@ class EcosedApp<YourApplication : IEcosedApp> : ContextWrapper(null),
 
 
     @Suppress("UNCHECKED_CAST")
-    override fun IEcosedApp.onAttachEcosed(
+    override fun IEcosedApplication.onAttachEcosed(
         application: Application,
         content: EcosedAppContent.() -> Unit
     ) {
@@ -93,7 +97,7 @@ class EcosedApp<YourApplication : IEcosedApp> : ContextWrapper(null),
         // 获取mME
         mYourApplication = mApplication as YourApplication
 
-        content.invoke(this@EcosedApp)
+        content.invoke(this@EcosedApplication)
 
         mParent()
 
@@ -101,6 +105,21 @@ class EcosedApp<YourApplication : IEcosedApp> : ContextWrapper(null),
         mEngine = EcosedEngine.create(
             application = mApplication
         )
+
+        // 创建通知通道
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(
+                notificationChannel,
+                application.getString(R.string.lib_name),
+                importance
+            ).apply {
+                description = application.getString(R.string.lib_description)
+            }
+            val notificationManager: NotificationManager =
+                application.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
 
         mInit()
         object : Thread() {
@@ -165,13 +184,13 @@ class EcosedApp<YourApplication : IEcosedApp> : ContextWrapper(null),
 
 
 
-    override fun IEcosedApp.toast(obj: Any) {
+    override fun IEcosedApplication.toast(obj: Any) {
         try {
             mainHandler.post {
                 log(obj.toString())
                 if (mToast == null) {
                     mToast = Toast.makeText(
-                        this@EcosedApp,
+                        this@EcosedApplication,
                         mNull,
                         Toast.LENGTH_SHORT
                     )
@@ -184,7 +203,7 @@ class EcosedApp<YourApplication : IEcosedApp> : ContextWrapper(null),
         }
     }
 
-    override fun IEcosedApp.log(obj: Any) {
+    override fun IEcosedApplication.log(obj: Any) {
         Log.i(tag, obj.toString())
     }
 
@@ -228,6 +247,7 @@ class EcosedApp<YourApplication : IEcosedApp> : ContextWrapper(null),
         }
 
     companion object {
+        const val notificationChannel: String = "id"
         const val tag: String = "tag"
         const val mNull: String = ""
     }

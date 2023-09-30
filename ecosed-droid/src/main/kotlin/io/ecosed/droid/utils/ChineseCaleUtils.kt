@@ -8,7 +8,7 @@ import java.util.*
 /**
  * 获取中国农历
  */
-class ChineseCaleUtils {
+internal class ChineseCaleUtils private constructor(){
 
     // 农历的年份
     private var year = 0
@@ -236,7 +236,7 @@ class ChineseCaleUtils {
 
         //公历节假日
         for (i in solarHoliday.indices) {
-            if ((i == solarHoliday.size && year < 1893 || i + 3 == solarHoliday.size && year < 1999 || i + 6 == solarHoliday.size && year < 1942 || i + 10 == solarHoliday.size && year < 1949 || i == 19) && year < 1921 || i == 20 && year < 1933 || i == 22 && year < 1976) {
+            if ((i + 3 == solarHoliday.size && year < 1999 || i + 6 == solarHoliday.size && year < 1942 || i + 10 == solarHoliday.size && year < 1949 || i == 19) && year < 1921 || i == 20 && year < 1933 || i == 22 && year < 1976) {
                 break
             }
             // 返回公历节假日名称
@@ -314,7 +314,7 @@ class ChineseCaleUtils {
         }
     }
 
-    companion object {
+    internal companion object {
 
         private val chineseNumber = arrayOf(
             "正", "二", "三", "四", "五", "六", "七",
@@ -436,7 +436,7 @@ class ChineseCaleUtils {
         )
 
         // 入口函数，返回农历日期的字符串
-        fun getChineseCale(): String {
+        internal fun getChineseCale(): String {
             val calendar = Calendar.getInstance()
 
             val year = calendar[Calendar.YEAR]

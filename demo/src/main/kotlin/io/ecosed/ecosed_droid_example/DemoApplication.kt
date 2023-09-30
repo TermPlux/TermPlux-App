@@ -16,40 +16,44 @@
 package io.ecosed.ecosed_droid_example
 
 import android.app.Application
-import io.ecosed.droid.app.EcosedApp
+import io.ecosed.droid.app.EcosedApplication
 import io.ecosed.droid.app.EcosedAppHost
 import io.ecosed.droid.app.EcosedAppInitialize
 import io.ecosed.droid.app.EcosedPlugin
-import io.ecosed.droid.app.IEcosedApp
+import io.ecosed.droid.app.IEcosedApplication
 
-class DemoApplication : Application(), IEcosedApp by EcosedApp<DemoApplication>() {
+class DemoApplication : Application(), IEcosedApplication by EcosedApplication<DemoApplication>() {
+
+    private val mHost: EcosedAppHost = object : EcosedAppHost {
+        override fun isDebug(): Boolean {
+            return BuildConfig.DEBUG
+        }
+
+        override fun getPluginList(): ArrayList<EcosedPlugin> {
+            return arrayListOf(DemoPlugin())
+        }
+    }
+
+    private val mInitialize: EcosedAppInitialize = object : EcosedAppInitialize {
+        override fun init() {
+            toast("init")
+        }
+
+        override fun initSDKs() {
+            Thread.sleep(8000)
+        }
+
+        override fun initSDKInitialized() {
+            toast("SDK已加载完毕")
+        }
+    }
 
     override fun onCreate() = onAttachEcosed(
         application = this@DemoApplication
     ) {
         parent = { super.onCreate() }
-        host = object : EcosedAppHost {
-            override fun isDebug(): Boolean {
-                return BuildConfig.DEBUG
-            }
-
-            override fun getPluginList(): ArrayList<EcosedPlugin> {
-                return arrayListOf(DemoPlugin())
-            }
-        }
-        initialize = object : EcosedAppInitialize {
-            override fun init() {
-                toast("init")
-            }
-
-            override fun initSDKs() {
-                Thread.sleep(8000)
-            }
-
-            override fun initSDKInitialized() {
-                toast("SDK已加载完毕")
-            }
-        }
+        host = mHost
+        initialize = mInitialize
         body = {
 
         }

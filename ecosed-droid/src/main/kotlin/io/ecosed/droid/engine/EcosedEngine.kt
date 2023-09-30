@@ -6,7 +6,7 @@ import android.content.ContextWrapper
 import android.os.Bundle
 import android.util.Log
 import io.ecosed.droid.app.EcosedAppHost
-import io.ecosed.droid.app.IEcosedApp
+import io.ecosed.droid.app.IEcosedApplication
 import io.ecosed.droid.app.EcosedPlugin
 import io.ecosed.droid.plugin.LibEcosedPlugin
 import io.ecosed.droid.app.PluginBinding
@@ -197,7 +197,7 @@ internal class EcosedEngine private constructor() : ContextWrapper(null) {
             application: Application,
         ): EcosedEngine = EcosedEngine().let { engine ->
             return@let engine.apply {
-                if (application is IEcosedApp) {
+                if (application is IEcosedApplication) {
                     application.apply {
                         mApp = application
                         mBase = baseContext

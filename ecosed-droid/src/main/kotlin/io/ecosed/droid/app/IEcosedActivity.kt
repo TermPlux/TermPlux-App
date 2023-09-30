@@ -15,9 +15,9 @@
  */
 package io.ecosed.droid.app
 
+import android.app.Activity
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.compose.runtime.Composable
+import androidx.lifecycle.Lifecycle
 
 interface IEcosedActivity {
 
@@ -26,22 +26,20 @@ interface IEcosedActivity {
      * @param activity 要附加的Activity
      */
     fun IEcosedActivity.onAttachEcosed(
-        activity: ComponentActivity,
-        content: EcosedActivityContent.() -> Unit
+        activity: Activity,
+        lifecycle: Lifecycle
     )
 
     /**
      * 将EcosedDroid与Activity分离
      */
-    fun IEcosedActivity.onDetachEcosed(
-        content: EcosedActivityContent.() -> Unit
-    )
+    fun IEcosedActivity.onDetachEcosed()
 
-    /**
-     * 设置布局,EcosedLauncher标记为true则设置主页布局,false为整个Activity的布局.
-     * @param content 页面布局
-     */
-    fun IEcosedActivity.setContentComposable(content: @Composable () -> Unit)
+//    /**
+//     * 设置布局,EcosedLauncher标记为true则设置主页布局,false为整个Activity的布局.
+//     * @param content 页面布局
+//     */
+//    fun IEcosedActivity.setContentComposable(content: @Composable () -> Unit)
 
     /**
      * 调用插件代码的方法.

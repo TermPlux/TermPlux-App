@@ -18,7 +18,7 @@ package io.ecosed.droid.app
 import android.app.Application
 import android.os.Bundle
 
-interface IEcosedApp {
+interface IEcosedApplication {
 
     /** 内部接口 */
     val getEngine: Any
@@ -29,7 +29,7 @@ interface IEcosedApp {
     /**
      *
      */
-    fun IEcosedApp.onAttachEcosed(
+    fun IEcosedApplication.onAttachEcosed(
         application: Application,
         content: EcosedAppContent.() -> Unit,
     )
@@ -41,12 +41,12 @@ interface IEcosedApp {
      * @param bundle 通过Bundle传递参数.
      * @return 返回方法执行后的返回值.
      */
-    fun <T> IEcosedApp.execMethodCall(
+    fun <T> IEcosedApplication.execMethodCall(
         name: String,
         method: String,
         bundle: Bundle? = null,
     ): T?
 
-    fun IEcosedApp.toast(obj: Any)
-    fun IEcosedApp.log(obj: Any)
+    fun IEcosedApplication.toast(obj: Any)
+    fun IEcosedApplication.log(obj: Any)
 }

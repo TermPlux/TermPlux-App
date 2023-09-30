@@ -6,19 +6,16 @@ import android.app.Service
 import android.content.ComponentName
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.core.app.NotificationCompat
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.PermissionUtils
 import io.ecosed.droid.BuildConfig
 import io.ecosed.droid.EcosedFramework
 import io.ecosed.droid.R
+import io.ecosed.droid.app.EcosedApplication
 import io.ecosed.droid.plugin.LibEcosedPlugin
 import io.ecosed.droid.utils.ChineseCaleUtils
 import io.ecosed.droid.utils.EnvironmentUtils
@@ -32,7 +29,7 @@ internal class EcosedService : Service(), Shizuku.OnBinderReceivedListener,
     Shizuku.OnBinderDeadListener, Shizuku.OnRequestPermissionResultListener {
 
     private lateinit var mService: EcosedService
-    private var isDebug: Boolean by mutableStateOf(value = false)
+    private var isDebug: Boolean = false
    // private lateinit var mProductLogo: Drawable
     private lateinit var poem: ArrayList<String>
 
@@ -185,7 +182,7 @@ internal class EcosedService : Service(), Shizuku.OnBinderReceivedListener,
 
         val notification = NotificationCompat.Builder(
             this@EcosedService,
-            LibEcosedPlugin.notificationChannel
+            EcosedApplication.notificationChannel
         )
             .setContentTitle(AppUtils.getAppName())
             .setContentText("服务正在运行")

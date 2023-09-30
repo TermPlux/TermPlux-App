@@ -35,7 +35,7 @@ android {
 
     buildFeatures {
         aidl = true
-        compose = true
+        //compose = true
         buildConfig = true
     }
 
@@ -62,9 +62,9 @@ android {
         jvmTarget = "11"
     }
 
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
-    }
+//    composeOptions {
+//        kotlinCompilerExtensionVersion = "1.5.1"
+//    }
 
     packaging {
         jniLibs {
@@ -114,11 +114,11 @@ dependencies {
     implementation(dependencyNotation = "androidx.preference:preference-ktx:1.2.1")
 
     implementation(dependencyNotation = "androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
-    implementation(dependencyNotation = "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
-    implementation(dependencyNotation = "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+//    implementation(dependencyNotation = "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
+//    implementation(dependencyNotation = "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
 
     implementation(dependencyNotation = "androidx.browser:browser:1.6.0")
-    implementation(dependencyNotation = "androidx.activity:activity-compose:1.7.2")
+//    implementation(dependencyNotation = "androidx.activity:activity-compose:1.7.2")
 
     implementation(dependencyNotation = "com.google.android.material:material:1.9.0")
 
@@ -126,35 +126,35 @@ dependencies {
     implementation(dependencyNotation = "com.google.android.gms:play-services-base:18.2.0")
 
 
-    implementation(dependencyNotation = "com.google.accompanist:accompanist-systemuicontroller:0.32.0")
-    implementation(dependencyNotation = "com.google.accompanist:accompanist-adaptive:0.32.0")
-    implementation(dependencyNotation = "com.google.accompanist:accompanist-drawablepainter:0.32.0")
-
-
-    implementation(dependencyNotation = "androidx.navigation:navigation-compose:2.7.2")
-    implementation(dependencyNotation = "androidx.navigation:navigation-ui-ktx:2.7.2")
-
-
-
-
-
-    implementation(dependencyNotation = platform(notation = "androidx.compose:compose-bom:2023.03.00"))
-    implementation(dependencyNotation = "androidx.compose.ui:ui:1.5.1")
-    implementation(dependencyNotation = "androidx.compose.ui:ui-graphics:1.5.1")
-    implementation(dependencyNotation = "androidx.compose.ui:ui-tooling-preview:1.5.1")
-    implementation(dependencyNotation = "androidx.compose.material3:material3:1.1.2")
-    implementation(dependencyNotation = "androidx.compose.material3:material3-window-size-class:1.1.2")
-    implementation(dependencyNotation = "androidx.compose.material:material-icons-core:1.5.1")
-    implementation(dependencyNotation = "androidx.compose.material:material-icons-extended:1.5.1")
+//    implementation(dependencyNotation = "com.google.accompanist:accompanist-systemuicontroller:0.32.0")
+//    implementation(dependencyNotation = "com.google.accompanist:accompanist-adaptive:0.32.0")
+//    implementation(dependencyNotation = "com.google.accompanist:accompanist-drawablepainter:0.32.0")
+//
+//
+//    implementation(dependencyNotation = "androidx.navigation:navigation-compose:2.7.3")
+//    implementation(dependencyNotation = "androidx.navigation:navigation-ui-ktx:2.7.3")
+//
+//
+//
+//
+//
+//    implementation(dependencyNotation = platform(notation = "androidx.compose:compose-bom:2023.03.00"))
+//    implementation(dependencyNotation = "androidx.compose.ui:ui:1.5.2")
+//    implementation(dependencyNotation = "androidx.compose.ui:ui-graphics:1.5.2")
+//    implementation(dependencyNotation = "androidx.compose.ui:ui-tooling-preview:1.5.2")
+//    implementation(dependencyNotation = "androidx.compose.material3:material3:1.1.2")
+//    implementation(dependencyNotation = "androidx.compose.material3:material3-window-size-class:1.1.2")
+//    implementation(dependencyNotation = "androidx.compose.material:material-icons-core:1.5.2")
+//    implementation(dependencyNotation = "androidx.compose.material:material-icons-extended:1.5.2")
 
 
     // 测试和调试
     testImplementation(dependencyNotation = "junit:junit:4.13.2")
     androidTestImplementation(dependencyNotation = "androidx.test.ext:junit:1.1.5")
     androidTestImplementation(dependencyNotation = "androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation(dependencyNotation = platform(notation = "androidx.compose:compose-bom:2023.03.00"))
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.5.1")
-    androidTestImplementation(dependencyNotation = "androidx.navigation:navigation-testing:2.7.2")
-    debugImplementation(dependencyNotation = "androidx.compose.ui:ui-tooling:1.5.1")
-    debugImplementation(dependencyNotation = "androidx.compose.ui:ui-test-manifest:1.5.1")
+//    androidTestImplementation(dependencyNotation = platform(notation = "androidx.compose:compose-bom:2023.03.00"))
+//    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.5.2")
+//    androidTestImplementation(dependencyNotation = "androidx.navigation:navigation-testing:2.7.3")
+//    debugImplementation(dependencyNotation = "androidx.compose.ui:ui-tooling:1.5.2")
+//    debugImplementation(dependencyNotation = "androidx.compose.ui:ui-test-manifest:1.5.2")
 }

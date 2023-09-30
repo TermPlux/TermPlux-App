@@ -5,7 +5,7 @@ import android.app.Application
 import android.app.Service
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import io.ecosed.droid.app.IEcosedApp
+import io.ecosed.droid.app.IEcosedApplication
 import io.ecosed.droid.engine.EcosedEngine
 
 /**
@@ -104,8 +104,8 @@ internal class PluginExecutor {
             method: String,
             bundle: Bundle?
         ): T? {
-            if (activity.application is IEcosedApp) {
-                (activity.application as IEcosedApp).apply {
+            if (activity.application is IEcosedApplication) {
+                (activity.application as IEcosedApplication).apply {
                     return (getEngine as EcosedEngine).execMethodCall<T>(
                         name = name,
                         method = method,
@@ -131,8 +131,8 @@ internal class PluginExecutor {
             method: String,
             bundle: Bundle?
         ): T? {
-            if (fragment.requireActivity().application is IEcosedApp) {
-                (fragment.requireActivity().application as IEcosedApp).apply {
+            if (fragment.requireActivity().application is IEcosedApplication) {
+                (fragment.requireActivity().application as IEcosedApplication).apply {
                     return (getEngine as EcosedEngine).execMethodCall<T>(
                         name = name,
                         method = method,
@@ -158,8 +158,8 @@ internal class PluginExecutor {
             method: String,
             bundle: Bundle?
         ): T? {
-            if (service.application is IEcosedApp) {
-                (service.application as IEcosedApp).apply {
+            if (service.application is IEcosedApplication) {
+                (service.application as IEcosedApplication).apply {
                     return (getEngine as EcosedEngine).execMethodCall<T>(
                         name = name,
                         method = method,
@@ -185,8 +185,8 @@ internal class PluginExecutor {
             method: String,
             bundle: Bundle?
         ): T? {
-            if (application is IEcosedApp) {
-                (application as IEcosedApp).apply {
+            if (application is IEcosedApplication) {
+                (application as IEcosedApplication).apply {
                     return (getEngine as EcosedEngine).execMethodCall<T>(
                         name = name,
                         method = method,
