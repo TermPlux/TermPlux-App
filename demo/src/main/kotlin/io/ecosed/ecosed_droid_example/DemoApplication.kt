@@ -18,7 +18,6 @@ package io.ecosed.ecosed_droid_example
 import android.app.Application
 import io.ecosed.droid.app.EcosedApplication
 import io.ecosed.droid.app.EcosedHost
-import io.ecosed.droid.app.EcosedAppInitialize
 import io.ecosed.droid.app.EcosedPlugin
 import io.ecosed.droid.app.IEcosedApplication
 
@@ -31,20 +30,6 @@ class DemoApplication : Application(), IEcosedApplication by EcosedApplication<D
 
         override fun getPluginList(): ArrayList<EcosedPlugin> {
             return arrayListOf(DemoPlugin())
-        }
-    }
-
-    private val mInitialize: EcosedAppInitialize = object : EcosedAppInitialize {
-        override fun init() {
-            toast("init")
-        }
-
-        override fun initSDKs() {
-            Thread.sleep(8000)
-        }
-
-        override fun initSDKInitialized() {
-            toast("SDK已加载完毕")
         }
     }
 

@@ -130,23 +130,23 @@ class EcosedApplication<YourApplication : IEcosedApplication> : ContextWrapper(n
 
     }
 
-    private fun initialize(initialize: EcosedAppInitialize?) = defaultUnit<Unit> {
-        initialize?.apply {
-            init()
-            object : Thread() {
-                override fun run() {
-                    mYourApplication.apply {
-                        initSDKs()
-                        synchronized(mYourApplication) {
-                            mainHandler.post {
-                                initSDKInitialized()
-                            }
-                        }
-                    }
-                }
-            }.start()
-        }
-    }
+//    private fun initialize(initialize: EcosedAppInitialize?) = defaultUnit<Unit> {
+//        initialize?.apply {
+//            init()
+//            object : Thread() {
+//                override fun run() {
+//                    mYourApplication.apply {
+//                        initSDKs()
+//                        synchronized(mYourApplication) {
+//                            mainHandler.post {
+//                                initSDKInitialized()
+//                            }
+//                        }
+//                    }
+//                }
+//            }.start()
+//        }
+//    }
 
 
     private fun <T> engineUnit(
