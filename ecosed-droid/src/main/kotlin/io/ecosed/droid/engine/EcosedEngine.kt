@@ -1,3 +1,18 @@
+/**
+ * Copyright EcosedDroid
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.ecosed.droid.engine
 
 import android.app.Application
@@ -32,6 +47,9 @@ internal class EcosedEngine private constructor() : ContextWrapper(null) {
     /** 应用程序全局上下文, 非UI上下文. */
     private lateinit var mContext: Context
 
+    /** */
+    private lateinit var mClient: EcosedClient
+
     /** 插件绑定器. */
     private var mBinding: PluginBinding? = null
 
@@ -48,19 +66,20 @@ internal class EcosedEngine private constructor() : ContextWrapper(null) {
     private fun attach() {
         when {
             (mPluginList == null) or (mBinding == null) -> apply {
+                // 引擎附加基本上下文
                 attachBaseContext(
                     base = mBase
                 )
-                val client = EcosedClient.newInstance()
+                // 初始化客户端组件
+                mClient = EcosedClient.build()
                 // 初始化插件绑定器.
                 mBinding = PluginBinding(
-                    context = mContext,
-                    debug = mHost.isDebug()
+                    context = mContext, debug = mHost.isDebug()
                 )
                 // 初始化插件列表.
                 mPluginList = arrayListOf()
-                // 加载LibEcosed框架 (如果使用了的话).
-                client.let { ecosed ->
+                // 加载框架
+                mClient.let { ecosed ->
                     mBinding?.let { binding ->
                         ecosed.apply {
                             try {
@@ -117,7 +136,7 @@ internal class EcosedEngine private constructor() : ContextWrapper(null) {
 
     /**
      * 调用插件代码的方法.
-     * @param name 要调用的插件的通道.
+     * @param channel 要调用的插件的通道.
      * @param method 要调用的插件中的方法.
      * @param bundle 通过Bundle传递参数.
      * @return 返回方法执行后的返回值,类型为Any?.
@@ -134,17 +153,12 @@ internal class EcosedEngine private constructor() : ContextWrapper(null) {
                     when (pluginChannel.getChannel()) {
                         channel -> {
                             result = pluginChannel.execMethodCall<T>(
-                                name = channel,
-                                method = method,
-                                bundle = bundle
+                                name = channel, method = method, bundle = bundle
                             )
                             if (mHost.isDebug()) {
                                 Log.d(
                                     tag,
-                                    "插件代码调用成功!\n" +
-                                            "通道名称:${channel}.\n" +
-                                            "方法名称:${method}.\n" +
-                                            "返回结果:${result}."
+                                    "插件代码调用成功!\n通道名称:${channel}.\n方法名称:${method}.\n返回结果:${result}."
                                 )
                             }
                         }
@@ -196,9 +210,7 @@ internal class EcosedEngine private constructor() : ContextWrapper(null) {
                         attach()
                     }
                 } else error(
-                    message = "错误:EcosedApplication接口未实现.\n" +
-                            "提示1:可能未在应用的Application全局类实现EcosedApplication接口.\n" +
-                            "提示2:应用的Application全局类可能未在AndroidManifest.xml中注册."
+                    message = "错误:EcosedApplication接口未实现.\n" + "提示1:可能未在应用的Application全局类实现EcosedApplication接口.\n" + "提示2:应用的Application全局类可能未在AndroidManifest.xml中注册."
                 )
             }
         }

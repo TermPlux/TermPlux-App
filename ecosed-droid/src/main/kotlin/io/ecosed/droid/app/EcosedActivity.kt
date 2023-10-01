@@ -28,6 +28,7 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import com.blankj.utilcode.util.AppUtils
+import io.ecosed.droid.client.EcosedClient
 import io.ecosed.droid.engine.EcosedEngine
 
 class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcosedActivity> :
@@ -43,6 +44,8 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
 
     private var isDebug = false
     private var isLaunch = false
+
+    private var mToast: Toast? = null
 
 
     override fun onResume(owner: LifecycleOwner) {
@@ -60,16 +63,36 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
         activity: Activity,
         lifecycle: Lifecycle,
     ) {
-
+        // 附加基本上下文
         attachBaseContext(base = activity)
+        // 获取Activity
         mActivity = activity
+        // 获取Application
         mApplication = activity.application
+        // 获取生命周期
         mLifecycle = lifecycle
-        @Suppress("UNCHECKED_CAST")
+        // 获取传入的Activity
+        @Suppress(names = ["UNCHECKED_CAST"])
         mYourActivity = mActivity as YourActivity
-        @Suppress("UNCHECKED_CAST")
+        // 获取传入的Application
+        @Suppress(names = ["UNCHECKED_CAST"])
         mYourApplication = mApplication as YourApplication
-        isDebug()?.let { isDebug = it }
+        // 如果传入错误的类则抛出异常
+        when {
+            mYourActivity !is Activity -> error(
+                message = errorActivityExtends
+            )
+            mYourApplication !is Application -> error(
+                message = errorApplicationExtends
+            )
+        }
+        // 获取是否调试模式
+        execMethodCall<Boolean>(
+            channel = EcosedClient.mChannelName,
+            method = EcosedClient.mMethodDebug
+        )?.let { debug ->
+            isDebug = debug
+        }
 
 
         this@EcosedActivity.lifecycle.addObserver(this@EcosedActivity)
@@ -94,17 +117,22 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
         }
     }
 
-    override fun IEcosedActivity.toast(obj: Any) = defaultUnit {
+
+    override fun IEcosedActivity.toast(obj: Any) = defaultUnit<Unit> {
         try {
             runOnUiThread {
-                Toast.makeText(
-                    this@EcosedActivity,
-                    obj.toString(),
-                    Toast.LENGTH_SHORT
-                ).show()
+                if (mToast == null) {
+                    mToast = Toast.makeText(
+                        this@EcosedActivity,
+                        mNull,
+                        Toast.LENGTH_SHORT
+                    )
+                }
+                mToast?.setText(obj.toString())
+                mToast?.show()
             }
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.e(tag, "toast", e)
         }
     }
 
@@ -132,11 +160,6 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
     override val lifecycle: Lifecycle
         get() = mLifecycle
 
-
-    private fun isDebug(): Boolean? = hostUnit {
-        return@hostUnit isDebug()
-    }
-
     private fun hasSuperUnit(
         superUnit: (() -> Unit) -> Unit,
         content: Activity.() -> Unit,
@@ -152,10 +175,6 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
         }
     }
 
-    private fun <T> hostUnit(
-        content: EcosedHost.() -> T,
-    ): T? = (mYourApplication.getHost as EcosedHost).content()
-
     private fun <T> engineUnit(
         content: EcosedEngine.() -> T,
     ): T? = (mYourApplication.getEngine as EcosedEngine).content()
@@ -167,7 +186,6 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
             (mYourActivity as Activity).content()
         }
 
-
         else -> error(
             message = errorActivityExtends
         )
@@ -175,8 +193,8 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
 
     private companion object {
         const val tag: String = "EcosedActivity"
-
+        const val mNull: String = ""
         const val errorActivityExtends: String = "错误: EcosedActivity只能在Activity中使用!"
-
+        const val errorApplicationExtends: String = "错误: EcosedApplication只能在Application中使用!"
     }
 }

@@ -67,7 +67,7 @@ internal class PluginChannel constructor(binding: PluginBinding, channel: String
      * 是否调试模式.
      * @return Boolean.
      */
-    fun isDebug(): Boolean {
+    internal fun isDebug(): Boolean {
         return mBinding.isDebug()
     }
 

@@ -19,6 +19,13 @@ import android.app.Activity
 import android.os.Bundle
 import androidx.lifecycle.Lifecycle
 
+/**
+ * 作者: wyq0918dev
+ * 仓库: https://github.com/ecosed/EcosedDroid
+ * 时间: 2023/10/01
+ * 描述: EcosedActivity接口
+ * 文档: https://github.com/ecosed/EcosedDroid/blob/master/README.md
+ */
 interface IEcosedActivity {
 
     /**

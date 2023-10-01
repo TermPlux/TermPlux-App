@@ -22,15 +22,19 @@ import io.ecosed.droid.app.EcosedMethodCall
 import io.ecosed.droid.app.EcosedResult
 import io.ecosed.droid.plugin.BasePlugin
 
-internal class EcosedClient private constructor(): BasePlugin(), ServiceConnection, EcosedCallBack {
+internal class EcosedClient private constructor() : BasePlugin(), ServiceConnection,
+    EcosedCallBack {
 
     override val channel: String
-        get() = mChannel
+        get() = mChannelName
 
     override fun onEcosedMethodCall(call: EcosedMethodCall, result: EcosedResult) {
         super.onEcosedMethodCall(call, result)
-        when(call.method) {
-            "" -> result.success("")
+        when (call.method) {
+            mMethodDebug -> result.success(isDebug)
+            mMethodStartService -> {
+
+            }
             else -> result.notImplemented()
         }
     }
@@ -68,10 +72,10 @@ internal class EcosedClient private constructor(): BasePlugin(), ServiceConnecti
     }
 
     internal companion object {
-        internal const val mChannel: String = ""
+        internal const val mChannelName: String = "ecosed_droid"
+        internal const val mMethodDebug: String = "is_debug"
+        internal const val mMethodStartService: String = "start_service"
 
-        internal fun newInstance(): EcosedClient{
-            return EcosedClient()
-        }
+        internal fun build(): EcosedClient = EcosedClient()
     }
 }

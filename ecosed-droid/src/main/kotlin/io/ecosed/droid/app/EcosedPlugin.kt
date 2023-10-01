@@ -24,37 +24,10 @@ import io.ecosed.droid.plugin.BasePlugin
  * 描述: 插件接口
  * 文档: https://github.com/ecosed/plugin/blob/master/README.md
  */
-//interface EcosedPlugins {
-//
-//    /** 插件被添加时执行. */
-//    fun onEcosedAdded(binding: PluginBinding)
-//
-//    /** 获取插件通信通道. */
-//    val getPluginChannel: PluginChannel
-//}
+abstract class EcosedPlugin(channelName: String) : BasePlugin() {
 
-abstract class EcosedPlugin: BasePlugin()
+    private val mChannel: String = channelName
 
-//abstract class EcosedPlugin: ContextWrapper(null) {
-//
-//    private lateinit var mPluginChannel: PluginChannel
-//
-//    override fun attachBaseContext(base: Context?) {
-//        super.attachBaseContext(base)
-//    }
-//
-//    internal fun onEcosedAdded(binding: PluginBinding) {
-//        mPluginChannel = PluginChannel(binding = binding, channel = channel)
-//        attachBaseContext(base =  mPluginChannel.getContext())
-//        mPluginChannel.setMethodCallHandler(handler = this@EcosedPlugin)
-//    }
-//
-//    internal val getPluginChannel: PluginChannel
-//        get() = mPluginChannel
-//
-//    abstract val channel: String
-//
-//    open fun onEcosedMethodCall(call: MethodCall, result: Result) {
-//
-//    }
-//}
+    override val channel: String
+        get() = mChannel
+}

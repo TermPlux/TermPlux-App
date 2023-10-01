@@ -25,7 +25,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.widget.Toast
 import io.ecosed.droid.R
 import io.ecosed.droid.engine.EcosedEngine
 import org.lsposed.hiddenapibypass.HiddenApiBypass
@@ -41,12 +40,6 @@ class EcosedApplication<YourApplication : IEcosedApplication> : ContextWrapper(n
     private lateinit var mYourApplication: YourApplication
 
     private lateinit var mHost: EcosedHost
-
-
-    private var mToast: Toast? = null
-
-
-
 
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)
@@ -172,27 +165,6 @@ class EcosedApplication<YourApplication : IEcosedApplication> : ContextWrapper(n
         }
     }
 
-
-
-    override fun IEcosedApplication.toast(obj: Any) {
-        try {
-            mainHandler.post {
-                log(obj.toString())
-                if (mToast == null) {
-                    mToast = Toast.makeText(
-                        this@EcosedApplication,
-                        mNull,
-                        Toast.LENGTH_SHORT
-                    )
-                }
-                mToast?.setText(obj.toString())
-                mToast?.show()
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
     override fun IEcosedApplication.log(obj: Any) {
         Log.i(tag, obj.toString())
     }
@@ -200,6 +172,6 @@ class EcosedApplication<YourApplication : IEcosedApplication> : ContextWrapper(n
     companion object {
         const val notificationChannel: String = "id"
         const val tag: String = "tag"
-        const val mNull: String = ""
+
     }
 }

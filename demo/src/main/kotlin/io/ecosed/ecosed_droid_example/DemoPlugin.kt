@@ -4,10 +4,7 @@ import io.ecosed.droid.app.EcosedPlugin
 import io.ecosed.droid.app.EcosedMethodCall
 import io.ecosed.droid.app.EcosedResult
 
-class DemoPlugin : EcosedPlugin() {
-
-    override val channel: String
-        get() = mChannel
+class DemoPlugin : EcosedPlugin(channelName = mChannel) {
 
     override fun onEcosedMethodCall(call: EcosedMethodCall, result: EcosedResult) {
         when (call.method) {
@@ -17,6 +14,6 @@ class DemoPlugin : EcosedPlugin() {
     }
 
     companion object {
-        const val mChannel: String = "my_plugin"
+        const val mChannel: String = "demo_plugin"
     }
 }

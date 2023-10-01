@@ -18,12 +18,19 @@ package io.ecosed.droid.app
 import android.app.Application
 import android.os.Bundle
 
+/**
+ * 作者: wyq0918dev
+ * 仓库: https://github.com/ecosed/EcosedDroid
+ * 时间: 2023/10/01
+ * 描述: EcosedApplication接口
+ * 文档: https://github.com/ecosed/EcosedDroid/blob/master/README.md
+ */
 interface IEcosedApplication {
 
-    /** 内部接口 */
+    /** 内部接口, 不要调用. */
     val getEngine: Any
 
-    /** 内部接口 */
+    /** 内部接口, 不要调用. */
     val getHost: Any
 
     /**
@@ -31,7 +38,7 @@ interface IEcosedApplication {
      */
     fun IEcosedApplication.attachEcosed(
         application: Application,
-        host: EcosedHost
+        host: EcosedHost,
     )
 
     /**
@@ -47,6 +54,5 @@ interface IEcosedApplication {
         bundle: Bundle? = null,
     ): T?
 
-    fun IEcosedApplication.toast(obj: Any)
     fun IEcosedApplication.log(obj: Any)
 }
