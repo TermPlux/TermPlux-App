@@ -3,9 +3,11 @@ package io.ecosed.droid.service
 import android.Manifest
 import android.app.Notification
 import android.app.Service
+import android.app.UiModeManager
 import android.content.ComponentName
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
@@ -17,7 +19,6 @@ import io.ecosed.droid.EcosedFramework
 import io.ecosed.droid.R
 import io.ecosed.droid.app.EcosedApplication
 import io.ecosed.droid.utils.ChineseCaleUtils
-import io.ecosed.droid.utils.EnvironmentUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -134,7 +135,9 @@ internal class EcosedService : Service(), Shizuku.OnBinderReceivedListener,
     }
 
     private fun watch(): Boolean {
-        return EnvironmentUtils.isWatch(this)
+        return getSystemService(
+            UiModeManager::class.java
+        ).currentModeType == Configuration.UI_MODE_TYPE_WATCH
     }
 
     private fun dynamicColors(): Boolean {

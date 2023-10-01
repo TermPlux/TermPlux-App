@@ -47,7 +47,7 @@ internal class EcosedEngine private constructor() : ContextWrapper(null) {
     /** 应用程序全局上下文, 非UI上下文. */
     private lateinit var mContext: Context
 
-    /** */
+    /**  */
     private lateinit var mClient: EcosedClient
 
     /** 插件绑定器. */
