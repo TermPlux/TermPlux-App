@@ -1,12 +1,18 @@
 package io.ecosed.droid.nativelib
 
-internal class NativeLib {
+internal class NativeLib private constructor() {
 
-    external fun stringFromJNI(): String
+    private external fun stringFromJNI(): String
+
+    internal fun main(){
+        stringFromJNI()
+    }
 
     companion object {
         init {
             System.loadLibrary("libecosed")
         }
+
+        fun build(): NativeLib = NativeLib()
     }
 }

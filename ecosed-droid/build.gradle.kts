@@ -62,10 +62,6 @@ android {
         jvmTarget = "11"
     }
 
-//    composeOptions {
-//        kotlinCompilerExtensionVersion = "1.5.1"
-//    }
-
     packaging {
         jniLibs {
             useLegacyPackaging = true
@@ -102,11 +98,10 @@ dependencies {
     implementation(dependencyNotation = "dev.rikka.tools.refine:runtime:4.3.0")
     kapt(dependencyNotation = "dev.rikka.tools.refine:annotation-processor:4.3.0")
     // Google 官方库
-    implementation(dependencyNotation = "androidx.core:core-ktx:1.12.0")
     implementation(dependencyNotation = "androidx.annotation:annotation:1.7.0")
-    implementation(dependencyNotation = "androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
     implementation(dependencyNotation = "androidx.browser:browser:1.6.0")
-    implementation(dependencyNotation = "com.google.android.material:material:1.9.0")
+    implementation(dependencyNotation = "androidx.core:core-ktx:1.12.0")
+    implementation(dependencyNotation = "androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
     implementation(dependencyNotation = "com.google.android.gms:play-services-base:18.2.0")
     // 测试和调试
     testImplementation(dependencyNotation = "junit:junit:4.13.2")
