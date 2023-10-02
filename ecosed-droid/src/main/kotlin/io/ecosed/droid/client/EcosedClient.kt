@@ -15,12 +15,15 @@
  */
 package io.ecosed.droid.client
 
+import android.app.Service
 import android.content.ComponentName
+import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 import io.ecosed.droid.app.EcosedMethodCall
 import io.ecosed.droid.app.EcosedResult
 import io.ecosed.droid.plugin.BasePlugin
+import io.ecosed.droid.service.EcosedService
 
 internal class EcosedClient private constructor() : BasePlugin(), ServiceConnection,
     EcosedCallBack {
@@ -30,11 +33,11 @@ internal class EcosedClient private constructor() : BasePlugin(), ServiceConnect
 
     override fun onEcosedMethodCall(call: EcosedMethodCall, result: EcosedResult) {
         super.onEcosedMethodCall(call, result)
+        val service = Intent(this@EcosedClient, EcosedService::class.java)
         when (call.method) {
             mMethodDebug -> result.success(isDebug)
-            mMethodStartService -> {
-
-            }
+            mMethodStartService -> startService(service)
+            mMethodBindService -> result.success(bindService(service, this@EcosedClient, Service.BIND_AUTO_CREATE))
             else -> result.notImplemented()
         }
     }
@@ -71,10 +74,17 @@ internal class EcosedClient private constructor() : BasePlugin(), ServiceConnect
 
     }
 
+    private fun callBack(
+        function: EcosedCallBack.() -> Unit
+    ) {
+        this@EcosedClient.function()
+    }
+
     internal companion object {
         internal const val mChannelName: String = "ecosed_droid"
         internal const val mMethodDebug: String = "is_debug"
         internal const val mMethodStartService: String = "start_service"
+        internal const val mMethodBindService: String = "bind_service"
 
         internal fun build(): EcosedClient = EcosedClient()
     }
