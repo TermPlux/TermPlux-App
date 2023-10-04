@@ -39,13 +39,9 @@ class EcosedApplication<YourApplication : IEcosedApplication> : ContextWrapper(n
 
     private val mainHandler = Handler(Looper.getMainLooper())
 
-    private lateinit var mApplication: Application
-
     private lateinit var mEngine: EcosedEngine
 
     private lateinit var mYourApplication: YourApplication
-
-//    private lateinit var mHost: EcosedHost
 
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)
@@ -54,12 +50,8 @@ class EcosedApplication<YourApplication : IEcosedApplication> : ContextWrapper(n
         }
     }
 
-
-    override val getEngine: Any
+    override val engine: Any
         get() = mEngine
-
-//    override val getHost: Any
-//        get() = mHost
 
     override fun <T> IEcosedApplication.execMethodCall(
         channel: String,
@@ -78,20 +70,12 @@ class EcosedApplication<YourApplication : IEcosedApplication> : ContextWrapper(n
     override fun IEcosedApplication.attachEcosed(application: Application, host: EcosedHost) {
         // 附加基本上下文
         attachBaseContext(base = application.baseContext)
-        // 获取应用程序全局类
-        mApplication = application
         // 获取mME
-        mYourApplication = mApplication as YourApplication
-
-
-
-
-//
-//        mHost = host
+        mYourApplication = application as YourApplication
 
         // 初始化引擎
         mEngine = EcosedEngine.create(
-            application = mApplication,
+            application = application,
             host = host
         )
 
@@ -100,22 +84,21 @@ class EcosedApplication<YourApplication : IEcosedApplication> : ContextWrapper(n
             val importance = NotificationManager.IMPORTANCE_DEFAULT
             val channel = NotificationChannel(
                 notificationChannel,
-                application.getString(R.string.lib_name),
+                getString(R.string.lib_name),
                 importance
             ).apply {
-                description = application.getString(R.string.lib_description)
+                description = getString(R.string.lib_description)
             }
-            val notificationManager: NotificationManager =
-                application.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val notificationManager: NotificationManager = getSystemService(
+                Context.NOTIFICATION_SERVICE
+            ) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
 
-        if (ServiceUtils.isServiceRunning(EcosedService().javaClass)) {
-            execMethodCall<Unit>(
-                channel = EcosedClient.mChannelName,
-                method = EcosedClient.mMethodStartService
-            )
-        }
+        execMethodCall<Unit>(
+            channel = EcosedClient.mChannelName,
+            method = EcosedClient.mMethodStartService
+        )
 
         object : Thread() {
             override fun run() {

@@ -28,7 +28,7 @@ import android.os.Bundle
 interface IEcosedApplication {
 
     /** 内部接口, 不要调用. */
-    val getEngine: Any
+    val engine: Any
 
 //    /** 内部接口, 不要调用. */
 //    val getHost: Any

@@ -181,7 +181,7 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
 
     private fun <T> engineUnit(
         content: EcosedEngine.() -> T,
-    ): T? = (mYourApplication.getEngine as EcosedEngine).content()
+    ): T? = (mYourApplication.engine as EcosedEngine).content()
 
     private fun <T> defaultUnit(
         content: Activity.() -> T,
