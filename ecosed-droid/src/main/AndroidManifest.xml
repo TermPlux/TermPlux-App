@@ -14,7 +14,11 @@
         <service
             android:name=".service.EcosedService"
             android:enabled="true"
-            android:exported="false" />
+            android:exported="false">
+            <intent-filter>
+                <action android:name="io.ecosed.droid.action" />
+            </intent-filter>
+        </service>
 
         <provider
             android:name=".provider.EcosedProvider"

@@ -18,6 +18,7 @@ package io.ecosed.droid.app
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.ComponentName
 import android.content.Context
 import android.content.ContextWrapper
 import android.os.Build
@@ -25,11 +26,16 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.widget.Toast
+import com.blankj.utilcode.util.ServiceUtils
 import io.ecosed.droid.R
+import io.ecosed.droid.client.EcosedClient
 import io.ecosed.droid.engine.EcosedEngine
+import io.ecosed.droid.service.EcosedService
 import org.lsposed.hiddenapibypass.HiddenApiBypass
 
-class EcosedApplication<YourApplication : IEcosedApplication> : ContextWrapper(null), IEcosedApplication {
+class EcosedApplication<YourApplication : IEcosedApplication> : ContextWrapper(null),
+    IEcosedApplication {
 
     private val mainHandler = Handler(Looper.getMainLooper())
 
@@ -39,7 +45,7 @@ class EcosedApplication<YourApplication : IEcosedApplication> : ContextWrapper(n
 
     private lateinit var mYourApplication: YourApplication
 
-    private lateinit var mHost: EcosedHost
+//    private lateinit var mHost: EcosedHost
 
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)
@@ -52,8 +58,8 @@ class EcosedApplication<YourApplication : IEcosedApplication> : ContextWrapper(n
     override val getEngine: Any
         get() = mEngine
 
-    override val getHost: Any
-        get() = mHost
+//    override val getHost: Any
+//        get() = mHost
 
     override fun <T> IEcosedApplication.execMethodCall(
         channel: String,
@@ -68,9 +74,6 @@ class EcosedApplication<YourApplication : IEcosedApplication> : ContextWrapper(n
     }
 
 
-
-
-
     @Suppress("UNCHECKED_CAST")
     override fun IEcosedApplication.attachEcosed(application: Application, host: EcosedHost) {
         // 附加基本上下文
@@ -83,12 +86,13 @@ class EcosedApplication<YourApplication : IEcosedApplication> : ContextWrapper(n
 
 
 
-
-        mHost = host
+//
+//        mHost = host
 
         // 初始化引擎
         mEngine = EcosedEngine.create(
-            application = mApplication
+            application = mApplication,
+            host = host
         )
 
         // 创建通知通道
@@ -106,6 +110,12 @@ class EcosedApplication<YourApplication : IEcosedApplication> : ContextWrapper(n
             notificationManager.createNotificationChannel(channel)
         }
 
+        if (ServiceUtils.isServiceRunning(EcosedService().javaClass)) {
+            execMethodCall<Unit>(
+                channel = EcosedClient.mChannelName,
+                method = EcosedClient.mMethodStartService
+            )
+        }
 
         object : Thread() {
             override fun run() {

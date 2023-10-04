@@ -30,8 +30,8 @@ interface IEcosedApplication {
     /** 内部接口, 不要调用. */
     val getEngine: Any
 
-    /** 内部接口, 不要调用. */
-    val getHost: Any
+//    /** 内部接口, 不要调用. */
+//    val getHost: Any
 
     /**
      *

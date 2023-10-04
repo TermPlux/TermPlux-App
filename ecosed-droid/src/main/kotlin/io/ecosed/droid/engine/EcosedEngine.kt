@@ -183,7 +183,7 @@ internal class EcosedEngine private constructor() : ContextWrapper(null) {
          * @param application 传入Application.
          * @return 返回已构建的引擎.
          */
-        fun create(application: Application): EcosedEngine
+        fun create(application: Application, host: EcosedHost): EcosedEngine
     }
 
     internal companion object : Builder {
@@ -198,6 +198,7 @@ internal class EcosedEngine private constructor() : ContextWrapper(null) {
          */
         override fun create(
             application: Application,
+            host: EcosedHost
         ): EcosedEngine = EcosedEngine().let { engine ->
             return@let engine.apply {
                 if (application is IEcosedApplication) {
@@ -205,7 +206,7 @@ internal class EcosedEngine private constructor() : ContextWrapper(null) {
                         mApp = application
                         mBase = baseContext
                         mContext = applicationContext
-                        mHost = getHost as EcosedHost
+                        mHost = host
                     }.run {
                         attach()
                     }

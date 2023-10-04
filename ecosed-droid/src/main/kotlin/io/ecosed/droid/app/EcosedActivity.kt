@@ -28,8 +28,10 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import com.blankj.utilcode.util.AppUtils
+import com.blankj.utilcode.util.ServiceUtils
 import io.ecosed.droid.client.EcosedClient
 import io.ecosed.droid.engine.EcosedEngine
+import io.ecosed.droid.service.EcosedService
 
 class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcosedActivity> :
     ContextWrapper(null), IEcosedActivity, LifecycleOwner, DefaultLifecycleObserver {
@@ -50,6 +52,8 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
 
     override fun onResume(owner: LifecycleOwner) {
         super.onResume(owner)
+//        val run = ServiceUtils.isServiceRunning(EcosedService().javaClass)
+//        Toast.makeText(this@EcosedActivity, run.toString(), Toast.LENGTH_SHORT).show()
 
     }
 
