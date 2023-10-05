@@ -49,14 +49,26 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
 
     private var mToast: Toast? = null
 
+    override fun onCreate(owner: LifecycleOwner) {
+        super.onCreate(owner)
+//        execMethodCall<Unit>(
+//            channel = EcosedClient.mChannelName,
+//            method = EcosedClient.mMethodBindService
+//        )
+    }
 
     override fun onResume(owner: LifecycleOwner) {
         super.onResume(owner)
-//        val run = ServiceUtils.isServiceRunning(EcosedService().javaClass)
-//        Toast.makeText(this@EcosedActivity, run.toString(), Toast.LENGTH_SHORT).show()
 
     }
 
+    override fun onDestroy(owner: LifecycleOwner) {
+        super.onDestroy(owner)
+//        execMethodCall<Unit>(
+//            channel = EcosedClient.mChannelName,
+//            method = EcosedClient.mMethodUnbindService
+//        )
+    }
 
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)
@@ -68,7 +80,7 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
         lifecycle: Lifecycle,
     ) {
         // 附加基本上下文
-        attachBaseContext(base = activity)
+        attachBaseContext(base = activity.baseContext)
         // 获取Activity
         mActivity = activity
         // 获取Application
@@ -97,6 +109,8 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
         )?.let { debug ->
             isDebug = debug
         }
+
+
 
 
         this@EcosedActivity.lifecycle.addObserver(this@EcosedActivity)

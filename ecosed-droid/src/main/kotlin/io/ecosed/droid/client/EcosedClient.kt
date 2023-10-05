@@ -15,18 +15,18 @@
  */
 package io.ecosed.droid.client
 
-import android.app.Service
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import android.net.Uri
 import android.os.IBinder
 import android.util.Log
-import io.ecosed.droid.EcosedFramework
+import android.widget.Toast
+import io.ecosed.droid.EcosedDroid
 import io.ecosed.droid.app.EcosedMethodCall
 import io.ecosed.droid.app.EcosedResult
 import io.ecosed.droid.plugin.BasePlugin
+import io.ecosed.droid.plugin.PluginBinding
 import io.ecosed.droid.service.EcosedService
 
 internal class EcosedClient private constructor() : BasePlugin(), ServiceConnection,
@@ -38,45 +38,57 @@ internal class EcosedClient private constructor() : BasePlugin(), ServiceConnect
     private lateinit var mIntent: Intent
 
     /** 服务AIDL接口 */
-    private var mFramework: EcosedFramework? = null
+    private var mFramework: EcosedDroid? = null
 
     /** 服务绑定状态 */
     private var mIsBind: Boolean = false
 
+    override fun onEcosedAdded(binding: PluginBinding) {
+        super.onEcosedAdded(binding)
+        mIntent = Intent(this@EcosedClient, EcosedService().javaClass)
+        mIntent.action = action
+
+        startService(mIntent)
+        bindEcosed()
+
+    }
+
     override fun onEcosedMethodCall(call: EcosedMethodCall, result: EcosedResult) {
         super.onEcosedMethodCall(call, result)
-        mIntent = Intent(
-//            action,
-//            Uri.parse(null),
-            this@EcosedClient,
-            EcosedService().javaClass
-        )
-        //service.action = serviceAction
         when (call.method) {
             mMethodDebug -> result.success(isDebug)
-            mMethodIsBinding -> result.success(mIsBind
-            )
+            mMethodIsBinding -> result.success(mIsBind)
             mMethodStartService -> startService(mIntent)
             mMethodBindService -> bindEcosed()
             mMethodUnbindService -> unbindEcosed()
+
+            "" -> result.success({
+
+            })
+
+            mMethodShizukuVersion -> result.success(getShizukuVersion())
             else -> result.notImplemented()
         }
     }
 
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-        mFramework = EcosedFramework.Stub.asInterface(service)
-        if (mFramework != null) {
-            mIsBind = true
-            callBack {
-                onEcosedConnected()
+        mFramework = EcosedDroid.Stub.asInterface(service)
+        when {
+            mFramework != null -> {
+                mIsBind = true
+                callBack {
+                    onEcosedConnected()
+                }
             }
-        } else {
-            if (isDebug) {
-                Log.e(tag, "AIDL接口获取失败 - onServiceConnected")
-            }
+
+            else -> if (isDebug) Log.e(
+                tag, "AIDL接口获取失败 - onServiceConnected"
+            )
         }
-        if (isDebug) {
-            Log.i(tag, "服务已连接 - onServiceConnected")
+        when {
+            isDebug -> Log.i(
+                tag, "服务已连接 - onServiceConnected"
+            )
         }
     }
 
@@ -104,25 +116,25 @@ internal class EcosedClient private constructor() : BasePlugin(), ServiceConnect
     }
 
     override fun onEcosedConnected() {
-
+        Toast.makeText(this@EcosedClient, "onEcosedConnected", Toast.LENGTH_SHORT).show()
     }
 
     override fun onEcosedDisconnected() {
-
+        Toast.makeText(this@EcosedClient, "onEcosedDisconnected", Toast.LENGTH_SHORT).show()
     }
 
     override fun onEcosedDead() {
-
+        Toast.makeText(this@EcosedClient, "onEcosedDead", Toast.LENGTH_SHORT).show()
     }
 
     override fun onEcosedUnbind() {
-
+        Toast.makeText(this@EcosedClient, "onEcosedUnbind", Toast.LENGTH_SHORT).show()
     }
 
     /**
      * 绑定服务
      */
-    fun bindEcosed() {
+    private fun bindEcosed() {
         try {
             if (!mIsBind) {
                 bindService(
@@ -145,7 +157,7 @@ internal class EcosedClient private constructor() : BasePlugin(), ServiceConnect
     /**
      * 解绑服务
      */
-    fun unbindEcosed() {
+    private fun unbindEcosed() {
         try {
             if (mIsBind) {
                 unbindService(
@@ -168,8 +180,33 @@ internal class EcosedClient private constructor() : BasePlugin(), ServiceConnect
         }
     }
 
+    private fun getShizukuVersion(): String? {
+        return try {
+            if (mIsBind) {
+                if (mFramework != null) {
+                    mFramework!!.shizukuVersion
+                } else {
+                    callBack {
+                        onEcosedUnbind()
+                    }
+                    null
+                }
+            } else {
+                callBack {
+                    onEcosedUnbind()
+                }
+                null
+            }
+        } catch (e: Exception) {
+            if (isDebug) {
+                Log.e(tag, "getShizukuVersion", e)
+            }
+            null
+        }
+    }
+
     private fun callBack(
-        function: EcosedCallBack.() -> Unit
+        function: EcosedCallBack.() -> Unit,
     ) {
         this@EcosedClient.function()
     }
@@ -181,6 +218,8 @@ internal class EcosedClient private constructor() : BasePlugin(), ServiceConnect
         internal const val mMethodStartService: String = "start_service"
         internal const val mMethodBindService: String = "bind_service"
         internal const val mMethodUnbindService: String = "unbind_service"
+
+        internal const val mMethodShizukuVersion: String = "shizuku_version"
 
         internal const val tag: String = "EcosedClient"
         internal const val action: String = "io.ecosed.droid.action"

@@ -45,7 +45,7 @@ abstract class BasePlugin : ContextWrapper(null) {
     /**
      * 插件添加时执行
      */
-    internal fun onEcosedAdded(binding: PluginBinding) {
+    internal open fun onEcosedAdded(binding: PluginBinding) {
         // 初始化插件通道
         mPluginChannel = PluginChannel(
             binding = binding, channel = channel

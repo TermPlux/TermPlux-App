@@ -15,7 +15,7 @@ import androidx.core.app.NotificationCompat
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.PermissionUtils
 import io.ecosed.droid.BuildConfig
-import io.ecosed.droid.EcosedFramework
+import io.ecosed.droid.EcosedDroid
 import io.ecosed.droid.R
 import io.ecosed.droid.app.EcosedApplication
 import io.ecosed.droid.utils.ChineseCaleUtils
@@ -48,7 +48,7 @@ internal class EcosedService : Service(), Shizuku.OnBinderReceivedListener,
 
 
         val notification = buildNotification()
-        startForeground(notificationId, notification)
+        //startForeground(notificationId, notification)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -56,7 +56,7 @@ internal class EcosedService : Service(), Shizuku.OnBinderReceivedListener,
     }
 
     override fun onBind(intent: Intent): IBinder {
-        return object : EcosedFramework.Stub() {
+        return object : EcosedDroid.Stub() {
             override fun getFrameworkVersion(): String = frameworkVersion()
             override fun getShizukuVersion(): String = shizukuVersion()
             override fun getChineseCale(): String = chineseCale()

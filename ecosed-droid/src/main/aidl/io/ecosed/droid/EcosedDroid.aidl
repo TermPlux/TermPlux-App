@@ -1,6 +1,6 @@
 package io.ecosed.droid;
 
-interface EcosedFramework {
+interface EcosedDroid {
     String getFrameworkVersion(); // 获取版本
     String getShizukuVersion(); // 获取Shizuku版本
     String getChineseCale(); // 获取农历

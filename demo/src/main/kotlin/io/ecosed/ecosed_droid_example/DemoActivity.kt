@@ -16,6 +16,7 @@
 package io.ecosed.ecosed_droid_example
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
@@ -43,12 +44,21 @@ class DemoActivity : ComponentActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        attachEcosed(this@DemoActivity, lifecycle)
+        attachEcosed(
+            activity = this@DemoActivity,
+            lifecycle = lifecycle
+        )
         setContent {
             EDExampleTheme {
                 Greeting()
             }
         }
+
+
+        execMethodCall<(() -> Unit)>(
+            channel = "",
+            method = ""
+        )?.let { it() }
     }
 
     override fun onDestroy() {
@@ -82,8 +92,17 @@ class DemoActivity : ComponentActivity(),
                 color = MaterialTheme.colorScheme.background
             ) {
                 Column {
-                    Button(onClick = { /*TODO*/ }) {
-                        Text(text = "Button")
+                    Button(onClick = {
+                        Toast.makeText(
+                            this@DemoActivity,
+                            execMethodCall<String>(
+                                channel = "ecosed_droid",
+                                method = "shizuku_version"
+                            ) ?: "null",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }) {
+                        Text(text = "Shizuku版本")
                     }
                 }
 

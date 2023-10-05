@@ -95,10 +95,10 @@ class EcosedApplication<YourApplication : IEcosedApplication> : ContextWrapper(n
             notificationManager.createNotificationChannel(channel)
         }
 
-        execMethodCall<Unit>(
-            channel = EcosedClient.mChannelName,
-            method = EcosedClient.mMethodStartService
-        )
+//        execMethodCall<Unit>(
+//            channel = EcosedClient.mChannelName,
+//            method = EcosedClient.mMethodStartService
+//        )
 
         object : Thread() {
             override fun run() {
