@@ -28,10 +28,8 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import com.blankj.utilcode.util.AppUtils
-import com.blankj.utilcode.util.ServiceUtils
 import io.ecosed.droid.client.EcosedClient
 import io.ecosed.droid.engine.EcosedEngine
-import io.ecosed.droid.service.EcosedService
 
 class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcosedActivity> :
     ContextWrapper(null), IEcosedActivity, LifecycleOwner, DefaultLifecycleObserver {
@@ -45,30 +43,9 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
 
 
     private var isDebug = false
-    private var isLaunch = false
 
     private var mToast: Toast? = null
 
-    override fun onCreate(owner: LifecycleOwner) {
-        super.onCreate(owner)
-//        execMethodCall<Unit>(
-//            channel = EcosedClient.mChannelName,
-//            method = EcosedClient.mMethodBindService
-//        )
-    }
-
-    override fun onResume(owner: LifecycleOwner) {
-        super.onResume(owner)
-
-    }
-
-    override fun onDestroy(owner: LifecycleOwner) {
-        super.onDestroy(owner)
-//        execMethodCall<Unit>(
-//            channel = EcosedClient.mChannelName,
-//            method = EcosedClient.mMethodUnbindService
-//        )
-    }
 
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)
@@ -118,7 +95,7 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
     }
 
     override fun IEcosedActivity.detachEcosed() {
-
+        lifecycle.removeObserver(this@EcosedActivity)
     }
 
     override fun <T> IEcosedActivity.execMethodCall(

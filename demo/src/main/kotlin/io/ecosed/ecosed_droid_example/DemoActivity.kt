@@ -19,7 +19,6 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -31,10 +30,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Wallpapers
 import io.ecosed.droid.app.EcosedActivity
 import io.ecosed.droid.app.IEcosedActivity
 import io.ecosed.ecosed_droid_example.ui.theme.EDExampleTheme
@@ -53,12 +52,6 @@ class DemoActivity : ComponentActivity(),
                 Greeting()
             }
         }
-
-
-        execMethodCall<(() -> Unit)>(
-            channel = "",
-            method = ""
-        )?.let { it() }
     }
 
     override fun onDestroy() {
@@ -92,16 +85,18 @@ class DemoActivity : ComponentActivity(),
                 color = MaterialTheme.colorScheme.background
             ) {
                 Column {
-                    Button(onClick = {
-                        Toast.makeText(
-                            this@DemoActivity,
-                            execMethodCall<String>(
-                                channel = "ecosed_droid",
-                                method = "shizuku_version"
-                            ) ?: "null",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }) {
+                    Button(
+                        onClick = {
+                            Toast.makeText(
+                                this@DemoActivity,
+                                execMethodCall<String>(
+                                    channel = "ecosed_droid",
+                                    method = "shizuku_version"
+                                ) ?: "null",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    ) {
                         Text(text = "Shizuku版本")
                     }
                 }
@@ -110,7 +105,12 @@ class DemoActivity : ComponentActivity(),
         }
     }
 
-    @Preview(showBackground = true)
+    @Preview(
+        showBackground = true,
+        device = "id:pixel_7_pro",
+        showSystemUi = true,
+        wallpaper = Wallpapers.BLUE_DOMINATED_EXAMPLE
+    )
     @Composable
     private fun GreetingPreview() {
         EDExampleTheme {
