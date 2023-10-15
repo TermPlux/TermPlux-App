@@ -1,70 +1,80 @@
-# MPFlutter 工程模板
+# TermPlux Project
 
-本仓库是 MPFlutter 工程壳模板，你可以下载本仓库，并根据需要移除不必要的部分，然后开始开发。
+![TermPlux-App](https://raw.github.com/TermPlux/TermPlux-App/master/assets/cover.jpg "TermPlux-App")
 
-在根目录下，weapp 是微信小程序工程，web 是 H5 工程，如果你不需要对应的输出端，可以移除。
+__警告！此应用严禁用于非法用途！不听劝阻，后果自负！使用此应用则代表用户自行承担使用后导致的一切后果，与开发者无关！__
+## 介绍
+经过多代更迭，全新的TermPlux已经到来！  
+[TermPlux](https://github.com/TermPlux/TermPlux-App)致力于让[Termux](https://github.com/termux/termux-app)更加好用、易用，提高移动设备生产力。
 
-## Flutter 版本要求
+## 软件架构
+Powered by Flutter  
 
-本模板 master 分支要求 Flutter 版本 >= 3.7.0。
+## 安装教程
+1.准备工作
+- 检查设备兼容性：支持的设备架构有arm64-v8a、armeabi-v7a、x86_64、x86。支持的Android版本API24-API33(安卓7.0-安卓13)。  
+- 安装Shizuku：开启开发者选项，开启无线ADB调试(安卓11及以上版本可用)，配对并激活Shizuku。  
 
-如果你的 Flutter 版本 < 3.7.0，请使用 flutter_3.3.0 分支。
+2.下载[安装包](https://github.com/TermPlux/TermPlux-App/releases)进行安装。  
 
-## 环境准备
+3.按照软件中的提示使用即可。
 
-至少需要以下开发环境
+(由于没有足够的资金支持，macOS和iOS端不会上架Apple AppStore，仅提供安装包文件，需要通过特殊手段安装。)
 
-- 操作系统：macOS / Windows / Linux 任一操作系统
-- 代码编辑器：VSCode
-- VSCode 扩展：Dart 和 Flutter 
-- Flutter 开发环境
-- Chrome 浏览器
+## 开发/构建
+1.安装开发者工具包(SDK)  
+- 下载最新Flutter SDK并配置环境变量，[配置方法](https://flutter.cn/docs/get-started/install)  
+- 下载最新JDK安装并配置环境变量，[下载地址](https://www.oracle.com/cn/java/technologies/downloads/)  
 
-Flutter 开发环境可以在 https://flutter.dev 或 https://flutter-io.cn 下载安装。
+2.安装集成开发环境(IDE)  
+- 下载最新Visual Studio并安装C++桌面开发工作负载。(仅限PC)  
+- 下载最新Android Studio并安装Flutter和Dart插件，安装CMake，NDK，Android SDK Command-line Tools，SDK Platforms 33  
+- 下载最新IntelliJ IDEA并安装Flutter和Dart插件  
+- 下载最新Xcode并安装(仅限Mac)  
+_(由于不同平台软件差异，iOS和macOS端必须用Mac才能进行开发，Windows端必须要用PC才能进行开发，Linux端必须使用运行Linux操作系统的计算机进行开发，Android平台和Web平台无论使用PC，Mac或者Linux都可以进行开发)_  
 
-## 开发
+3.导入源码进行开发或构建
 
-1. 使用 Git clone 或直接下载本仓库，使用 VSCode 打开本仓库根目录。
-2. 使用命令行，locate 到本仓库根目录，执行命令 `./mpflutter packages get`（*划重点，这里是执行 ./mpflutter 而不是 flutter*）。
-2. 按下键盘上的 'F5' 键，开始调试，在 VSCode 的调试控制台上出现如下输出。
+## 使用说明
 
-```
-Connecting to VM Service at http://127.0.0.1:61276/OgoUGNgV_fE=/
-lib/main.dart: Warning: Interpreting this as package URI, 'package:mpflutter_template/main.dart'.
-Hot reloading enabled
-Listening for file changes at ./lib
-Serve on 0.0.0.0:9898
-Use browser open http://0.0.0.0:9898/index.html or use MiniProgram Developer Tools import './dist/weapp' for dev.
-```
+使用[TermPlux-App](https://github.com/TermPlux/TermPlux-App)需要[Shizuku](https://github.com/RikkaApps/Shizuku)  
 
-3. 打开 Chrome 浏览器，输入网址 http://0.0.0.0:9898/index.html ，如无意外，你将看到 Hello, MPFlutter! 提示。
-4. 在 VSCode 中打开 `lib/main.dart`，尝试修改 Hello, MPFlutter! 文本，并保存，看看是否可以实现 Hot-Reload?
-5. 如果没有问题，你可以在 lib 目录下开展业务开发了。
+## 参与贡献
+开发人员:  
+[TermPlux Project](https://github.com/TermPlux) - TermPlux项目团队  
+[wyq0918dev](https://github.com/wyq0918dev) - TermPlux项目的主要开发者
 
-### 微信小程序
+## 开源相关
+使用的开源第三方库:  
+AndroidUtilCode [https://github.com/Blankj/AndroidUtilCode](https://github.com/Blankj/AndroidUtilCode)  
+Flutter [https://github.com/flutter/flutter](https://github.com/flutter/flutter)  
+LibTaskBar [https://github.com/farmerbb/libtaskbar](https://github.com/farmerbb/libtaskbar)  
+BaseFramework [https://github.com/kongzue/BaseFramework](https://github.com/kongzue/BaseFramework)  
+DialogX [https://github.com/kongzue/DialogX](https://github.com/kongzue/DialogX)  
+LicensesDialog [https://github.com/PSDev/LicensesDialog](https://github.com/PSDev/LicensesDialog)  
+Shizuku-API [https://github.com/RikkaApps/Shizuku-API](https://github.com/RikkaApps/Shizuku-API)  
+AndroidHiddenApiBypass [https://github.com/LSPosed/AndroidHiddenApiBypass](https://github.com/LSPosed/AndroidHiddenApiBypass)  
 
-如果需要在微信小程序中实现边开发边调试能力，可以直接将 weapp 目录导入到『微信开发者工具』中。
+使用的Flutter插件:  
+dynamic_color [https://pub.dev/packages/dynamic_color](https://pub.dev/packages/dynamic_color)  
+device_preview [https://pub.dev/packages/device_preview](https://pub.dev/packages/device_preview)  
+flutter_rfb [https://pub.dev/packages/flutter_rfb](https://pub.dev/packages/flutter_rfb)  
+xterm [https://pub.dev/packages/xterm](https://pub.dev/packages/xterm)  
 
-你也可以通过修改 weapp 目录下的文件，实现定制化功能。
+引用了以下项目的部分代码:  
+DialogX [https://github.com/kongzue/DialogX](https://github.com/kongzue/DialogX)  
+FakeStore [https://github.com/microg/FakeStore](https://github.com/microg/FakeStore)  
+UserLAnd [https://github.com/CypherpunkArmory/UserLAnd](https://github.com/CypherpunkArmory/UserLAnd)  
+ShizukuRunner [https://github.com/WuDi-ZhanShen/ShizukuRunner](https://github.com/WuDi-ZhanShen/ShizukuRunner)  
+AndroidEasterEggs [https://github.com/hushenghao/AndroidEasterEggs](https://github.com/hushenghao/AndroidEasterEggs)  
+ComposeSettings [https://github.com/amitks2015/ComposeSettings](https://github.com/amitks2015/ComposeSettings)  
+KernelSU [https://github.com/tiann/KernelSU](https://github.com/tiann/KernelSU)  
+EdXposedManager [https://github.com/ElderDrivers/EdXposedManager](https://github.com/ElderDrivers/EdXposedManager)  
+Xposed Installer [https://github.com/rovo89/XposedInstaller](https://github.com/rovo89/XposedInstaller)  
+LearnPlus [https://github.com/wyq0918dev/LearnPlus](https://github.com/wyq0918dev/LearnPlus)  
+MicroLauncher [https://gitee.com/Yuyuko1024/MicroLauncher](https://gitee.com/Yuyuko1024/MicroLauncher)  
+dynamic_color [https://github.com/dartling/dynamic_color](https://github.com/dartling/dynamic_color)  
+compose-samples [https://github.com/android/compose-samples](https://github.com/android/compose-samples)  
 
-## 构建
-
-### H5
-
-使用操作系统的命令行工具，locate 到工程根目录，执行以下命令。
-
-```sh
-dart scripts/build_web.dart
-```
-
-执行完成后，H5 产物在 build 目录下，你可以上传到 HTTP 服务器上使用。
-
-### 微信小程序
-
-使用操作系统的命令行工具，locate 到工程根目录，执行以下命令。
-
-```sh
-dart scripts/build_weapp.dart
-```
-
-执行完成后，微信小程序产物在 build 目录下，你可以打开『微信开发者工具』，导入 build 目录，进一步编译、测试并上传审核。
+## 开源协议
+此仓库遵循[GNU General Public License v3.0](https://github.com/TermPlux/TermPlux-App/blob/master/LICENSE)协议开源。
