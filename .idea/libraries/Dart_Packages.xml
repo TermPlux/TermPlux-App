@@ -1,0 +1,244 @@
+<component name="libraryTable">
+  <library name="Dart Packages" type="DartPackagesLibraryType">
+    <properties>
+      <option name="packageNameToDirsMap">
+        <entry key="async">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/async-2.8.2/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="characters">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/characters-1.1.0/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="charcode">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/charcode-1.3.1/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="cli_dialog">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/cli_dialog-0.5.0/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="collection">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/collection-1.15.0/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="crypto">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/crypto-3.0.1/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="dart_console">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/dart_console-1.0.0/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="ffi">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/ffi-1.1.2/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="file">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/file-6.1.4/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="flutter">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/flutter-1.3.0/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="flutter_web_plugins">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/flutter_web_plugins-1.3.0/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="glob">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/glob-2.1.1/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="http">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/http-0.13.1/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="http_parser">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/http_parser-4.0.0/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="meta">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/meta-1.3.0/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="mime_type">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/mime_type-1.0.0/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="mp_build_tools">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/mp_build_tools-1.3.0/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="mpcore">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/mpcore-1.3.0/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="path">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/path-1.8.1/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="pedantic">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/pedantic-1.11.1/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="source_span">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/source_span-1.8.2/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="string_scanner">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/string_scanner-1.1.0/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="term_glyph">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/term_glyph-1.2.0/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="typed_data">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/typed_data-1.3.0/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="usage">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/usage-4.0.2/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="vector_math">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/vector_math-2.1.0/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="vm_service">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/vm_service-6.2.0/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="watcher">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/watcher-1.1.0/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="win32">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/win32-2.6.0/lib" />
+            </list>
+          </value>
+        </entry>
+      </option>
+    </properties>
+    <CLASSES>
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/async-2.8.2/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/characters-1.1.0/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/charcode-1.3.1/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/cli_dialog-0.5.0/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/collection-1.15.0/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/crypto-3.0.1/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/dart_console-1.0.0/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/ffi-1.1.2/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/file-6.1.4/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/flutter-1.3.0/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/flutter_web_plugins-1.3.0/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/glob-2.1.1/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/http-0.13.1/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/http_parser-4.0.0/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/meta-1.3.0/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/mime_type-1.0.0/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/mp_build_tools-1.3.0/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/mpcore-1.3.0/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/path-1.8.1/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/pedantic-1.11.1/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/source_span-1.8.2/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/string_scanner-1.1.0/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/term_glyph-1.2.0/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/typed_data-1.3.0/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/usage-4.0.2/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/vector_math-2.1.0/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/vm_service-6.2.0/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/watcher-1.1.0/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/win32-2.6.0/lib" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

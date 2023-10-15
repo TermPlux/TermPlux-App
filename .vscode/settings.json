@@ -1,0 +1,5 @@
+{
+    "dart.env": {
+        "PUB_HOSTED_URL": "https://pub.mpflutter.com"
+    }
+}

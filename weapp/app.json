@@ -1,0 +1,16 @@
+{
+  "pages": ["pages/index/index", "pages/index/share"],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "",
+    "navigationBarTextStyle": "black"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "darkmode": true,
+  "newFramework": {
+    "enabled": true,
+    "minimumSupportedVersion": "5.12"
+  }
+}

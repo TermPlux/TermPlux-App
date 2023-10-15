@@ -1,0 +1,1 @@
+const base=require("./base");Component({behaviors:[base],options:{addGlobalClass:!0,virtualHost:!0}});

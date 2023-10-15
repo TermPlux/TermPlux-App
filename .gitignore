@@ -1,0 +1,7 @@
+build/
+.dart_tool/
+.packages
+.DS_Store
+lib/generated_plugin_registrant.dart
+.flutter-plugins
+.flutter-plugins-dependencies
