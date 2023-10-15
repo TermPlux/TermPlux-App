@@ -6,8 +6,8 @@ class Splash extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: Colors.black,
-    );
+    return Scaffold(
+        appBar: AppBar(title: const Text('应用正在启动')),
+        body: const Center(child: CircularProgressIndicator()));
   }
 }

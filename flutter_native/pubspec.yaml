@@ -7,8 +7,14 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_boost:
+    git:
+      url: 'https://github.com/alibaba/flutter_boost.git'
+      ref: '4.4.0'
   cupertino_icons: ^1.0.2
   mp_flutter_runtime: ^1.1.0
+  #flutter_document_picker: ^5.2.3
+  device_preview: ^1.1.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
