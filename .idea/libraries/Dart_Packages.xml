@@ -2,10 +2,46 @@
   <library name="Dart Packages" type="DartPackagesLibraryType">
     <properties>
       <option name="packageNameToDirsMap">
+        <entry key="archive">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/archive-3.4.6/lib" />
+            </list>
+          </value>
+        </entry>
         <entry key="async">
           <value>
             <list>
               <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/async-2.8.2/lib" />
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/async-2.11.0/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="boolean_selector">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/boolean_selector-2.1.1/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="cached_network_image">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/cached_network_image-3.3.0/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="cached_network_image_platform_interface">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/cached_network_image_platform_interface-3.0.0/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="cached_network_image_web">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/cached_network_image_web-1.1.0/lib" />
             </list>
           </value>
         </entry>
@@ -13,6 +49,7 @@
           <value>
             <list>
               <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/characters-1.1.0/lib" />
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/characters-1.3.0/lib" />
             </list>
           </value>
         </entry>
@@ -30,10 +67,25 @@
             </list>
           </value>
         </entry>
+        <entry key="clock">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/clock-1.1.1/lib" />
+            </list>
+          </value>
+        </entry>
         <entry key="collection">
           <value>
             <list>
               <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/collection-1.15.0/lib" />
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/collection-1.17.2/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="convert">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/convert-3.1.1/lib" />
             </list>
           </value>
         </entry>
@@ -41,6 +93,14 @@
           <value>
             <list>
               <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/crypto-3.0.1/lib" />
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/crypto-3.0.3/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="cupertino_icons">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/cupertino_icons-1.0.6/lib" />
             </list>
           </value>
         </entry>
@@ -51,10 +111,32 @@
             </list>
           </value>
         </entry>
+        <entry key="dio">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/dio-4.0.6/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="extended_list_library">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/extended_list_library-3.0.0/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="fake_async">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/fake_async-1.3.1/lib" />
+            </list>
+          </value>
+        </entry>
         <entry key="ffi">
           <value>
             <list>
               <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/ffi-1.1.2/lib" />
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/ffi-2.1.0/lib" />
             </list>
           </value>
         </entry>
@@ -62,6 +144,7 @@
           <value>
             <list>
               <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/file-6.1.4/lib" />
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/file-7.0.0/lib" />
             </list>
           </value>
         </entry>
@@ -69,6 +152,42 @@
           <value>
             <list>
               <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/flutter-1.3.0/lib" />
+              <option value="$USER_HOME$/AppData/Local/Flutter/flutter/packages/flutter/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="flutter_cache_manager">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_cache_manager-3.3.1/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="flutter_lints">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_lints-2.0.3/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="flutter_picker">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_picker-2.1.0/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="flutter_svg">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_svg-1.1.6/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="flutter_test">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Flutter/flutter/packages/flutter_test/lib" />
             </list>
           </value>
         </entry>
@@ -76,6 +195,7 @@
           <value>
             <list>
               <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/flutter_web_plugins-1.3.0/lib" />
+              <option value="$USER_HOME$/AppData/Local/Flutter/flutter/packages/flutter_web_plugins/lib" />
             </list>
           </value>
         </entry>
@@ -90,6 +210,7 @@
           <value>
             <list>
               <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/http-0.13.1/lib" />
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/http-1.1.0/lib" />
             </list>
           </value>
         </entry>
@@ -97,6 +218,35 @@
           <value>
             <list>
               <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/http_parser-4.0.0/lib" />
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/http_parser-4.0.2/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="js">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/js-0.6.7/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="lints">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/lints-2.1.1/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="matcher">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/matcher-0.12.16/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="material_color_utilities">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/material_color_utilities-0.5.0/lib" />
             </list>
           </value>
         </entry>
@@ -104,6 +254,7 @@
           <value>
             <list>
               <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/meta-1.3.0/lib" />
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/meta-1.9.1/lib" />
             </list>
           </value>
         </entry>
@@ -121,6 +272,13 @@
             </list>
           </value>
         </entry>
+        <entry key="mp_flutter_runtime">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/mp_flutter_runtime-1.1.0/lib" />
+            </list>
+          </value>
+        </entry>
         <entry key="mpcore">
           <value>
             <list>
@@ -128,10 +286,74 @@
             </list>
           </value>
         </entry>
+        <entry key="octo_image">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/octo_image-2.0.0/lib" />
+            </list>
+          </value>
+        </entry>
         <entry key="path">
           <value>
             <list>
               <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/path-1.8.1/lib" />
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/path-1.8.3/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="path_drawing">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/path_drawing-1.0.1/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="path_parsing">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/path_parsing-1.0.1/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="path_provider">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/path_provider-2.1.1/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="path_provider_android">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/path_provider_android-2.2.0/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="path_provider_foundation">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/path_provider_foundation-2.3.1/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="path_provider_linux">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/path_provider_linux-2.2.1/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="path_provider_platform_interface">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/path_provider_platform_interface-2.1.1/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="path_provider_windows">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/path_provider_windows-2.2.1/lib" />
             </list>
           </value>
         </entry>
@@ -142,10 +364,137 @@
             </list>
           </value>
         </entry>
+        <entry key="petitparser">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/petitparser-5.4.0/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="platform">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/platform-3.1.3/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="plugin_platform_interface">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/plugin_platform_interface-2.1.6/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="pointycastle">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/pointycastle-3.7.3/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="rxdart">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/rxdart-0.27.7/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="shared_preferences">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/shared_preferences-2.2.2/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="shared_preferences_android">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/shared_preferences_android-2.2.1/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="shared_preferences_foundation">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/shared_preferences_foundation-2.3.4/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="shared_preferences_linux">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/shared_preferences_linux-2.3.2/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="shared_preferences_platform_interface">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/shared_preferences_platform_interface-2.3.1/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="shared_preferences_web">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/shared_preferences_web-2.2.1/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="shared_preferences_windows">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/shared_preferences_windows-2.3.2/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="sky_engine">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Flutter/flutter/bin/cache/pkg/sky_engine/lib" />
+            </list>
+          </value>
+        </entry>
         <entry key="source_span">
           <value>
             <list>
               <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/source_span-1.8.2/lib" />
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/source_span-1.10.0/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="sprintf">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/sprintf-7.0.0/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="sqflite">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/sqflite-2.3.0/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="sqflite_common">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/sqflite_common-2.5.0/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="stack_trace">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/stack_trace-1.11.0/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="stream_channel">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/stream_channel-2.1.1/lib" />
             </list>
           </value>
         </entry>
@@ -153,6 +502,14 @@
           <value>
             <list>
               <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/string_scanner-1.1.0/lib" />
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/string_scanner-1.2.0/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="synchronized">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/synchronized-3.1.0/lib" />
             </list>
           </value>
         </entry>
@@ -160,6 +517,14 @@
           <value>
             <list>
               <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/term_glyph-1.2.0/lib" />
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/term_glyph-1.2.1/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="test_api">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/test_api-0.6.0/lib" />
             </list>
           </value>
         </entry>
@@ -167,6 +532,7 @@
           <value>
             <list>
               <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/typed_data-1.3.0/lib" />
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/typed_data-1.3.2/lib" />
             </list>
           </value>
         </entry>
@@ -177,10 +543,18 @@
             </list>
           </value>
         </entry>
+        <entry key="uuid">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/uuid-4.1.0/lib" />
+            </list>
+          </value>
+        </entry>
         <entry key="vector_math">
           <value>
             <list>
               <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/vector_math-2.1.0/lib" />
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/vector_math-2.1.4/lib" />
             </list>
           </value>
         </entry>
@@ -198,16 +572,126 @@
             </list>
           </value>
         </entry>
+        <entry key="waterfall_flow">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/waterfall_flow-3.0.2/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="web">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/web-0.1.4-beta/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="web_socket_channel">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/web_socket_channel-2.4.0/lib" />
+            </list>
+          </value>
+        </entry>
         <entry key="win32">
           <value>
             <list>
               <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/win32-2.6.0/lib" />
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/win32-5.0.9/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="xdg_directories">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/xdg_directories-1.0.3/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="xml">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/xml-6.3.0/lib" />
             </list>
           </value>
         </entry>
       </option>
     </properties>
     <CLASSES>
+      <root url="file://$USER_HOME$/AppData/Local/Flutter/flutter/bin/cache/pkg/sky_engine/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Flutter/flutter/packages/flutter/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Flutter/flutter/packages/flutter_test/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Flutter/flutter/packages/flutter_web_plugins/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/archive-3.4.6/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/async-2.11.0/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/boolean_selector-2.1.1/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/cached_network_image-3.3.0/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/cached_network_image_platform_interface-3.0.0/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/cached_network_image_web-1.1.0/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/characters-1.3.0/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/clock-1.1.1/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/collection-1.17.2/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/convert-3.1.1/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/crypto-3.0.3/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/cupertino_icons-1.0.6/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/dio-4.0.6/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/extended_list_library-3.0.0/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/fake_async-1.3.1/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/ffi-2.1.0/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/file-7.0.0/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_cache_manager-3.3.1/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_lints-2.0.3/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_picker-2.1.0/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_svg-1.1.6/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/http-1.1.0/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/http_parser-4.0.2/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/js-0.6.7/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/lints-2.1.1/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/matcher-0.12.16/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/material_color_utilities-0.5.0/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/meta-1.9.1/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/mp_flutter_runtime-1.1.0/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/octo_image-2.0.0/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/path-1.8.3/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/path_drawing-1.0.1/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/path_parsing-1.0.1/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/path_provider-2.1.1/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/path_provider_android-2.2.0/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/path_provider_foundation-2.3.1/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/path_provider_linux-2.2.1/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/path_provider_platform_interface-2.1.1/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/path_provider_windows-2.2.1/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/petitparser-5.4.0/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/platform-3.1.3/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/plugin_platform_interface-2.1.6/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/pointycastle-3.7.3/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/rxdart-0.27.7/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/shared_preferences-2.2.2/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/shared_preferences_android-2.2.1/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/shared_preferences_foundation-2.3.4/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/shared_preferences_linux-2.3.2/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/shared_preferences_platform_interface-2.3.1/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/shared_preferences_web-2.2.1/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/shared_preferences_windows-2.3.2/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/source_span-1.10.0/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/sprintf-7.0.0/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/sqflite-2.3.0/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/sqflite_common-2.5.0/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/stack_trace-1.11.0/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/stream_channel-2.1.1/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/string_scanner-1.2.0/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/synchronized-3.1.0/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/term_glyph-1.2.1/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/test_api-0.6.0/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/typed_data-1.3.2/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/uuid-4.1.0/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/vector_math-2.1.4/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/waterfall_flow-3.0.2/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/web-0.1.4-beta/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/web_socket_channel-2.4.0/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/win32-5.0.9/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/xdg_directories-1.0.3/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/xml-6.3.0/lib" />
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/async-2.8.2/lib" />
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/characters-1.1.0/lib" />
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.mpflutter.com/charcode-1.3.1/lib" />
