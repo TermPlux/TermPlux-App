@@ -18,7 +18,6 @@ package io.ecosed.droid.app
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.ComponentName
 import android.content.Context
 import android.content.ContextWrapper
 import android.os.Build
@@ -26,12 +25,8 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.widget.Toast
-import com.blankj.utilcode.util.ServiceUtils
 import io.ecosed.droid.R
-import io.ecosed.droid.client.EcosedClient
 import io.ecosed.droid.engine.EcosedEngine
-import io.ecosed.droid.service.EcosedService
 import org.lsposed.hiddenapibypass.HiddenApiBypass
 
 class EcosedApplication<YourApplication : IEcosedApplication> : ContextWrapper(null),
@@ -73,11 +68,14 @@ class EcosedApplication<YourApplication : IEcosedApplication> : ContextWrapper(n
         // 获取mME
         mYourApplication = application as YourApplication
 
+
         // 初始化引擎
         mEngine = EcosedEngine.create(
             application = application,
             host = host
         )
+
+
 
         // 创建通知通道
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

@@ -25,6 +25,7 @@ import io.ecosed.droid.app.IEcosedApplication
 import io.ecosed.droid.client.EcosedClient
 import io.ecosed.droid.plugin.BasePlugin
 import io.ecosed.droid.plugin.PluginBinding
+import io.flutter.embedding.engine.plugins.FlutterPlugin
 
 /**
  * 作者: wyq0918dev
@@ -33,7 +34,7 @@ import io.ecosed.droid.plugin.PluginBinding
  * 描述: 插件引擎
  * 文档: https://github.com/ecosed/plugin/blob/master/README.md
  */
-internal class EcosedEngine private constructor() : ContextWrapper(null) {
+internal class EcosedEngine private constructor() : ContextWrapper(null), FlutterPlugin {
 
     /** 应用程序全局类. */
     private lateinit var mApp: Application
@@ -220,5 +221,13 @@ internal class EcosedEngine private constructor() : ContextWrapper(null) {
                 )
             }
         }
+    }
+
+    override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+
+    }
+
+    override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+
     }
 }
