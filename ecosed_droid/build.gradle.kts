@@ -82,9 +82,9 @@ afterEvaluate {
 }
 
 dependencies {
-    releaseImplementation("io.ecosed.mp_ecosed:flutter_release:1.0")
+    releaseImplementation("io.ecosed.droid:flutter_release:1.0")
     //profileImplementation("io.ecosed.mp_ecosed:flutter_profile:1.0")
-    debugImplementation("io.ecosed.mp_ecosed:flutter_debug:1.0")
+    debugImplementation("io.ecosed.droid:flutter_debug:1.0")
 
 
 

@@ -1,8 +1,8 @@
 package io.ecosed.ecosed_droid_example
 
-import io.ecosed.droid.app.EcosedPlugin
-import io.ecosed.droid.app.EcosedMethodCall
-import io.ecosed.droid.app.EcosedResult
+import io.ecosed.droid.embedding.EcosedPlugin
+import io.ecosed.droid.embedding.EcosedMethodCall
+import io.ecosed.droid.embedding.EcosedResult
 
 class DemoPlugin : EcosedPlugin(channelName = mChannel) {
 

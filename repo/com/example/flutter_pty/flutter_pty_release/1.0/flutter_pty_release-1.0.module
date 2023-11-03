@@ -1,0 +1,76 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "com.example.flutter_pty",
+    "module": "flutter_pty_release",
+    "version": "1.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.5"
+    }
+  },
+  "variants": [
+    {
+      "name": "releaseVariantReleaseApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "io.flutter",
+          "module": "flutter_embedding_release",
+          "version": {
+            "requires": "1.0.0-0545f8705df301877d787107bac1a6e9fc9ee1ad"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "flutter_pty_release-1.0.aar",
+          "url": "flutter_pty_release-1.0.aar",
+          "size": 28648,
+          "sha512": "0be1ee12f5c36341e08182dbfc287c5bf0b61b601b32ff8accabd2d69108d74ef38e831deb1252c95f3c05fcea0e94001f7695b995740cfc929e67f846d14eef",
+          "sha256": "a2d2ca2cb5109d8f4ef4f7d878792341dcefb6421f63c56a5210a174aee783ef",
+          "sha1": "dedc996c5e1734016494a5207f7625f0f6c190c3",
+          "md5": "49686602fb56d3407cd13f7480aa3a3c"
+        }
+      ]
+    },
+    {
+      "name": "releaseVariantReleaseRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "io.flutter",
+          "module": "flutter_embedding_release",
+          "version": {
+            "requires": "1.0.0-0545f8705df301877d787107bac1a6e9fc9ee1ad"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "flutter_pty_release-1.0.aar",
+          "url": "flutter_pty_release-1.0.aar",
+          "size": 28648,
+          "sha512": "0be1ee12f5c36341e08182dbfc287c5bf0b61b601b32ff8accabd2d69108d74ef38e831deb1252c95f3c05fcea0e94001f7695b995740cfc929e67f846d14eef",
+          "sha256": "a2d2ca2cb5109d8f4ef4f7d878792341dcefb6421f63c56a5210a174aee783ef",
+          "sha1": "dedc996c5e1734016494a5207f7625f0f6c190c3",
+          "md5": "49686602fb56d3407cd13f7480aa3a3c"
+        }
+      ]
+    }
+  ]
+}

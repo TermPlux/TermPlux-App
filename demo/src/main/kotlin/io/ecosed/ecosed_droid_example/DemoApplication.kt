@@ -16,10 +16,10 @@
 package io.ecosed.ecosed_droid_example
 
 import android.app.Application
-import io.ecosed.droid.app.EcosedApplication
-import io.ecosed.droid.app.EcosedHost
-import io.ecosed.droid.app.EcosedPlugin
-import io.ecosed.droid.app.IEcosedApplication
+import io.ecosed.droid.embedding.EcosedApplication
+import io.ecosed.droid.embedding.EcosedHost
+import io.ecosed.droid.embedding.EcosedPlugin
+import io.ecosed.droid.embedding.IEcosedApplication
 
 class DemoApplication : Application(), IEcosedApplication by EcosedApplication<DemoApplication>() {
 

@@ -1,0 +1,83 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "io.material.plugins.dynamic_color",
+    "module": "dynamic_color_profile",
+    "version": "1.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.5"
+    }
+  },
+  "variants": [
+    {
+      "name": "profileVariantProfileApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "io.flutter",
+          "module": "flutter_embedding_profile",
+          "version": {
+            "requires": "1.0.0-0545f8705df301877d787107bac1a6e9fc9ee1ad"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "dynamic_color_profile-1.0.aar",
+          "url": "dynamic_color_profile-1.0.aar",
+          "size": 5867,
+          "sha512": "9e85b97f61a2b83c6c70c7d276022d0c845c99ddea708455e1543930dad2d1bcd00a7b4e84561c98ce170f58ad28c56604b538b4c83c2e7b01f623659d91f6d8",
+          "sha256": "73892e62e5e17aadc0337c455efc8742dfe5a32591c63f3780c1d4c4894e1c08",
+          "sha1": "796cb57d8f041569af68a189ed33d2f5577fb9b9",
+          "md5": "b6274a7a84c3294ae4715adc2cf451d5"
+        }
+      ]
+    },
+    {
+      "name": "profileVariantProfileRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "io.flutter",
+          "module": "flutter_embedding_profile",
+          "version": {
+            "requires": "1.0.0-0545f8705df301877d787107bac1a6e9fc9ee1ad"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-jdk7",
+          "version": {
+            "requires": "1.5.30"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "dynamic_color_profile-1.0.aar",
+          "url": "dynamic_color_profile-1.0.aar",
+          "size": 5867,
+          "sha512": "9e85b97f61a2b83c6c70c7d276022d0c845c99ddea708455e1543930dad2d1bcd00a7b4e84561c98ce170f58ad28c56604b538b4c83c2e7b01f623659d91f6d8",
+          "sha256": "73892e62e5e17aadc0337c455efc8742dfe5a32591c63f3780c1d4c4894e1c08",
+          "sha1": "796cb57d8f041569af68a189ed33d2f5577fb9b9",
+          "md5": "b6274a7a84c3294ae4715adc2cf451d5"
+        }
+      ]
+    }
+  ]
+}

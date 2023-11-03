@@ -1,0 +1,90 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "io.flutter.plugins.webviewflutter",
+    "module": "webview_flutter_android_debug",
+    "version": "1.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.5"
+    }
+  },
+  "variants": [
+    {
+      "name": "debugVariantDebugApiPublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-api"
+      },
+      "dependencies": [
+        {
+          "group": "io.flutter",
+          "module": "flutter_embedding_debug",
+          "version": {
+            "requires": "1.0.0-0545f8705df301877d787107bac1a6e9fc9ee1ad"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "webview_flutter_android_debug-1.0.aar",
+          "url": "webview_flutter_android_debug-1.0.aar",
+          "size": 145177,
+          "sha512": "23fb53d2d35c013c721065e3c0f91ae35df01f1a0aeec78fded2c5b26a9625cb7ffd9b84756fc14c8a2a9c202a94c110700d4e117a342c2524f627180fd10884",
+          "sha256": "a3d48cf16a94283eb7c7a69c505d7e7dbded4622e658f8b62797596280e8d44a",
+          "sha1": "2baa54f4a4e2344fe3a33b3836ed9430b419f109",
+          "md5": "393bea7b43cea880c7eb7c08984f8309"
+        }
+      ]
+    },
+    {
+      "name": "debugVariantDebugRuntimePublication",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.libraryelements": "aar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "io.flutter",
+          "module": "flutter_embedding_debug",
+          "version": {
+            "requires": "1.0.0-0545f8705df301877d787107bac1a6e9fc9ee1ad"
+          }
+        },
+        {
+          "group": "androidx.annotation",
+          "module": "annotation",
+          "version": {
+            "requires": "1.7.0"
+          }
+        },
+        {
+          "group": "androidx.webkit",
+          "module": "webkit",
+          "version": {
+            "requires": "1.7.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "webview_flutter_android_debug-1.0.aar",
+          "url": "webview_flutter_android_debug-1.0.aar",
+          "size": 145177,
+          "sha512": "23fb53d2d35c013c721065e3c0f91ae35df01f1a0aeec78fded2c5b26a9625cb7ffd9b84756fc14c8a2a9c202a94c110700d4e117a342c2524f627180fd10884",
+          "sha256": "a3d48cf16a94283eb7c7a69c505d7e7dbded4622e658f8b62797596280e8d44a",
+          "sha1": "2baa54f4a4e2344fe3a33b3836ed9430b419f109",
+          "md5": "393bea7b43cea880c7eb7c08984f8309"
+        }
+      ]
+    }
+  ]
+}

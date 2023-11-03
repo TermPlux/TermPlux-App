@@ -34,8 +34,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.Wallpapers
-import io.ecosed.droid.app.EcosedActivity
-import io.ecosed.droid.app.IEcosedActivity
+import io.ecosed.droid.embedding.EcosedActivity
+import io.ecosed.droid.embedding.IEcosedActivity
 import io.ecosed.ecosed_droid_example.ui.theme.EDExampleTheme
 
 class DemoActivity : ComponentActivity(),

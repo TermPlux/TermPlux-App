@@ -11,6 +11,13 @@
             android:name="fake-signature"
             android:value="@string/fake_signature" />
 
+        <activity
+            android:name=".flutter.FlutterActivity"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density"
+            android:hardwareAccelerated="true"
+            android:theme="@style/Theme.AppCompat"
+            android:windowSoftInputMode="adjustResize" />
+
         <service
             android:name=".service.EcosedService"
             android:enabled="true"

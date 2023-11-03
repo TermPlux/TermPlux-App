@@ -17,8 +17,8 @@ package io.ecosed.droid.plugin
 
 import android.content.Context
 import android.content.ContextWrapper
-import io.ecosed.droid.app.EcosedMethodCall
-import io.ecosed.droid.app.EcosedResult
+import io.ecosed.droid.embedding.EcosedMethodCall
+import io.ecosed.droid.embedding.EcosedResult
 
 /**
  * 作者: wyq0918dev

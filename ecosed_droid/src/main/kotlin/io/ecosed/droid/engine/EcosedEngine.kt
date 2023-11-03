@@ -20,8 +20,8 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.os.Bundle
 import android.util.Log
-import io.ecosed.droid.app.EcosedHost
-import io.ecosed.droid.app.IEcosedApplication
+import io.ecosed.droid.embedding.EcosedHost
+import io.ecosed.droid.embedding.IEcosedApplication
 import io.ecosed.droid.client.EcosedClient
 import io.ecosed.droid.plugin.BasePlugin
 import io.ecosed.droid.plugin.PluginBinding
@@ -34,7 +34,8 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin
  * 描述: 插件引擎
  * 文档: https://github.com/ecosed/plugin/blob/master/README.md
  */
-internal class EcosedEngine private constructor() : ContextWrapper(null),EngineImpl, FlutterPlugin {
+internal class EcosedEngine private constructor() : ContextWrapper(null), EngineWrapper,
+    FlutterPlugin {
 
     /** 应用程序全局类. */
     private lateinit var mApp: Application
@@ -181,7 +182,6 @@ internal class EcosedEngine private constructor() : ContextWrapper(null),EngineI
         }
         return result
     }
-
 
 
     /**

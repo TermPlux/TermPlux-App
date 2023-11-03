@@ -23,8 +23,8 @@ import android.os.IBinder
 import android.util.Log
 import android.widget.Toast
 import io.ecosed.droid.EcosedDroid
-import io.ecosed.droid.app.EcosedMethodCall
-import io.ecosed.droid.app.EcosedResult
+import io.ecosed.droid.embedding.EcosedMethodCall
+import io.ecosed.droid.embedding.EcosedResult
 import io.ecosed.droid.plugin.BasePlugin
 import io.ecosed.droid.plugin.PluginBinding
 import io.ecosed.droid.service.EcosedService

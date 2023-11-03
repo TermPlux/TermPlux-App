@@ -17,7 +17,7 @@ import com.blankj.utilcode.util.PermissionUtils
 import io.ecosed.droid.BuildConfig
 import io.ecosed.droid.EcosedDroid
 import io.ecosed.droid.R
-import io.ecosed.droid.app.EcosedApplication
+import io.ecosed.droid.embedding.EcosedApplication
 import io.ecosed.droid.utils.ChineseCaleUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
