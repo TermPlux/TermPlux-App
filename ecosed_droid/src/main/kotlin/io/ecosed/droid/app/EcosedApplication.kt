@@ -27,6 +27,7 @@ import android.os.Looper
 import android.util.Log
 import io.ecosed.droid.R
 import io.ecosed.droid.engine.EcosedEngine
+import io.flutter.plugins.GeneratedPluginRegistrant
 import org.lsposed.hiddenapibypass.HiddenApiBypass
 
 class EcosedApplication<YourApplication : IEcosedApplication> : ContextWrapper(null),
@@ -67,7 +68,6 @@ class EcosedApplication<YourApplication : IEcosedApplication> : ContextWrapper(n
         attachBaseContext(base = application.baseContext)
         // 获取mME
         mYourApplication = application as YourApplication
-
 
         // 初始化引擎
         mEngine = EcosedEngine.create(

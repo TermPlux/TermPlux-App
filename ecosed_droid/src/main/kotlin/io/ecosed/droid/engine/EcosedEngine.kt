@@ -34,7 +34,7 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin
  * 描述: 插件引擎
  * 文档: https://github.com/ecosed/plugin/blob/master/README.md
  */
-internal class EcosedEngine private constructor() : ContextWrapper(null), FlutterPlugin {
+internal class EcosedEngine private constructor() : ContextWrapper(null),EngineImpl, FlutterPlugin {
 
     /** 应用程序全局类. */
     private lateinit var mApp: Application
@@ -61,10 +61,18 @@ internal class EcosedEngine private constructor() : ContextWrapper(null), Flutte
         super.attachBaseContext(base)
     }
 
+    override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+
+    }
+
+    override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+
+    }
+
     /**
      * 将引擎附加到应用.
      */
-    private fun attach() {
+    override fun attach() {
         when {
             (mPluginList == null) or (mBinding == null) -> apply {
                 // 引擎附加基本上下文
@@ -174,6 +182,8 @@ internal class EcosedEngine private constructor() : ContextWrapper(null), Flutte
         return result
     }
 
+
+
     /**
      * 用于构建引擎的接口.
      */
@@ -214,6 +224,7 @@ internal class EcosedEngine private constructor() : ContextWrapper(null), Flutte
                         mContext = applicationContext
                         mHost = host
                     }.run {
+
                         attach()
                     }
                 } else error(
@@ -221,13 +232,5 @@ internal class EcosedEngine private constructor() : ContextWrapper(null), Flutte
                 )
             }
         }
-    }
-
-    override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-
-    }
-
-    override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-
     }
 }
