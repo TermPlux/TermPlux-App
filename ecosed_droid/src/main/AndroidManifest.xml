@@ -12,7 +12,7 @@
             android:value="@string/fake_signature" />
 
         <activity
-            android:name=".flutter.FlutterActivity"
+            android:name=".activity.FlutterActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density"
             android:hardwareAccelerated="true"
             android:theme="@style/Theme.AppCompat"

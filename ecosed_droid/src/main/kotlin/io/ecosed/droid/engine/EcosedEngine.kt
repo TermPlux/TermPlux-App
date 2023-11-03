@@ -26,6 +26,8 @@ import io.ecosed.droid.client.EcosedClient
 import io.ecosed.droid.plugin.BasePlugin
 import io.ecosed.droid.plugin.PluginBinding
 import io.flutter.embedding.engine.plugins.FlutterPlugin
+import io.flutter.plugin.common.MethodCall
+import io.flutter.plugin.common.MethodChannel
 
 /**
  * 作者: wyq0918dev
@@ -35,7 +37,7 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin
  * 文档: https://github.com/ecosed/plugin/blob/master/README.md
  */
 internal class EcosedEngine private constructor() : ContextWrapper(null), EngineWrapper,
-    FlutterPlugin {
+    FlutterPlugin, MethodChannel.MethodCallHandler {
 
     /** 应用程序全局类. */
     private lateinit var mApp: Application
@@ -58,16 +60,35 @@ internal class EcosedEngine private constructor() : ContextWrapper(null), Engine
     /** 插件列表. */
     private var mPluginList: ArrayList<BasePlugin>? = null
 
+    private lateinit var mChannel: MethodChannel
+
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)
     }
 
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-
+        mChannel = MethodChannel(binding.binaryMessenger, channel)
+        mChannel.setMethodCallHandler(this@EcosedEngine)
     }
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+        mChannel.setMethodCallHandler(null)
+    }
 
+    override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
+        when (call.method) {
+
+            "ecosed_plugin" -> {
+                val key = call.argument<String>("key")
+                val value = call.argument<String>("value")
+                val bundle = Bundle()
+                bundle.putString(key, value)
+                val s = execMethodCall<Any>("", "", bundle)
+                result.success(s)
+            }
+
+            else -> result.notImplemented()
+        }
     }
 
     /**
@@ -205,6 +226,8 @@ internal class EcosedEngine private constructor() : ContextWrapper(null), Engine
 
         /** 用于打印日志的标签. */
         private const val tag: String = "PluginEngine"
+
+        private const val channel: String = "ecosed_droid"
 
         /**
          * 引擎构建函数.

@@ -5,6 +5,7 @@ import com.idlefish.flutterboost.FlutterBoost
 import com.idlefish.flutterboost.FlutterBoostDelegate
 import com.idlefish.flutterboost.FlutterBoostRouteOptions
 import com.idlefish.flutterboost.containers.FlutterBoostActivity
+import io.ecosed.droid.activity.FlutterActivity
 import io.flutter.embedding.android.FlutterActivityLaunchConfigs
 
 internal class FlutterDelegate private constructor() : FlutterBoostDelegate {

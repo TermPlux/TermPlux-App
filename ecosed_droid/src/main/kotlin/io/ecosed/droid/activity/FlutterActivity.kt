@@ -1,4 +1,4 @@
-package io.ecosed.droid.flutter
+package io.ecosed.droid.activity
 
 import com.idlefish.flutterboost.containers.FlutterBoostActivity
 
