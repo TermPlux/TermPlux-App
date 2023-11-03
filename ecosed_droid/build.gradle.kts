@@ -82,12 +82,9 @@ afterEvaluate {
 }
 
 dependencies {
-    releaseImplementation("io.ecosed.droid:flutter_release:1.0")
-    //profileImplementation("io.ecosed.mp_ecosed:flutter_profile:1.0")
-    debugImplementation("io.ecosed.droid:flutter_debug:1.0")
-
-
-
+    // 第二方库
+    releaseImplementation(dependencyNotation = "io.ecosed.droid:flutter_release:1.0")
+    debugImplementation(dependencyNotation = "io.ecosed.droid:flutter_debug:1.0")
     // 第三方库
     // AndroidUtilCode: https://github.com/Blankj/AndroidUtilCode
     implementation(dependencyNotation = "com.blankj:utilcodex:1.31.1")

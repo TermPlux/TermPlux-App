@@ -40,8 +40,6 @@ android {
     }
     buildFeatures {
         compose = true
-    }
-    buildFeatures {
         buildConfig = true
     }
     composeOptions {
@@ -72,14 +70,4 @@ dependencies {
     androidTestImplementation(dependencyNotation = "androidx.compose.ui:ui-test-junit4:1.5.4")
     debugImplementation(dependencyNotation = "androidx.compose.ui:ui-tooling:1.5.4")
     debugImplementation(dependencyNotation = "androidx.compose.ui:ui-test-manifest:1.5.4")
-
-
-
-//    implementation(dependencyNotation = "androidx.core:core-ktx:1.12.0")
-//    implementation(dependencyNotation = "androidx.appcompat:appcompat:1.6.1")
-//    implementation(dependencyNotation = "com.google.android.material:material:1.9.0")
-//    implementation(dependencyNotation = "androidx.constraintlayout:constraintlayout:2.1.4")
-//    testImplementation(dependencyNotation = "junit:junit:4.13.2")
-//    androidTestImplementation(dependencyNotation = "androidx.test.ext:junit:1.1.5")
-//    androidTestImplementation(dependencyNotation = "androidx.test.espresso:espresso-core:3.5.1")
 }
