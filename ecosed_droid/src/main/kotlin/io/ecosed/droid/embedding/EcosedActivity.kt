@@ -15,6 +15,7 @@
  */
 package io.ecosed.droid.embedding
 
+
 import android.app.Activity
 import android.app.Application
 import android.content.Context
@@ -22,20 +23,29 @@ import android.content.ContextWrapper
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.blankj.utilcode.util.AppUtils
+import com.idlefish.flutterboost.containers.FlutterBoostFragment
 import io.ecosed.droid.client.EcosedClient
 import io.ecosed.droid.engine.EcosedEngine
+import io.flutter.embedding.android.RenderMode
+import io.flutter.embedding.android.TransparencyMode
+
 
 class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcosedActivity> :
     ContextWrapper(null), IEcosedActivity, LifecycleOwner, DefaultLifecycleObserver {
 
 
-    private lateinit var mActivity: Activity
+    private lateinit var mActivity: FragmentActivity
     private lateinit var mApplication: Application
     private lateinit var mLifecycle: Lifecycle
     private lateinit var mYourActivity: YourActivity
@@ -59,7 +69,7 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
         // 附加基本上下文
         attachBaseContext(base = activity.baseContext)
         // 获取Activity
-        mActivity = activity
+        mActivity = activity as FragmentActivity
         // 获取Application
         mApplication = activity.application
         // 获取生命周期
@@ -75,6 +85,7 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
             mYourActivity !is Activity -> error(
                 message = errorActivityExtends
             )
+
             mYourApplication !is Application -> error(
                 message = errorApplicationExtends
             )
@@ -90,9 +101,75 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
 
 
 
+
         this@EcosedActivity.lifecycle.addObserver(this@EcosedActivity)
 
+
+
+        flutterFragment = FlutterBoostFragment.CachedEngineFragmentBuilder(
+            io.ecosed.droid.fragment.FlutterFragment::class.java
+        )
+            .destroyEngineWithFragment(false)
+            .renderMode(RenderMode.surface)
+            .transparencyMode(TransparencyMode.opaque)
+            .shouldAttachEngineToActivity(false)
+            .build()
+
+        mFlutterView = ViewPager2(this@EcosedActivity).apply {
+            adapter = object : FragmentStateAdapter(mActivity) {
+                override fun getItemCount(): Int {
+                    return 1
+                }
+
+                override fun createFragment(position: Int): Fragment {
+                    return flutterFragment
+                }
+
+            }
+        }
+
+        setContentSpace {
+            mActivity.setContentView(it)
+        }
+
+
+
+//        val fragmentManager: FragmentManager = mActivity.supportFragmentManager
+//
+//
+//        flutterFragment = fragmentManager
+//            .findFragmentByTag(TAG_FLUTTER_FRAGMENT) as FlutterFragment
+//
+//
+//        if (flutterFragment == null) {
+//            flutterFragment = FlutterBoostFragment.CachedEngineFragmentBuilder(
+//                io.ecosed.droid.fragment.FlutterFragment::class.java
+//            )
+//                .destroyEngineWithFragment(false)
+//                .renderMode(RenderMode.surface)
+//                .transparencyMode(TransparencyMode.opaque)
+//                .shouldAttachEngineToActivity(false)
+//                .build()
+//
+//
+//            fragmentManager
+//                .beginTransaction()
+//                .add(
+//                    R.id.flutter_frame,
+//                    flutterFragment!!,
+//                    TAG_FLUTTER_FRAGMENT
+//                )
+//                .commit()
+//        }
+
     }
+
+    private fun setContentSpace(block: (flutter: View) -> Unit) {
+        block.invoke(mFlutterView)
+    }
+
+    private lateinit var flutterFragment: FlutterBoostFragment
+    private lateinit var mFlutterView: ViewPager2
 
     override fun IEcosedActivity.detachEcosed() {
         lifecycle.removeObserver(this@EcosedActivity)
@@ -190,6 +267,7 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
         const val tag: String = "EcosedActivity"
         const val mNull: String = ""
         const val errorActivityExtends: String = "错误: EcosedActivity只能在Activity中使用!"
-        const val errorApplicationExtends: String = "错误: EcosedApplication只能在Application中使用!"
+        const val errorApplicationExtends: String =
+            "错误: EcosedApplication只能在Application中使用!"
     }
 }

@@ -104,6 +104,8 @@ dependencies {
     implementation(dependencyNotation = "androidx.browser:browser:1.6.0")
     implementation(dependencyNotation = "androidx.core:core-ktx:1.12.0")
     implementation(dependencyNotation = "androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
+    implementation("androidx.viewpager2:viewpager2:1.0.0")
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
     implementation(dependencyNotation = "com.google.android.gms:play-services-base:18.2.0")
     // 测试和调试
     testImplementation(dependencyNotation = "junit:junit:4.13.2")

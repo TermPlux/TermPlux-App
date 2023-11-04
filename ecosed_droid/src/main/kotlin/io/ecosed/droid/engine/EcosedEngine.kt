@@ -75,19 +75,27 @@ internal class EcosedEngine private constructor() : ContextWrapper(null), Engine
         mChannel.setMethodCallHandler(null)
     }
 
+    private var execResult: Any? = null
+
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
-        when (call.method) {
-
-            "ecosed_plugin" -> {
-                val key = call.argument<String>("key")
-                val value = call.argument<String>("value")
-                val bundle = Bundle()
-                bundle.putString(key, value)
-                val s = execMethodCall<Any>("", "", bundle)
-                result.success(s)
+        try {
+            val bundle = Bundle()
+            bundle.putString(
+                call.argument<String>("key"),
+                call.argument<String>("value")
+            )
+            execResult = execMethodCall<Any>(
+                channel = EcosedClient.mChannelName,
+                method = call.method,
+                bundle = bundle
+            )
+            if (execResult != null) {
+                result.success(execResult)
+            } else {
+                result.notImplemented()
             }
-
-            else -> result.notImplemented()
+        } catch (e: Exception) {
+            result.error(tag, "", e)
         }
     }
 

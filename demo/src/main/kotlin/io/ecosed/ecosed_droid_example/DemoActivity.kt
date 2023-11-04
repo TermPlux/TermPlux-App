@@ -19,6 +19,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -38,7 +39,7 @@ import io.ecosed.droid.embedding.EcosedActivity
 import io.ecosed.droid.embedding.IEcosedActivity
 import io.ecosed.ecosed_droid_example.ui.theme.EDExampleTheme
 
-class DemoActivity : ComponentActivity(),
+class DemoActivity : AppCompatActivity(),
     IEcosedActivity by EcosedActivity<DemoApplication, DemoActivity>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,11 +48,11 @@ class DemoActivity : ComponentActivity(),
             activity = this@DemoActivity,
             lifecycle = lifecycle
         )
-        setContent {
-            EDExampleTheme {
-                Greeting()
-            }
-        }
+//        setContent {
+//            EDExampleTheme {
+//                Greeting()
+//            }
+//        }
     }
 
     override fun onDestroy() {
@@ -100,7 +101,6 @@ class DemoActivity : ComponentActivity(),
                         Text(text = "Shizuku版本")
                     }
                 }
-
             }
         }
     }
