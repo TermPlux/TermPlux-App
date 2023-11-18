@@ -25,6 +25,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.widget.Toast
 import com.idlefish.flutterboost.FlutterBoost
 import io.ecosed.droid.R
 import io.ecosed.droid.flutter.FlutterCallback
@@ -83,7 +84,6 @@ class EcosedApplication<YourApplication : IEcosedApplication> : ContextWrapper(n
             FlutterDelegate.build(),
             FlutterCallback.build(engine = mEngine)
         )
-
 
         // 创建通知通道
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
