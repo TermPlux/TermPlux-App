@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "io.ecosed.ecosed_droid_example"
+    namespace = "io.ecosed.example"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "io.ecosed.ecosed_droid_example"
+        applicationId = "io.ecosed.example"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -53,11 +53,11 @@ android {
 }
 
 dependencies {
-    implementation(dependencyNotation = project(path = ":ecosed_droid"))
+    implementation(dependencyNotation = project(path = ":ecosedkit"))
     implementation(dependencyNotation = "com.google.android.material:material:1.10.0")
     implementation(dependencyNotation = "androidx.core:core-ktx:1.12.0")
     implementation(dependencyNotation = "androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
-    implementation(dependencyNotation = "androidx.activity:activity-compose:1.8.0")
+    implementation(dependencyNotation = "androidx.activity:activity-compose:1.8.1")
     implementation(dependencyNotation = platform(notation = "androidx.compose:compose-bom:2023.03.00"))
     implementation(dependencyNotation = "androidx.compose.ui:ui:1.5.4")
     implementation(dependencyNotation = "androidx.compose.ui:ui-graphics:1.5.4")

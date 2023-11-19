@@ -22,5 +22,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "EcosedDroid"
-include(":demo", ":ecosed_droid")
+rootProject.name = "EcosedKit"
+include(":demo", ":ecosedkit")
