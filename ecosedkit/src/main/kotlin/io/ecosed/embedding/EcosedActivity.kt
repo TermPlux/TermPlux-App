@@ -1,5 +1,5 @@
 /**
- * Copyright EcosedDroid
+ * Copyright EcosedKit
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ import android.view.View
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import com.idlefish.flutterboost.containers.FlutterBoostFragment
@@ -33,7 +32,7 @@ import io.flutter.embedding.android.RenderMode
 import io.flutter.embedding.android.TransparencyMode
 
 class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcosedActivity> :
-    ContextWrapper(null), IEcosedActivity, LifecycleOwner, DefaultLifecycleObserver {
+    ContextWrapper(null), IEcosedActivity, LifecycleOwner {
 
 
     private lateinit var mActivity: FragmentActivity
@@ -88,9 +87,12 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
         ).apply {
             id = R.id.flutter_container
         }
-        // 为片段容器视图添加片段
-        if (mFlutterFragment == null) {
-            addFragment()
+        // 获取是否调试模式
+        execMethodCall<Boolean>(
+            channel = io.ecosed.client.EcosedClient.mChannelName,
+            method = io.ecosed.client.EcosedClient.mMethodDebug
+        )?.let { debug ->
+            isDebug = debug
         }
         // 如果传入错误的类则抛出异常
         when {
@@ -102,31 +104,21 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
                 message = errorApplicationExtends
             )
         }
-        // 获取是否调试模式
-        execMethodCall<Boolean>(
-            channel = io.ecosed.client.EcosedClient.mChannelName,
-            method = io.ecosed.client.EcosedClient.mMethodDebug
-        )?.let { debug ->
-            isDebug = debug
-        }
-
-
-
-
-
-
-
-
-        this@EcosedActivity.lifecycle.addObserver(this@EcosedActivity)
-
-
     }
 
 
     override fun IEcosedActivity.setContentSpace(
-        block: (flutter: View) -> Unit,
+        block: (
+            dashboard: View,
+            commit: () -> Unit,
+        ) -> Unit,
     ) = defaultUnit {
-        block.invoke(mFlutterContainerView)
+        block.invoke(mFlutterContainerView) {
+            // 为片段容器视图添加片段
+            if (mFlutterFragment == null) {
+                addFragment()
+            }
+        }
     }
 
     override fun <T> IEcosedActivity.execMethodCall(
@@ -145,24 +137,25 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
 
     override fun IEcosedActivity.detachEcosed() {
         mFlutterFragment = null
-        lifecycle.removeObserver(this@EcosedActivity)
     }
 
     private fun addFragment() {
-        val df = getFlutterFragment()
-        if (!df.isAdded and (mFragmentManager.findFragmentByTag(tagFlutterFragment) == null)) {
-            mFlutterFragment = df
-            mFlutterFragment?.let { dashboard ->
+        mFlutterFragment = getFlutterFragment()
+
+        if (mFlutterFragment?.isAdded == false and (mFragmentManager.findFragmentByTag(
+                tagFlutterFragment
+            ) == null)
+        ) {
+            mFlutterFragment?.let { flutter ->
                 mFragmentManager
                     .beginTransaction()
                     .add(
                         mFlutterContainerView.id,
-                        dashboard,
+                        flutter,
                         tagFlutterFragment
                     )
                     .commit()
             }
-
         }
     }
 

@@ -1,5 +1,5 @@
 /**
- * Copyright EcosedDroid
+ * Copyright EcosedKit
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,9 +39,15 @@ interface IEcosedActivity {
     )
 
     /**
-     * 设置内容空间,it为仪表盘.
+     * 设置内容空间
+     * @param block flutter: 仪表盘视图 commit: 显示仪表盘
      */
-    fun IEcosedActivity.setContentSpace(block: (flutter: View) -> Unit)
+    fun IEcosedActivity.setContentSpace(
+        block: (
+            dashboard: View,
+            commit: () -> Unit,
+        ) -> Unit,
+    )
 
     /**
      * 调用插件代码的方法.

@@ -1,5 +1,5 @@
 /**
- * Copyright EcosedDroid
+ * Copyright EcosedKit
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ private val lightColorScheme = lightColorScheme(
 )
 
 @Composable
-fun EDExampleTheme(
+fun EcosedKitTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,

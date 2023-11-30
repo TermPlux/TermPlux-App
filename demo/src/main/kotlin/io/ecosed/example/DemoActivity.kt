@@ -1,5 +1,5 @@
 /**
- * Copyright EcosedDroid
+ * Copyright EcosedKit
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,11 @@
 package io.ecosed.example
 
 import android.os.Bundle
-import android.widget.Toast
+import android.view.View
+import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -33,11 +32,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.Wallpapers
+import androidx.compose.ui.viewinterop.AndroidView
 import io.ecosed.embedding.EcosedActivity
 import io.ecosed.embedding.IEcosedActivity
-import io.ecosed.example.ui.theme.EDExampleTheme
+import io.ecosed.example.ui.theme.EcosedKitTheme
 
-class DemoActivity : AppCompatActivity(), IEcosedActivity by EcosedActivity<DemoApplication, DemoActivity>() {
+class DemoActivity : AppCompatActivity(),
+    IEcosedActivity by EcosedActivity<DemoApplication, DemoActivity>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,8 +46,12 @@ class DemoActivity : AppCompatActivity(), IEcosedActivity by EcosedActivity<Demo
             activity = this@DemoActivity,
             lifecycle = lifecycle
         )
-        setContentSpace {
-            setContentView(it)
+        setContentSpace { dashboard, commit ->
+            setContent {
+                EcosedKitTheme {
+                    Greeting(dashboard = dashboard, commit = commit)
+                }
+            }
         }
     }
 
@@ -57,7 +62,7 @@ class DemoActivity : AppCompatActivity(), IEcosedActivity by EcosedActivity<Demo
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    private fun Greeting() {
+    private fun Greeting(dashboard: View? = null, commit: () -> Unit = {}) {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             topBar = {
@@ -80,21 +85,16 @@ class DemoActivity : AppCompatActivity(), IEcosedActivity by EcosedActivity<Demo
                     ),
                 color = MaterialTheme.colorScheme.background
             ) {
-                Column {
-                    Button(
-                        onClick = {
-                            Toast.makeText(
-                                this@DemoActivity,
-                                execMethodCall<String>(
-                                    channel = "ecosed_droid",
-                                    method = "shizuku_version"
-                                ) ?: "null",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                dashboard?.let { view ->
+                    AndroidView(
+                        factory = {
+                            return@AndroidView view
+                        },
+                        modifier = Modifier.fillMaxSize(),
+                        update = {
+                            commit()
                         }
-                    ) {
-                        Text(text = "Shizuku版本")
-                    }
+                    )
                 }
             }
         }
@@ -108,7 +108,7 @@ class DemoActivity : AppCompatActivity(), IEcosedActivity by EcosedActivity<Demo
     )
     @Composable
     private fun GreetingPreview() {
-        EDExampleTheme {
+        EcosedKitTheme {
             Greeting()
         }
     }
