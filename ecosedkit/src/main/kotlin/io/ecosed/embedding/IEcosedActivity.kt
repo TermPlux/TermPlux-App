@@ -15,8 +15,9 @@
  */
 package io.ecosed.embedding
 
-import android.app.Activity
 import android.os.Bundle
+import android.view.View
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 
 /**
@@ -29,24 +30,18 @@ import androidx.lifecycle.Lifecycle
 interface IEcosedActivity {
 
     /**
-     * 将EcosedDroid附加到Activity
-     * @param activity 要附加的Activity
+     * 将EcosedDroid附加到Activity.
+     * @param activity 要附加的Activity.
      */
     fun IEcosedActivity.attachEcosed(
-        activity: Activity,
-        lifecycle: Lifecycle
+        activity: FragmentActivity,
+        lifecycle: Lifecycle,
     )
 
     /**
-     * 将EcosedDroid与Activity分离
+     * 设置内容空间,it为仪表盘.
      */
-    fun IEcosedActivity.detachEcosed()
-
-//    /**
-//     * 设置布局,EcosedLauncher标记为true则设置主页布局,false为整个Activity的布局.
-//     * @param content 页面布局
-//     */
-//    fun IEcosedActivity.setContentComposable(content: @Composable () -> Unit)
+    fun IEcosedActivity.setContentSpace(block: (flutter: View) -> Unit)
 
     /**
      * 调用插件代码的方法.
@@ -58,14 +53,11 @@ interface IEcosedActivity {
     fun <T> IEcosedActivity.execMethodCall(
         channel: String,
         method: String,
-        bundle: Bundle? = null
+        bundle: Bundle? = null,
     ): T?
 
-    fun IEcosedActivity.toast(obj: Any)
-    fun IEcosedActivity.log(obj: Any)
-    fun IEcosedActivity.openUrl(url: String)
-    fun IEcosedActivity.openApp(packageName: String)
-    fun IEcosedActivity.isInstallApp(packageName: String): Boolean
-
-
+    /**
+     * 将EcosedDroid与Activity分离.
+     */
+    fun IEcosedActivity.detachEcosed()
 }

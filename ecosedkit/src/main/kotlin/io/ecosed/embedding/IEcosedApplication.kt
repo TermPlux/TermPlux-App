@@ -50,6 +50,4 @@ interface IEcosedApplication {
         method: String,
         bundle: Bundle? = null,
     ): T?
-
-    fun IEcosedApplication.log(obj: Any)
 }

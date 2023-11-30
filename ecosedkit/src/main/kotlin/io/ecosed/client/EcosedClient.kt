@@ -29,11 +29,10 @@ import io.ecosed.plugin.BasePlugin
 import io.ecosed.plugin.PluginBinding
 import io.ecosed.service.EcosedService
 
-internal class EcosedClient private constructor() : BasePlugin(), ServiceConnection,
-    io.ecosed.client.EcosedCallBack {
+internal class EcosedClient private constructor() : BasePlugin(), ServiceConnection, EcosedCallBack {
 
     override val channel: String
-        get() = io.ecosed.client.EcosedClient.Companion.mChannelName
+        get() = mChannelName
 
     private lateinit var mIntent: Intent
 
@@ -46,7 +45,7 @@ internal class EcosedClient private constructor() : BasePlugin(), ServiceConnect
     override fun onEcosedAdded(binding: PluginBinding) {
         super.onEcosedAdded(binding)
         mIntent = Intent(this@EcosedClient, EcosedService().javaClass)
-        mIntent.action = io.ecosed.client.EcosedClient.Companion.action
+        mIntent.action = action
 
         startService(mIntent)
         bindEcosed()
@@ -56,17 +55,17 @@ internal class EcosedClient private constructor() : BasePlugin(), ServiceConnect
     override fun onEcosedMethodCall(call: EcosedMethodCall, result: EcosedResult) {
         super.onEcosedMethodCall(call, result)
         when (call.method) {
-            io.ecosed.client.EcosedClient.Companion.mMethodDebug -> result.success(isDebug)
-            io.ecosed.client.EcosedClient.Companion.mMethodIsBinding -> result.success(mIsBind)
-            io.ecosed.client.EcosedClient.Companion.mMethodStartService -> startService(mIntent)
-            io.ecosed.client.EcosedClient.Companion.mMethodBindService -> bindEcosed()
-            io.ecosed.client.EcosedClient.Companion.mMethodUnbindService -> unbindEcosed()
+            mMethodDebug -> result.success(isDebug)
+            mMethodIsBinding -> result.success(mIsBind)
+            mMethodStartService -> startService(mIntent)
+            mMethodBindService -> bindEcosed()
+            mMethodUnbindService -> unbindEcosed()
 
             "" -> result.success({
 
             })
 
-            io.ecosed.client.EcosedClient.Companion.mMethodShizukuVersion -> result.success(getShizukuVersion())
+            mMethodShizukuVersion -> result.success(getShizukuVersion())
             else -> result.notImplemented()
         }
     }
@@ -82,12 +81,12 @@ internal class EcosedClient private constructor() : BasePlugin(), ServiceConnect
             }
 
             else -> if (isDebug) Log.e(
-                io.ecosed.client.EcosedClient.Companion.tag, "AIDL接口获取失败 - onServiceConnected"
+                tag, "AIDL接口获取失败 - onServiceConnected"
             )
         }
         when {
             isDebug -> Log.i(
-                io.ecosed.client.EcosedClient.Companion.tag, "服务已连接 - onServiceConnected"
+                tag, "服务已连接 - onServiceConnected"
             )
         }
     }
@@ -100,7 +99,7 @@ internal class EcosedClient private constructor() : BasePlugin(), ServiceConnect
             onEcosedDisconnected()
         }
         if (isDebug) {
-            Log.i(io.ecosed.client.EcosedClient.Companion.tag, "服务意外断开连接 - onServiceDisconnected")
+            Log.i(tag, "服务意外断开连接 - onServiceDisconnected")
         }
     }
 
@@ -111,7 +110,7 @@ internal class EcosedClient private constructor() : BasePlugin(), ServiceConnect
     override fun onNullBinding(name: ComponentName?) {
         super.onNullBinding(name)
         if (isDebug) {
-            Log.e(io.ecosed.client.EcosedClient.Companion.tag, "Binder为空 - onNullBinding")
+            Log.e(tag, "Binder为空 - onNullBinding")
         }
     }
 
@@ -149,7 +148,7 @@ internal class EcosedClient private constructor() : BasePlugin(), ServiceConnect
             }
         } catch (e: Exception) {
             if (isDebug) {
-                Log.e(io.ecosed.client.EcosedClient.Companion.tag, "bindEcosed", e)
+                Log.e(tag, "bindEcosed", e)
             }
         }
     }
@@ -169,13 +168,13 @@ internal class EcosedClient private constructor() : BasePlugin(), ServiceConnect
                         onEcosedDisconnected()
                     }
                     if (isDebug) {
-                        Log.i(io.ecosed.client.EcosedClient.Companion.tag, "服务已断开连接 - onServiceDisconnected")
+                        Log.i(tag, "服务已断开连接 - onServiceDisconnected")
                     }
                 }
             }
         } catch (e: Exception) {
             if (isDebug) {
-                Log.e(io.ecosed.client.EcosedClient.Companion.tag, "unbindEcosed", e)
+                Log.e(tag, "unbindEcosed", e)
             }
         }
     }
@@ -199,14 +198,14 @@ internal class EcosedClient private constructor() : BasePlugin(), ServiceConnect
             }
         } catch (e: Exception) {
             if (isDebug) {
-                Log.e(io.ecosed.client.EcosedClient.Companion.tag, "getShizukuVersion", e)
+                Log.e(tag, "getShizukuVersion", e)
             }
             null
         }
     }
 
     private fun callBack(
-        function: io.ecosed.client.EcosedCallBack.() -> Unit,
+        function: EcosedCallBack.() -> Unit,
     ) {
         this@EcosedClient.function()
     }

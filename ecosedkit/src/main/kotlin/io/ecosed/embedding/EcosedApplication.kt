@@ -121,24 +121,6 @@ class EcosedApplication<YourApplication : IEcosedApplication> : ContextWrapper(n
 
     }
 
-//    private fun initialize(initialize: EcosedAppInitialize?) = defaultUnit<Unit> {
-//        initialize?.apply {
-//            init()
-//            object : Thread() {
-//                override fun run() {
-//                    mYourApplication.apply {
-//                        initSDKs()
-//                        synchronized(mYourApplication) {
-//                            mainHandler.post {
-//                                initSDKInitialized()
-//                            }
-//                        }
-//                    }
-//                }
-//            }.start()
-//        }
-//    }
-
 
     private fun <T> engineUnit(
         content: EcosedEngine.() -> T,
@@ -156,16 +138,6 @@ class EcosedApplication<YourApplication : IEcosedApplication> : ContextWrapper(n
         )
     }
 
-
-    fun runOnMain(runnable: Runnable) {
-        mainHandler.post {
-            runnable.run()
-        }
-    }
-
-    override fun IEcosedApplication.log(obj: Any) {
-        Log.i(tag, obj.toString())
-    }
 
     companion object {
         const val notificationChannel: String = "id"

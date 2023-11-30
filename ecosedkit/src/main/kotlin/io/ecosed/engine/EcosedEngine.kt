@@ -20,6 +20,7 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.os.Bundle
 import android.util.Log
+import io.ecosed.client.EcosedClient
 import io.ecosed.embedding.EcosedHost
 import io.ecosed.embedding.IEcosedApplication
 import io.ecosed.plugin.BasePlugin
@@ -84,7 +85,7 @@ internal class EcosedEngine private constructor() : ContextWrapper(null), Engine
                 call.argument<String>("value")
             )
             execResult = execMethodCall<Any>(
-                channel = io.ecosed.client.EcosedClient.mChannelName,
+                channel = EcosedClient.mChannelName,
                 method = call.method,
                 bundle = bundle
             )
@@ -109,7 +110,7 @@ internal class EcosedEngine private constructor() : ContextWrapper(null), Engine
                     base = mBase
                 )
                 // 初始化客户端组件
-                mClient = io.ecosed.client.EcosedClient.build()
+                mClient = EcosedClient.build()
                 // 初始化插件绑定器.
                 mBinding = PluginBinding(
                     context = mContext, debug = mHost.isDebug()

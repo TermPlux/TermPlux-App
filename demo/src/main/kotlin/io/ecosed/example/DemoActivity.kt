@@ -37,8 +37,7 @@ import io.ecosed.embedding.EcosedActivity
 import io.ecosed.embedding.IEcosedActivity
 import io.ecosed.example.ui.theme.EDExampleTheme
 
-class DemoActivity : AppCompatActivity(),
-    IEcosedActivity by EcosedActivity<DemoApplication, DemoActivity>() {
+class DemoActivity : AppCompatActivity(), IEcosedActivity by EcosedActivity<DemoApplication, DemoActivity>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,11 +45,9 @@ class DemoActivity : AppCompatActivity(),
             activity = this@DemoActivity,
             lifecycle = lifecycle
         )
-//        setContent {
-//            EDExampleTheme {
-//                Greeting()
-//            }
-//        }
+        setContentSpace {
+            setContentView(it)
+        }
     }
 
     override fun onDestroy() {
