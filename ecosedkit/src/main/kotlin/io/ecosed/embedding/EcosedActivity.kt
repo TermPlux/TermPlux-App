@@ -109,12 +109,11 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
 
     override fun IEcosedActivity.setContentSpace(
         block: (
-            dashboard: View,
+            flutter: View,
             commit: () -> Unit,
         ) -> Unit,
     ) = defaultUnit {
         block.invoke(mFlutterContainerView) {
-            // 为片段容器视图添加片段
             if (mFlutterFragment == null) {
                 addFragment()
             }
@@ -141,7 +140,6 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
 
     private fun addFragment() {
         mFlutterFragment = getFlutterFragment()
-
         if (mFlutterFragment?.isAdded == false and (mFragmentManager.findFragmentByTag(
                 tagFlutterFragment
             ) == null)

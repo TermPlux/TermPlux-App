@@ -44,7 +44,7 @@ interface IEcosedActivity {
      */
     fun IEcosedActivity.setContentSpace(
         block: (
-            dashboard: View,
+            flutter: View,
             commit: () -> Unit,
         ) -> Unit,
     )

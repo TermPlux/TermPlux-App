@@ -255,8 +255,9 @@ internal class EcosedEngine private constructor() : ContextWrapper(null), Engine
                         mContext = applicationContext
                         mHost = host
                     }.run {
-
-                        attach()
+                        if (this@run is EngineWrapper) {
+                            attach()
+                        }
                     }
                 } else error(
                     message = "错误:EcosedApplication接口未实现.\n" + "提示1:可能未在应用的Application全局类实现EcosedApplication接口.\n" + "提示2:应用的Application全局类可能未在AndroidManifest.xml中注册."

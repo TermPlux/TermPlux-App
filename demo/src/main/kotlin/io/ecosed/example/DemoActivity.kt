@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -32,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.Wallpapers
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import io.ecosed.embedding.EcosedActivity
 import io.ecosed.embedding.IEcosedActivity
@@ -46,10 +48,13 @@ class DemoActivity : AppCompatActivity(),
             activity = this@DemoActivity,
             lifecycle = lifecycle
         )
-        setContentSpace { dashboard, commit ->
+        setContentSpace { flutter, commit ->
             setContent {
                 EcosedKitTheme {
-                    Greeting(dashboard = dashboard, commit = commit)
+                    Greeting(
+                        flutter = flutter,
+                        commit = commit
+                    )
                 }
             }
         }
@@ -62,7 +67,7 @@ class DemoActivity : AppCompatActivity(),
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    private fun Greeting(dashboard: View? = null, commit: () -> Unit = {}) {
+    private fun Greeting(flutter: View? = null, commit: () -> Unit = {}) {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             topBar = {
@@ -85,17 +90,26 @@ class DemoActivity : AppCompatActivity(),
                     ),
                 color = MaterialTheme.colorScheme.background
             ) {
-                dashboard?.let { view ->
-                    AndroidView(
-                        factory = {
-                            return@AndroidView view
-                        },
-                        modifier = Modifier.fillMaxSize(),
-                        update = {
-                            commit()
-                        }
-                    )
+                OutlinedCard(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(
+                            all = 12.dp
+                        )
+                ) {
+                    flutter?.let { view ->
+                        AndroidView(
+                            factory = {
+                                return@AndroidView view
+                            },
+                            modifier = Modifier.fillMaxSize(),
+                            update = {
+                                commit()
+                            }
+                        )
+                    }
                 }
+
             }
         }
     }
