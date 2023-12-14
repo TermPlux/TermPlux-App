@@ -15,19 +15,22 @@
  */
 package io.ecosed.engine
 
+import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.content.ContextWrapper
 import android.os.Bundle
 import android.util.Log
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
 import io.ecosed.client.EcosedClient
+import io.ecosed.common.FlutterPluginProxy
+import io.ecosed.common.MethodCallProxy
+import io.ecosed.common.ResultProxy
 import io.ecosed.embedding.EcosedHost
 import io.ecosed.embedding.IEcosedApplication
 import io.ecosed.plugin.BasePlugin
 import io.ecosed.plugin.PluginBinding
-import io.flutter.embedding.engine.plugins.FlutterPlugin
-import io.flutter.plugin.common.MethodCall
-import io.flutter.plugin.common.MethodChannel
 
 /**
  * 作者: wyq0918dev
@@ -37,7 +40,7 @@ import io.flutter.plugin.common.MethodChannel
  * 文档: https://github.com/ecosed/plugin/blob/master/README.md
  */
 internal class EcosedEngine private constructor() : ContextWrapper(null), EngineWrapper,
-    FlutterPlugin, MethodChannel.MethodCallHandler {
+    FlutterPluginProxy, LifecycleOwner {
 
     /** 应用程序全局类. */
     private lateinit var mApp: Application
@@ -52,7 +55,7 @@ internal class EcosedEngine private constructor() : ContextWrapper(null), Engine
     private lateinit var mContext: Context
 
     /**  */
-    private lateinit var mClient: io.ecosed.client.EcosedClient
+    private lateinit var mClient: EcosedClient
 
     /** 插件绑定器. */
     private var mBinding: PluginBinding? = null
@@ -60,43 +63,45 @@ internal class EcosedEngine private constructor() : ContextWrapper(null), Engine
     /** 插件列表. */
     private var mPluginList: ArrayList<BasePlugin>? = null
 
-    private lateinit var mChannel: MethodChannel
-
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)
     }
 
-    override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-        mChannel = MethodChannel(binding.binaryMessenger, channel)
-        mChannel.setMethodCallHandler(this@EcosedEngine)
-    }
-
-    override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-        mChannel.setMethodCallHandler(null)
-    }
-
     private var execResult: Any? = null
+    override fun getActivity(activity: Activity) {
+        mActivity = activity
+    }
 
-    override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
-        try {
-            val bundle = Bundle()
-            bundle.putString(
-                call.argument<String>("key"),
-                call.argument<String>("value")
-            )
-            execResult = execMethodCall<Any>(
-                channel = EcosedClient.mChannelName,
-                method = call.method,
-                bundle = bundle
-            )
-            if (execResult != null) {
-                result.success(execResult)
-            } else {
-                result.notImplemented()
-            }
-        } catch (e: Exception) {
-            result.error(tag, "", e)
-        }
+    private lateinit var mLifecycle: Lifecycle
+    private lateinit var mActivity: Activity
+
+    override fun getLifecycle(lifecycle: Lifecycle) {
+        mLifecycle = lifecycle
+    }
+
+    override val lifecycle: Lifecycle
+        get() = mLifecycle
+
+    override fun onMethodCall(call: MethodCallProxy, result: ResultProxy) {
+//        try {
+//            val bundle = Bundle()
+//            bundle.putString(
+//                call.argument<String>("key"),
+//                call.argument<String>("value")
+//            )
+//            execResult = execMethodCall<Any>(
+//                channel = EcosedClient.mChannelName,
+//                method = call.method,
+//                bundle = bundle
+//            )
+//            if (execResult != null) {
+//                result.success(execResult)
+//            } else {
+//                result.notImplemented()
+//            }
+//        } catch (e: Exception) {
+//            result.error(tag, "", e)
+//        }
     }
 
     /**

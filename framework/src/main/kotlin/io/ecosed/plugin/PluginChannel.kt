@@ -27,7 +27,7 @@ import io.ecosed.embedding.EcosedResult
  * 描述: 插件通信通道
  * 文档: https://github.com/ecosed/plugin/blob/master/README.md
  */
-internal class PluginChannel constructor(binding: PluginBinding, channel: String) {
+internal class PluginChannel(binding: PluginBinding, channel: String) {
 
     /** 插件绑定器. */
     private var mBinding: PluginBinding = binding

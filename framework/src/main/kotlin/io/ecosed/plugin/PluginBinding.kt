@@ -24,7 +24,7 @@ import android.content.Context
  * 描述: 插件绑定器
  * 文档: https://github.com/ecosed/plugin/blob/master/README.md
  */
-internal class PluginBinding constructor(
+internal class PluginBinding(
     context: Context,
     debug: Boolean,
 ) {

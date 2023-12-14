@@ -42,6 +42,7 @@ import io.ecosed.example.ui.theme.EcosedKitTheme
 class DemoActivity : AppCompatActivity(),
     IEcosedActivity by EcosedActivity<DemoApplication, DemoActivity>() {
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         attachEcosed(

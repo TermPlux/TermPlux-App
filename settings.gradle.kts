@@ -22,5 +22,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "EcosedKit"
-include(":demo", ":ecosedkit")
+rootProject.name = "framework"
+include(":demo", ":framework")

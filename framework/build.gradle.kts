@@ -83,8 +83,9 @@ afterEvaluate {
 
 dependencies {
     // 第二方库
-    releaseImplementation(dependencyNotation = "io.ecosed.droid:flutter_release:1.0")
-    debugImplementation(dependencyNotation = "io.ecosed.droid:flutter_debug:1.0")
+  //  releaseImplementation(dependencyNotation = "io.ecosed.droid:flutter_release:1.0")
+   // debugImplementation(dependencyNotation = "io.ecosed.droid:flutter_debug:1.0")
+    implementation(dependencyNotation = "com.github.ecosed:common:0.0.1")
     // 第三方库
     // AndroidUtilCode: https://github.com/Blankj/AndroidUtilCode
     implementation(dependencyNotation = "com.blankj:utilcodex:1.31.1")
@@ -100,7 +101,7 @@ dependencies {
     implementation(dependencyNotation = "dev.rikka.tools.refine:runtime:4.3.0")
     kapt(dependencyNotation = "dev.rikka.tools.refine:annotation-processor:4.3.0")
     // Google 官方库
-    implementation(dependencyNotation = "androidx.annotation:annotation:1.7.0")
+    implementation(dependencyNotation = "androidx.annotation:annotation:1.7.1")
     implementation(dependencyNotation = "androidx.browser:browser:1.7.0")
     implementation(dependencyNotation = "androidx.core:core-ktx:1.12.0")
     implementation(dependencyNotation = "androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")

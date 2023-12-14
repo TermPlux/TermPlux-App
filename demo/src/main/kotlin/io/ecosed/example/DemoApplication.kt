@@ -33,6 +33,7 @@ class DemoApplication : Application(), IEcosedApplication by EcosedApplication<D
         }
     }
 
+
     override fun onCreate() {
         super.onCreate()
         attachEcosed(
