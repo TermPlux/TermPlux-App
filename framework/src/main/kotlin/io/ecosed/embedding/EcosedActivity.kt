@@ -25,11 +25,8 @@ import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
-import com.idlefish.flutterboost.containers.FlutterBoostFragment
 import io.ecosed.R
 import io.ecosed.engine.EcosedEngine
-import io.flutter.embedding.android.RenderMode
-import io.flutter.embedding.android.TransparencyMode
 
 class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcosedActivity> :
     ContextWrapper(null), IEcosedActivity, LifecycleOwner {
@@ -42,14 +39,11 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
     private lateinit var mYourApplication: YourApplication
 
 
-    private lateinit var mFragmentManager: FragmentManager
-    private var mFlutterFragment: FlutterBoostFragment? = null
 
 
     private var isDebug = false
 
 
-    private lateinit var mFlutterContainerView: FragmentContainerView
 
 
     override fun attachBaseContext(base: Context?) {
@@ -75,18 +69,7 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
         // 获取传入的Application
         @Suppress(names = ["UNCHECKED_CAST"])
         mYourApplication = mApplication as YourApplication
-        // 初始化片段管理器
-        mFragmentManager = mActivity.supportFragmentManager
-        // 初始化Flutter片段
-        mFlutterFragment = mFragmentManager.findFragmentByTag(
-            tagFlutterFragment
-        ) as FlutterBoostFragment?
-        // 初始化片段容器视图
-        mFlutterContainerView = FragmentContainerView(
-            context = this@EcosedActivity
-        ).apply {
-            id = R.id.flutter_container
-        }
+
         // 获取是否调试模式
         execMethodCall<Boolean>(
             channel = io.ecosed.client.EcosedClient.mChannelName,
@@ -113,11 +96,11 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
             commit: () -> Unit,
         ) -> Unit,
     ) = defaultUnit {
-        block.invoke(mFlutterContainerView) {
-            if (mFlutterFragment == null) {
-                addFragment()
-            }
-        }
+//        block.invoke(mFlutterContainerView) {
+//            if (mFlutterFragment == null) {
+//                addFragment()
+//            }
+//        }
     }
 
     override fun <T> IEcosedActivity.execMethodCall(
@@ -135,37 +118,37 @@ class EcosedActivity<YourApplication : IEcosedApplication, YourActivity : IEcose
     }
 
     override fun IEcosedActivity.detachEcosed() {
-        mFlutterFragment = null
+       // mFlutterFragment = null
     }
 
-    private fun addFragment() {
-        mFlutterFragment = getFlutterFragment()
-        if (mFlutterFragment?.isAdded == false and (mFragmentManager.findFragmentByTag(
-                tagFlutterFragment
-            ) == null)
-        ) {
-            mFlutterFragment?.let { flutter ->
-                mFragmentManager
-                    .beginTransaction()
-                    .add(
-                        mFlutterContainerView.id,
-                        flutter,
-                        tagFlutterFragment
-                    )
-                    .commit()
-            }
-        }
-    }
+//    private fun addFragment() {
+//        mFlutterFragment = getFlutterFragment()
+//        if (mFlutterFragment?.isAdded == false and (mFragmentManager.findFragmentByTag(
+//                tagFlutterFragment
+//            ) == null)
+//        ) {
+//            mFlutterFragment?.let { flutter ->
+//                mFragmentManager
+//                    .beginTransaction()
+//                    .add(
+//                        mFlutterContainerView.id,
+//                        flutter,
+//                        tagFlutterFragment
+//                    )
+//                    .commit()
+//            }
+//        }
+//    }
 
 
-    private fun getFlutterFragment(): FlutterBoostFragment {
-        return FlutterBoostFragment.CachedEngineFragmentBuilder()
-            .destroyEngineWithFragment(false)
-            .renderMode(RenderMode.surface)
-            .transparencyMode(TransparencyMode.opaque)
-            .shouldAttachEngineToActivity(false)
-            .build()
-    }
+//    private fun getFlutterFragment(): FlutterBoostFragment {
+//        return FlutterBoostFragment.CachedEngineFragmentBuilder()
+//            .destroyEngineWithFragment(false)
+//            .renderMode(RenderMode.surface)
+//            .transparencyMode(TransparencyMode.opaque)
+//            .shouldAttachEngineToActivity(false)
+//            .build()
+//    }
 
     override val lifecycle: Lifecycle
         get() = mLifecycle

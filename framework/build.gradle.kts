@@ -85,6 +85,7 @@ dependencies {
     // 第二方库
   //  releaseImplementation(dependencyNotation = "io.ecosed.droid:flutter_release:1.0")
    // debugImplementation(dependencyNotation = "io.ecosed.droid:flutter_debug:1.0")
+    implementation(dependencyNotation = project(":engine"))
     implementation(dependencyNotation = "com.github.ecosed:common:0.0.1")
     // 第三方库
     // AndroidUtilCode: https://github.com/Blankj/AndroidUtilCode

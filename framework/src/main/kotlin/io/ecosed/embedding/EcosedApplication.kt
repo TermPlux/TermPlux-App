@@ -24,11 +24,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
-import com.idlefish.flutterboost.FlutterBoost
 import io.ecosed.R
-import io.ecosed.flutter.FlutterCallback
-import io.ecosed.flutter.FlutterDelegate
 import io.ecosed.engine.EcosedEngine
 import org.lsposed.hiddenapibypass.HiddenApiBypass
 
@@ -77,12 +73,12 @@ class EcosedApplication<YourApplication : IEcosedApplication> : ContextWrapper(n
             application = application,
             host = host
         )
-        // 初始化FlutterBoost
-        FlutterBoost.instance().setup(
-            application,
-            FlutterDelegate.build(),
-            FlutterCallback.build(engine = mEngine)
-        )
+//        // 初始化FlutterBoost
+//        FlutterBoost.instance().setup(
+//            application,
+//            FlutterDelegate.build(),
+//            FlutterCallback.build(engine = mEngine)
+//        )
 
         // 创建通知通道
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

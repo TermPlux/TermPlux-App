@@ -24,3 +24,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "framework"
 include(":demo", ":framework")
+include(":engine")
