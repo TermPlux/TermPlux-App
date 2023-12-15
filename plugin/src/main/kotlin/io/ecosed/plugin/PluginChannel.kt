@@ -34,7 +34,7 @@ class PluginChannel(binding: PluginBinding, channel: String) {
     private var mChannel: String = channel
 
     /** 方法调用处理接口. */
-    private var mPlugin: BasePlugin? = null
+    private var mPlugin: EcosedPlugin? = null
 
     /** 方法名. */
     private var mMethod: String? = null
@@ -49,7 +49,7 @@ class PluginChannel(binding: PluginBinding, channel: String) {
      * 设置方法调用.
      * @param handler 执行方法时调用EcosedMethodCallHandler.
      */
-    internal fun setMethodCallHandler(handler: BasePlugin) {
+    internal fun setMethodCallHandler(handler: EcosedPlugin) {
         mPlugin = handler
     }
 

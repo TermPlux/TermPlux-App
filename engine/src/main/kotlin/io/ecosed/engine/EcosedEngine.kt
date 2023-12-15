@@ -17,7 +17,6 @@ package io.ecosed.engine
 
 import android.app.Activity
 import android.content.Context
-import android.content.ContextWrapper
 import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.DefaultLifecycleObserver
@@ -25,10 +24,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import com.blankj.utilcode.util.AppUtils
 import io.ecosed.client.EcosedClient
-import io.ecosed.common.FlutterPluginProxy
 import io.ecosed.common.MethodCallProxy
 import io.ecosed.common.ResultProxy
-import io.ecosed.plugin.BasePlugin
+import io.ecosed.plugin.EcosedPlugin
+import io.ecosed.plugin.EcosedMethodCall
+import io.ecosed.plugin.EcosedResult
 import io.ecosed.plugin.PluginBinding
 
 /**
@@ -38,7 +38,10 @@ import io.ecosed.plugin.PluginBinding
  * 描述: 插件引擎
  * 文档: https://github.com/ecosed/plugin/blob/master/README.md
  */
-class EcosedEngine private constructor() : ContextWrapper(null), EngineWrapper, LifecycleOwner, DefaultLifecycleObserver {
+open class EcosedEngine : EcosedPlugin(), EngineWrapper, LifecycleOwner, DefaultLifecycleObserver {
+
+    override val channel: String
+        get() = "ecosed_engine"
 
     /** 应用程序全局类. */
    // private lateinit var mApp: Application
@@ -59,9 +62,9 @@ class EcosedEngine private constructor() : ContextWrapper(null), EngineWrapper, 
     private var mBinding: PluginBinding? = null
 
     /** 插件列表. */
-    private var mPluginList: ArrayList<BasePlugin>? = null
+    private var mPluginList: ArrayList<EcosedPlugin>? = null
 
-    private val isDebug: Boolean = AppUtils.isAppDebug()
+    private val isBaseDebug: Boolean = AppUtils.isAppDebug()
 
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)
@@ -81,6 +84,15 @@ class EcosedEngine private constructor() : ContextWrapper(null), EngineWrapper, 
 
     override val lifecycle: Lifecycle
         get() = mLifecycle
+
+    override fun onEcosedAdded(binding: PluginBinding) {
+        super.onEcosedAdded(binding)
+    }
+
+    override fun onEcosedMethodCall(call: EcosedMethodCall, result: EcosedResult) {
+        super.onEcosedMethodCall(call, result)
+
+    }
 
     override fun onMethodCall(call: MethodCallProxy, result: ResultProxy) {
 //        try {
@@ -121,7 +133,7 @@ class EcosedEngine private constructor() : ContextWrapper(null), EngineWrapper, 
                 mClient = EcosedClient.build()
                 // 初始化插件绑定器.
                 mBinding = PluginBinding(
-                    context = this@EcosedEngine, debug = isDebug
+                    context = this@EcosedEngine, debug = isBaseDebug
                 )
                 // 初始化插件列表.
                 mPluginList = arrayListOf()
@@ -131,18 +143,18 @@ class EcosedEngine private constructor() : ContextWrapper(null), EngineWrapper, 
                         ecosed.apply {
                             try {
                                 onEcosedAdded(binding = binding)
-                                if (isDebug) {
+                                if (isBaseDebug) {
                                     Log.d(tag, "框架已加载")
                                 }
                             } catch (e: Exception) {
-                                if (isDebug) {
+                                if (isBaseDebug) {
                                     Log.e(tag, "框架加载失败!", e)
                                 }
                             }
                         }
                     }.run {
                         mPluginList?.add(element = ecosed)
-                        if (isDebug) {
+                        if (isBaseDebug) {
                             Log.d(tag, "框架已添加到插件列表")
                         }
                     }
@@ -175,7 +187,7 @@ class EcosedEngine private constructor() : ContextWrapper(null), EngineWrapper, 
 //                }
             }
 
-            else -> if (isDebug) {
+            else -> if (isBaseDebug) {
                 Log.e(tag, "请勿重复执行attach!")
             }
         }
@@ -227,7 +239,7 @@ class EcosedEngine private constructor() : ContextWrapper(null), EngineWrapper, 
                             result = pluginChannel.execMethodCall<T>(
                                 name = channel, method = method, bundle = bundle
                             )
-                            if (isDebug) {
+                            if (isBaseDebug) {
                                 Log.d(
                                     tag,
                                     "插件代码调用成功!\n通道名称:${channel}.\n方法名称:${method}.\n返回结果:${result}."
@@ -238,7 +250,7 @@ class EcosedEngine private constructor() : ContextWrapper(null), EngineWrapper, 
                 }
             }
         } catch (e: Exception) {
-            if (isDebug) {
+            if (isBaseDebug) {
                 Log.e(tag, "插件代码调用失败!", e)
             }
         }

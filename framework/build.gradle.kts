@@ -72,6 +72,7 @@ afterEvaluate {
 dependencies {
     // 本地依赖
     implementation(dependencyNotation = project(":engine"))
+    implementation(dependencyNotation = project(":plugin"))
     // 第二方库
     implementation(dependencyNotation = "com.github.ecosed:common:0.0.1")
     // 第三方库
@@ -90,5 +91,5 @@ dependencies {
     implementation(dependencyNotation = "androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
 
     implementation("androidx.fragment:fragment-ktx:1.6.2")
-    implementation(dependencyNotation = "com.google.android.gms:play-services-base:18.2.0")
+
 }

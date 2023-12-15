@@ -15,17 +15,63 @@
  */
 package io.ecosed.plugin
 
+import android.content.Context
+import android.content.ContextWrapper
+
 /**
  * 作者: wyq0918dev
- * 仓库: https://github.com/ecosed/plugin
- * 时间: 2023/09/02
- * 描述: 插件接口
- * 文档: https://github.com/ecosed/plugin/blob/master/README.md
+ * 仓库: https://github.com/ecosed/EcosedDroid
+ * 时间: 2023/10/01
+ * 描述: 基本插件
+ * 文档: https://github.com/ecosed/EcosedDroid/blob/master/README.md
  */
-abstract class EcosedPlugin(channelName: String) : BasePlugin() {
+abstract class EcosedPlugin : ContextWrapper(null) {
 
-    private val mChannel: String = channelName
+    /** 插件通道 */
+    private lateinit var mPluginChannel: PluginChannel
 
-    override val channel: String
-        get() = mChannel
+    /** 是否调试模式 */
+    private var mDebug: Boolean = false
+
+    /**
+     * 附加基本上下文
+     */
+    override fun attachBaseContext(base: Context?) {
+        super.attachBaseContext(base)
+    }
+
+    /**
+     * 插件添加时执行
+     */
+    open fun onEcosedAdded(binding: PluginBinding) {
+        // 初始化插件通道
+        mPluginChannel = PluginChannel(
+            binding = binding, channel = channel
+        )
+        // 插件附加基本上下文
+        attachBaseContext(
+            base = mPluginChannel.getContext()
+        )
+        // 获取是否调试模式
+        mDebug = mPluginChannel.isDebug()
+        // 设置调用
+        mPluginChannel.setMethodCallHandler(
+            handler = this@EcosedPlugin
+        )
+    }
+
+    /** 获取插件通道 */
+    val getPluginChannel: PluginChannel
+        get() = mPluginChannel
+
+    /** 需要子类重写的通道名称 */
+    abstract val channel: String
+
+    /** 供子类使用的判断调试模式的接口 */
+    protected val isDebug: Boolean = mDebug
+
+    /**
+     * 插件调用方法
+     */
+    open fun onEcosedMethodCall(call: EcosedMethodCall, result: EcosedResult) = Unit
 }

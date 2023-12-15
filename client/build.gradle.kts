@@ -63,6 +63,9 @@ dependencies {
 
     implementation(project(":plugin"))
     implementation(project(":aidl"))
+    implementation(project(":nativelib"))
+    implementation(project(":signature"))
+
 
     // Shizuku-API: https://github.com/RikkaApps/Shizuku-API
     implementation(dependencyNotation = "dev.rikka.shizuku:api:13.1.5")
@@ -71,6 +74,8 @@ dependencies {
     implementation(dependencyNotation = "dev.rikka.tools.refine:annotation:4.3.0")
     implementation(dependencyNotation = "dev.rikka.tools.refine:runtime:4.3.0")
     kapt(dependencyNotation = "dev.rikka.tools.refine:annotation-processor:4.3.0")
+
+    implementation(dependencyNotation = "com.google.android.gms:play-services-base:18.2.0")
 
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")

@@ -25,10 +25,10 @@ import android.widget.Toast
 import io.ecosed.aidl.EcosedDroid
 import io.ecosed.plugin.EcosedMethodCall
 import io.ecosed.plugin.EcosedResult
-import io.ecosed.plugin.BasePlugin
+import io.ecosed.plugin.EcosedPlugin
 import io.ecosed.plugin.PluginBinding
 
-class EcosedClient private constructor() : BasePlugin(), ServiceConnection, EcosedCallBack {
+class EcosedClient private constructor() : EcosedPlugin(), ServiceConnection, EcosedCallBack {
 
     override val channel: String
         get() = mChannelName
