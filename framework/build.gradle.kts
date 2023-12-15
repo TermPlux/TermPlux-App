@@ -58,6 +58,25 @@ afterEvaluate {
     publishing {
         publications {
             create<MavenPublication>("release") {
+                groupId = "io.ecosed.framework"
+                artifactId = "framework"
+                pom {
+                    name = "EcosedKit - framework - $artifactId"
+                    description = artifactId
+                    url = "https://github.com/ecosed/EcosedKit"
+                    licenses {
+                        license {
+                            name = "Apache-2.0 License"
+                            url = "https://github.com/ecosed/EcosedKit/blob/master/LICENSE"
+                        }
+                    }
+                    developers {
+                        developer {
+                            name = "wyq0918dev"
+                            url = "https://github.com/wyq0918dev"
+                        }
+                    }
+                }
                 from(components["release"])
             }
         }
