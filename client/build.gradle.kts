@@ -37,6 +37,16 @@ android {
     }
 }
 
+afterEvaluate {
+    publishing {
+        publications {
+            create<MavenPublication>("release") {
+                from(components["release"])
+            }
+        }
+    }
+}
+
 dependencies {
 
     implementation(project(":plugin"))

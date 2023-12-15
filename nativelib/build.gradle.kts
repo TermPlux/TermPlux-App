@@ -48,6 +48,16 @@ android {
     }
 }
 
+afterEvaluate {
+    publishing {
+        publications {
+            create<MavenPublication>("release") {
+                from(components["release"])
+            }
+        }
+    }
+}
+
 dependencies {
 
     implementation("androidx.core:core-ktx:1.12.0")

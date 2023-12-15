@@ -33,6 +33,16 @@ android {
     }
 }
 
+afterEvaluate {
+    publishing {
+        publications {
+            create<MavenPublication>("release") {
+                from(components["release"])
+            }
+        }
+    }
+}
+
 dependencies {
 
     implementation(dependencyNotation = project(":aidl"))
