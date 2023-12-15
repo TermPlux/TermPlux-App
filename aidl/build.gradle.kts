@@ -34,16 +34,14 @@ afterEvaluate {
     publishing {
         publications {
             create<MavenPublication>("release") {
-                groupId = "io.ecosed.framework"
-                artifactId = "aidl"
                 pom {
                     name = "EcosedKit - framework - $artifactId"
                     description = artifactId
-                    url = "https://github.com/ecosed/EcosedKit"
+                    url = "https://github.com/ecosed/framework"
                     licenses {
                         license {
                             name = "Apache-2.0 License"
-                            url = "https://github.com/ecosed/EcosedKit/blob/master/LICENSE"
+                            url = "https://github.com/ecosed/framework/blob/master/LICENSE"
                         }
                     }
                     developers {

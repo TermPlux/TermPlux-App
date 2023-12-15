@@ -1,8 +1,6 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
-    id("org.jetbrains.kotlin.kapt")
-    id("dev.rikka.tools.refine")
     id("maven-publish")
 }
 
@@ -12,12 +10,6 @@ android {
 
     defaultConfig {
         minSdk = 24
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
-        vectorDrawables {
-            useSupportLibrary = true
-        }
-
     }
 
     buildFeatures {
@@ -28,10 +20,6 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
         }
     }
 
@@ -58,16 +46,14 @@ afterEvaluate {
     publishing {
         publications {
             create<MavenPublication>("release") {
-                groupId = "io.ecosed.framework"
-                artifactId = "framework"
                 pom {
                     name = "EcosedKit - framework - $artifactId"
                     description = artifactId
-                    url = "https://github.com/ecosed/EcosedKit"
+                    url = "https://github.com/ecosed/framework"
                     licenses {
                         license {
                             name = "Apache-2.0 License"
-                            url = "https://github.com/ecosed/EcosedKit/blob/master/LICENSE"
+                            url = "https://github.com/ecosed/framework/blob/master/LICENSE"
                         }
                     }
                     developers {
@@ -96,10 +82,7 @@ dependencies {
 
     // AndroidHiddenApiBypass: https://github.com/LSPosed/AndroidHiddenApiBypass
     implementation(dependencyNotation = "org.lsposed.hiddenapibypass:hiddenapibypass:4.3")
-    // HiddenApiRefinePlugin: https://github.com/RikkaApps/HiddenApiRefinePlugin
-    implementation(dependencyNotation = "dev.rikka.tools.refine:annotation:4.3.0")
-    implementation(dependencyNotation = "dev.rikka.tools.refine:runtime:4.3.0")
-    kapt(dependencyNotation = "dev.rikka.tools.refine:annotation-processor:4.3.0")
+
     // Google 官方库
     implementation(dependencyNotation = "androidx.annotation:annotation:1.7.1")
     implementation(dependencyNotation = "androidx.browser:browser:1.7.0")
@@ -108,8 +91,4 @@ dependencies {
 
     implementation("androidx.fragment:fragment-ktx:1.6.2")
     implementation(dependencyNotation = "com.google.android.gms:play-services-base:18.2.0")
-    // 测试和调试
-    testImplementation(dependencyNotation = "junit:junit:4.13.2")
-    androidTestImplementation(dependencyNotation = "androidx.test.ext:junit:1.1.5")
-    androidTestImplementation(dependencyNotation = "androidx.test.espresso:espresso-core:3.5.1")
 }

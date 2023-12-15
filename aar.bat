@@ -1,1 +1,0 @@
-cmd /c gradlew.bat assembleRelease
