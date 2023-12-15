@@ -17,20 +17,7 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-        externalNativeBuild {
-            cmake {
-                cppFlags += "-std=c++17"
-                abiFilters("armeabi-v7a", "arm64-v8a", "x86_64", "x86")
-                arguments("-DANDROID_TOOLCHAIN=clang", "-DANDROID_STL=c++_static")
-            }
-        }
-    }
 
-    externalNativeBuild {
-        cmake {
-            path = file(path = "src/main/cpp/CMakeLists.txt")
-            version = "3.22.1"
-        }
     }
 
     buildFeatures {
@@ -52,10 +39,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-
-//    kotlin {
-//        jvmToolchain(11)
-//    }
 
     kotlinOptions {
         jvmTarget = "11"
@@ -91,9 +74,7 @@ dependencies {
     implementation(dependencyNotation = "com.blankj:utilcodex:1.31.1")
     // LicensesDialog: https://github.com/PSDev/LicensesDialog
     implementation(dependencyNotation = "de.psdev.licensesdialog:licensesdialog:2.2.0")
-    // Shizuku-API: https://github.com/RikkaApps/Shizuku-API
-    implementation(dependencyNotation = "dev.rikka.shizuku:api:13.1.4")
-    implementation(dependencyNotation = "dev.rikka.shizuku:provider:13.1.4")
+
     // AndroidHiddenApiBypass: https://github.com/LSPosed/AndroidHiddenApiBypass
     implementation(dependencyNotation = "org.lsposed.hiddenapibypass:hiddenapibypass:4.3")
     // HiddenApiRefinePlugin: https://github.com/RikkaApps/HiddenApiRefinePlugin

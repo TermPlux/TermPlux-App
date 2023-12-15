@@ -19,4 +19,12 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "framework"
-include(":demo", ":framework", ":engine")
+include(":demo")
+include(":framework")
+include(":engine")
+include(":plugin")
+include(":nativelib")
+include(":client")
+include(":provider")
+include(":aidl")
+include(":signature")

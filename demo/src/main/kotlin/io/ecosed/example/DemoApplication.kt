@@ -16,29 +16,10 @@
 package io.ecosed.example
 
 import android.app.Application
-import io.ecosed.embedding.EcosedApplication
-import io.ecosed.embedding.EcosedHost
-import io.ecosed.embedding.EcosedPlugin
-import io.ecosed.embedding.IEcosedApplication
 
-class DemoApplication : Application(), IEcosedApplication by EcosedApplication<DemoApplication>() {
-
-    private val mHost: EcosedHost = object : EcosedHost {
-        override fun isDebug(): Boolean {
-            return BuildConfig.DEBUG
-        }
-
-        override fun getPluginList(): ArrayList<EcosedPlugin> {
-            return arrayListOf(DemoPlugin())
-        }
-    }
-
+class DemoApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        attachEcosed(
-            application = this@DemoApplication,
-            host = mHost
-        )
     }
 }

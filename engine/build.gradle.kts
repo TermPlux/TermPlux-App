@@ -33,6 +33,10 @@ android {
 }
 
 dependencies {
+    implementation(dependencyNotation = project(":plugin"))
+    implementation(dependencyNotation = project(":client"))
+    implementation(dependencyNotation = "com.github.ecosed:common:0.0.1")
+    implementation(dependencyNotation = "com.blankj:utilcodex:1.31.1")
 
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")

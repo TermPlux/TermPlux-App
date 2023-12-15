@@ -7,26 +7,11 @@
     <uses-permission android:name="android.permission.FAKE_PACKAGE_SIGNATURE" />
 
     <application>
-        <meta-data
-            android:name="fake-signature"
-            android:value="@string/fake_signature" />
 
-        <service
-            android:name=".service.EcosedService"
-            android:enabled="true"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="io.ecosed.droid.action" />
-            </intent-filter>
-        </service>
 
-        <provider
-            android:name=".provider.EcosedProvider"
-            android:authorities="${applicationId}.shizuku"
-            android:enabled="true"
-            android:exported="true"
-            android:multiprocess="false"
-            android:permission="android.permission.INTERACT_ACROSS_USERS_FULL" />
+
+
+
     </application>
 
 </manifest>

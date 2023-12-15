@@ -17,6 +17,7 @@ package io.ecosed.example
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
@@ -35,35 +36,38 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.Wallpapers
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import io.ecosed.embedding.EcosedActivity
-import io.ecosed.embedding.IEcosedActivity
+import io.ecosed.Framework
+import io.ecosed.common.FlutterPluginProxy
 import io.ecosed.example.ui.theme.EcosedKitTheme
 
-class DemoActivity : AppCompatActivity(),
-    IEcosedActivity by EcosedActivity<DemoApplication, DemoActivity>() {
+class DemoActivity : AppCompatActivity(){
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        attachEcosed(
-            activity = this@DemoActivity,
-            lifecycle = lifecycle
-        )
-        setContentSpace { flutter, commit ->
-            setContent {
-                EcosedKitTheme {
-                    Greeting(
-                        flutter = flutter,
-                        commit = commit
-                    )
-                }
-            }
-        }
+
+        val f = Framework()
+
+        f.attach()
+//        attachEcosed(
+//            activity = this@DemoActivity,
+//            lifecycle = lifecycle
+//        )
+//        setContentSpace { flutter, commit ->
+//            setContent {
+//                EcosedKitTheme {
+//                    Greeting(
+//                        flutter = flutter,
+//                        commit = commit
+//                    )
+//                }
+//            }
+//        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        detachEcosed()
+        //detachEcosed()
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
