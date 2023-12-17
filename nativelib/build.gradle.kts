@@ -13,7 +13,6 @@ android {
         externalNativeBuild {
             cmake {
                 cppFlags("-std=c++17")
-                //cppFlags += "-std=c++17"
                 abiFilters("armeabi-v7a", "arm64-v8a", "x86_64", "x86")
                 arguments("-DANDROID_TOOLCHAIN=clang", "-DANDROID_STL=c++_static")
             }

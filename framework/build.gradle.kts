@@ -74,7 +74,7 @@ dependencies {
     implementation(dependencyNotation = project(":engine"))
     implementation(dependencyNotation = project(":plugin"))
     // 第二方库
-    implementation(dependencyNotation = "com.github.ecosed:common:0.0.1")
+    implementation(dependencyNotation = "com.github.ecosed:common:1.0.0")
     // 第三方库
     // AndroidUtilCode: https://github.com/Blankj/AndroidUtilCode
     implementation(dependencyNotation = "com.blankj:utilcodex:1.31.1")

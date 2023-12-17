@@ -56,7 +56,8 @@ afterEvaluate {
 dependencies {
     implementation(dependencyNotation = project(":plugin"))
     implementation(dependencyNotation = project(":client"))
-    implementation(dependencyNotation = "com.github.ecosed:common:0.0.1")
+    implementation(dependencyNotation = "com.github.ecosed:common:1.0.0")
     implementation(dependencyNotation = "com.blankj:utilcodex:1.31.1")
     implementation(dependencyNotation = "androidx.lifecycle:lifecycle-common:2.6.2")
+    implementation(dependencyNotation = "androidx.appcompat:appcompat:1.6.1")
 }

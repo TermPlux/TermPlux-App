@@ -47,8 +47,13 @@ class DemoActivity : AppCompatActivity(){
         super.onCreate(savedInstanceState)
 
         val f = Framework()
-
+        f.getActivity(this)
+        f.getLifecycle(lifecycle)
         f.attach()
+
+        setContent {
+            Greeting()
+        }
 //        attachEcosed(
 //            activity = this@DemoActivity,
 //            lifecycle = lifecycle

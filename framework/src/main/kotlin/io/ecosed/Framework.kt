@@ -57,7 +57,7 @@ class Framework : FlutterPluginProxy {
         engine.onMethodCall(call = call, result = result)
     }
 
-    fun attach() {
+    override fun attach() {
         engine.attach()
     }
 

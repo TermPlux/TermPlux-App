@@ -17,13 +17,21 @@ package io.ecosed.engine
 
 import android.app.Activity
 import android.content.Context
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.view.View.OnClickListener
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.AlertDialogLayout
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import com.blankj.utilcode.util.AppUtils
 import io.ecosed.client.EcosedClient
+import io.ecosed.common.FlutterPluginProxy
 import io.ecosed.common.MethodCallProxy
 import io.ecosed.common.ResultProxy
 import io.ecosed.plugin.EcosedPlugin
@@ -38,7 +46,8 @@ import io.ecosed.plugin.PluginBinding
  * 描述: 插件引擎
  * 文档: https://github.com/ecosed/plugin/blob/master/README.md
  */
-open class EcosedEngine : EcosedPlugin(), EngineWrapper, LifecycleOwner, DefaultLifecycleObserver {
+open class EcosedEngine : EcosedPlugin(), FlutterPluginProxy, LifecycleOwner,
+    DefaultLifecycleObserver, SensorEventListener {
 
     override val channel: String
         get() = "ecosed_engine"
@@ -129,6 +138,7 @@ open class EcosedEngine : EcosedPlugin(), EngineWrapper, LifecycleOwner, Default
                 attachBaseContext(
                     base = mActivity
                 )
+                lifecycle.addObserver(this@EcosedEngine)
                 // 初始化客户端组件
                 mClient = EcosedClient.build()
                 // 初始化插件绑定器.
@@ -196,6 +206,26 @@ open class EcosedEngine : EcosedPlugin(), EngineWrapper, LifecycleOwner, Default
     // Flutter插件Activity生命周期
     override fun onCreate(owner: LifecycleOwner) {
         super.onCreate(owner)
+
+        var dialog: AlertDialog
+
+        AlertDialog.Builder(this@EcosedEngine).apply {
+            setTitle("Flutter Ecosed Dev Menu")
+            setMessage("Running ")
+
+            setPositiveButton("确定") { dialog, which ->
+
+            }
+            setNegativeButton("取消") { dialog, which ->
+
+            }
+            dialog = create()
+        }
+
+
+        if (!dialog.isShowing) dialog.show()
+
+
     }
 
     override fun onStart(owner: LifecycleOwner) {
@@ -265,5 +295,13 @@ open class EcosedEngine : EcosedPlugin(), EngineWrapper, LifecycleOwner, Default
         fun build(): EcosedEngine {
             return EcosedEngine()
         }
+    }
+
+    override fun onSensorChanged(event: SensorEvent?) {
+
+    }
+
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
+
     }
 }

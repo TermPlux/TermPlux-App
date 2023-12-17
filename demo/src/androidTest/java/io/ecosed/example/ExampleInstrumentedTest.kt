@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("io.ecosed.libecosed_example", appContext.packageName)
+        assertEquals("io.ecosed.ecosed_example", appContext.packageName)
     }
 }
