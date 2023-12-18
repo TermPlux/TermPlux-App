@@ -61,11 +61,11 @@ afterEvaluate {
 
 dependencies {
 
-    implementation(project(":plugin"))
-    implementation(project(":aidl"))
-    implementation(project(":nativelib"))
-    implementation(dependencyNotation = project(":provider"))
-    implementation(project(":signature"))
+    implementation(dependencyNotation = project(path = ":plugin"))
+    implementation(dependencyNotation = project(path = ":aidl"))
+    implementation(dependencyNotation = project(path = ":nativelib"))
+    implementation(dependencyNotation = project(path = ":provider"))
+    implementation(dependencyNotation = project(path = ":signature"))
 
 
     // Shizuku-API: https://github.com/RikkaApps/Shizuku-API
