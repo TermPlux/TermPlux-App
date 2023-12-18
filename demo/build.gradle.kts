@@ -54,7 +54,7 @@ android {
 
 dependencies {
     implementation(dependencyNotation = project(path = ":framework"))
-    implementation(dependencyNotation = "com.github.ecosed:common:1.0.0")
+    implementation(dependencyNotation = project(path = ":common"))
 
     implementation(dependencyNotation = "com.google.android.material:material:1.11.0")
     implementation(dependencyNotation = "androidx.core:core-ktx:1.12.0")
