@@ -64,6 +64,7 @@ dependencies {
     implementation(project(":plugin"))
     implementation(project(":aidl"))
     implementation(project(":nativelib"))
+    implementation(dependencyNotation = project(":provider"))
     implementation(project(":signature"))
 
 
