@@ -1,0 +1,10 @@
+ext {
+    flutterModuleName = 'ecosed_flutter'
+    flutterHostAppProjectName = 'demo'
+}
+def flutterDir = new File(settingsDir, "../${flutterModuleName}")
+def script = new File(flutterDir, '.android/include_flutter.groovy')
+setBinding(new Binding([gradle: this, mainModuleName: flutterHostAppProjectName]))
+evaluate(script)
+include(":$flutterModuleName")
+project(":$flutterModuleName").projectDir = flutterDir

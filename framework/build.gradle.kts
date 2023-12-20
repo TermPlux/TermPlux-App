@@ -1,7 +1,6 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
-    id("maven-publish")
 }
 
 android {
@@ -38,33 +37,6 @@ android {
         }
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
-}
-
-afterEvaluate {
-    publishing {
-        publications {
-            create<MavenPublication>("release") {
-                pom {
-                    name = "EcosedKit - framework - $artifactId"
-                    description = artifactId
-                    url = "https://github.com/ecosed/framework"
-                    licenses {
-                        license {
-                            name = "Apache-2.0 License"
-                            url = "https://github.com/ecosed/framework/blob/master/LICENSE"
-                        }
-                    }
-                    developers {
-                        developer {
-                            name = "wyq0918dev"
-                            url = "https://github.com/wyq0918dev"
-                        }
-                    }
-                }
-                from(components["release"])
-            }
         }
     }
 }

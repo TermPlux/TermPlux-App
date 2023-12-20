@@ -4,3 +4,13 @@ plugins {
     id("com.android.library") version "8.2.0" apply false
     id("dev.rikka.tools.refine") version "4.3.0" apply false
 }
+
+allprojects {
+    repositories {
+        google()
+        gradlePluginPortal()
+        mavenCentral()
+        maven(url = "https://jitpack.io")
+        mavenLocal()
+    }
+}

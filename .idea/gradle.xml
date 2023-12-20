@@ -8,6 +8,9 @@
         <option name="gradleJvm" value="jbr-17" />
         <option name="modules">
           <set>
+            <option value="$USER_HOME$/AppData/Local/Pub/Cache/git/flutter_boost-dc78574ee440909be46542f0136e8a876e098919/android" />
+            <option value="$PROJECT_DIR$/../ecosed_flutter" />
+            <option value="$PROJECT_DIR$/../ecosed_flutter/.android/Flutter" />
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/aidl" />
             <option value="$PROJECT_DIR$/bridge" />
