@@ -36,8 +36,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.Wallpapers
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import io.ecosed.Framework
-import io.ecosed.common.FlutterPluginProxy
 import io.ecosed.example.ui.theme.EcosedKitTheme
 
 class DemoActivity : AppCompatActivity(){
@@ -45,11 +43,6 @@ class DemoActivity : AppCompatActivity(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val f = Framework()
-        f.getActivity(this)
-        f.getLifecycle(lifecycle)
-        f.attach()
 
         setContent {
             Greeting()
