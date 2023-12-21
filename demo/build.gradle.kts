@@ -53,10 +53,9 @@ android {
 }
 
 dependencies {
-    implementation(dependencyNotation = project(path = ":framework"))
-    implementation(dependencyNotation = project(path = ":common"))
 
-    implementation(project(":flutter"))
+
+    implementation(dependencyNotation = project(path = ":hybrid"))
 
     implementation(dependencyNotation = "com.google.android.material:material:1.11.0")
     implementation(dependencyNotation = "androidx.core:core-ktx:1.12.0")

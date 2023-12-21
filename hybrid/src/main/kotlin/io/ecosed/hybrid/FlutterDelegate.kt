@@ -3,7 +3,7 @@ package io.ecosed.hybrid
 import com.idlefish.flutterboost.FlutterBoostDelegate
 import com.idlefish.flutterboost.FlutterBoostRouteOptions
 
-class BoostDelegate : FlutterBoostDelegate {
+internal class FlutterDelegate private constructor() : FlutterBoostDelegate {
 
     override fun pushNativeRoute(options: FlutterBoostRouteOptions?) {
 
@@ -11,5 +11,11 @@ class BoostDelegate : FlutterBoostDelegate {
 
     override fun pushFlutterRoute(options: FlutterBoostRouteOptions?) {
 
+    }
+
+    companion object {
+        fun build(): FlutterDelegate {
+            return FlutterDelegate()
+        }
     }
 }

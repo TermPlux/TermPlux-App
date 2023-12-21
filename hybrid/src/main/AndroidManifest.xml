@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <application>
+        <activity
+            android:name=".FlutterActivity"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density"
+            android:hardwareAccelerated="true"
+            android:theme="@style/Theme.AppCompat"
+            android:windowSoftInputMode="adjustResize" />
+    </application>
 </manifest>

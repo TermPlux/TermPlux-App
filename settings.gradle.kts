@@ -17,10 +17,8 @@ dependencyResolutionManagement {
         mavenLocal()
     }
 }
-
-apply(from = "flutter.gradle")
-
 rootProject.name = "framework"
+apply(from = "flutter.gradle")
 include(":demo")
 include(":framework")
 include(":engine")
