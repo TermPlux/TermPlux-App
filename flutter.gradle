@@ -1,5 +1,5 @@
 ext {
-    flutterModuleName = 'ecosed_flutter'
+    flutterModuleName = 'TermPlux-Flutter'
     flutterHostAppProjectName = 'app'
 }
 

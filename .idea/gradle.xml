@@ -9,8 +9,6 @@
         <option name="modules">
           <set>
             <option value="$USER_HOME$/AppData/Local/Pub/Cache/git/flutter_boost-dc78574ee440909be46542f0136e8a876e098919/android" />
-            <option value="$PROJECT_DIR$/../ecosed_flutter" />
-            <option value="$PROJECT_DIR$/../ecosed_flutter/.android/Flutter" />
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/aidl" />
             <option value="$PROJECT_DIR$/app" />
@@ -24,6 +22,8 @@
             <option value="$PROJECT_DIR$/plugin" />
             <option value="$PROJECT_DIR$/provider" />
             <option value="$PROJECT_DIR$/signature" />
+            <option value="$PROJECT_DIR$/../TermPlux-Flutter" />
+            <option value="$PROJECT_DIR$/../TermPlux-Flutter/.android/Flutter" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="false" />
