@@ -13,10 +13,10 @@
             <option value="$PROJECT_DIR$/../ecosed_flutter/.android/Flutter" />
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/aidl" />
+            <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/bridge" />
             <option value="$PROJECT_DIR$/client" />
             <option value="$PROJECT_DIR$/common" />
-            <option value="$PROJECT_DIR$/demo" />
             <option value="$PROJECT_DIR$/engine" />
             <option value="$PROJECT_DIR$/framework" />
             <option value="$PROJECT_DIR$/hybrid" />

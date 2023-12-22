@@ -17,9 +17,9 @@ dependencyResolutionManagement {
         mavenLocal()
     }
 }
-rootProject.name = "framework"
+rootProject.name = "TermPlux-App"
 apply(from = "flutter.gradle")
-include(":demo")
+include(":app")
 include(":framework")
 include(":engine")
 include(":plugin")

@@ -1,6 +1,6 @@
 ext {
     flutterModuleName = 'ecosed_flutter'
-    flutterHostAppProjectName = 'demo'
+    flutterHostAppProjectName = 'app'
 }
 
 def flutterDir = new File(settingsDir, "../${flutterModuleName}")
