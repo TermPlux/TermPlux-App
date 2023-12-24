@@ -5,6 +5,12 @@
       <entry key="app">
         <State />
       </entry>
+      <entry key="stub">
+        <State />
+      </entry>
+      <entry key="wear">
+        <State />
+      </entry>
     </value>
   </component>
 </project>

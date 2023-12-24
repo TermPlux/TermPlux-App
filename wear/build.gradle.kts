@@ -4,12 +4,12 @@ plugins {
 }
 
 android {
-    namespace = "io.termplux.app"
+    namespace = "io.termplux.wear"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "io.termplux.app"
-        minSdk = 24
+        applicationId = "io.termplux.wear"
+        minSdk = 25
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -31,11 +31,5 @@ android {
 
 dependencies {
 
-    wearApp(dependencyNotation = project(":wear"))
-    implementation(dependencyNotation = project(path = ":hybrid"))
-
-    implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.11.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("com.google.android.gms:play-services-wearable:18.1.0")
 }
