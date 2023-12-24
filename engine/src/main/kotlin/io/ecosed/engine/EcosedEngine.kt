@@ -76,6 +76,13 @@ open class EcosedEngine : EcosedPlugin(), EngineWrapper, FlutterPlugin, MethodCh
             message = "lifecycle is null"
         )
 
+    open fun getHybridPlugin(): EcosedPlugin {
+        return object : EcosedPlugin() {
+            override val channel: String
+                get() = ""
+        }
+    }
+
     override fun onEcosedMethodCall(call: EcosedMethodCall, result: EcosedResult) {
         super.onEcosedMethodCall(call, result)
         when (call.method) {
@@ -125,7 +132,8 @@ open class EcosedEngine : EcosedPlugin(), EngineWrapper, FlutterPlugin, MethodCh
                 // 初始化客户端组件
                 mClient = EcosedClient.build()
 
-                plugin = arrayListOf(mClient)
+
+                plugin = arrayListOf(mClient, getHybridPlugin())
                 // 初始化插件绑定器.
                 mBinding = PluginBinding(
                     context = this@EcosedEngine, debug = isBaseDebug
