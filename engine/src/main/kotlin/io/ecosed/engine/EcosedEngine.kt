@@ -22,22 +22,22 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.view.View.OnClickListener
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.widget.AlertDialogLayout
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import com.blankj.utilcode.util.AppUtils
 import io.ecosed.client.EcosedClient
-import io.ecosed.common.FlutterPluginProxy
-import io.ecosed.common.MethodCallProxy
-import io.ecosed.common.ResultProxy
-import io.ecosed.plugin.EcosedPlugin
 import io.ecosed.plugin.EcosedMethodCall
+import io.ecosed.plugin.EcosedPlugin
 import io.ecosed.plugin.EcosedResult
 import io.ecosed.plugin.PluginBinding
+import io.flutter.embedding.engine.plugins.FlutterPlugin
+import io.flutter.embedding.engine.plugins.activity.ActivityAware
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
+import io.flutter.embedding.engine.plugins.lifecycle.FlutterLifecycleAdapter
+import io.flutter.plugin.common.MethodCall
+import io.flutter.plugin.common.MethodChannel
 
 /**
  * 作者: wyq0918dev
@@ -46,23 +46,11 @@ import io.ecosed.plugin.PluginBinding
  * 描述: 插件引擎
  * 文档: https://github.com/ecosed/plugin/blob/master/README.md
  */
-open class EcosedEngine : EcosedPlugin(), FlutterPluginProxy, LifecycleOwner,
-    DefaultLifecycleObserver, SensorEventListener {
+open class EcosedEngine : EcosedPlugin(), EngineWrapper, FlutterPlugin, MethodChannel.MethodCallHandler, ActivityAware, LifecycleOwner, DefaultLifecycleObserver, SensorEventListener {
 
     override val channel: String
-        get() = "ecosed_engine"
+        get() = channelName
 
-    /** 应用程序全局类. */
-   // private lateinit var mApp: Application
-
-    /** 基础上下文. */
-   // protected lateinit var mBase: Context
-
-    /** 客户端组件. */
-    //private lateinit var mHost: EcosedHost
-
-    /** 应用程序全局上下文, 非UI上下文. */
- //   protected lateinit var mContext: Context
 
     /**  */
     private lateinit var mClient: EcosedClient
@@ -75,35 +63,28 @@ open class EcosedEngine : EcosedPlugin(), FlutterPluginProxy, LifecycleOwner,
 
     private val isBaseDebug: Boolean = AppUtils.isAppDebug()
 
-    override fun attachBaseContext(base: Context?) {
-        super.attachBaseContext(base)
-    }
+
 
     private var execResult: Any? = null
-    override fun getActivity(activity: Activity) {
-        mActivity = activity
-    }
 
-    private lateinit var mLifecycle: Lifecycle
-    private lateinit var mActivity: Activity
+    private var mLifecycle: Lifecycle? = null
+    private var mActivity: Activity? = null
 
-    override fun getLifecycle(lifecycle: Lifecycle) {
-        mLifecycle = lifecycle
-    }
 
     override val lifecycle: Lifecycle
-        get() = mLifecycle
-
-    override fun onEcosedAdded(binding: PluginBinding) {
-        super.onEcosedAdded(binding)
-    }
+        get() = mLifecycle ?: error(
+            message = "lifecycle is null"
+        )
 
     override fun onEcosedMethodCall(call: EcosedMethodCall, result: EcosedResult) {
         super.onEcosedMethodCall(call, result)
-
+        when (call.method) {
+            "" -> result.success("")
+            else -> result.notImplemented()
+        }
     }
 
-    override fun onMethodCall(call: MethodCallProxy, result: ResultProxy) {
+    override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
 //        try {
 //            val bundle = Bundle()
 //            bundle.putString(
@@ -125,7 +106,7 @@ open class EcosedEngine : EcosedPlugin(), FlutterPluginProxy, LifecycleOwner,
 //        }
     }
 
-
+    private var plugin: ArrayList<EcosedPlugin>? = null
 
     /**
      * 将引擎附加到应用.
@@ -135,12 +116,16 @@ open class EcosedEngine : EcosedPlugin(), FlutterPluginProxy, LifecycleOwner,
         when {
             (mPluginList == null) or (mBinding == null) -> apply {
                 // 引擎附加基本上下文
-                attachBaseContext(
-                    base = mActivity
-                )
+                attachBaseContext(base = mActivity)
                 lifecycle.addObserver(this@EcosedEngine)
+
+
+
+
                 // 初始化客户端组件
                 mClient = EcosedClient.build()
+
+                plugin = arrayListOf(mClient)
                 // 初始化插件绑定器.
                 mBinding = PluginBinding(
                     context = this@EcosedEngine, debug = isBaseDebug
@@ -148,53 +133,53 @@ open class EcosedEngine : EcosedPlugin(), FlutterPluginProxy, LifecycleOwner,
                 // 初始化插件列表.
                 mPluginList = arrayListOf()
                 // 加载框架
-                mClient.let { ecosed ->
-                    mBinding?.let { binding ->
-                        ecosed.apply {
-                            try {
-                                onEcosedAdded(binding = binding)
-                                if (isBaseDebug) {
-                                    Log.d(tag, "框架已加载")
-                                }
-                            } catch (e: Exception) {
-                                if (isBaseDebug) {
-                                    Log.e(tag, "框架加载失败!", e)
-                                }
-                            }
-                        }
-                    }.run {
-                        mPluginList?.add(element = ecosed)
-                        if (isBaseDebug) {
-                            Log.d(tag, "框架已添加到插件列表")
-                        }
-                    }
-                }
-//                // 添加所有插件.
-//                mHost.getPluginList()?.let { plugins ->
+//                mClient.let { ecosed ->
 //                    mBinding?.let { binding ->
-//                        plugins.forEach { plugin ->
-//                            plugin.apply {
-//                                try {
-//                                    onEcosedAdded(binding = binding)
-//                                    if (isDebug) {
-//                                        Log.d(tag, "插件${plugin.javaClass.name}已加载")
-//                                    }
-//                                } catch (e: Exception) {
-//                                    if (isDebug) {
-//                                        Log.e(tag, "插件添加失败!", e)
-//                                    }
+//                        ecosed.apply {
+//                            try {
+//                                onEcosedAdded(binding = binding)
+//                                if (isBaseDebug) {
+//                                    Log.d(tag, "框架已加载")
+//                                }
+//                            } catch (e: Exception) {
+//                                if (isBaseDebug) {
+//                                    Log.e(tag, "框架加载失败!", e)
 //                                }
 //                            }
 //                        }
 //                    }.run {
-//                        plugins.forEach { plugin ->
-//                            mPluginList?.add(element = plugin)
-//                            if (isDebug) {
-//                                Log.d(tag, "插件${plugin.javaClass.name}已添加到插件列表")
-//                            }
+//                        mPluginList?.add(element = ecosed)
+//                        if (isBaseDebug) {
+//                            Log.d(tag, "框架已添加到插件列表")
 //                        }
 //                    }
 //                }
+                // 添加所有插件.
+                plugin?.let { plugins ->
+                    mBinding?.let { binding ->
+                        plugins.forEach { plugin ->
+                            plugin.apply {
+                                try {
+                                    onEcosedAdded(binding = binding)
+                                    if (isBaseDebug) {
+                                        Log.d(tag, "插件${plugin.javaClass.name}已加载")
+                                    }
+                                } catch (e: Exception) {
+                                    if (isBaseDebug) {
+                                        Log.e(tag, "插件添加失败!", e)
+                                    }
+                                }
+                            }
+                        }
+                    }.run {
+                        plugins.forEach { plugin ->
+                            mPluginList?.add(element = plugin)
+                            if (isBaseDebug) {
+                                Log.d(tag, "插件${plugin.javaClass.name}已添加到插件列表")
+                            }
+                        }
+                    }
+                }
             }
 
             else -> if (isBaseDebug) {
@@ -292,9 +277,8 @@ open class EcosedEngine : EcosedPlugin(), FlutterPluginProxy, LifecycleOwner,
         /** 用于打印日志的标签. */
         private const val tag: String = "PluginEngine"
 
-        fun build(): EcosedEngine {
-            return EcosedEngine()
-        }
+        private const val channelName: String = "termplux_engine"
+
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
@@ -303,5 +287,41 @@ open class EcosedEngine : EcosedPlugin(), FlutterPluginProxy, LifecycleOwner,
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
 
+    }
+
+    private lateinit var mMethodChannel: MethodChannel
+
+    override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+        mMethodChannel = MethodChannel(binding.binaryMessenger, channelName)
+        mMethodChannel.setMethodCallHandler(this@EcosedEngine)
+    }
+
+    override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+        mMethodChannel.setMethodCallHandler(null)
+    }
+
+    override fun onAttachedToActivity(binding: ActivityPluginBinding) {
+        mActivity = binding.activity
+        mLifecycle = FlutterLifecycleAdapter.getActivityLifecycle(binding)
+        attach()
+        lifecycle.addObserver(this)
+    }
+
+    override fun onDetachedFromActivityForConfigChanges() {
+        mActivity = null
+        mLifecycle = null
+        //lifecycle.removeObserver(this)
+    }
+
+    override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
+        mActivity = binding.activity
+        mLifecycle = FlutterLifecycleAdapter.getActivityLifecycle(binding)
+        //lifecycle.addObserver(this)
+    }
+
+    override fun onDetachedFromActivity() {
+        mActivity = null
+        mLifecycle = null
+        //lifecycle.removeObserver(this)
     }
 }

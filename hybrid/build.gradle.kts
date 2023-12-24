@@ -26,9 +26,10 @@ android {
 }
 
 dependencies {
-    rootProject.findProject(":flutter_boost")?.let { boost ->
-        compileOnly(dependencyNotation = boost)
-        implementation(dependencyNotation = project(path = ":flutter"))
-        implementation(dependencyNotation = project(path = ":bridge"))
-    }
+
+    implementation(dependencyNotation = rootProject.findProject(":flutter_boost") ?: error("flutter_boost"))
+    implementation(dependencyNotation = project(path = ":flutter"))
+    implementation(dependencyNotation = project(path = ":engine"))
+    implementation(dependencyNotation = project(path = ":plugin"))
+   // implementation(dependencyNotation = project(path = ":bridge"))
 }
