@@ -9,14 +9,16 @@
         <option name="modules">
           <set>
             <option value="$USER_HOME$/AppData/Local/Pub/Cache/git/flutter_boost-dc78574ee440909be46542f0136e8a876e098919/android" />
+            <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/device_info-2.0.3/android" />
+            <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_plugin_android_lifecycle-2.0.17/android" />
+            <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_pty-0.4.0/android" />
+            <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/share-2.0.4/android" />
+            <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/shared_preferences_android-2.2.1/android" />
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/aidl" />
             <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/bridge" />
             <option value="$PROJECT_DIR$/client" />
-            <option value="$PROJECT_DIR$/common" />
             <option value="$PROJECT_DIR$/engine" />
-            <option value="$PROJECT_DIR$/framework" />
             <option value="$PROJECT_DIR$/hybrid" />
             <option value="$PROJECT_DIR$/nativelib" />
             <option value="$PROJECT_DIR$/plugin" />
