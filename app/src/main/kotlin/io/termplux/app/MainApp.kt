@@ -7,6 +7,9 @@ class MainApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        HybridFlutter().init(this)
+        val hybrid = HybridFlutter.build()
+        val hy = hybrid.withApplication(application = this@MainApp).build()
+
+
     }
 }

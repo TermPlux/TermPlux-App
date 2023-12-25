@@ -46,11 +46,10 @@ import io.flutter.plugin.common.MethodChannel
  * 描述: 插件引擎
  * 文档: https://github.com/ecosed/plugin/blob/master/README.md
  */
-open class EcosedEngine : EcosedPlugin(), EngineWrapper, FlutterPlugin, MethodChannel.MethodCallHandler, ActivityAware, LifecycleOwner, DefaultLifecycleObserver, SensorEventListener {
+abstract class EcosedEngine : EcosedPlugin(), EngineWrapper, FlutterPlugin, MethodChannel.MethodCallHandler, ActivityAware, LifecycleOwner, DefaultLifecycleObserver, SensorEventListener {
 
     override val channel: String
         get() = channelName
-
 
     /**  */
     private lateinit var mClient: EcosedClient
@@ -76,12 +75,7 @@ open class EcosedEngine : EcosedPlugin(), EngineWrapper, FlutterPlugin, MethodCh
             message = "lifecycle is null"
         )
 
-    open fun getHybridPlugin(): EcosedPlugin {
-        return object : EcosedPlugin() {
-            override val channel: String
-                get() = ""
-        }
-    }
+    abstract val hybridPlugin: EcosedPlugin
 
     override fun onEcosedMethodCall(call: EcosedMethodCall, result: EcosedResult) {
         super.onEcosedMethodCall(call, result)
@@ -133,7 +127,7 @@ open class EcosedEngine : EcosedPlugin(), EngineWrapper, FlutterPlugin, MethodCh
                 mClient = EcosedClient.build()
 
 
-                plugin = arrayListOf(mClient, getHybridPlugin())
+                plugin = arrayListOf(mClient, hybridPlugin)
                 // 初始化插件绑定器.
                 mBinding = PluginBinding(
                     context = this@EcosedEngine, debug = isBaseDebug
