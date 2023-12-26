@@ -16,7 +16,6 @@
 package io.ecosed.engine
 
 import android.app.Activity
-import android.content.Context
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -28,16 +27,13 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import com.blankj.utilcode.util.AppUtils
 import io.ecosed.client.EcosedClient
+import io.ecosed.common.FlutterPluginProxy
+import io.ecosed.common.MethodCallProxy
+import io.ecosed.common.ResultProxy
 import io.ecosed.plugin.EcosedMethodCall
 import io.ecosed.plugin.EcosedPlugin
 import io.ecosed.plugin.EcosedResult
 import io.ecosed.plugin.PluginBinding
-import io.flutter.embedding.engine.plugins.FlutterPlugin
-import io.flutter.embedding.engine.plugins.activity.ActivityAware
-import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
-import io.flutter.embedding.engine.plugins.lifecycle.FlutterLifecycleAdapter
-import io.flutter.plugin.common.MethodCall
-import io.flutter.plugin.common.MethodChannel
 
 /**
  * 作者: wyq0918dev
@@ -46,7 +42,7 @@ import io.flutter.plugin.common.MethodChannel
  * 描述: 插件引擎
  * 文档: https://github.com/ecosed/plugin/blob/master/README.md
  */
-abstract class EcosedEngine : EcosedPlugin(), EngineWrapper, FlutterPlugin, MethodChannel.MethodCallHandler, ActivityAware, LifecycleOwner, DefaultLifecycleObserver, SensorEventListener {
+open class EcosedEngine : EcosedPlugin(), FlutterPluginProxy, LifecycleOwner, DefaultLifecycleObserver, SensorEventListener {
 
     override val channel: String
         get() = channelName
@@ -66,16 +62,22 @@ abstract class EcosedEngine : EcosedPlugin(), EngineWrapper, FlutterPlugin, Meth
 
     private var execResult: Any? = null
 
-    private var mLifecycle: Lifecycle? = null
-    private var mActivity: Activity? = null
+    private lateinit var mActivity: Activity
+    private lateinit var mLifecycle: Lifecycle
+
+    override fun getActivity(activity: Activity) {
+        mActivity = activity
+    }
+
+    override fun getLifecycle(lifecycle: Lifecycle) {
+        mLifecycle = lifecycle
+    }
 
 
     override val lifecycle: Lifecycle
-        get() = mLifecycle ?: error(
-            message = "lifecycle is null"
-        )
+        get() = mLifecycle
 
-    abstract val hybridPlugin: EcosedPlugin
+    open val hybridPlugin: EcosedPlugin? = null
 
     override fun onEcosedMethodCall(call: EcosedMethodCall, result: EcosedResult) {
         super.onEcosedMethodCall(call, result)
@@ -85,7 +87,7 @@ abstract class EcosedEngine : EcosedPlugin(), EngineWrapper, FlutterPlugin, Meth
         }
     }
 
-    override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
+    override fun onMethodCall(call: MethodCallProxy, result: ResultProxy) {
 //        try {
 //            val bundle = Bundle()
 //            bundle.putString(
@@ -117,7 +119,7 @@ abstract class EcosedEngine : EcosedPlugin(), EngineWrapper, FlutterPlugin, Meth
         when {
             (mPluginList == null) or (mBinding == null) -> apply {
                 // 引擎附加基本上下文
-                attachBaseContext(base = mActivity)
+                attachBaseContext(base = mActivity.baseContext)
                 lifecycle.addObserver(this@EcosedEngine)
 
 
@@ -127,7 +129,7 @@ abstract class EcosedEngine : EcosedPlugin(), EngineWrapper, FlutterPlugin, Meth
                 mClient = EcosedClient.build()
 
 
-                plugin = arrayListOf(mClient, hybridPlugin)
+                plugin = arrayListOf(mClient, hybridPlugin?: error(""))
                 // 初始化插件绑定器.
                 mBinding = PluginBinding(
                     context = this@EcosedEngine, debug = isBaseDebug
@@ -291,39 +293,4 @@ abstract class EcosedEngine : EcosedPlugin(), EngineWrapper, FlutterPlugin, Meth
 
     }
 
-    private lateinit var mMethodChannel: MethodChannel
-
-    override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-        mMethodChannel = MethodChannel(binding.binaryMessenger, channelName)
-        mMethodChannel.setMethodCallHandler(this@EcosedEngine)
-    }
-
-    override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-        mMethodChannel.setMethodCallHandler(null)
-    }
-
-    override fun onAttachedToActivity(binding: ActivityPluginBinding) {
-        mActivity = binding.activity
-        mLifecycle = FlutterLifecycleAdapter.getActivityLifecycle(binding)
-        attach()
-        lifecycle.addObserver(this)
-    }
-
-    override fun onDetachedFromActivityForConfigChanges() {
-        mActivity = null
-        mLifecycle = null
-        //lifecycle.removeObserver(this)
-    }
-
-    override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
-        mActivity = binding.activity
-        mLifecycle = FlutterLifecycleAdapter.getActivityLifecycle(binding)
-        //lifecycle.addObserver(this)
-    }
-
-    override fun onDetachedFromActivity() {
-        mActivity = null
-        mLifecycle = null
-        //lifecycle.removeObserver(this)
-    }
 }

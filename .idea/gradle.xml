@@ -18,6 +18,7 @@
             <option value="$PROJECT_DIR$/aidl" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/client" />
+            <option value="$PROJECT_DIR$/common" />
             <option value="$PROJECT_DIR$/engine" />
             <option value="$PROJECT_DIR$/hybrid" />
             <option value="$PROJECT_DIR$/nativelib" />
