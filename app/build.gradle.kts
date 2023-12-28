@@ -1,6 +1,6 @@
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
+    alias(notation = libs.plugins.androidApplication)
+    alias(notation = libs.plugins.kotlinAndroid)
 }
 
 android {
@@ -30,12 +30,10 @@ android {
 }
 
 dependencies {
-
     wearApp(dependencyNotation = project(":wear"))
     implementation(dependencyNotation = project(path = ":hybrid"))
-
-    implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.11.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation(dependencyNotation = libs.androidx.core.ktx)
+    implementation(dependencyNotation = libs.androidx.appcompat)
+    implementation(dependencyNotation = libs.material)
+    implementation(dependencyNotation = libs.androidx.constraintlayout)
 }

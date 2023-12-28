@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "io.ecosed.common"
+    namespace = "io.termplux.settings"
     compileSdk = 34
 
     defaultConfig {
@@ -27,5 +27,7 @@ android {
 
 dependencies {
 
-    implementation(libs.androidx.lifecycle.common)
+    implementation("androidx.core:core-ktx:1.12.0")
+    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("com.google.android.material:material:1.11.0")
 }

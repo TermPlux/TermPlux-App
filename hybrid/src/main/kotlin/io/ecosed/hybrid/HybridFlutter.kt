@@ -8,11 +8,7 @@ import com.idlefish.flutterboost.FlutterBoost
 import io.ecosed.common.FlutterPluginProxy
 import io.ecosed.common.MethodCallProxy
 import io.ecosed.common.ResultProxy
-import io.ecosed.engine.EcosedEngine
-import io.ecosed.plugin.EcosedMethodCall
-import io.ecosed.plugin.EcosedPlugin
-import io.ecosed.plugin.EcosedResult
-import io.ecosed.plugin.PluginBinding
+import io.ecosed.framework.Framework
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -100,20 +96,6 @@ class HybridFlutter : ContextWrapper(null), HybridWrapper {
         override fun onDetachedFromActivity() = Unit
     }
 
-    private val mPlugin: EcosedPlugin = object : EcosedPlugin() {
-
-        override val channel: String
-            get() = channelName
-
-        override fun onEcosedAdded(binding: PluginBinding) {
-            super.onEcosedAdded(binding)
-        }
-
-        override fun onEcosedMethodCall(call: EcosedMethodCall, result: EcosedResult) {
-            super.onEcosedMethodCall(call, result)
-        }
-    }
-
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)
     }
@@ -139,8 +121,10 @@ class HybridFlutter : ContextWrapper(null), HybridWrapper {
         }
     }
 
-    private fun engineUnit(content: FlutterPluginProxy.() -> Unit) {
-        content.invoke(Framework())
+    private fun engineUnit(
+        content: FlutterPluginProxy.() -> Unit,
+    ) {
+        content.invoke(Framework.build())
     }
 
     companion object {

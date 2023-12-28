@@ -1,8 +1,8 @@
 plugins {
-    id("com.android.library")
-    id("org.jetbrains.kotlin.android")
-    id("org.jetbrains.kotlin.kapt")
-    id("dev.rikka.tools.refine")
+    alias(notation = libs.plugins.androidLibrary)
+    alias(notation = libs.plugins.kotlinAndroid)
+    alias(notation = libs.plugins.kotlinKapt)
+    alias(notation = libs.plugins.rikkaToolsRefine)
 }
 
 android {
@@ -46,12 +46,13 @@ dependencies {
     // HiddenApiRefinePlugin: https://github.com/RikkaApps/HiddenApiRefinePlugin
     implementation(dependencyNotation = "dev.rikka.tools.refine:annotation:4.3.0")
     implementation(dependencyNotation = "dev.rikka.tools.refine:runtime:4.3.0")
+
     kapt(dependencyNotation = "dev.rikka.tools.refine:annotation-processor:4.3.0")
 
     implementation(dependencyNotation = "com.google.android.gms:play-services-base:18.2.0")
 
-    implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.11.0")
+    implementation(dependencyNotation = libs.androidx.core.ktx)
+    implementation(dependencyNotation = libs.androidx.appcompat)
+    implementation(dependencyNotation = libs.material)
 
 }

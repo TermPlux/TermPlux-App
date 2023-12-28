@@ -26,14 +26,10 @@ android {
 }
 
 dependencies {
-
-
-
-
-    implementation(dependencyNotation = project(":plugin"))
-    implementation(dependencyNotation = project(":client"))
-    implementation(dependencyNotation = project(":common"))
-    implementation(dependencyNotation = "com.blankj:utilcodex:1.31.1")
-    implementation(dependencyNotation = "androidx.lifecycle:lifecycle-common:2.6.2")
-    implementation(dependencyNotation = "androidx.appcompat:appcompat:1.6.1")
+    implementation(dependencyNotation = project(path = ":plugin"))
+    implementation(dependencyNotation = project(path = ":client"))
+    implementation(dependencyNotation = project(path = ":common"))
+    implementation(dependencyNotation = libs.utilcodex)
+    implementation(dependencyNotation = libs.androidx.lifecycle.common)
+    implementation(dependencyNotation = libs.androidx.appcompat)
 }

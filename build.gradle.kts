@@ -1,8 +1,10 @@
 plugins {
-    id("com.android.application") version "8.2.0" apply false
-    id("org.jetbrains.kotlin.android") version "1.9.20" apply false
-    id("com.android.library") version "8.2.0" apply false
-    id("dev.rikka.tools.refine") version "4.3.0" apply false
+    alias(libs.plugins.androidApplication) apply false
+    alias(libs.plugins.kotlinAndroid) apply false
+    alias(libs.plugins.kotlinKapt) apply false
+    alias(libs.plugins.androidLibrary) apply false
+    alias(libs.plugins.rikkaToolsRefine) apply false
+
 }
 
 allprojects {

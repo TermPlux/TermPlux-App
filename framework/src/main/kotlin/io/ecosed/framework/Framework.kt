@@ -1,4 +1,4 @@
-package io.ecosed.hybrid
+package io.ecosed.framework
 
 import android.app.Activity
 import androidx.lifecycle.Lifecycle
@@ -10,7 +10,7 @@ import io.ecosed.plugin.EcosedPlugin
 import io.ecosed.plugin.EcosedMethodCall
 import io.ecosed.plugin.EcosedResult
 
-class Framework : FlutterPluginProxy {
+class Framework private constructor(): FlutterPluginProxy {
 
     private val engine = object : EcosedEngine() {
 
@@ -50,5 +50,9 @@ class Framework : FlutterPluginProxy {
 
     companion object {
         const val channelName = "framework"
+
+        fun build(): Framework {
+            return Framework()
+        }
     }
 }
