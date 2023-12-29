@@ -15,5 +15,6 @@ class MainActivity : TPBaseActivity() {
         window.decorView.background = WallpaperUtil.drawable(this)
 
         setContentView(R.layout.activity_main)
+
     }
 }

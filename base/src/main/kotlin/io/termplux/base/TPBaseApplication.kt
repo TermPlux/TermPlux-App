@@ -3,7 +3,7 @@ package io.termplux.base
 import android.app.Application
 import io.termplux.hybrid.HybridFlutter
 
-open class TPBaseApplication : Application(), TPBaseAppWrapper {
+open class TPBaseApplication : Application(), TPBaseApplicationWrapper {
 
     private lateinit var mHybridFlutter: HybridFlutter
 
@@ -15,7 +15,6 @@ open class TPBaseApplication : Application(), TPBaseAppWrapper {
         ).build()
     }
 
-    override fun getHybrid(): HybridFlutter {
-        return mHybridFlutter
-    }
+    override val hybrid: HybridFlutter
+        get() = mHybridFlutter
 }
