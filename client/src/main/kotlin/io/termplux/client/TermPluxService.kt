@@ -15,6 +15,7 @@ import androidx.core.app.NotificationCompat
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.PermissionUtils
 import io.termplux.aidl.TermPlux
+import io.termplux.utils.ChineseCaleUtil
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -124,7 +125,7 @@ internal class TermPluxService : Service(), Shizuku.OnBinderReceivedListener,
     }
 
     private fun chineseCale(): String {
-        return io.termplux.utils.ChineseCaleUtil.getChineseCale()
+        return ChineseCaleUtil.getChineseCale()
     }
 
     private fun onePoem(): String {

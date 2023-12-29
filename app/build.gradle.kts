@@ -35,6 +35,8 @@ dependencies {
 
     implementation(project(":utils"))
 
+    implementation(project(":base"))
+
     implementation(libs.play.services.wearable)
     implementation(dependencyNotation = libs.androidx.core.ktx)
     implementation(dependencyNotation = libs.androidx.appcompat)

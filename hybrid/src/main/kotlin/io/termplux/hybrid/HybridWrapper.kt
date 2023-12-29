@@ -7,4 +7,6 @@ interface HybridWrapper {
     fun withApplication(application: Application): HybridWrapper
     fun build(): HybridFlutter
 
+
+
 }

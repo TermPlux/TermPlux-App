@@ -8,7 +8,7 @@ import java.util.*
 /**
  * 获取中国农历
  */
-internal class ChineseCaleUtil private constructor(){
+class ChineseCaleUtil private constructor() {
 
     // 农历的年份
     private var year = 0
@@ -77,7 +77,7 @@ internal class ChineseCaleUtil private constructor(){
     private fun getDaysOfTwoDate(
         nY: Int,
         nM: Int,
-        nD: Int
+        nD: Int,
     ): Int {
         var baseDate: Date? = null
         var nowadays: Date? = null
@@ -314,7 +314,7 @@ internal class ChineseCaleUtil private constructor(){
         }
     }
 
-    internal companion object {
+    companion object {
 
         private val chineseNumber = arrayOf(
             "正", "二", "三", "四", "五", "六", "七",
@@ -436,7 +436,7 @@ internal class ChineseCaleUtil private constructor(){
         )
 
         // 入口函数，返回农历日期的字符串
-        internal fun getChineseCale(): String {
+        fun getChineseCale(): String {
             val calendar = Calendar.getInstance()
 
             val year = calendar[Calendar.YEAR]

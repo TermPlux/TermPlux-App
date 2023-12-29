@@ -1,5 +1,6 @@
 [versions]
 agp = "8.2.0" #Android Gradle Plugin
+
 kotlin = "1.9.21" #JetBrains Kotlin language
 
 
@@ -12,6 +13,7 @@ util-code = "1.31.1"
 
 
 appcompat = "1.6.1" # AndroidX AppCompat
+fragment = "1.6.2"
 core-ktx = "1.12.0"
 lifecycle = "2.6.2"
 constraintlayout = "2.1.4"
@@ -31,6 +33,7 @@ espresso-core = "3.5.1"
 [libraries]
 # 第三方库
 # HiddenApiRefinePlugin: https://github.com/RikkaApps/HiddenApiRefinePlugin
+
 refine-annotation = { module = "dev.rikka.tools.refine:annotation", version.ref = "refine" }
 refine-processor = { module = "dev.rikka.tools.refine:annotation-processor", version.ref = "refine" }
 refine-runtime = { module = "dev.rikka.tools.refine:runtime", version.ref = "refine" }
@@ -49,6 +52,7 @@ androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecyc
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity-compose" }
 androidx-preference = { module = "androidx.preference:preference-ktx", version.ref = "preference" }
+androidx-fragment = { module = "androidx.fragment:fragment-ktx", version.ref = "fragment" }
 
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
 androidx-compose-ui = { group = "androidx.compose.ui", name = "ui" }

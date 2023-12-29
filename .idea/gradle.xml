@@ -10,6 +10,7 @@
           <set>
             <option value="$USER_HOME$/.pub-cache/git/flutter_boost-271e0e3d9bf6a25c7f17a0f85abb107870946a86/android" />
             <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/device_info-2.0.3/android" />
+            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/dynamic_color-1.6.9/android" />
             <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/flutter_plugin_android_lifecycle-2.0.17/android" />
             <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/flutter_pty-0.4.0/android" />
             <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/share-2.0.4/android" />
@@ -24,6 +25,7 @@
             <option value="$PROJECT_DIR$/framework" />
             <option value="$PROJECT_DIR$/hybrid" />
             <option value="$PROJECT_DIR$/nativelib" />
+            <option value="$PROJECT_DIR$/network" />
             <option value="$PROJECT_DIR$/plugin" />
             <option value="$PROJECT_DIR$/provider" />
             <option value="$PROJECT_DIR$/settings" />

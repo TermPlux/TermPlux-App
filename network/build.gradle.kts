@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "io.termplux.hybrid"
+    namespace = "io.termplux.network"
     compileSdk = 34
 
     defaultConfig {
@@ -26,10 +26,8 @@ android {
 }
 
 dependencies {
-    implementation(rootProject.findProject(":flutter_boost") ?: error("flutter_boost"))
-    implementation(rootProject.findProject(":flutter_plugin_android_lifecycle") ?: error("flutter_plugin_android_lifecycle"))
-    implementation(project(":flutter"))
-    implementation(project(":framework"))
-    implementation(project(":common"))
-    implementation(libs.androidx.fragment)
+
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.material)
 }
