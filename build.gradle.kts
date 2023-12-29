@@ -4,7 +4,6 @@ plugins {
     alias(libs.plugins.kotlinKapt) apply false
     alias(libs.plugins.androidLibrary) apply false
     alias(libs.plugins.rikkaToolsRefine) apply false
-
 }
 
 allprojects {

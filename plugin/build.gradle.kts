@@ -1,10 +1,10 @@
 plugins {
-    id("com.android.library")
-    id("org.jetbrains.kotlin.android")
+    alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.kotlinAndroid)
 }
 
 android {
-    namespace = "io.ecosed.plugin"
+    namespace = "io.termplux.plugin"
     compileSdk = 34
 
     defaultConfig {
@@ -23,11 +23,4 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
-}
-
-dependencies {
-
-    implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.11.0")
 }

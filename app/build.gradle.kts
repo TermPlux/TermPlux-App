@@ -32,6 +32,10 @@ android {
 dependencies {
     wearApp(dependencyNotation = project(":wear"))
     implementation(dependencyNotation = project(path = ":hybrid"))
+
+    implementation(project(":utils"))
+
+    implementation(libs.play.services.wearable)
     implementation(dependencyNotation = libs.androidx.core.ktx)
     implementation(dependencyNotation = libs.androidx.appcompat)
     implementation(dependencyNotation = libs.material)

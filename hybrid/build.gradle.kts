@@ -1,10 +1,10 @@
 plugins {
-    id("com.android.library")
-    id("org.jetbrains.kotlin.android")
+    alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.kotlinAndroid)
 }
 
 android {
-    namespace = "io.ecosed.hybrid"
+    namespace = "io.termplux.hybrid"
     compileSdk = 34
 
     defaultConfig {
@@ -26,12 +26,14 @@ android {
 }
 
 dependencies {
+    implementation(rootProject.findProject(":flutter_boost") ?: error("flutter_boost"))
+    implementation(rootProject.findProject(":flutter_plugin_android_lifecycle") ?: error("flutter_plugin_android_lifecycle"))
+    implementation(project(":flutter"))
+    implementation(project(":framework"))
+    implementation(project(":common"))
+    implementation(project(":base"))
 
-    implementation(dependencyNotation = rootProject.findProject(":flutter_boost") ?: error("flutter_boost"))
-    implementation(dependencyNotation = rootProject.findProject("flutter_plugin_android_lifecycle") ?: error("flutter_plugin_android_lifecycle"))
-    implementation(dependencyNotation = project(path = ":flutter"))
-//    implementation(dependencyNotation = project(path = ":engine"))
-    implementation(dependencyNotation = project(path = ":framework"))
-//    implementation(dependencyNotation = project(path = ":plugin"))
-    implementation(dependencyNotation = project(path = ":common"))
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.material)
 }

@@ -1,25 +1,46 @@
 [versions]
 agp = "8.2.0" #Android Gradle Plugin
-appcompat = "1.6.1" # AndroidX AppCompat
-constraintlayout = "2.1.4"
-kotlin = "1.9.20" #JetBrains Kotlin language
-
-material = "1.11.0"
-material3 = "1.1.2"
+kotlin = "1.9.21" #JetBrains Kotlin language
 
 
+play-services-wearable = "18.1.0"
+shizuku = "13.1.5"
+taskbar = "2.2.0"
 refine = "4.3.0"
 util-code = "1.31.1"
 
-core-ktx = "1.12.0"
 
+
+appcompat = "1.6.1" # AndroidX AppCompat
+core-ktx = "1.12.0"
 lifecycle = "2.6.2"
+constraintlayout = "2.1.4"
 activity-compose = "1.8.2"
+preference = "1.2.1"
+
+material3 = "1.1.2"
 compose-bom = "2023.10.01"
+
+material = "1.11.0"
+play-services-base = "18.2.0"
+junit = "4.13.2"
+androidx-test-ext-junit = "1.1.5"
+espresso-core = "3.5.1"
+
 
 [libraries]
 # 第三方库
+# HiddenApiRefinePlugin: https://github.com/RikkaApps/HiddenApiRefinePlugin
+refine-annotation = { module = "dev.rikka.tools.refine:annotation", version.ref = "refine" }
+refine-processor = { module = "dev.rikka.tools.refine:annotation-processor", version.ref = "refine" }
+refine-runtime = { module = "dev.rikka.tools.refine:runtime", version.ref = "refine" }
+# Shizuku-API: https://github.com/RikkaApps/Shizuku-API
+shizuku-api = { group = "dev.rikka.shizuku",name = "api", version.ref = "shizuku" }
+shizuku-provider = { group = "dev.rikka.shizuku",name = "provider", version.ref = "shizuku" }
+# AndroidUtilCode: https://github.com/Blankj/AndroidUtilCode
 utilcodex = { group = "com.blankj", name = "utilcodex", version.ref = "util-code"}
+# LibTaskbar: https://github.com/farmerbb/libtaskbar
+libtaskbar = { group = "com.github.farmerbb", name = "libtaskbar", version.ref = "taskbar"}
 # 官方库
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
@@ -27,9 +48,11 @@ androidx-lifecycle-common = { group = "androidx.lifecycle", name = "lifecycle-co
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity-compose" }
+androidx-preference = { module = "androidx.preference:preference-ktx", version.ref = "preference" }
 
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
 androidx-compose-ui = { group = "androidx.compose.ui", name = "ui" }
+androidx-compose-ui-android = { group = "androidx.compose.ui", name = "ui-android" }
 androidx-compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
@@ -40,6 +63,14 @@ androidx-compose-material3-window-size = { group = "androidx.compose.material3",
 androidx-compose-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended"}
 
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+play-services-base = { group = "com.google.android.gms",name = "play-services-base", version.ref = "play-services-base" }
+play-services-wearable = { module = "com.google.android.gms:play-services-wearable", version.ref = "play-services-wearable" }
+
+
+
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
+espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

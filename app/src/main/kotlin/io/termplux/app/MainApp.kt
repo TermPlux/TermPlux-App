@@ -1,7 +1,7 @@
 package io.termplux.app
 
 import android.app.Application
-import io.ecosed.hybrid.HybridFlutter
+import io.termplux.hybrid.HybridFlutter
 
 class MainApp : Application() {
 

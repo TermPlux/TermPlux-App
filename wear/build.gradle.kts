@@ -1,6 +1,6 @@
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
+    alias(libs.plugins.androidApplication)
+    alias(libs.plugins.kotlinAndroid)
 }
 
 android {
@@ -30,6 +30,5 @@ android {
 }
 
 dependencies {
-
-    implementation("com.google.android.gms:play-services-wearable:18.1.0")
+    implementation(libs.play.services.wearable)
 }

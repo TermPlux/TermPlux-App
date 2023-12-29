@@ -1,10 +1,10 @@
 plugins {
-    id("com.android.library")
-    id("org.jetbrains.kotlin.android")
+    alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.kotlinAndroid)
 }
 
 android {
-    namespace = "io.ecosed.engine"
+    namespace = "io.termplux.engine"
     compileSdk = 34
 
     defaultConfig {
@@ -26,10 +26,10 @@ android {
 }
 
 dependencies {
-    implementation(dependencyNotation = project(path = ":plugin"))
-    implementation(dependencyNotation = project(path = ":client"))
-    implementation(dependencyNotation = project(path = ":common"))
-    implementation(dependencyNotation = libs.utilcodex)
-    implementation(dependencyNotation = libs.androidx.lifecycle.common)
-    implementation(dependencyNotation = libs.androidx.appcompat)
+    implementation(project(":plugin"))
+    implementation(project(":client"))
+    implementation(project(":common"))
+    implementation(libs.utilcodex)
+    implementation(libs.androidx.lifecycle.common)
+    implementation(libs.androidx.appcompat)
 }

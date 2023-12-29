@@ -1,10 +1,10 @@
 plugins {
-    id("com.android.library")
-    id("org.jetbrains.kotlin.android")
+    alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.kotlinAndroid)
 }
 
 android {
-    namespace = "io.ecosed.signature"
+    namespace = "io.termplux.signature"
     compileSdk = 34
 
     defaultConfig {
@@ -26,11 +26,5 @@ android {
 }
 
 dependencies {
-
-    implementation(dependencyNotation = project(path = ":aidl"))
-
-    implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.11.0")
-
+    implementation(project(":aidl"))
 }

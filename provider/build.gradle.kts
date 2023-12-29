@@ -1,10 +1,10 @@
 plugins {
-    id("com.android.library")
-    id("org.jetbrains.kotlin.android")
+    alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.kotlinAndroid)
 }
 
 android {
-    namespace = "io.ecosed.provider"
+    namespace = "io.termplux.provider"
     compileSdk = 34
 
     defaultConfig {
@@ -26,5 +26,5 @@ android {
 }
 
 dependencies {
-    implementation(dependencyNotation = "dev.rikka.shizuku:provider:13.1.5")
+    implementation(libs.shizuku.provider)
 }

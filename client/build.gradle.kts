@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "io.ecosed.client"
+    namespace = "io.termplux.client"
     compileSdk = 34
 
     defaultConfig {
@@ -32,27 +32,19 @@ android {
 }
 
 dependencies {
-
-    implementation(dependencyNotation = project(path = ":plugin"))
-    implementation(dependencyNotation = project(path = ":aidl"))
-    implementation(dependencyNotation = project(path = ":nativelib"))
-    implementation(dependencyNotation = project(path = ":provider"))
-    implementation(dependencyNotation = project(path = ":signature"))
-
-
-    // Shizuku-API: https://github.com/RikkaApps/Shizuku-API
-    implementation(dependencyNotation = "dev.rikka.shizuku:api:13.1.5")
-    implementation(dependencyNotation = "com.blankj:utilcodex:1.31.1")
-    // HiddenApiRefinePlugin: https://github.com/RikkaApps/HiddenApiRefinePlugin
-    implementation(dependencyNotation = "dev.rikka.tools.refine:annotation:4.3.0")
-    implementation(dependencyNotation = "dev.rikka.tools.refine:runtime:4.3.0")
-
-    kapt(dependencyNotation = "dev.rikka.tools.refine:annotation-processor:4.3.0")
-
-    implementation(dependencyNotation = "com.google.android.gms:play-services-base:18.2.0")
-
-    implementation(dependencyNotation = libs.androidx.core.ktx)
-    implementation(dependencyNotation = libs.androidx.appcompat)
-    implementation(dependencyNotation = libs.material)
-
+    implementation(project(":plugin"))
+    implementation(project(":aidl"))
+    implementation(project(":nativelib"))
+    implementation(project(":provider"))
+    implementation(project(":signature"))
+    implementation(project(":utils"))
+    implementation(libs.shizuku.api)
+    implementation(libs.utilcodex)
+    implementation(libs.refine.annotation)
+    implementation(libs.refine.runtime)
+    kapt(libs.refine.processor)
+    implementation(libs.play.services.base)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.material)
 }
