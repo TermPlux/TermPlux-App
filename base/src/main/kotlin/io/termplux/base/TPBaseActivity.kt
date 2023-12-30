@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import io.termplux.hybrid.HybridFlutter
 
@@ -16,13 +17,16 @@ abstract class TPBaseActivity : AppCompatActivity(), TPBaseActivityWrapper {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (application is TPBaseApplicationWrapper) {
-            (application as TPBaseApplicationWrapper).apply {
+        when (application) {
+            is TPBaseApplicationWrapper -> (application as TPBaseApplicationWrapper).apply {
                 mHybridFlutter = hybrid
+                enableEdgeToEdge()
             }
-        } else error(
-            message = "Application未实现TPBaseApplicationWrapper方法"
-        )
+
+            else -> error(
+                message = "Application未实现TPBaseApplicationWrapper方法"
+            )
+        }
     }
 
     override fun onPostResume() {
@@ -44,7 +48,6 @@ abstract class TPBaseActivity : AppCompatActivity(), TPBaseActivityWrapper {
     }
 
 
-
     @Deprecated("Deprecated in Java")
     @SuppressLint("MissingSuperCall")
     override fun onBackPressed() {
@@ -58,7 +61,7 @@ abstract class TPBaseActivity : AppCompatActivity(), TPBaseActivityWrapper {
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
-        grantResults: IntArray
+        grantResults: IntArray,
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         try {

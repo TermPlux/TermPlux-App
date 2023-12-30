@@ -20,7 +20,6 @@ class MainActivity : TPBaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
 
         binding = ContainerBinding.inflate(layoutInflater)
 
