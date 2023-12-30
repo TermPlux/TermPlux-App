@@ -12,9 +12,6 @@ open class TPBaseActivity : AppCompatActivity(), TPBaseActivityWrapper {
 
     private lateinit var mHybridFlutter: HybridFlutter
 
-    override val flutter: Fragment
-        get() = mHybridFlutter.getFlutterFragment()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (application is TPBaseApplicationWrapper) {
@@ -94,6 +91,9 @@ open class TPBaseActivity : AppCompatActivity(), TPBaseActivityWrapper {
             Log.e(tag, "onTrimMemory", e)
         }
     }
+
+    override val flutter: Fragment
+        get() = mHybridFlutter.getFlutterFragment()
 
     companion object {
         private const val tag: String = "TPBaseActivity"

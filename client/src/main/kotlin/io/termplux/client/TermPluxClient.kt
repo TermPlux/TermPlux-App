@@ -49,6 +49,7 @@ class TermPluxClient private constructor() : EcosedPlugin(), ServiceConnection, 
         startService(mIntent)
         bindEcosed()
 
+        Toast.makeText(this, "client", Toast.LENGTH_SHORT).show()
     }
 
     override fun onEcosedMethodCall(call: EcosedMethodCall, result: EcosedResult) {

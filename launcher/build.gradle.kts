@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "io.termplux.base"
+    namespace = "io.termplux.launcher"
     compileSdk = 34
 
     defaultConfig {
@@ -23,14 +23,20 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
 
-    implementation("com.github.kongzue:BaseFramework:6.9.3")
-
-    implementation(project(":hybrid"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+
+    implementation(project(":plugin"))
+    implementation(project(":utils"))
+    implementation(project(":ui"))
+
+    implementation(libs.androidx.fragment)
 }

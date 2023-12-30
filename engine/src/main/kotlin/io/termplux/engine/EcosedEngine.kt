@@ -122,12 +122,8 @@ open class EcosedEngine : EcosedPlugin(), FlutterPluginProxy, LifecycleOwner, De
                 attachBaseContext(base = mActivity.baseContext)
                 lifecycle.addObserver(this@EcosedEngine)
 
-
-
-
                 // 初始化客户端组件
                 mClient = TermPluxClient.build()
-
 
                 plugin = arrayListOf(mClient, hybridPlugin?: error(""))
                 // 初始化插件绑定器.
@@ -136,28 +132,6 @@ open class EcosedEngine : EcosedPlugin(), FlutterPluginProxy, LifecycleOwner, De
                 )
                 // 初始化插件列表.
                 mPluginList = arrayListOf()
-                // 加载框架
-//                mClient.let { ecosed ->
-//                    mBinding?.let { binding ->
-//                        ecosed.apply {
-//                            try {
-//                                onEcosedAdded(binding = binding)
-//                                if (isBaseDebug) {
-//                                    Log.d(tag, "框架已加载")
-//                                }
-//                            } catch (e: Exception) {
-//                                if (isBaseDebug) {
-//                                    Log.e(tag, "框架加载失败!", e)
-//                                }
-//                            }
-//                        }
-//                    }.run {
-//                        mPluginList?.add(element = ecosed)
-//                        if (isBaseDebug) {
-//                            Log.d(tag, "框架已添加到插件列表")
-//                        }
-//                    }
-//                }
                 // 添加所有插件.
                 plugin?.let { plugins ->
                     mBinding?.let { binding ->

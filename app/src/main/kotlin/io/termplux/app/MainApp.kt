@@ -5,11 +5,5 @@ import io.termplux.hybrid.HybridFlutter
 
 class MainApp : TPBaseApplication() {
 
-    override fun onCreate() {
-        super.onCreate()
 
-
-
-
-    }
 }

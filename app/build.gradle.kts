@@ -1,6 +1,6 @@
 plugins {
-    alias(notation = libs.plugins.androidApplication)
-    alias(notation = libs.plugins.kotlinAndroid)
+    alias(libs.plugins.androidApplication)
+    alias(libs.plugins.kotlinAndroid)
 }
 
 android {
@@ -27,19 +27,28 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
-    wearApp(dependencyNotation = project(":wear"))
-    implementation(dependencyNotation = project(path = ":hybrid"))
 
+
+    implementation("com.github.kongzue:BaseFramework:6.9.3")
+
+    wearApp(project(":wear"))
+    implementation(project(":base"))
+    implementation(project(":hybrid"))
     implementation(project(":utils"))
 
-    implementation(project(":base"))
+    implementation(project(":launcher"))
+
+    implementation(project(":ui"))
 
     implementation(libs.play.services.wearable)
-    implementation(dependencyNotation = libs.androidx.core.ktx)
-    implementation(dependencyNotation = libs.androidx.appcompat)
-    implementation(dependencyNotation = libs.material)
-    implementation(dependencyNotation = libs.androidx.constraintlayout)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.material)
+    implementation(libs.androidx.constraintlayout)
 }

@@ -19,7 +19,7 @@ dependencyResolutionManagement {
 }
 rootProject.name = "TermPlux-App"
 apply(from = "flutter.gradle")
-include(":stub")
+//include(":stub")
 include(":app")
 include(":wear")
 include(":engine")
@@ -37,3 +37,4 @@ include(":settings")
 include(":ui")
 include(":base")
 include(":network")
+include(":launcher")
