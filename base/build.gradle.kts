@@ -27,9 +27,10 @@ android {
 
 dependencies {
 
-    implementation("com.github.kongzue:BaseFramework:6.9.3")
+    implementation(libs.base.framework)
 
     implementation(project(":hybrid"))
+    implementation(project(":utils"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

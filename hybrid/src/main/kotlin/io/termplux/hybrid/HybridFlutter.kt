@@ -27,9 +27,11 @@ class HybridFlutter : ContextWrapper(null), HybridWrapper {
 
     override fun build(): HybridFlutter {
         return this@HybridFlutter.apply {
+            // 附加基础上下文
             attachBaseContext(
                 base = mApplication.baseContext
             )
+            // 初始化FlutterBoost
             FlutterBoost.instance().setup(
                 mApplication,
                 FlutterDelegate.build(),
@@ -37,6 +39,7 @@ class HybridFlutter : ContextWrapper(null), HybridWrapper {
                     plugin = EnginePlugin.build()
                 )
             )
+            // 初始化FlutterFragment
             FlutterBoostFragment.CachedEngineFragmentBuilder()
                 .destroyEngineWithFragment(false)
                 .renderMode(RenderMode.surface)

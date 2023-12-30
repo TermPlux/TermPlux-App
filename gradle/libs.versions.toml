@@ -1,6 +1,7 @@
 [versions]
 agp = "8.2.0" #Android Gradle Plugin
 
+base-framework = "6.9.3"
 kotlin = "1.9.21" #JetBrains Kotlin language
 
 
@@ -25,6 +26,8 @@ compose-bom = "2023.10.01"
 
 material = "1.11.0"
 play-services-base = "18.2.0"
+navigation-fragment-ktx = "2.6.0"
+navigation-ui-ktx = "2.6.0"
 
 
 
@@ -32,6 +35,7 @@ play-services-base = "18.2.0"
 # 第三方库
 # HiddenApiRefinePlugin: https://github.com/RikkaApps/HiddenApiRefinePlugin
 
+base-framework = { group = "com.github.kongzue",name = "BaseFramework",  version.ref = "base-framework" }
 refine-annotation = { module = "dev.rikka.tools.refine:annotation", version.ref = "refine" }
 refine-processor = { module = "dev.rikka.tools.refine:annotation-processor", version.ref = "refine" }
 refine-runtime = { module = "dev.rikka.tools.refine:runtime", version.ref = "refine" }
@@ -67,6 +71,8 @@ androidx-compose-material-icons-extended = { group = "androidx.compose.material"
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 play-services-base = { group = "com.google.android.gms",name = "play-services-base", version.ref = "play-services-base" }
 play-services-wearable = { module = "com.google.android.gms:play-services-wearable", version.ref = "play-services-wearable" }
+navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigation-fragment-ktx" }
+navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigation-ui-ktx" }
 
 
 

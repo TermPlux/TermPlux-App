@@ -6,7 +6,6 @@ import com.idlefish.flutterboost.FlutterBoostRouteOptions
 import com.idlefish.flutterboost.containers.FlutterBoostActivity
 import io.flutter.embedding.android.FlutterActivityLaunchConfigs
 
-
 internal class FlutterDelegate private constructor() : FlutterBoostDelegate {
 
     override fun pushNativeRoute(options: FlutterBoostRouteOptions?) {

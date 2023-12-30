@@ -170,23 +170,23 @@ open class EcosedEngine : EcosedPlugin(), FlutterPluginProxy, LifecycleOwner, De
     override fun onCreate(owner: LifecycleOwner) {
         super.onCreate(owner)
 
-        var dialog: AlertDialog
+//        var dialog: AlertDialog
+//
+//        AlertDialog.Builder(this@EcosedEngine).apply {
+//            setTitle("Flutter Ecosed Dev Menu")
+//            setMessage("Running ")
+//
+//            setPositiveButton("确定") { dialog, which ->
+//
+//            }
+//            setNegativeButton("取消") { dialog, which ->
+//
+//            }
+//            dialog = create()
+//        }
 
-        AlertDialog.Builder(this@EcosedEngine).apply {
-            setTitle("Flutter Ecosed Dev Menu")
-            setMessage("Running ")
 
-            setPositiveButton("确定") { dialog, which ->
-
-            }
-            setNegativeButton("取消") { dialog, which ->
-
-            }
-            dialog = create()
-        }
-
-
-        if (!dialog.isShowing) dialog.show()
+//        if (!dialog.isShowing) dialog.show()
 
 
     }

@@ -26,6 +26,7 @@ android {
 }
 
 dependencies {
-
-
+    implementation(libs.androidx.fragment)
+    implementation(libs.base.framework)
+    implementation(libs.androidx.appcompat)
 }

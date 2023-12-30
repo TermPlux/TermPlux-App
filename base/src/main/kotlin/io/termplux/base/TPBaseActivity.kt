@@ -5,12 +5,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import io.termplux.hybrid.HybridFlutter
 
-open class TPBaseActivity : AppCompatActivity(), TPBaseActivityWrapper {
+abstract class TPBaseActivity : AppCompatActivity(), TPBaseActivityWrapper {
 
     private lateinit var mHybridFlutter: HybridFlutter
+
+    override val hybrid: HybridFlutter
+        get() = mHybridFlutter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,7 +21,7 @@ open class TPBaseActivity : AppCompatActivity(), TPBaseActivityWrapper {
                 mHybridFlutter = hybrid
             }
         } else error(
-            message = ""
+            message = "Application未实现TPBaseApplicationWrapper方法"
         )
     }
 
@@ -34,7 +36,6 @@ open class TPBaseActivity : AppCompatActivity(), TPBaseActivityWrapper {
 
     @SuppressLint("MissingSuperCall")
     override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
         try {
             mHybridFlutter.onNewIntent(intent = intent!!)
         } catch (e: Exception) {
@@ -42,8 +43,11 @@ open class TPBaseActivity : AppCompatActivity(), TPBaseActivityWrapper {
         }
     }
 
+
+
+    @Deprecated("Deprecated in Java")
+    @SuppressLint("MissingSuperCall")
     override fun onBackPressed() {
-        super.onBackPressed()
         try {
             mHybridFlutter.onBackPressed()
         } catch (e: Exception) {
@@ -73,8 +77,8 @@ open class TPBaseActivity : AppCompatActivity(), TPBaseActivityWrapper {
         }
     }
 
+    @SuppressLint("MissingSuperCall")
     override fun onUserLeaveHint() {
-        super.onUserLeaveHint()
         try {
             mHybridFlutter.onUserLeaveHint()
         } catch (e: Exception) {
@@ -91,9 +95,6 @@ open class TPBaseActivity : AppCompatActivity(), TPBaseActivityWrapper {
             Log.e(tag, "onTrimMemory", e)
         }
     }
-
-    override val flutter: Fragment
-        get() = mHybridFlutter.getFlutterFragment()
 
     companion object {
         private const val tag: String = "TPBaseActivity"

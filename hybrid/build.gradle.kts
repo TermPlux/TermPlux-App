@@ -32,4 +32,5 @@ dependencies {
     implementation(project(":framework"))
     implementation(project(":common"))
     implementation(libs.androidx.fragment)
+    implementation(libs.material)
 }
