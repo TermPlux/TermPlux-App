@@ -10,23 +10,23 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
 import io.termplux.base.TPBaseFragment
 
-class FlutterFragment : TPBaseFragment() {
+class MainFragment : TPBaseFragment() {
 
     private lateinit var mFragmentManager: FragmentManager
-    private var flutterFragment: Fragment? = null
+    private var mFragment: Fragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mFragmentManager = childFragmentManager
-        flutterFragment = mFragmentManager.findFragmentByTag(
-            tagFlutterFragment
+        mFragment = mFragmentManager.findFragmentByTag(
+            tagMainFragment
         )
     }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View = FragmentContainerView(
         context = requireContext()
     ).apply {
@@ -35,35 +35,33 @@ class FlutterFragment : TPBaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (flutterFragment == null) addFragment(view)
+        if (mFragment == null) {
+            if (
+                !fragment.isAdded && mFragmentManager.findFragmentByTag(
+                    tagMainFragment
+                ) == null
+            ) {
+                mFragmentManager.commit(
+                    allowStateLoss = false,
+                    body = {
+                        mFragment = fragment
+                        add(
+                            view.id,
+                            fragment,
+                            tagMainFragment
+                        )
+                    }
+                )
+            }
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        flutterFragment = null
-    }
-
-    private fun addFragment(view: View) {
-        if (
-            !fragment.isAdded && mFragmentManager.findFragmentByTag(
-                tagFlutterFragment
-            ) == null
-        ) {
-            mFragmentManager.commit(
-                allowStateLoss = false,
-                body = {
-                    flutterFragment = fragment
-                    add(
-                        view.id,
-                        fragment,
-                        tagFlutterFragment
-                    )
-                }
-            )
-        }
+        mFragment = null
     }
 
     companion object {
-        const val tagFlutterFragment = "flutter_fragment"
+        const val tagMainFragment = "main_fragment"
     }
 }

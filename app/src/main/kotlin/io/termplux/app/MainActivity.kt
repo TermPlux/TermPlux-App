@@ -43,7 +43,9 @@ class MainActivity : TPBaseActivity() {
             context = this
         )
 
-        setContentView(content)
+        setContentView(mFragmentContainerView)
+
+        navController.navigate(R.id.nav_launcher)
     }
 
     override fun onSupportNavigateUp(): Boolean {
