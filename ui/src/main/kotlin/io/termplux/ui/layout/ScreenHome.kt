@@ -17,11 +17,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -41,9 +44,9 @@ import io.termplux.ui.preview.ScreenPreviews
 import io.termplux.ui.theme.TermPluxAppTheme
 import io.termplux.ui.widget.TopActionBar
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScreenHome(
-    topBarVisible: Boolean,
     topBarView: MaterialToolbar,
     container: FragmentContainerView,
     rootLayout: FrameLayout
@@ -87,11 +90,10 @@ fun ScreenHome(
                     ) {
                         TopActionBar(
                             factory = topBarView,
-                            modifier = Modifier.fillMaxWidth(),
-                            visible = topBarVisible,
+                            modifier = Modifier.fillMaxWidth()
                         )
                     }
-                    ElevatedCard(
+                    OutlinedCard(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(
@@ -112,6 +114,7 @@ fun ScreenHome(
                     }
                 }
                 ElevatedCard(
+                    onClick = {},
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(
@@ -123,9 +126,6 @@ fun ScreenHome(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(IntrinsicSize.Min)
-                            .clickable {
-
-                            }
                     ) {
                         IconButton(
                             onClick = {
@@ -170,13 +170,12 @@ fun ScreenHomePreview() {
     val context = LocalContext.current
     TermPluxAppTheme {
         ScreenHome(
-            topBarVisible = true,
             topBarView = MaterialToolbar(LocalContext.current).apply {
                 title = "toolbar_preview"
-//                navigationIcon = ContextCompat.getDrawable(
-//                    LocalContext.current,
-//                    R.drawable.baseline_arrow_back_24
-//                )
+                navigationIcon = ContextCompat.getDrawable(
+                    LocalContext.current,
+                    R.drawable.baseline_arrow_back_24
+                )
             },
             container = FragmentContainerView(context),
             rootLayout = FrameLayout(context).apply {

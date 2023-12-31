@@ -200,7 +200,7 @@ fun ActivityMain(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = AppUtils.getAppName(),
+                        text = "TermPlux Project",
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.primary
                     )
@@ -549,7 +549,7 @@ fun ActivityMain(
                 }
                 NavHost(
                     navController = navController,
-                    startDestination = Screen.Flutter.route,
+                    startDestination = Screen.Overview.route,
                     modifier = when (navigationType) {
                         NavigationType.PermanentNavigationDrawer -> Modifier.fillMaxSize()
                         else -> Modifier
@@ -576,7 +576,6 @@ fun ActivityMain(
                         route = Screen.Flutter.route
                     ) {
                         ScreenHome(
-                            topBarVisible = topBarVisible,
                             topBarView = topBarView,
                             container = container,
                             rootLayout = flutter

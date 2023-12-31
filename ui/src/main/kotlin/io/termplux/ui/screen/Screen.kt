@@ -24,7 +24,7 @@ sealed class Screen constructor(
     @StringRes val title: Int,
 ) {
 
-    object Overview: Screen(
+    data object Overview: Screen(
         type = ScreenType.Compose,
         item = ItemType.Default,
         route = ScreenRoute.routeDashboard,
@@ -32,7 +32,7 @@ sealed class Screen constructor(
         title = R.string.menu_overview
     )
 
-    object Apps: Screen(
+    data object Apps: Screen(
         type = ScreenType.Compose,
         item = ItemType.Default,
         route = "apps",
@@ -40,7 +40,7 @@ sealed class Screen constructor(
         title = R.string.menu_apps
     )
 
-    object Flutter : Screen(
+    data object Flutter : Screen(
         type = ScreenType.Compose,
         item = ItemType.Default,
         route = ScreenRoute.routeHome,
@@ -56,7 +56,7 @@ sealed class Screen constructor(
 //        title = R.string.menu_overview
 //    )
 
-    object Manager : Screen(
+    data object Manager : Screen(
         type = ScreenType.Compose,
         item = ItemType.Default,
         route = ScreenRoute.routeManager,
@@ -64,15 +64,15 @@ sealed class Screen constructor(
         title = R.string.menu_manager
     )
 
-    object Divider : Screen(
+    data object Divider : Screen(
         type = ScreenType.Divider,
         item = ItemType.Divider,
         route = ScreenRoute.Divider,
         imageVector = Icons.Filled.Android,
-        title = R.string.app_name
+        title = R.string.divider
     )
 
-    object Settings : Screen(
+    data object Settings : Screen(
         type = ScreenType.Compose,
         item = ItemType.Default,
         route = ScreenRoute.routeSettings,
@@ -80,7 +80,7 @@ sealed class Screen constructor(
         title = R.string.menu_settings
     )
 
-    object Preference : Screen(
+    data object Preference : Screen(
         type = ScreenType.Compose,
         item = ItemType.Default,
         route = "preference",
@@ -88,7 +88,7 @@ sealed class Screen constructor(
         title = R.string.menu_preference
     )
 
-    object About : Screen(
+    data object About : Screen(
         type = ScreenType.Compose,
         item = ItemType.Default,
         route = ScreenRoute.routeAbout,
