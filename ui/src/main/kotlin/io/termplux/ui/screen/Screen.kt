@@ -3,20 +3,21 @@ package io.termplux.ui.screen
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Android
+import androidx.compose.material.icons.twotone.AccountCircle
 import androidx.compose.material.icons.twotone.AppSettingsAlt
 import androidx.compose.material.icons.twotone.Apps
-import androidx.compose.material.icons.twotone.FlutterDash
 import androidx.compose.material.icons.twotone.Home
 import androidx.compose.material.icons.twotone.Info
 import androidx.compose.material.icons.twotone.RoomPreferences
 import androidx.compose.material.icons.twotone.Settings
+import androidx.compose.material.icons.twotone.Terminal
 import androidx.compose.ui.graphics.vector.ImageVector
 import io.termplux.ui.R
 import io.termplux.ui.navigation.ItemType
 import io.termplux.ui.navigation.ScreenRoute
 import io.termplux.ui.navigation.ScreenType
 
-sealed class Screen constructor(
+sealed class Screen(
     val type: ScreenType,
     val item: ItemType,
     val route: String,
@@ -32,20 +33,12 @@ sealed class Screen constructor(
         title = R.string.menu_overview
     )
 
-    data object Apps: Screen(
-        type = ScreenType.Compose,
-        item = ItemType.Default,
-        route = "apps",
-        imageVector = Icons.TwoTone.Apps,
-        title = R.string.menu_apps
-    )
-
-    data object Flutter : Screen(
+    data object Home : Screen(
         type = ScreenType.Compose,
         item = ItemType.Default,
         route = ScreenRoute.routeHome,
-        imageVector = Icons.TwoTone.FlutterDash,
-        title = R.string.menu_flutter
+        imageVector = Icons.TwoTone.Terminal,
+        title = R.string.menu_home
     )
 
 //    object Dashboard : Screen(
@@ -62,6 +55,14 @@ sealed class Screen constructor(
         route = ScreenRoute.routeManager,
         imageVector = Icons.TwoTone.AppSettingsAlt,
         title = R.string.menu_manager
+    )
+
+    data object Account : Screen(
+        type = ScreenType.Compose,
+        item = ItemType.Default,
+        route = "account",
+        imageVector = Icons.TwoTone.AccountCircle,
+        title = R.string.account
     )
 
     data object Divider : Screen(

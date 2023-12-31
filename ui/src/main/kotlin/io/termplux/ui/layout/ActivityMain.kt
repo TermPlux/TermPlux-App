@@ -99,8 +99,7 @@ fun ActivityMain(
 ) {
     val pages = listOf(
         Screen.Overview,
-        Screen.Apps,
-        Screen.Flutter,
+        Screen.Home,
         Screen.Manager,
         Screen.Settings,
         Screen.Divider,
@@ -109,10 +108,9 @@ fun ActivityMain(
     )
     val items = listOf(
         Screen.Overview,
-        Screen.Apps,
-        Screen.Flutter,
+        Screen.Home,
         Screen.Manager,
-        Screen.Settings
+        Screen.Account
     )
 
     val navController: NavHostController = rememberNavController()
@@ -283,7 +281,7 @@ fun ActivityMain(
                                         item.route.toInt()
                                     ).also {
                                         navController.navigate(
-                                            route = Screen.Flutter.route
+                                            route = Screen.Home.route
                                         ) {
                                             popUpTo(
                                                 id = navController.graph.findStartDestination().id
@@ -568,23 +566,19 @@ fun ActivityMain(
                         )
                     }
                     composable(
-                        route = Screen.Apps.route
-                    ) {
-                        ScreenApps(appsUpdate = appsUpdate)
-                    }
-                    composable(
-                        route = Screen.Flutter.route
+                        route = Screen.Home.route
                     ) {
                         ScreenHome(
-                            topBarView = topBarView,
+
                             container = container,
-                            rootLayout = flutter
+//                            rootLayout = flutter
                         )
                     }
                     composable(
                         route = Screen.Manager.route
                     ) {
                         ScreenManager(
+                            topBarView = topBarView,
                             navController = navController,
                             toggle = toggle,
                             current = current,
@@ -600,6 +594,11 @@ fun ActivityMain(
                             SelectOnClick = {},
                             onNavigateToApps = {}
                         )
+                    }
+                    composable(
+                        route = Screen.Account.route
+                    ) {
+                        ScreenAccount()
                     }
                     composable(
                         route = Screen.Settings.route

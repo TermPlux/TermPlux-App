@@ -6,4 +6,6 @@
     <string name="menu_settings">设置</string>
     <string name="menu_preference">首选项</string>
     <string name="menu_about">关于</string>
+    <string name="account">我的</string>
+    <string name="menu_home">主页</string>
 </resources>

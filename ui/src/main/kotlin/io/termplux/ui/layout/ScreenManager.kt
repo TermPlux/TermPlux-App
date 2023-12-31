@@ -13,17 +13,26 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.google.android.material.appbar.MaterialToolbar
 import io.termplux.ui.R
 import io.termplux.ui.preview.ScreenPreviews
 import io.termplux.ui.theme.TermPluxAppTheme
+import io.termplux.ui.widget.TopActionBar
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScreenManager(
+    topBarView: MaterialToolbar,
+
+
     navController: NavHostController,
     toggle: () -> Unit,
     current: (item: Int) -> Unit,
@@ -57,6 +66,71 @@ fun ScreenManager(
                     state = scrollState
                 )
         ) {
+            ElevatedCard(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        start = 16.dp,
+                        end = 16.dp,
+                        top = 16.dp,
+                        bottom = 8.dp
+                    ),
+                colors = CardDefaults.elevatedCardColors(
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer
+                )
+            ) {
+                TopActionBar(
+                    factory = topBarView,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+
+            ElevatedCard(
+                onClick = {},
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        vertical = 8.dp,
+                        horizontal = 16.dp
+                    )
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(IntrinsicSize.Min)
+                ) {
+                    IconButton(
+                        onClick = {
+
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Search,
+                            contentDescription = null
+                        )
+                    }
+                    Column(
+                        modifier = Modifier.fillMaxHeight(),
+                        verticalArrangement = Arrangement.Center,
+                    ) {
+                        Text(
+                            text = "Search...",
+                            textAlign = TextAlign.Center,
+                            style = MaterialTheme.typography.titleSmall
+                        )
+                    }
+                    IconButton(
+                        onClick = {
+                            //    toggle()
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Search,
+                            contentDescription = null
+                        )
+                    }
+                }
+            }
 //            ElevatedCard(
 //                modifier = Modifier.padding(
 //                    start = 16.dp,
@@ -546,6 +620,13 @@ fun ScreenManager(
 private fun ScreenManagerPreview() {
     TermPluxAppTheme {
         ScreenManager(
+            topBarView = MaterialToolbar(LocalContext.current).apply {
+                title = "toolbar_preview"
+                navigationIcon = ContextCompat.getDrawable(
+                    LocalContext.current,
+                    R.drawable.baseline_arrow_back_24
+                )
+            },
             navController = rememberNavController(),
             toggle = {},
             current = {},
