@@ -47,8 +47,6 @@ open class EcosedEngine : EcosedPlugin(), FlutterPluginProxy, LifecycleOwner, De
     override val channel: String
         get() = channelName
 
-    /**  */
-    private lateinit var mClient: TermPluxClient
 
     /** 插件绑定器. */
     private var mBinding: PluginBinding? = null
@@ -109,7 +107,7 @@ open class EcosedEngine : EcosedPlugin(), FlutterPluginProxy, LifecycleOwner, De
 //        }
     }
 
-    private var plugin: ArrayList<EcosedPlugin>? = null
+   // private var plugin: ArrayList<EcosedPlugin>? = null
 
     /**
      * 将引擎附加到应用.
@@ -122,10 +120,6 @@ open class EcosedEngine : EcosedPlugin(), FlutterPluginProxy, LifecycleOwner, De
                 attachBaseContext(base = mActivity.baseContext)
                 lifecycle.addObserver(this@EcosedEngine)
 
-                // 初始化客户端组件
-                mClient = TermPluxClient.build()
-
-                plugin = arrayListOf(mClient, hybridPlugin?: error(""))
                 // 初始化插件绑定器.
                 mBinding = PluginBinding(
                     context = this@EcosedEngine, debug = isBaseDebug
@@ -133,7 +127,11 @@ open class EcosedEngine : EcosedPlugin(), FlutterPluginProxy, LifecycleOwner, De
                 // 初始化插件列表.
                 mPluginList = arrayListOf()
                 // 添加所有插件.
-                plugin?.let { plugins ->
+                arrayListOf(
+                    this@EcosedEngine,
+                    TermPluxClient.build(),
+                    hybridPlugin?: error("")
+                ).let { plugins ->
                     mBinding?.let { binding ->
                         plugins.forEach { plugin ->
                             plugin.apply {
