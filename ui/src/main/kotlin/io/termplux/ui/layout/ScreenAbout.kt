@@ -97,9 +97,7 @@ fun ScreenAbout(
                             )
                     ) {
                         Image(
-                            painter = painterResource(
-                                id = R.drawable.custom_termplux_24
-                            ),
+                            painter = rememberDrawablePainter(drawable = AppUtils.getAppIcon()),
                             contentDescription = null,
                             modifier = Modifier.fillMaxHeight()
                         )
@@ -478,7 +476,7 @@ fun ScreenAbout(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Image(
-                                    painter = rememberDrawablePainter(drawable = AppUtils.getAppIcon()),
+                                    painter = painterResource(id = R.drawable.custom_termplux_24),
                                     contentDescription = null,
                                     modifier = Modifier.size(
                                         width = 48.dp,

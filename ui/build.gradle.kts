@@ -62,9 +62,9 @@ dependencies {
 
     implementation(libs.utilcodex)
 
-    implementation(dependencyNotation = "com.google.accompanist:accompanist-adaptive:0.30.1")
-    implementation(dependencyNotation = "com.google.accompanist:accompanist-webview:0.30.1")
-    implementation(dependencyNotation = "com.google.accompanist:accompanist-drawablepainter:0.30.1")
+    implementation(libs.accompanist.adaptive)
+    implementation(libs.accompanist.webview)
+    implementation(libs.accompanist.drawablepainter)
 
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)

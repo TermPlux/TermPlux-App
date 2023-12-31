@@ -1,4 +1,5 @@
 [versions]
+
 agp = "8.2.0" #Android Gradle Plugin
 
 base-framework = "6.9.3"
@@ -11,7 +12,7 @@ shizuku = "13.1.5"
 taskbar = "2.2.0"
 refine = "4.3.0"
 util-code = "1.31.1"
-
+accompanist = "0.32.0"
 
 
 appcompat = "1.6.1" # AndroidX AppCompat
@@ -78,6 +79,11 @@ androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navi
 androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigation-ui-ktx" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigation-compose" }
 androidx-navigation-testing = { module = "androidx.navigation:navigation-testing", version.ref = "navigation-compose" }
+
+accompanist-adaptive = { module = "com.google.accompanist:accompanist-adaptive", version.ref = "accompanist" }
+accompanist-drawablepainter = { module = "com.google.accompanist:accompanist-drawablepainter", version.ref = "accompanist" }
+accompanist-webview = { module = "com.google.accompanist:accompanist-webview", version.ref = "accompanist" }
+
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
