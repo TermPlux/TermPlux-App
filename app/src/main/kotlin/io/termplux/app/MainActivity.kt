@@ -1,8 +1,8 @@
 package io.termplux.app
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -33,6 +33,8 @@ class MainActivity : TPBaseActivity() {
         val navHostFragment =
             (supportFragmentManager.findFragmentById(mFragmentContainerView.id) as NavHostFragment?)!!
         navController = navHostFragment.navController
+        navController.setGraph(R.navigation.nav_graph, Bundle())
+
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
 
