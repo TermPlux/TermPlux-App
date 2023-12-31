@@ -3,6 +3,7 @@ package io.termplux.ui.layout
 import android.view.Gravity
 import android.widget.FrameLayout
 import android.widget.TextView
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,7 +26,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -52,14 +55,14 @@ fun ScreenHome(
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
-//            Image(
-//                painter = painterResource(
-//                    id = R.drawable.custom_wallpaper_24
-//                ),
-//                contentDescription = null,
-//                contentScale = ContentScale.FillBounds,
-//                modifier = Modifier.fillMaxSize()
-//            )
+            Image(
+                painter = painterResource(
+                    id = R.drawable.custom_wallpaper_24
+                ),
+                contentDescription = null,
+                contentScale = ContentScale.FillBounds,
+                modifier = Modifier.fillMaxSize()
+            )
             Column {
                 Column(
                     modifier = Modifier
