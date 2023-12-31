@@ -36,9 +36,9 @@ dependencies {
 
 
     implementation(libs.base.framework)
-    implementation(libs.androidx.fragment)
-    implementation(libs.navigation.fragment.ktx)
-    implementation(libs.navigation.ui.ktx)
+    implementation(libs.androidx.fragment.ktx)
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
 
     wearApp(project(":wear"))
     implementation(project(":base"))

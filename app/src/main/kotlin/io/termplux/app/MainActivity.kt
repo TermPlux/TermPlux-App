@@ -44,7 +44,8 @@ class MainActivity : TPBaseActivity() {
         val ui = UI.build()
 
         val content = ui.content(
-            context = this,
+            context = this@MainActivity,
+            activity = this@MainActivity,
             container = mFragmentContainerView
         )
 

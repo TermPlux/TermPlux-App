@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="menu_overview">overview</string>
+    <string name="menu_apps">apps</string>
+    <string name="menu_flutter">flutter</string>
+    <string name="menu_manager">manager</string>
+    <string name="app_name">name</string>
+    <string name="menu_settings">settings</string>
+    <string name="menu_preference">preference</string>
+    <string name="menu_about">about</string>
+</resources>

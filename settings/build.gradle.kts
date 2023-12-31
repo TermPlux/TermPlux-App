@@ -26,5 +26,5 @@ android {
 }
 
 dependencies {
-    implementation(libs.androidx.preference)
+    implementation(libs.androidx.preference.ktx)
 }

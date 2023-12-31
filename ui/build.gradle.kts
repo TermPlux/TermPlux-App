@@ -58,9 +58,17 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material3.window.size)
     implementation(libs.androidx.compose.material.icons.extended)
+    implementation(libs.androidx.navigation.compose)
+
+    implementation(libs.utilcodex)
+
+    implementation(dependencyNotation = "com.google.accompanist:accompanist-adaptive:0.30.1")
+    implementation(dependencyNotation = "com.google.accompanist:accompanist-webview:0.30.1")
+    implementation(dependencyNotation = "com.google.accompanist:accompanist-drawablepainter:0.30.1")
 
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+    androidTestImplementation(libs.androidx.navigation.testing)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 

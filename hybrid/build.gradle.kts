@@ -31,6 +31,5 @@ dependencies {
     implementation(project(":flutter"))
     implementation(project(":framework"))
     implementation(project(":common"))
-    implementation(libs.androidx.fragment)
-    implementation(libs.material)
+    implementation(libs.androidx.fragment.ktx)
 }
