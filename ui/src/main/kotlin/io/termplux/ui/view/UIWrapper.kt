@@ -4,5 +4,5 @@ import android.content.Context
 import android.view.View
 
 interface UIWrapper {
-    fun content(context: Context): View
+    fun content(context: Context, container: View): View
 }
