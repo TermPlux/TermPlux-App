@@ -21,7 +21,6 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.os.Bundle
 import android.util.Log
-import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -106,8 +105,6 @@ open class EcosedEngine : EcosedPlugin(), FlutterPluginProxy, LifecycleOwner, De
 //            result.error(tag, "", e)
 //        }
     }
-
-   // private var plugin: ArrayList<EcosedPlugin>? = null
 
     /**
      * 将引擎附加到应用.

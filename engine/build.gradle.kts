@@ -28,6 +28,7 @@ android {
 dependencies {
     implementation(project(":plugin"))
     implementation(project(":client"))
+    implementation(project(":launcher"))
     implementation(project(":common"))
     implementation(libs.utilcodex)
     implementation(libs.androidx.lifecycle.common)

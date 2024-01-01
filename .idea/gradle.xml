@@ -8,13 +8,13 @@
         <option name="gradleJvm" value="jbr-17" />
         <option name="modules">
           <set>
-            <option value="$USER_HOME$/.pub-cache/git/flutter_boost-271e0e3d9bf6a25c7f17a0f85abb107870946a86/android" />
-            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/device_info-2.0.3/android" />
-            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/dynamic_color-1.6.9/android" />
-            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/flutter_plugin_android_lifecycle-2.0.17/android" />
-            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/flutter_pty-0.4.0/android" />
-            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/share-2.0.4/android" />
-            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/shared_preferences_android-2.2.1/android" />
+            <option value="$USER_HOME$/AppData/Local/Pub/Cache/git/flutter_boost-271e0e3d9bf6a25c7f17a0f85abb107870946a86/android" />
+            <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/device_info-2.0.3/android" />
+            <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/dynamic_color-1.6.9/android" />
+            <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_plugin_android_lifecycle-2.0.17/android" />
+            <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_pty-0.4.0/android" />
+            <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/share-2.0.4/android" />
+            <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/shared_preferences_android-2.2.1/android" />
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/aidl" />
             <option value="$PROJECT_DIR$/app" />
