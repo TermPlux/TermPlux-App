@@ -33,22 +33,18 @@ android {
 }
 
 dependencies {
-
-
+    implementation(project(":base"))
+    implementation(project(":hybrid"))
+    implementation(project(":launcher"))
+    implementation(project(":network"))
+    implementation(project(":provider"))
+    implementation(project(":settings"))
+    implementation(project(":ui"))
+    implementation(project(":utils"))
     implementation(libs.base.framework)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
-
-    wearApp(project(":wear"))
-    implementation(project(":base"))
-    implementation(project(":hybrid"))
-    implementation(project(":utils"))
-
-    implementation(project(":launcher"))
-
-    implementation(project(":ui"))
-
     implementation(libs.play.services.wearable)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

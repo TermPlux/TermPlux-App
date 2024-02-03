@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.appbar.MaterialToolbar
 import io.termplux.hybrid.HybridFlutter
 
 abstract class TPBaseActivity : AppCompatActivity(), TPBaseActivityWrapper {

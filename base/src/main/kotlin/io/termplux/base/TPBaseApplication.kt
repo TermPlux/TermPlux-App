@@ -1,6 +1,7 @@
 package io.termplux.base
 
 import android.app.Application
+import com.google.android.material.color.DynamicColors
 import io.termplux.hybrid.HybridFlutter
 
 abstract class TPBaseApplication : Application(), TPBaseApplicationWrapper {

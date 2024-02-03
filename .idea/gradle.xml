@@ -8,41 +8,33 @@
         <option name="gradleJvm" value="jbr-17" />
         <option name="modules">
           <set>
-            <option value="$USER_HOME$/AppData/Local/Pub/Cache/git/flutter_boost-fcda0545c490a086f8fe9665b23fa5bdc8adacfc/android" />
-            <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/device_info-2.0.3/android" />
-            <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/dynamic_color-1.6.9/android" />
-            <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/ffmpeg_kit_flutter_full_gpl-6.0.3/android" />
-            <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_plugin_android_lifecycle-2.0.17/android" />
-            <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_pty-0.4.0/android" />
-            <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/package_info_plus-5.0.1/android" />
-            <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/path_provider_android-2.2.2/android" />
-            <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/permission_handler_android-12.0.1/android" />
-            <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/share-2.0.4/android" />
-            <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/shared_preferences_android-2.2.1/android" />
-            <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_android-6.2.0/android" />
-            <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/wakelock_plus-1.1.4/android" />
-            <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/webview_flutter_android-3.13.1/android" />
+            <option value="$USER_HOME$/.pub-cache/git/flutter_boost-fcda0545c490a086f8fe9665b23fa5bdc8adacfc/android" />
+            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/device_info-2.0.3/android" />
+            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/dynamic_color-1.6.9/android" />
+            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/ffmpeg_kit_flutter_full_gpl-6.0.3/android" />
+            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/flutter_plugin_android_lifecycle-2.0.17/android" />
+            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/flutter_pty-0.4.0/android" />
+            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/package_info_plus-5.0.1/android" />
+            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/path_provider_android-2.2.2/android" />
+            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/permission_handler_android-12.0.3/android" />
+            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/share-2.0.4/android" />
+            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/shared_preferences_android-2.2.1/android" />
+            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/url_launcher_android-6.2.2/android" />
+            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/wakelock_plus-1.1.4/android" />
+            <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/webview_flutter_android-3.14.0/android" />
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/aidl" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/base" />
-            <option value="$PROJECT_DIR$/client" />
-            <option value="$PROJECT_DIR$/common" />
-            <option value="$PROJECT_DIR$/engine" />
-            <option value="$PROJECT_DIR$/framework" />
             <option value="$PROJECT_DIR$/hybrid" />
             <option value="$PROJECT_DIR$/launcher" />
-            <option value="$PROJECT_DIR$/nativelib" />
             <option value="$PROJECT_DIR$/network" />
-            <option value="$PROJECT_DIR$/plugin" />
             <option value="$PROJECT_DIR$/provider" />
             <option value="$PROJECT_DIR$/settings" />
-            <option value="$PROJECT_DIR$/signature" />
             <option value="$PROJECT_DIR$/ui" />
             <option value="$PROJECT_DIR$/utils" />
-            <option value="$PROJECT_DIR$/wear" />
             <option value="$PROJECT_DIR$/../TermPlux-Flutter" />
             <option value="$PROJECT_DIR$/../TermPlux-Flutter/.android/Flutter" />
+            <option value="$USER_HOME$/FlutterProject/flutter_ecosed/android" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="false" />

@@ -26,10 +26,7 @@ android {
 }
 
 dependencies {
-    implementation(rootProject.findProject(":flutter_boost") ?: error("flutter_boost"))
-    implementation(rootProject.findProject(":flutter_plugin_android_lifecycle") ?: error("flutter_plugin_android_lifecycle"))
     implementation(project(":flutter"))
-    implementation(project(":framework"))
-    implementation(project(":common"))
+    implementation(project(":flutter_boost"))
     implementation(libs.androidx.fragment.ktx)
 }

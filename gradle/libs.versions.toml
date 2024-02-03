@@ -1,15 +1,13 @@
 [versions]
 
-agp = "8.2.0" #Android Gradle Plugin
+agp = "8.2.2" #Android Gradle Plugin
 
 base-framework = "6.9.3"
-kotlin = "1.9.21" #JetBrains Kotlin language
+kotlin = "1.9.22" #JetBrains Kotlin language
 
 
 navigation-compose = "2.7.6"
 play-services-wearable = "18.1.0"
-shizuku = "13.1.5"
-taskbar = "2.2.0"
 refine = "4.3.0"
 util-code = "1.31.1"
 accompanist = "0.32.0"
@@ -18,16 +16,16 @@ accompanist = "0.32.0"
 appcompat = "1.6.1" # AndroidX AppCompat
 fragment-ktx = "1.6.2"
 core-ktx = "1.12.0"
-lifecycle = "2.6.2"
+lifecycle = "2.7.0"
 constraintlayout = "2.1.4"
 activity-compose = "1.8.2"
 preference-ktx = "1.2.1"
 
 material3 = "1.1.2"
-compose-bom = "2023.10.01"
+compose-bom = "2024.01.00"
 
 material = "1.11.0"
-play-services-base = "18.2.0"
+play-services-base = "18.3.0"
 
 navigation-fragment-ktx = "2.7.6"
 navigation-ui-ktx = "2.7.6"
@@ -36,20 +34,11 @@ navigation-ui-ktx = "2.7.6"
 
 [libraries]
 # 第三方库
-# HiddenApiRefinePlugin: https://github.com/RikkaApps/HiddenApiRefinePlugin
 
 
 base-framework = { group = "com.github.kongzue",name = "BaseFramework",  version.ref = "base-framework" }
-refine-annotation = { module = "dev.rikka.tools.refine:annotation", version.ref = "refine" }
-refine-processor = { module = "dev.rikka.tools.refine:annotation-processor", version.ref = "refine" }
-refine-runtime = { module = "dev.rikka.tools.refine:runtime", version.ref = "refine" }
-# Shizuku-API: https://github.com/RikkaApps/Shizuku-API
-shizuku-api = { group = "dev.rikka.shizuku",name = "api", version.ref = "shizuku" }
-shizuku-provider = { group = "dev.rikka.shizuku",name = "provider", version.ref = "shizuku" }
 # AndroidUtilCode: https://github.com/Blankj/AndroidUtilCode
 utilcodex = { group = "com.blankj", name = "utilcodex", version.ref = "util-code"}
-# LibTaskbar: https://github.com/farmerbb/libtaskbar
-libtaskbar = { group = "com.github.farmerbb", name = "libtaskbar", version.ref = "taskbar"}
 # 官方库
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }

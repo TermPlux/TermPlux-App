@@ -21,7 +21,7 @@ internal class FlutterDelegate private constructor() : FlutterBoostDelegate {
 
     override fun pushFlutterRoute(options: FlutterBoostRouteOptions?) {
         val intent = FlutterBoostActivity.CachedEngineIntentBuilder(
-            FlutterActivity::class.java
+            FlutterBoostActivity::class.java
         )
             .backgroundMode(FlutterActivityLaunchConfigs.BackgroundMode.transparent)
             .destroyEngineWithActivity(false)

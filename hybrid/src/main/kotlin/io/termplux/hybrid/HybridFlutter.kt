@@ -35,12 +35,11 @@ class HybridFlutter : ContextWrapper(null), HybridWrapper {
             FlutterBoost.instance().setup(
                 mApplication,
                 FlutterDelegate.build(),
-                FlutterCallBack.build(
-                    plugin = EnginePlugin.build()
-                )
+                FlutterCallBack.build()
             )
             // 初始化FlutterFragment
             FlutterBoostFragment.CachedEngineFragmentBuilder()
+                .url("/manager")
                 .destroyEngineWithFragment(false)
                 .renderMode(RenderMode.surface)
                 .transparencyMode(TransparencyMode.opaque)

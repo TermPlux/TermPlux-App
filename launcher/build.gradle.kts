@@ -34,7 +34,7 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
 
-    implementation(project(":plugin"))
+
     implementation(project(":utils"))
     implementation(project(":ui"))
 
