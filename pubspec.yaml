@@ -1,0 +1,54 @@
+name: termplux_app
+description: "TermPlux-App"
+publish_to: 'none'
+version: 1.0.0+1
+environment:
+  sdk: '>=3.2.6 <4.0.0'
+dependencies:
+  flutter:
+    sdk: flutter
+  termplux_engine:
+    path: ../TermPlux-Engine
+  flutter_ecosed:
+    path: ../flutter_ecosed
+  flutter_boost:
+    git:
+      url: 'https://github.com/alibaba/flutter_boost.git'
+      ref: '5.0.1'
+  flutter_plugin_android_lifecycle: ^2.0.17
+  plugin_platform_interface: ^2.1.8
+  dynamic_color: ^1.6.9
+  cupertino_icons: ^1.0.2
+  provider: ^6.1.1
+  dio: ^4.0.6
+  flutter_ume: ^1.1.2
+  flutter_ume_kit_ui: ^1.1.0
+  flutter_ume_kit_perf: ^1.0.0
+  flutter_ume_kit_show_code: ^1.0.0+1
+  flutter_ume_kit_device: ^1.0.0
+  flutter_ume_kit_console: ^1.0.0
+  flutter_ume_kit_dio: ^1.0.1+2
+  device_preview: ^1.1.0
+  xterm: ^3.5.0
+  flutter_pty: ^0.4.0
+  path_provider: ^2.1.2
+  webview_flutter: ^4.4.4
+  permission_handler: ^11.2.0
+  http: ^1.2.0
+  retry: ^3.1.2
+  url_launcher: ^6.2.4
+  shared_preferences: ^2.2.2
+  intl: ^0.18.1
+  clipboard: ^0.1.3
+  wakelock_plus: ^1.1.4
+  ffmpeg_kit_flutter_full_gpl: ^6.0.3
+dependency_overrides:
+  vm_service: ^14.0.0
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/
