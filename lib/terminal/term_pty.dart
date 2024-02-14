@@ -1,13 +1,10 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_boost/flutter_boost.dart';
 import 'package:flutter_pty/flutter_pty.dart';
 import 'package:xterm/core.dart';
 
 import '../value/global.dart';
-import '../layout/signal9error.dart';
 import '../utils/util.dart';
 
 //一个结合terminal和pty的类
@@ -40,7 +37,10 @@ class TermPty {
         //   Global.homePageStateContext,
         //   MaterialPageRoute(builder: (context) => const Signal9Error()),
         // );
-        BoostNavigator.instance.push("/signal9");
+
+
+
+        //BoostNavigator.instance.push("/signal9");
       }
     });
     terminal.onOutput = (data) {

@@ -8,7 +8,7 @@ import '../terminal/virtual_keyboard.dart';
 
 // Global variables
 class Global {
-  static late final String dataPath;
+  static late String dataPath;
   static Pty? audioPty;
   static late WebViewController controller;
   //static late BuildContext homePageStateContext;
@@ -40,6 +40,7 @@ class Global {
   //static int? virglPid;
   //主界面索引
   static ValueNotifier<int> pageIndex = ValueNotifier(0);
+  static bool complete = false;
 
   //更改值，用于刷新启动命令
   static ValueNotifier<bool> bootTextChange = ValueNotifier(true);

@@ -1,9 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:termplux_app/value/global.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-
-import '../value/global.dart';
 
 class DesktopPage extends StatelessWidget {
   const DesktopPage({super.key});

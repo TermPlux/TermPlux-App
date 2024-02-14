@@ -23,35 +23,30 @@ if (flutterVersionName == null) {
 }
 
 android {
-    namespace = "io.termplux.app"
+    namespace = "io.termplux"
     compileSdk = 34
     ndkVersion = flutter.ndkVersion
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-
     kotlinOptions {
         jvmTarget = '11'
     }
-
     defaultConfig {
-        applicationId = "io.termplux.app"
+        applicationId = "io.termplux"
         minSdk = 24
+        //noinspection ExpiredTargetSdkVersion
         targetSdk = 28
         versionCode = flutterVersionCode.toInteger()
         versionName = flutterVersionName
     }
-
     buildTypes {
         release {
             signingConfig = signingConfigs.debug
         }
     }
-
     lintOptions {
-        //checkReleaseBuilds false
         abortOnError false
     }
 }
@@ -61,6 +56,8 @@ flutter {
 }
 
 dependencies {
-    implementation 'androidx.activity:activity-ktx:1.8.2'
-    implementation 'com.google.android.material:material:1.11.0'
+    //implementation("androidx.activity:activity-ktx:1.8.2")
+    implementation("com.google.android.material:material:1.11.0")
+    implementation("com.blankj:utilcodex:1.31.1")
+    implementation("com.tencent.bugly:crashreport:4.1.9.3")
 }

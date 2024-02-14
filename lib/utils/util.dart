@@ -93,41 +93,6 @@ class Util {
           Global.prefs.setString(key, value);
           return value;
         }("1970-01-01");
-      // case "adsWatchedToday":
-      //   return b
-      //       ? Global.prefs.getInt(key)!
-      //       : (value) {
-      //     Global.prefs.setInt(key, value);
-      //     return value;
-      //   }(0);
-      // case "adsWatchedTotal":
-      //   return b
-      //       ? Global.prefs.getInt(key)!
-      //       : (value) {
-      //     Global.prefs.setInt(key, value);
-      //     return value;
-      //   }(0);
-      // case "isBannerAdsClosed":
-      //   return b
-      //       ? Global.prefs.getBool(key)!
-      //       : (value) {
-      //     Global.prefs.setBool(key, value);
-      //     return value;
-      //   }(false);
-      // case "isTerminalWriteEnabled":
-      //   return b
-      //       ? Global.prefs.getBool(key)!
-      //       : (value) {
-      //     Global.prefs.setBool(key, value);
-      //     return value;
-      //   }(false);
-      // case "isTerminalCommandsEnabled":
-      //   return b
-      //       ? Global.prefs.getBool(key)!
-      //       : (value) {
-      //     Global.prefs.setBool(key, value);
-      //     return value;
-      //   }(false);
       case "termMaxLines":
         return b
             ? Global.prefs.getInt(key)!
@@ -142,13 +107,6 @@ class Util {
           Global.prefs.setDouble(key, value);
           return value;
         }(1.0);
-      // case "vip":
-      //   return b
-      //       ? Global.prefs.getInt(key)!
-      //       : (value) {
-      //     Global.prefs.setInt(key, value);
-      //     return value;
-      //   }(0);
       case "isStickyKey":
         return b
             ? Global.prefs.getBool(key)!
@@ -242,13 +200,6 @@ class Util {
         }("GDK_SCALE=2 QT_FONT_DPI=192");
       case "containersInfo":
         return Global.prefs.getStringList(key)!;
-      // case "adsBonus":
-      //   return b
-      //       ? Global.prefs.getStringList(key)!
-      //       : (value) {
-      //     Global.prefs.setStringList(key, value);
-      //     return value;
-      //   }([].cast<String>());
     }
   }
 

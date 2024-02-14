@@ -115,22 +115,24 @@ class _SettingPageState extends State<SettingPage> {
                   maxLines: null,
                   initialValue: Util.getCurrentProp("vnc"),
                   decoration: const InputDecoration(
-                      border: OutlineInputBorder(), labelText: "vnc启动命令"),
+                      border: OutlineInputBorder(), labelText: "noVNC启动命令"),
                   onChanged: (value) async {
                     await Util.setCurrentProp("vnc", value);
                   },
                 ),
                 SizedBox.fromSize(size: const Size.square(8)),
-                const Divider(height: 2, indent: 8, endIndent: 8),
-                SizedBox.fromSize(size: const Size.square(16)),
-                const Text(
-                    "你可以在当前所有同一网络下的设备（如：连接同一路由器的手机，电脑等）里使用小小电脑。\n\n将下面的链接复制到其他设备，在其他设备上把链接localhost字样改为当前设备的IP地址（可以通过快捷指令查看，格式类似192.168.x.x），然后使用浏览器打开链接即可。"),
-                SizedBox.fromSize(size: const Size.square(16)),
+                //const Divider(height: 2, indent: 8, endIndent: 8),
+                //SizedBox.fromSize(size: const Size.square(16)),
+                //const Text(
+                //    "你可以在当前所有同一网络下的设备（如：连接同一路由器的手机，电脑等）里使用小小电脑。\n\n将下面的链接复制到其他设备，在其他设备上把链接localhost字样改为当前设备的IP地址（可以通过快捷指令查看，格式类似192.168.x.x），然后使用浏览器打开链接即可。"),
+                //SizedBox.fromSize(size: const Size.square(16)),
                 TextFormField(
                   maxLines: null,
-                  initialValue: Util.getCurrentProp("vncUrl"),
+                  initialValue: Util.getCurrentProp('vncUrl'),
                   decoration: const InputDecoration(
-                      border: OutlineInputBorder(), labelText: "网页跳转地址"),
+                    border: OutlineInputBorder(),
+                    labelText: "noVNC地址",
+                  ),
                   onChanged: (value) async {
                     await Util.setCurrentProp("vncUrl", value);
                   },

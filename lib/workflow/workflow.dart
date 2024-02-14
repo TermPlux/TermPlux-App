@@ -2,11 +2,8 @@ import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter_boost/flutter_boost.dart';
-import 'package:intl/intl.dart';
 import 'package:http/http.dart';
 import 'package:retry/retry.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:xterm/xterm.dart';
@@ -16,7 +13,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
-import '../layout/desktop.dart';
 import '../value/default.dart';
 import '../value/global.dart';
 import '../terminal/term_pty.dart';
@@ -142,13 +138,6 @@ done
 
     Global.prefs = await SharedPreferences.getInstance();
 
-    //限制一天内观看视频广告不超过5次
-    final String currentDate = DateFormat("yyyy-MM-dd").format(DateTime.now());
-    if (currentDate != (Util.getGlobal("lastDate") as String)) {
-      await Global.prefs.setString("lastDate", currentDate);
-      await Global.prefs.setInt("adsWatchedToday", 0);
-    }
-
     //如果没有这个key，说明是初次启动
     if (!Global.prefs.containsKey("defaultContainer")) {
       await initForFirstTime();
@@ -164,8 +153,7 @@ done
 
     Global.termFontScale.value = Util.getGlobal("termFontScale") as double;
 
-    Global.controller = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted);
+    Global.controller = WebViewController()..setJavaScriptMode(JavaScriptMode.unrestricted);
 
     //设置屏幕常亮
     WakelockPlus.toggle(enable: Util.getGlobal("wakelock"));
@@ -280,7 +268,7 @@ clear""");
     );
   }
 
-  static Future<void> launchBrowser() async {
+  static Future<void> loadDesktop() async {
     Global.controller.loadRequest(Uri.parse(Util.getCurrentProp("vncUrl")));
   }
 
@@ -290,6 +278,7 @@ clear""");
     await initTerminalForCurrent();
     setupAudio();
     launchCurrentContainer();
-    waitForConnection().then((value) => launchBrowser());
+
+    waitForConnection().then((value) => loadDesktop());
   }
 }

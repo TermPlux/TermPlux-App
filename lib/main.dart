@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'app.dart';
-import 'binding.dart';
 
-void main() {
-  //CustomFlutterBinding();
+Future<void> main() async {
   runApp(const MyApp());
 }

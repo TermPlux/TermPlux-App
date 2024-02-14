@@ -7,19 +7,14 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  termplux_engine:
-    path: ../TermPlux-Engine
+  flutter_mixed:
+    path: ../flutter_mixed
   flutter_ecosed:
     path: ../flutter_ecosed
-  flutter_boost:
-    git:
-      url: 'https://github.com/alibaba/flutter_boost.git'
-      ref: '5.0.1'
-  flutter_plugin_android_lifecycle: ^2.0.17
-  plugin_platform_interface: ^2.1.8
   dynamic_color: ^1.6.9
   cupertino_icons: ^1.0.2
   provider: ^6.1.1
+  animations: ^2.0.11
   dio: ^4.0.6
   flutter_ume: ^1.1.2
   flutter_ume_kit_ui: ^1.1.0
