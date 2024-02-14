@@ -17,15 +17,15 @@ pluginManagement {
     }
 
     plugins {
-        id "dev.flutter.flutter-gradle-plugin" version "1.0.0" apply false
-        id 'org.jetbrains.kotlin.android' version '1.9.0'
+        id("dev.flutter.flutter-gradle-plugin") version "1.0.0" apply false
     }
 }
 
 plugins {
     id("dev.flutter.flutter-plugin-loader") version "1.0.0"
     id("com.android.application") version '8.2.2' apply false
+    id("org.jetbrains.kotlin.android") version '1.9.22' apply false
 }
 
-rootProject.name = "TermPlux-App"
+rootProject.name = "TermPlux"
 include(":app")
