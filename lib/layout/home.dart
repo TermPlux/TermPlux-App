@@ -168,6 +168,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    Global.homePageStateContext = context;
+    final textTheme = Theme.of(context)
+        .textTheme
+        .apply(displayColor: Theme.of(context).colorScheme.onSurface);
     return AnimatedBuilder(
       animation: controller,
       builder: (context, child) {
@@ -196,7 +200,19 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                     },
                   ),
                 )
-              : const LoadingPage(),
+              : Expanded(
+                  child: Center(
+                    child: ValueListenableBuilder(
+                      valueListenable: Global.updateText,
+                      builder: (context, value, child) {
+                        return Text(
+                          value,
+                          style: textTheme.titleMedium,
+                        );
+                      },
+                    ),
+                  ),
+                ),
           navigationRail: ValueListenableBuilder(
             valueListenable: Global.screenIndex,
             builder: (context, value, child) {

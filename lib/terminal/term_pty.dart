@@ -1,9 +1,11 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_pty/flutter_pty.dart';
 import 'package:xterm/core.dart';
 
+import '../layout/signal9error.dart';
 import '../value/global.dart';
 import '../utils/util.dart';
 
@@ -33,14 +35,10 @@ class TermPty {
       }
       //Signal 9 hint
       if (code == -9) {
-        // Navigator.push(
-        //   Global.homePageStateContext,
-        //   MaterialPageRoute(builder: (context) => const Signal9Error()),
-        // );
-
-
-
-        //BoostNavigator.instance.push("/signal9");
+        Navigator.push(
+          Global.homePageStateContext,
+          MaterialPageRoute(builder: (context) => const Signal9Error()),
+        );
       }
     });
     terminal.onOutput = (data) {

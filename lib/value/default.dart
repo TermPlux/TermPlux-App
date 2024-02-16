@@ -3,6 +3,7 @@ import 'package:xterm/core.dart';
 
 //default values
 class Default {
+  static const String appName = 'TermPlux';
   //默认快捷指令
   static const commands = [
     {"name": "检查更新并升级", "command": "sudo apt update && sudo apt upgrade -y"},

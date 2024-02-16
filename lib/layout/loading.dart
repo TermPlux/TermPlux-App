@@ -1,39 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import '../main.dart';
 import '../value/global.dart';
-import 'info.dart';
-import '../widget/loading_state.dart';
 
 class LoadingPage extends StatelessWidget {
   const LoadingPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // return FocusTraversalGroup(
-    //   child: CustomScrollView(
-    //     slivers: [
-    //       SliverPadding(
-    //         padding: showSecondList
-    //             ? const EdgeInsetsDirectional.only(end: smallSpacing)
-    //             : EdgeInsets.zero,
-    //         sliver: SliverList(
-    //           delegate: BuildSlivers(
-    //             heights: heights,
-    //             builder: (context, index) {
-    //               return _CacheHeight(
-    //                 heights: heights,
-    //                 index: index,
-    //                 child: children[index],
-    //               );
-    //             },
-    //           ),
-    //         ),
-    //       ),
-    //     ],
-    //   ),
-    // );
     return Padding(
       padding: const EdgeInsets.all(8),
       child: Column(

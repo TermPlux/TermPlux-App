@@ -5,13 +5,14 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 import '../terminal/term_pty.dart';
 import '../terminal/virtual_keyboard.dart';
+import 'default.dart';
 
 // Global variables
 class Global {
   static late String dataPath;
   static Pty? audioPty;
   static late WebViewController controller;
-  //static late BuildContext homePageStateContext;
+  static late BuildContext homePageStateContext;
 
   //目前运行第几个容器
   static late int currentContainer;
@@ -46,7 +47,7 @@ class Global {
   static ValueNotifier<bool> bootTextChange = ValueNotifier(true);
 
   //加载界面的说明文字
-  static ValueNotifier<String> updateText = ValueNotifier("proot");
+  static ValueNotifier<String> updateText = ValueNotifier(Default.appName);
 
   //本次启动时是否启用了box86/64
   static bool wasBoxEnabled = false;
