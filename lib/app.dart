@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DynamicColorBuilder(
-      builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
+      builder: (lightDynamic, darkDynamic) {
         return MaterialApp(
           title: appName,
           theme: ThemeData(
@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
             colorScheme: darkDynamic,
             useMaterial3: true,
           ),
-          home: const MyHomePage(title: appName),
+          home: const Home(title: appName),
         );
       },
     );

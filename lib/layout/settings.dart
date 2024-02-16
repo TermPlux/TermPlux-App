@@ -560,7 +560,7 @@ class _SettingPageState extends State<SettingPage> {
                               onPressed: () {
                                 Util.termWrite(
                                     "bash ~/.local/share/tiny/extra/install-box");
-                                Global.pageIndex.value = 0;
+                                Global.screenIndex.value = 0;
                               }),
                           OutlinedButton(
                               style: Default.commandButtonStyle,
@@ -579,7 +579,7 @@ class _SettingPageState extends State<SettingPage> {
                                 }
                                 Util.termWrite(
                                     "bash ~/.local/share/tiny/extra/install-wine");
-                                Global.pageIndex.value = 0;
+                                Global.screenIndex.value = 0;
                               }),
                           OutlinedButton(
                               style: Default.commandButtonStyle,
@@ -596,7 +596,7 @@ class _SettingPageState extends State<SettingPage> {
                                 }
                                 Util.termWrite(
                                     "bash ~/.local/share/tiny/extra/install-dxvk");
-                                Global.pageIndex.value = 0;
+                                Global.screenIndex.value = 0;
                               }),
                           OutlinedButton(
                               style: Default.commandButtonStyle,
@@ -613,14 +613,14 @@ class _SettingPageState extends State<SettingPage> {
                                 }
                                 Util.termWrite(
                                     "rm -rf ~/.local/share/tiny/cross");
-                                Global.pageIndex.value = 0;
+                                Global.screenIndex.value = 0;
                               }),
                           OutlinedButton(
                               style: Default.commandButtonStyle,
                               child: const Text("清空wine数据"),
                               onPressed: () async {
                                 Util.termWrite("rm -rf ~/.wine");
-                                Global.pageIndex.value = 0;
+                                Global.screenIndex.value = 0;
                               }),
                         ]),
                     SizedBox.fromSize(size: const Size.square(16)),
@@ -650,7 +650,7 @@ class _SettingPageState extends State<SettingPage> {
                               child: Text(e.value["name"]!),
                               onPressed: () {
                                 Util.termWrite("${e.value["command"]!} &");
-                                Global.pageIndex.value = 0;
+                                Global.screenIndex.value = 0;
                               });
                         }).toList()),
                     SizedBox.fromSize(size: const Size.square(16)),

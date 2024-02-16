@@ -27,7 +27,7 @@ class _FastCommandsState extends State<FastCommands> {
           child: Text(e.value["name"]!),
           onPressed: () {
             Util.termWrite(e.value["command"]!);
-            //Global.pageIndex.value = 0;
+            Global.screenIndex.value = 0;
           },
           onLongPress: () {
             String name = e.value["name"]!;

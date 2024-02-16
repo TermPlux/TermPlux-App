@@ -11,17 +11,41 @@ class LoadingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // return FocusTraversalGroup(
+    //   child: CustomScrollView(
+    //     slivers: [
+    //       SliverPadding(
+    //         padding: showSecondList
+    //             ? const EdgeInsetsDirectional.only(end: smallSpacing)
+    //             : EdgeInsets.zero,
+    //         sliver: SliverList(
+    //           delegate: BuildSlivers(
+    //             heights: heights,
+    //             builder: (context, index) {
+    //               return _CacheHeight(
+    //                 heights: heights,
+    //                 index: index,
+    //                 child: children[index],
+    //               );
+    //             },
+    //           ),
+    //         ),
+    //       ),
+    //     ],
+    //   ),
+    // );
     return Padding(
       padding: const EdgeInsets.all(8),
       child: Column(
         children: [
-          const Padding(
-            padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
-            child: FractionallySizedBox(
-              widthFactor: 0.4,
-              child: FlutterLogo(),
-            ),
-          ),
+          // const Padding(
+          //   padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
+          //   child: FractionallySizedBox(
+          //     widthFactor: 0.4,
+          //     child: FlutterLogo(),
+          //   ),
+          // ),
+          const FlutterLogo(),
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
             child: ValueListenableBuilder(
@@ -34,7 +58,8 @@ class LoadingPage extends StatelessWidget {
               },
             ),
           ),
-          const FakeLoadingStatus(),
+          //const LinearProgressIndicator(),
+          const CircularProgressIndicator()
           // const Expanded(
           //   child: Padding(
           //     padding: EdgeInsets.all(8),
