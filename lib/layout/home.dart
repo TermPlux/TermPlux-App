@@ -200,19 +200,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                     },
                   ),
                 )
-              : Expanded(
-                  child: Center(
-                    child: ValueListenableBuilder(
-                      valueListenable: Global.updateText,
-                      builder: (context, value, child) {
-                        return Text(
-                          value,
-                          style: textTheme.titleMedium,
-                        );
-                      },
-                    ),
-                  ),
-                ),
+              : const LoadingPage(),
           navigationRail: ValueListenableBuilder(
             valueListenable: Global.screenIndex,
             builder: (context, value, child) {
