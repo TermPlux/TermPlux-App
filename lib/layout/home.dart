@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ecosed/flutter_ecosed.dart';
 import 'package:termplux_app/layout/contor.dart';
+import 'package:termplux_app/value/default.dart';
 
 import '../value/global.dart';
 import '../utils/util.dart';
@@ -169,9 +171,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     Global.homePageStateContext = context;
-    final textTheme = Theme.of(context)
-        .textTheme
-        .apply(displayColor: Theme.of(context).colorScheme.onSurface);
+
     return AnimatedBuilder(
       animation: controller,
       builder: (context, child) {
@@ -184,23 +184,26 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
               isLoadingComplete ? Util.getCurrentProp("name") : widget.title,
             ),
           ),
-          body: isLoadingComplete
-              ? Expanded(
-                  child: ValueListenableBuilder(
-                    valueListenable: Global.screenIndex,
-                    builder: (context, value, child) {
-                      return IndexedStack(
-                        index: Global.screenIndex.value,
-                        children: const [
-                          TerminalPage(),
-                          DesktopPage(),
-                          Contor()
-                        ],
-                      );
-                    },
-                  ),
-                )
-              : const LoadingPage(),
+          body: (body) {
+            return isLoadingComplete
+                ? Expanded(
+                    child: ValueListenableBuilder(
+                      valueListenable: Global.screenIndex,
+                      builder: (context, value, child) {
+                        return IndexedStack(
+                          index: Global.screenIndex.value,
+                          children: [
+                            const TerminalPage(),
+                            const DesktopPage(),
+                            const Contor(),
+                            Container(child: body)
+                          ],
+                        );
+                      },
+                    ),
+                  )
+                : const LoadingPage();
+          },
           navigationRail: ValueListenableBuilder(
             valueListenable: Global.screenIndex,
             builder: (context, value, child) {
@@ -260,8 +263,17 @@ const List<NavigationDestination> appBarDestinations = [
     label: "控制",
     tooltip: '控制',
     enabled: true,
+  ),
+  NavigationDestination(
+    icon: Icon(Icons.dashboard_outlined),
+    selectedIcon: Icon(Icons.dashboard),
+    label: "仪表盘",
+    tooltip: '仪表盘',
+    enabled: true,
   )
 ];
+
+typedef Body = Widget Function(Widget body);
 
 class NavigationTransition extends StatefulWidget {
   const NavigationTransition(
@@ -280,7 +292,7 @@ class NavigationTransition extends StatefulWidget {
   final Widget navigationRail;
   final Widget navigationBar;
   final PreferredSizeWidget appBar;
-  final Widget body;
+  final Body body;
 
   @override
   State<NavigationTransition> createState() => _NavigationTransitionState();
@@ -310,26 +322,35 @@ class _NavigationTransitionState extends State<NavigationTransition> {
 
   @override
   Widget build(BuildContext context) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
-    return Scaffold(
-      key: widget.scaffoldKey,
-      appBar: widget.appBar,
-      body: Row(
-        children: <Widget>[
-          RailTransition(
-            animation: railAnimation,
-            backgroundColor: colorScheme.surface,
-            child: widget.navigationRail,
+    return EcosedApp(
+      title: Default.appName,
+      home: (body, exec) {
+        return Row(
+          children: <Widget>[
+            RailTransition(
+              animation: railAnimation,
+              backgroundColor: Theme.of(context).colorScheme.surface,
+              child: widget.navigationRail,
+            ),
+            widget.body(body),
+          ],
+        );
+      },
+      scaffold: (body) {
+        return Scaffold(
+          key: widget.scaffoldKey,
+          appBar: widget.appBar,
+          body: body,
+          bottomNavigationBar: BarTransition(
+            animation: barAnimation,
+            backgroundColor: Theme.of(context).colorScheme.surface,
+            child: widget.navigationBar,
           ),
-          widget.body,
-        ],
-      ),
-      bottomNavigationBar: BarTransition(
-        animation: barAnimation,
-        backgroundColor: colorScheme.surface,
-        child: widget.navigationBar,
-      ),
-      // drawer: true ? const NavigationDrawerSection() : null
+          // drawer: true ? const NavigationDrawerSection() : null
+        );
+      },
+      location: BannerLocation.topStart,
+      plugins: [],
     );
   }
 }

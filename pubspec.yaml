@@ -11,6 +11,7 @@ dependencies:
     path: ../flutter_mixed
   flutter_ecosed:
     path: ../flutter_ecosed
+#  flutter_ecosed: ^0.0.1
   dynamic_color: ^1.6.9
   cupertino_icons: ^1.0.2
   provider: ^6.1.1
