@@ -324,7 +324,7 @@ class _NavigationTransitionState extends State<NavigationTransition> {
   Widget build(BuildContext context) {
     return EcosedApp(
       title: Default.appName,
-      home: (body, exec) {
+      home: (exec, body) {
         return Row(
           children: <Widget>[
             RailTransition(
