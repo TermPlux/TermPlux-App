@@ -76,128 +76,128 @@ class Util {
         return b
             ? Global.prefs.getInt(key)!
             : (value) {
-          Global.prefs.setInt(key, value);
-          return value;
-        }(0);
+                Global.prefs.setInt(key, value);
+                return value;
+              }(0);
       case "defaultAudioPort":
         return b
             ? Global.prefs.getInt(key)!
             : (value) {
-          Global.prefs.setInt(key, value);
-          return value;
-        }(4718);
+                Global.prefs.setInt(key, value);
+                return value;
+              }(4718);
       case "lastDate":
         return b
             ? Global.prefs.getString(key)!
             : (value) {
-          Global.prefs.setString(key, value);
-          return value;
-        }("1970-01-01");
+                Global.prefs.setString(key, value);
+                return value;
+              }("1970-01-01");
       case "termMaxLines":
         return b
             ? Global.prefs.getInt(key)!
             : (value) {
-          Global.prefs.setInt(key, value);
-          return value;
-        }(4095);
+                Global.prefs.setInt(key, value);
+                return value;
+              }(4095);
       case "termFontScale":
         return b
             ? Global.prefs.getDouble(key)!
             : (value) {
-          Global.prefs.setDouble(key, value);
-          return value;
-        }(1.0);
+                Global.prefs.setDouble(key, value);
+                return value;
+              }(1.0);
       case "isStickyKey":
         return b
             ? Global.prefs.getBool(key)!
             : (value) {
-          Global.prefs.setBool(key, value);
-          return value;
-        }(true);
+                Global.prefs.setBool(key, value);
+                return value;
+              }(true);
       case "reinstallBootstrap":
         return b
             ? Global.prefs.getBool(key)!
             : (value) {
-          Global.prefs.setBool(key, value);
-          return value;
-        }(false);
+                Global.prefs.setBool(key, value);
+                return value;
+              }(false);
       case "getifaddrsBridge":
         return b
             ? Global.prefs.getBool(key)!
             : (value) {
-          Global.prefs.setBool(key, value);
-          return value;
-        }(false);
+                Global.prefs.setBool(key, value);
+                return value;
+              }(false);
       case "uos":
         return b
             ? Global.prefs.getBool(key)!
             : (value) {
-          Global.prefs.setBool(key, value);
-          return value;
-        }(false);
+                Global.prefs.setBool(key, value);
+                return value;
+              }(false);
       case "isBoxEnabled":
         return b
             ? Global.prefs.getBool(key)!
             : (value) {
-          Global.prefs.setBool(key, value);
-          return value;
-        }(false);
+                Global.prefs.setBool(key, value);
+                return value;
+              }(false);
       case "isWineEnabled":
         return b
             ? Global.prefs.getBool(key)!
             : (value) {
-          Global.prefs.setBool(key, value);
-          return value;
-        }(false);
+                Global.prefs.setBool(key, value);
+                return value;
+              }(false);
       case "virgl":
         return b
             ? Global.prefs.getBool(key)!
             : (value) {
-          Global.prefs.setBool(key, value);
-          return value;
-        }(false);
+                Global.prefs.setBool(key, value);
+                return value;
+              }(false);
       case "wakelock":
         return b
             ? Global.prefs.getBool(key)!
             : (value) {
-          Global.prefs.setBool(key, value);
-          return value;
-        }(false);
+                Global.prefs.setBool(key, value);
+                return value;
+              }(false);
       case "isHidpiEnabled":
         return b
             ? Global.prefs.getBool(key)!
             : (value) {
-          Global.prefs.setBool(key, value);
-          return value;
-        }(false);
+                Global.prefs.setBool(key, value);
+                return value;
+              }(false);
       case "defaultFFmpegCommand":
         return b
             ? Global.prefs.getString(key)!
             : (value) {
-          Global.prefs.setString(key, value);
-          return value;
-        }("-hide_banner -an -max_delay 1000000 -r 30 -f android_camera -camera_index 0 -i 0:0 -vf scale=iw/2:-1 -rtsp_transport udp -f rtsp rtsp://127.0.0.1:8554/stream");
+                Global.prefs.setString(key, value);
+                return value;
+              }("-hide_banner -an -max_delay 1000000 -r 30 -f android_camera -camera_index 0 -i 0:0 -vf scale=iw/2:-1 -rtsp_transport udp -f rtsp rtsp://127.0.0.1:8554/stream");
       case "defaultVirglCommand":
         return b
             ? Global.prefs.getString(key)!
             : (value) {
-          Global.prefs.setString(key, value);
-          return value;
-        }("--socket-path=\$CONTAINER_DIR/tmp/.virgl_test");
+                Global.prefs.setString(key, value);
+                return value;
+              }("--socket-path=\$CONTAINER_DIR/tmp/.virgl_test");
       case "defaultVirglOpt":
         return b
             ? Global.prefs.getString(key)!
             : (value) {
-          Global.prefs.setString(key, value);
-          return value;
-        }("GALLIUM_DRIVER=virpipe MESA_GL_VERSION_OVERRIDE=4.0");
+                Global.prefs.setString(key, value);
+                return value;
+              }("GALLIUM_DRIVER=virpipe MESA_GL_VERSION_OVERRIDE=4.0");
       case "defaultHidpiOpt":
         return b
             ? Global.prefs.getString(key)!
             : (value) {
-          Global.prefs.setString(key, value);
-          return value;
-        }("GDK_SCALE=2 QT_FONT_DPI=192");
+                Global.prefs.setString(key, value);
+                return value;
+              }("GDK_SCALE=2 QT_FONT_DPI=192");
       case "containersInfo":
         return Global.prefs.getStringList(key)!;
     }
@@ -218,7 +218,8 @@ class Util {
           Global.currentContainer,
           [
             jsonEncode(
-              (jsonDecode(Util.getGlobal("containersInfo")[Global.currentContainer]))
+              (jsonDecode(
+                  Util.getGlobal("containersInfo")[Global.currentContainer]))
                 ..update(key, (v) => value),
             )
           ],
@@ -231,15 +232,15 @@ class Util {
     bool flag = false;
     List<String> ret = Util.getGlobal("adsBonus")
         .map((e) {
-      Map<String, dynamic> item = jsonDecode(e);
-      return (item["name"] == bonus["name"])
-          ? jsonEncode(item
-        ..update("amount", (v) {
-          flag = true;
-          return v + bonus["amount"];
-        }))
-          : e;
-    })
+          Map<String, dynamic> item = jsonDecode(e);
+          return (item["name"] == bonus["name"])
+              ? jsonEncode(item
+                ..update("amount", (v) {
+                  flag = true;
+                  return v + bonus["amount"];
+                }))
+              : e;
+        })
         .toList()
         .cast<String>();
     if (!flag) {

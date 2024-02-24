@@ -10,75 +10,6 @@ import 'desktop.dart';
 import 'loading.dart';
 import 'terminal.dart';
 
-// class MyHomePage extends StatefulWidget {
-//   const MyHomePage({super.key, required this.title});
-//
-//   final String title;
-//
-//   @override
-//   State<MyHomePage> createState() => _MyHomePageState();
-// }
-//
-// class _MyHomePageState extends State<MyHomePage> {
-//   //安装完成了吗？
-//   //完成后从加载界面切换到主界面
-//   bool isLoadingComplete = false;
-//
-//   @override
-//   void initState() {
-//     if (!isLoadingComplete) {
-//       Workflow.workflow().then((value) {
-//         setState(() {
-//           isLoadingComplete = true;
-//         });
-//       });
-//     }
-//     super.initState();
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text(
-//           isLoadingComplete
-//               ? Util.getCurrentProp("name")
-//               : widget.title,
-//         ),
-//       ),
-//       body: isLoadingComplete ? Column(
-//         mainAxisSize: MainAxisSize.min,
-//         children: [
-//           Expanded(
-//             child: ValueListenableBuilder(
-//               valueListenable: Global.screenIndex,
-//               builder: (context, value, child) {
-//                 return IndexedStack(
-//                   index: Global.screenIndex.value,
-//                   children: const [
-//                     TerminalPage(),
-//                     DesktopPage(),
-//                     Contor()
-//                   ],
-//                 );
-//               },
-//             ),
-//           ),
-//         ],
-//       ) : LoadingPage(),
-//       bottomNavigationBar: ValueListenableBuilder(
-//         valueListenable: Global.pageIndex,
-//         builder: (context, value, child) {
-//           return Visibility(
-//             visible: isLoadingComplete,
-//             child: ,
-//           );
-//         },
-//       ),
-//     );
-//   }
-// }
-
 // compact阈值
 const double compactWidthBreakpoint = 600;
 // medium阈值
@@ -195,8 +126,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                           children: [
                             const TerminalPage(),
                             const DesktopPage(),
-                            const Contor(),
-                            Container(child: body)
+                            Container(child: body),
+                            const Contor()
                           ],
                         );
                       },
@@ -258,19 +189,19 @@ const List<NavigationDestination> appBarDestinations = [
     enabled: true,
   ),
   NavigationDestination(
+    icon: Icon(Icons.dashboard_outlined),
+    selectedIcon: Icon(Icons.dashboard),
+    label: "仪表盘",
+    tooltip: '仪表盘',
+    enabled: true,
+  ),
+  NavigationDestination(
     icon: Icon(Icons.video_settings_outlined),
     selectedIcon: Icon(Icons.video_settings),
     label: "控制",
     tooltip: '控制',
     enabled: true,
   ),
-  NavigationDestination(
-    icon: Icon(Icons.dashboard_outlined),
-    selectedIcon: Icon(Icons.dashboard),
-    label: "仪表盘",
-    tooltip: '仪表盘',
-    enabled: true,
-  )
 ];
 
 typedef Body = Widget Function(Widget body);

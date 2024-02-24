@@ -178,7 +178,8 @@ class _FastCommandsState extends State<FastCommands> {
                           child: const Text("取消")),
                       TextButton(
                           onPressed: () async {
-                            await Util.setCurrentProp("commands", Default.commands);
+                            await Util.setCurrentProp(
+                                "commands", Default.commands);
                             setState(() {});
                             if (!context.mounted) return;
                             Navigator.of(context).pop();

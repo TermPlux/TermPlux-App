@@ -32,8 +32,7 @@ class Contor extends StatelessWidget {
                     child: Column(
                       children: [
                         const SettingPage(),
-                        SizedBox.fromSize(
-                            size: const Size.square(8)),
+                        SizedBox.fromSize(size: const Size.square(8)),
                         const InfoPage(
                           openFirstInfo: false,
                         )

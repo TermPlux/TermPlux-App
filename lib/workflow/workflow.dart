@@ -153,7 +153,8 @@ done
 
     Global.termFontScale.value = Util.getGlobal("termFontScale") as double;
 
-    Global.controller = WebViewController()..setJavaScriptMode(JavaScriptMode.unrestricted);
+    Global.controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted);
 
     //设置屏幕常亮
     WakelockPlus.toggle(enable: Util.getGlobal("wakelock"));

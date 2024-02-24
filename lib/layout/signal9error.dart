@@ -45,9 +45,8 @@ class Signal9Error extends StatelessWidget {
                 OutlinedButton(
                   onPressed: () {
                     FlutterClipboard.copy(helperLink).then(
-                          (value) {
-                        ScaffoldMessenger.of(context)
-                            .hideCurrentSnackBar();
+                      (value) {
+                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: const Text("已复制"),
@@ -56,8 +55,7 @@ class Signal9Error extends StatelessWidget {
                               onPressed: () {
                                 launchUrl(
                                   Uri.parse(helperLink),
-                                  mode:
-                                  LaunchMode.externalApplication,
+                                  mode: LaunchMode.externalApplication,
                                 );
                               },
                             ),
@@ -80,9 +78,8 @@ class Signal9Error extends StatelessWidget {
                 OutlinedButton(
                   onPressed: () {
                     FlutterClipboard.copy(helperLink2).then(
-                          (value) {
-                        ScaffoldMessenger.of(context)
-                            .hideCurrentSnackBar();
+                      (value) {
+                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: const Text("已复制"),
@@ -91,8 +88,7 @@ class Signal9Error extends StatelessWidget {
                               onPressed: () {
                                 launchUrl(
                                   Uri.parse(helperLink2),
-                                  mode:
-                                  LaunchMode.externalApplication,
+                                  mode: LaunchMode.externalApplication,
                                 );
                               },
                             ),
