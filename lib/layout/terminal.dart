@@ -30,7 +30,7 @@ class TerminalPage extends StatelessWidget {
               builder: (context, value, child) {
                 return TerminalView(
                   Global.termPtys[Global.currentContainer]!.terminal,
-                  textScaleFactor: value,
+                  textScaler: TextScaler.linear(value),
                   keyboardType: TextInputType.multiline,
                 );
               },

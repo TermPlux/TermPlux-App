@@ -25,11 +25,7 @@ dependencies:
   flutter_ume_kit_console: ^1.0.0
   flutter_ume_kit_dio: ^1.0.1+2
   device_preview: ^1.1.0
-#  xterm: ^3.5.0
-  xterm:
-    git:
-      url: https://github.com/Multi-Tech-s-r-l/xterm.dart
-      ref: master
+  xterm: ^4.0.0
   flutter_pty: ^0.4.0
   path_provider: ^2.1.2
   webview_flutter: ^4.4.4
