@@ -10,7 +10,7 @@ package com.gaurav.avnc.ui.about
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.tiny_computer.R
+import io.termplux.R
 
 /**
  * Activity for app details.

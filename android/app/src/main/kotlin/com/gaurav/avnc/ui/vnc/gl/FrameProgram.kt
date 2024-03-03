@@ -26,7 +26,7 @@ import android.opengl.GLES20.glUniform1i
 import android.opengl.GLES20.glUniformMatrix4fv
 import android.opengl.GLES20.glUseProgram
 import android.util.Log
-import com.example.tiny_computer.BuildConfig
+import io.termplux.BuildConfig
 
 /**
  * Represents the GL program used for Frame rendering.

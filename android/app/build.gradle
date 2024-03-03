@@ -46,6 +46,11 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+        kapt {
+            arguments {
+                arg("room.schemaLocation", "$projectDir/roomSchema")
+            }
+        }
     }
     buildTypes {
         release {
@@ -62,9 +67,6 @@ android {
             version = "3.22.1"
         }
     }
-    lintOptions {
-        abortOnError = false
-    }
     buildFeatures {
         buildConfig = true
         compose = true
@@ -77,6 +79,9 @@ android {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
+    }
+    lint {
+        abortOnError false
     }
 }
 
@@ -124,6 +129,7 @@ dependencies {
     def roomVersion = "2.6.1"
     implementation "androidx.room:room-runtime:$roomVersion"
     implementation "androidx.room:room-ktx:$roomVersion"
+    //noinspection KaptUsageInsteadOfKsp
     kapt "androidx.room:room-compiler:$roomVersion"
 
 

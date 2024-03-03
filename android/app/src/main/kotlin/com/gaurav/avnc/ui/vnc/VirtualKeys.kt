@@ -13,7 +13,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
 import androidx.databinding.BindingAdapter
-import com.example.tiny_computer.databinding.VirtualKeysBinding
+import io.termplux.databinding.VirtualKeysBinding
 
 /**
  * Virtual keys allow the user to input keys which are not normally found on

@@ -18,7 +18,7 @@ import androidx.core.text.HtmlCompat
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
-import com.example.tiny_computer.R
+import io.termplux.R
 import com.gaurav.avnc.util.DeviceAuthPrompt
 import com.google.android.material.appbar.MaterialToolbar
 

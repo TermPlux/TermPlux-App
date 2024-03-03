@@ -14,7 +14,7 @@ import android.widget.ImageButton
 import androidx.fragment.app.FragmentActivity
 import androidx.preference.ListPreference
 import androidx.preference.PreferenceViewHolder
-import com.example.tiny_computer.R
+import io.termplux.R
 import com.gaurav.avnc.util.MsgDialog
 
 /**

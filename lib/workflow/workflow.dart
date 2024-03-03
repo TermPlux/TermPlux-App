@@ -273,6 +273,11 @@ clear""");
     Global.controller.loadRequest(Uri.parse(Util.getCurrentProp("vncUrl")));
   }
 
+  static Future<void> launchAvnc() async {
+    await Default.avncChannel.invokeMethod("launchUsingUri", {"vncUri": Util.getCurrentProp("vncUri") as String});
+  }
+
+
   static Future<void> workflow() async {
     grantPermissions();
     await initData();
@@ -280,6 +285,9 @@ clear""");
     setupAudio();
     launchCurrentContainer();
 
-    waitForConnection().then((value) => loadDesktop());
+    waitForConnection().then((value) {
+      loadDesktop();
+      launchAvnc();
+    });
   }
 }

@@ -15,9 +15,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.tiny_computer.BuildConfig
-import com.example.tiny_computer.R
-import com.example.tiny_computer.databinding.FragmentAboutBinding
+import io.termplux.BuildConfig
+import io.termplux.R
+import io.termplux.databinding.FragmentAboutBinding
 
 class AboutFragment : Fragment() {
 

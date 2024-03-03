@@ -16,8 +16,8 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import com.example.tiny_computer.R
-import com.example.tiny_computer.databinding.FragmentCredentialBinding
+import io.termplux.R
+import io.termplux.databinding.FragmentCredentialBinding
 import com.gaurav.avnc.model.LoginInfo
 import com.gaurav.avnc.model.ServerProfile
 import com.gaurav.avnc.viewmodel.VncViewModel

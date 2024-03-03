@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_pty/flutter_pty.dart';
+import 'package:termplux_app/value/default.dart';
 
 import '../value/global.dart';
 
@@ -204,9 +206,21 @@ class Util {
   }
 
   static dynamic getCurrentProp(String key) {
-    return jsonDecode(
-      Util.getGlobal("containersInfo")[Global.currentContainer],
-    )[key];
+    // return jsonDecode(
+    //   Util.getGlobal("containersInfo")[Global.currentContainer],
+    // )[key];
+    dynamic m = jsonDecode(Util.getGlobal("containersInfo")[Global.currentContainer]);
+    if (m.containsKey(key)) {
+      return m[key];
+    }
+    switch (key) {
+      case "name" : return (value){addCurrentProp(key, value); return value;}("Debian Bookworm");
+      case "boot" : return (value){addCurrentProp(key, value); return value;}(Default.boot);
+      case "vnc" : return (value){addCurrentProp(key, value); return value;}("startnovnc &");
+      case "vncUrl" : return (value){addCurrentProp(key, value); return value;}("http://localhost:36082/vnc.html?host=localhost&port=36082&autoconnect=true&resize=remote&password=12345678");
+      case "vncUri" : return (value){addCurrentProp(key, value); return value;}("vnc://127.0.0.1:5904?VncPassword=12345678&SecurityType=2");
+      case "commands" : return (value){addCurrentProp(key, value); return value;}(jsonDecode(jsonEncode(Default.commands)));
+    }
   }
 
   //用来设置name, boot, vnc, vncUrl等
@@ -224,6 +238,17 @@ class Util {
             )
           ],
         ),
+    );
+  }
+
+  //用来添加不存在的key等
+  static Future<void> addCurrentProp(String key, dynamic value) async {
+    await Global.prefs.setStringList("containersInfo",
+        Util.getGlobal("containersInfo")..setAll(Global.currentContainer,
+            [jsonEncode((jsonDecode(
+                Util.getGlobal("containersInfo")[Global.currentContainer]
+            ))..addAll({key : value}))]
+        )
     );
   }
 

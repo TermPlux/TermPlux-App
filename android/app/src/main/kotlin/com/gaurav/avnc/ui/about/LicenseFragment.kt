@@ -16,8 +16,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.example.tiny_computer.R
-import com.example.tiny_computer.databinding.FragmentLicenseBinding
+import io.termplux.R
+import io.termplux.databinding.FragmentLicenseBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

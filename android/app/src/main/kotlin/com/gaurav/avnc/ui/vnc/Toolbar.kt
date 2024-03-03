@@ -21,7 +21,7 @@ import androidx.annotation.StringRes
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
-import com.example.tiny_computer.R
+import io.termplux.R
 import com.gaurav.avnc.viewmodel.VncViewModel.State
 import com.gaurav.avnc.viewmodel.VncViewModel.State.Companion.isConnected
 import kotlinx.coroutines.delay

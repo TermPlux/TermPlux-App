@@ -13,7 +13,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.example.tiny_computer.R
+import io.termplux.R
 import com.gaurav.avnc.model.db.MainDb
 import com.gaurav.avnc.vnc.VncUri
 import kotlinx.coroutines.launch

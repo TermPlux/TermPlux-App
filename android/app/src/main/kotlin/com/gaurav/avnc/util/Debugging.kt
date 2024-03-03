@@ -10,7 +10,7 @@ package com.gaurav.avnc.util
 
 import android.net.Uri
 import android.os.Build
-import com.example.tiny_computer.BuildConfig
+import io.termplux.BuildConfig
 
 /**
  * Utilities to aid in debugging

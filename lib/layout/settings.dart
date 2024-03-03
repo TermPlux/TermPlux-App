@@ -758,6 +758,127 @@ fi""");
             ),
           ),
         ),
+        ExpansionPanel(
+            isExpanded: _expandState[2],
+            headerBuilder: ((context, isExpanded) {
+              return const ListTile(title: Text("显示设置"));
+            }),
+            body: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  children: [
+                    SizedBox.fromSize(size: const Size.square(16)),
+                    const Text("""AVNC可以带来获得更好的操控体验；
+如触摸板触控，双击弹出键盘，自动剪切板，画中画模式等等。这是一个实验性功能。"""),
+                    SizedBox.fromSize(size: const Size.square(16)),
+                    Wrap(
+                        alignment: WrapAlignment.center,
+                        spacing: 4.0,
+                        runSpacing: 4.0,
+                        children: [
+                          OutlinedButton(
+                              style: Default.commandButtonStyle,
+                              child: const Text("AVNC启动时分辨率设置"),
+                              onPressed: () async {
+                                String w = "1440";
+                                String h = "720";
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                          title: const Text("分辨率设置"),
+                                          content: SingleChildScrollView(
+                                              child: Column(children: [
+                                            TextFormField(
+                                                autovalidateMode:
+                                                    AutovalidateMode
+                                                        .onUserInteraction,
+                                                initialValue: w,
+                                                decoration:
+                                                    const InputDecoration(
+                                                        border:
+                                                            OutlineInputBorder(),
+                                                        labelText: "宽"),
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                validator: (value) {
+                                                  return Util.validateBetween(
+                                                      value, 200, 7680, () {
+                                                    w = value!;
+                                                  });
+                                                }),
+                                            SizedBox.fromSize(
+                                                size: const Size.square(8)),
+                                            TextFormField(
+                                                autovalidateMode:
+                                                    AutovalidateMode
+                                                        .onUserInteraction,
+                                                initialValue: h,
+                                                decoration:
+                                                    const InputDecoration(
+                                                        border:
+                                                            OutlineInputBorder(),
+                                                        labelText: "高"),
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                validator: (value) {
+                                                  return Util.validateBetween(
+                                                      value, 200, 7680, () {
+                                                    h = value!;
+                                                  });
+                                                }),
+                                          ])),
+                                          actions: [
+                                            TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: const Text("取消")),
+                                            TextButton(
+                                                onPressed: () async {
+                                                  Util.termWrite(
+                                                      """sed -i -E "s@(geometry)=.*@\\1=${w}x${h}@" /etc/tigervnc/vncserver-config-tmoe
+sed -i -E "s@^(VNC_RESOLUTION)=.*@\\1=${w}x${h}@" \$(command -v startvnc)""");
+                                                  ScaffoldMessenger.of(context)
+                                                      .hideCurrentSnackBar();
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(SnackBar(
+                                                          content: Text(
+                                                              "${w}x${h}. 下次启动时生效")));
+                                                  if (!context.mounted) return;
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: const Text("保存")),
+                                          ]);
+                                    });
+                              }),
+                          OutlinedButton(
+                              style: Default.commandButtonStyle,
+                              child: const Text("AVNC设置"),
+                              onPressed: () async {
+                                await Default.avncChannel
+                                    .invokeMethod("launchPrefsPage", {});
+                              }),
+                          OutlinedButton(
+                              style: Default.commandButtonStyle,
+                              child: const Text("关于AVNC"),
+                              onPressed: () async {
+                                await Default.avncChannel
+                                    .invokeMethod("launchAboutPage", {});
+                              }),
+                        ]),
+                    SizedBox.fromSize(size: const Size.square(8)),
+                    SwitchListTile(
+                      title: const Text("默认使用AVNC"),
+                      subtitle: const Text("下次启动时生效"),
+                      value: Util.getGlobal("useAvnc") as bool,
+                      onChanged: (value) {
+                        Global.prefs.setBool("useAvnc", value);
+                        setState(() {});
+                      },
+                    ),
+                  ],
+                ))),
       ],
     );
   }
